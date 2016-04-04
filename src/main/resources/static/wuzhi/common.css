@@ -1,0 +1,1147 @@
+/**
+ *  reset
+ *
+ */
+
+/** 清除内外边距 **/
+body, h1, h2, h3, h4, h5, h6, hr, p, blockquote, dl, dt, dd, ul, ol, li, pre, form, fieldset, legend, button, input, textarea, th, td {
+    margin: 0;
+    padding: 0;
+}
+
+/** 设置默认字体 **/
+body, button, input, select /* for ie */ {
+    font: 12px/1.5 tahoma, arial, \5b8b\4f53, sans-serif;
+}
+
+h1, h2, h3, h4, h5, h6 {
+    font-size: 100%;
+}
+
+/* 将斜体扶正 */
+address, cite, dfn, em, var {
+    font-style: normal;
+}
+
+/* 统一等宽字体 */
+code, kbd, pre, samp {
+    font-family: courier new, courier, monospace;
+}
+
+/* 小于 12px 的中文很难阅读，让 small 正常化 */
+small {
+    font-size: 12px;
+}
+
+/** 重置列表元素 **/
+ul, ol {
+    list-style: none;
+}
+
+/** 重置文本格式元素 **/
+a {
+    text-decoration: none;
+}
+
+/* 重置，减少对行高的影响 */
+sup {
+    vertical-align: text-top;
+}
+
+sub {
+    vertical-align: text-bottom;
+}
+
+/** 重置表单元素 **/
+legend {
+    color: #000;
+}
+
+/* img 搭车：让链接里的 img 无边框 */
+fieldset, img {
+    border: 0;
+}
+
+/* 使得表单元素在 ie 下能继承字体大小 */
+button, input, select, textarea {
+    font-size: 100%;
+}
+
+/** 重置表格元素 **/
+table {
+    border-collapse: collapse;
+    border-spacing: 0;
+}
+
+/* --------------------------------------------------------------
+
+grid.css
+ * Sets up an easy-to-use grid of 24 columns.
+
+ By default, the grid is 950px wide, with 24 columns
+ spanning 30px, and a 10px margin between columns.
+
+ If you need fewer or more columns, namespaces or semantic
+ element names, use the compressor script (lib/compress.rb)
+
+ -------------------------------------------------------------- */
+
+/* A container should group all your columns. */
+.container {
+    width: 840px;
+    margin: 0 auto;
+}
+
+/* Use this class on any .span / container to see the grid. */
+.showgrid {
+    /* 显示背景gird
+    background: url(src/grid.png);
+     */
+}
+
+
+/* Columns
+-------------------------------------------------------------- */
+
+/* Sets up basic grid floating and margin. */
+.column, .span-1, .span-2, .span-3, .span-4, .span-5, .span-6, .span-7, .span-8, .span-9, .span-10, .span-11, .span-12, .span-13, .span-14, .span-15, .span-16, .span-17, .span-18, .span-19, .span-20, .span-21, .span-22, .span-23, .span-24 {
+    float: left;
+    margin-right: 10px;
+}
+
+/* The last column in a row needs this class. */
+.last { margin-right: 0; }
+
+/* Use these classes to set the width of a column. */
+.span-1 {width: 25px;}
+.span-2 {width: 60px;}
+.span-3 {width: 95px;}
+.span-4 {width: 130px;}
+.span-5 {width: 165px;}
+.span-6 {width: 200px;}
+.span-7 {width: 235px;}
+.span-8 {width: 270px;}
+.span-9 {width: 305px;}
+.span-10 {width: 340px;}
+.span-11 {width: 375px;}
+.span-12 {width: 410px;}
+.span-13 {width: 445px;}
+.span-14 {width: 480px;}
+.span-15 {width: 515px;}
+.span-16 {width: 550px;}
+.span-17 {width: 585px;}
+.span-18 {width: 620px;}
+.span-19 {width: 655px;}
+.span-20 {width: 690px;}
+.span-21 {width: 725px;}
+.span-22 {width: 760px;}
+.span-23 {width: 795px;}
+.span-24 {width: 830px; margin-right:0;}
+
+/* Use these classes to set the width of an input. */
+input.span-1, textarea.span-1, input.span-2, textarea.span-2, input.span-3, textarea.span-3, input.span-4, textarea.span-4, input.span-5, textarea.span-5, input.span-6, textarea.span-6, input.span-7, textarea.span-7, input.span-8, textarea.span-8, input.span-9, textarea.span-9, input.span-10, textarea.span-10, input.span-11, textarea.span-11, input.span-12, textarea.span-12, input.span-13, textarea.span-13, input.span-14, textarea.span-14, input.span-15, textarea.span-15, input.span-16, textarea.span-16, input.span-17, textarea.span-17, input.span-18, textarea.span-18, input.span-19, textarea.span-19, input.span-20, textarea.span-20, input.span-21, textarea.span-21, input.span-22, textarea.span-22, input.span-23, textarea.span-23, input.span-24, textarea.span-24 {
+    border-left-width: 1px;
+    border-right-width: 1px;
+    padding-left: 5px;
+    padding-right: 5px;
+}
+
+input.span-1, textarea.span-1 { width: 18px; }
+input.span-2, textarea.span-2 { width: 58px; }
+input.span-3, textarea.span-3 { width: 98px; }
+input.span-4, textarea.span-4 { width: 138px; }
+input.span-5, textarea.span-5 { width: 178px; }
+input.span-6, textarea.span-6 { width: 218px; }
+input.span-7, textarea.span-7 { width: 258px; }
+input.span-8, textarea.span-8 { width: 298px; }
+input.span-9, textarea.span-9 { width: 338px; }
+input.span-10, textarea.span-10 { width: 378px; }
+input.span-11, textarea.span-11 { width: 418px; }
+input.span-12, textarea.span-12 { width: 458px; }
+input.span-13, textarea.span-13 { width: 498px; }
+input.span-14, textarea.span-14 { width: 538px; }
+input.span-15, textarea.span-15 { width: 578px; }
+input.span-16, textarea.span-16 { width: 618px; }
+input.span-17, textarea.span-17 { width: 658px; }
+input.span-18, textarea.span-18 { width: 698px; }
+input.span-19, textarea.span-19 { width: 738px; }
+input.span-20, textarea.span-20 { width: 778px; }
+input.span-21, textarea.span-21 { width: 818px; }
+input.span-22, textarea.span-22 { width: 858px; }
+input.span-23, textarea.span-23 { width: 898px; }
+input.span-24, textarea.span-24 { width: 938px; }
+
+/* Add these to a column to append empty cols. */
+
+.append-1 { padding-right: 35px;}
+.append-2 { padding-right: 70px;}
+.append-3 { padding-right: 105px;}
+.append-4 { padding-right: 140px;}
+.append-5 { padding-right: 175px;}
+.append-6 { padding-right: 210px;}
+.append-7 { padding-right: 245px;}
+.append-8 { padding-right: 280px;}
+.append-9 { padding-right: 315px;}
+.append-10 { padding-right: 350px;}
+.append-11 { padding-right: 395px;}
+.append-12 { padding-right: 430px;}
+.append-13 { padding-right: 465px;}
+.append-14 { padding-right: 490px;}
+.append-15 { padding-right: 535px;}
+.append-16 { padding-right: 570px;}
+.append-17 { padding-right: 615px;}
+.append-18 { padding-right: 630px;}
+.append-19 { padding-right: 665px;}
+.append-20 { padding-right: 700px;}
+.append-21 { padding-right: 735px;}
+.append-22 { padding-right: 770px;}
+.append-23 { padding-right: 805px;}
+
+/* Add these to a column to prepend empty cols. */
+
+.prepend-half { padding-left: 20px;}
+.prepend-1 { padding-left: 45px;}
+.prepend-2 { padding-left: 80px;}
+.prepend-3 { padding-left: 115px;}
+.prepend-4 { padding-left: 150px;}
+.prepend-5 { padding-left: 185px;}
+.prepend-6 { padding-left: 220px;}
+.prepend-7 { padding-left: 255px;}
+.prepend-8 { padding-left: 290px;}
+.prepend-9 { padding-left: 325px;}
+.prepend-10 { padding-left: 360px;}
+.prepend-11 { padding-left: 395px;}
+.prepend-12 { padding-left: 430px;}
+.prepend-13 { padding-left: 465px;}
+.prepend-14 { padding-left: 500px;}
+.prepend-15 { padding-left: 535px;}
+.prepend-16 { padding-left: 570px;}
+.prepend-17 { padding-left: 615px;}
+.prepend-18 { padding-left: 640px;}
+.prepend-19 { padding-left: 675px;}
+.prepend-20 { padding-left: 710px;}
+.prepend-21 { padding-left: 745px;}
+.prepend-22 { padding-left: 780px;}
+.prepend-23 { padding-left: 815px;}
+
+
+/* Border on right hand side of a column. */
+.border {
+    padding-right: 4px;
+    margin-right: 5px;
+    border-right: 1px solid #ddd;
+}
+
+/* Border with more whitespace, spans one column. */
+.colborder {
+    padding-right: 24px;
+    margin-right: 25px;
+    border-right: 1px solid #ddd;
+}
+
+
+/* Use these classes on an element to push it into the
+next column, or to pull it into the previous column.  */
+
+
+.pull-1 { margin-left: -40px; }
+.pull-2 { margin-left: -80px; }
+.pull-3 { margin-left: -120px; }
+.pull-4 { margin-left: -160px; }
+.pull-5 { margin-left: -200px; }
+.pull-6 { margin-left: -240px; }
+.pull-7 { margin-left: -280px; }
+.pull-8 { margin-left: -320px; }
+.pull-9 { margin-left: -360px; }
+.pull-10 { margin-left: -400px; }
+.pull-11 { margin-left: -440px; }
+.pull-12 { margin-left: -480px; }
+.pull-13 { margin-left: -520px; }
+.pull-14 { margin-left: -560px; }
+.pull-15 { margin-left: -600px; }
+.pull-16 { margin-left: -640px; }
+.pull-17 { margin-left: -680px; }
+.pull-18 { margin-left: -720px; }
+.pull-19 { margin-left: -760px; }
+.pull-20 { margin-left: -800px; }
+.pull-21 { margin-left: -840px; }
+.pull-22 { margin-left: -880px; }
+.pull-23 { margin-left: -920px; }
+.pull-24 { margin-left: -960px; }
+
+.pull-1, .pull-2, .pull-3, .pull-4, .pull-5, .pull-6, .pull-7, .pull-8, .pull-9, .pull-10, .pull-11, .pull-12, .pull-13, .pull-14, .pull-15, .pull-16, .pull-17, .pull-18, .pull-19, .pull-20, .pull-21, .pull-22, .pull-23, .pull-24 {float: left; position:relative;}
+
+
+.push-1 { margin: 0 -40px 1.5em 40px; }
+.push-2 { margin: 0 -80px 1.5em 80px; }
+.push-3 { margin: 0 -120px 1.5em 120px; }
+.push-4 { margin: 0 -160px 1.5em 160px; }
+.push-5 { margin: 0 -200px 1.5em 200px; }
+.push-6 { margin: 0 -240px 1.5em 240px; }
+.push-7 { margin: 0 -280px 1.5em 280px; }
+.push-8 { margin: 0 -320px 1.5em 320px; }
+.push-9 { margin: 0 -360px 1.5em 360px; }
+.push-10 { margin: 0 -400px 1.5em 400px; }
+.push-11 { margin: 0 -440px 1.5em 440px; }
+.push-12 { margin: 0 -480px 1.5em 480px; }
+.push-13 { margin: 0 -520px 1.5em 520px; }
+.push-14 { margin: 0 -560px 1.5em 560px; }
+.push-15 { margin: 0 -600px 1.5em 600px; }
+.push-16 { margin: 0 -640px 1.5em 640px; }
+.push-17 { margin: 0 -680px 1.5em 680px; }
+.push-18 { margin: 0 -720px 1.5em 720px; }
+.push-19 { margin: 0 -760px 1.5em 760px; }
+.push-20 { margin: 0 -800px 1.5em 800px; }
+.push-21 { margin: 0 -840px 1.5em 840px; }
+.push-22 { margin: 0 -880px 1.5em 880px; }
+.push-23 { margin: 0 -920px 1.5em 920px; }
+.push-24 { margin: 0 -960px 1.5em 960px; }
+
+.push-1, .push-2, .push-3, .push-4, .push-5, .push-6, .push-7, .push-8, .push-9, .push-10, .push-11, .push-12, .push-13, .push-14, .push-15, .push-16, .push-17, .push-18, .push-19, .push-20, .push-21, .push-22, .push-23, .push-24 {float: left; position:relative;}
+
+
+/* Misc classes and elements
+-------------------------------------------------------------- */
+
+/* In case you need to add a gutter above/below an element */
+div.prepend-top, .prepend-top {
+    margin-top:1.5em;
+}
+div.append-bottom, .append-bottom {
+    margin-bottom:1.5em;
+}
+
+/* Use a .box to create a padded box inside a column.  */
+.box {
+    padding: 1.5em;
+    margin-bottom: 1.5em;
+    background: #e5eCf9;
+}
+
+/* Use this to create a horizontal ruler across a column. */
+
+hr {
+    background: #8FA5AB;
+    clear: both;
+    float: none;
+    width: 100%;
+    height: 5px;
+    border: none;
+}
+
+.hr_small {
+    background: #8FA5AB;
+    clear: both;
+    float: none;
+    width: 100%;
+    height: 2px;
+    border: none;
+}
+
+/* Clearing floats without extra markup
+Based on How To Clear Floats Without Structural Markup by PiE
+[http://www.positioniseverything.net/easyclearing.html] */
+
+.clearfix:after, .container:after {
+    content: "\0020";
+    display: block;
+    height: 0;
+    clear: both;
+    visibility: hidden;
+    overflow:hidden;
+}
+.clearfix, .container {display: block;}
+
+/* Regular clearing
+apply to column that should drop below previous ones. */
+
+.clear { clear:both; }
+
+
+
+
+
+
+/* --------------------------------------------------------------
+
+forms.css
+ * Sets up some default styling for forms
+ * Gives you classes to enhance your forms
+
+ Usage:
+ * For text fields, use class .title or .text
+ * For inline forms, use .inline (even when using columns)
+
+ -------------------------------------------------------------- */
+
+/*
+A special hack is included for IE8 since it does not apply padding
+correctly on fieldsets
+ */
+label       { font-weight: bold; }
+fieldset    { padding:0 1.4em 1.4em 1.4em; margin: 0 0 1.5em 0; border: 1px solid #ccc; }
+legend      { font-weight: bold; font-size:1.2em; margin-top:-0.2em; margin-bottom:1em; }
+
+fieldset, #IE8#HACK { padding-top:1.4em; }
+legend, #IE8#HACK { margin-top:0; margin-bottom:0; }
+
+/* Form fields
+-------------------------------------------------------------- */
+
+/*
+Attribute selectors are used to differentiate the different types
+of input elements, but to support old browsers, you will have to
+add classes for each one. ".title" simply creates a large text
+field, this is purely for looks.
+ */
+input[type=text], input[type=password],
+input.text, input.title,
+textarea {
+    background-color:#fff;
+    border:1px solid #bbb;
+}
+input[type=text]:focus, input[type=password]:focus,
+input.text:focus, input.title:focus,
+textarea:focus {
+    border-color:#F6C86F;
+}
+select {font-size: 18px; background-color:#fff; border-width:1px; border-style:solid; }
+
+input[type=text], input[type=password],
+input.text, input.title,
+textarea, select {
+    margin:0.5em 0;
+}
+
+input.text,
+input.title   { width: 210px; padding:5px; height: 25px}
+input.title   { font-size:1.5em; }
+textarea      { width: 460px; height: 350px; padding:5px; }
+
+/*
+This is to be used on forms where a variety of elements are
+placed side-by-side. Use the p tag to denote a line.
+ */
+form.inline { line-height:3; }
+form.inline p { margin-bottom:0; }
+
+
+/* Success, info, notice and error/alert boxes
+-------------------------------------------------------------- */
+
+.error,
+.alert,
+.notice,
+.success,
+.info 			{ padding: 0.8em; margin-bottom: 1em; border: 2px solid #ddd; }
+
+.error, .alert { background: #fbe3e4; color: #8a1f11; border-color: #fbc2c4; }
+.notice     { background: #fff6bf; color: #514721; border-color: #ffd324; }
+.success    { background: #e6efc2; color: #264409; border-color: #c6d880; }
+.info 			{ background: #d5edf8; color: #205791; border-color: #92cae4; }
+.error a, .alert a { color: #8a1f11; }
+.notice a   { color: #514721; }
+.success a  { color: #264409; }
+.info a			{ color: #205791; }
+
+
+h1,h2,h3,h4,h5,h6 { font-weight: normal; color: #111; }
+
+h1 { font-size: 3em; line-height: 1;}
+h2 { font-size: 2em;}
+h3 { font-size: 1.5em; line-height: 1;}
+h4 { font-size: 1.2em; line-height: 1.25;}
+h5 { font-size: 1em; font-weight: bold;}
+h6 { font-size: 1em; font-weight: bold;}
+
+
+
+
+
+/* --------------------------------------------------------------
+
+ie.css
+
+Contains every hack for Internet Explorer,
+so that our core files stay sweet and nimble.
+
+-------------------------------------------------------------- */
+
+/* Make sure the layout is centered in IE5 */
+body { text-align: center; }
+.container { text-align: left; }
+
+/* Fixes IE margin bugs */
+* html .column, * html .span-1, * html .span-2,
+    * html .span-3, * html .span-4, * html .span-5,
+    * html .span-6, * html .span-7, * html .span-8,
+    * html .span-9, * html .span-10, * html .span-11,
+    * html .span-12, * html .span-13, * html .span-14,
+    * html .span-15, * html .span-16, * html .span-17,
+    * html .span-18, * html .span-19, * html .span-20,
+    * html .span-21, * html .span-22, * html .span-23,
+    * html .span-24 { display:inline; overflow-x: hidden; }
+
+
+    /* Elements
+    -------------------------------------------------------------- */
+
+/* Fixes incorrect styling of legend in IE6. */
+    * html legend { margin:0px -8px 16px 0; padding:0; }
+
+    /* Fixes wrong line-height on sup/sub in IE. */
+    sup { vertical-align:text-top; }
+    sub { vertical-align:text-bottom; }
+
+    /* Fixes IE7 missing wrapping of code elements. */
+    html>body p code { *white-space: normal; }
+
+    /* IE 6&7 has problems with setting proper <hr> margins. */
+    hr  { margin:-8px auto 11px; }
+
+    /* Explicitly set interpolation, allowing dynamically resized images to not look horrible */
+    img { -ms-interpolation-mode:bicubic; }
+
+    /* Clearing
+    -------------------------------------------------------------- */
+
+/* Makes clearfix actually work in IE */
+    * html .clearfix,
+    * html .container { height:1%; }
+
+
+    /* Forms
+    -------------------------------------------------------------- */
+
+/* Fixes padding on fieldset */
+fieldset { padding-top:0; }
+legend { margin-top:-0.2em; margin-bottom:1em; margin-left:-0.5em; }
+
+/* Makes classic textareas in IE 6 resemble other browsers */
+textarea { overflow:auto; }
+
+/* Makes labels behave correctly in IE 6 and 7 */
+label { vertical-align:middle; position:relative; top:-0.25em; }
+
+/* Fixes rule that IE 6 ignores */
+input.text, input.title, textarea { background-color:#fff; border:1px solid #bbb; }
+input.text:focus, input.title:focus { border-color:#F6C86F; }
+input.text, input.title, textarea, select { margin:0.5em 0; }
+input.checkbox, input.radio { position:relative; top:.25em; }
+
+/* Fixes alignment of inline form elements */
+form.inline div, form.inline p { vertical-align:middle; }
+form.inline input.checkbox, form.inline input.radio,
+form.inline input.button, form.inline button {
+    margin:0.5em 0;
+}
+button, input.button { position:relative;top:0.25em; }
+
+.header {
+    height: 45px;
+    background-color: #34495E;
+    box-shadow: 0px 0px 5px rgba(0, 0, 0, 0.5)
+}
+
+.header_text {
+    color: #808080;
+    font-size: 16px;
+    line-height: 45px;
+}
+
+.header_user {
+    color: #ddd;
+    font-size: 20px;
+    font-weight: bold;
+}
+
+.header_w {
+    color: #ddd;
+    font-size: 16px;
+    line-height: 45px;
+    padding-right: 15px;
+    font-weight: bold;
+}
+.header a:hover {
+    color: #fff;
+}
+
+.header_reg, .header_reg a{
+    color: #ddd;
+    line-height: 45px;
+    font-size: 14px;
+}
+
+.index_main {
+    padding-top: 30px;
+}
+
+.index_left {
+}
+
+.index_day {
+    padding-bottom: 20px;
+}
+
+.index_right {
+    border-left: 1px solid #A0A0A0;
+    height: 180px;
+}
+
+.reg_go {
+    padding-top: 20px;
+}
+
+.reg_go span{
+    font-size: 14px;
+    padding-left: 20px;
+    line-height: 44px;
+}
+
+.reg_button:hover {
+    background: none repeat scroll 0 0 #8ba644;
+}
+
+.reg_button {
+    font-size: 18px;
+    padding: 10px 20px;
+    border-radius: 3px;
+    background: none repeat scroll 0 0 #9FBB58;
+    color: #FFF;
+    cursor: pointer;
+    font-weight: 300;
+    letter-spacing: 1px;
+    line-height: 13px;
+    text-align: center;
+    text-transform: uppercase;
+    transition: background 0.3s ease 0s, border-color 0.3s ease 0s;
+}
+
+.footer {
+    margin-top: 20px;
+    margin-bottom: 15px;
+    height: 30px;
+    text-align: left;
+    color: #999;
+    text-align: right;
+}
+
+.footer a {
+    color: #999;
+}
+
+.footer .copyright {
+    text-align: left;
+}
+
+.homepage_desc {
+    padding-top: 10px;
+    margin-bottom: 30px;
+    color: #56D6FF;
+    font-size: 18px;
+}
+
+.homepage_pic {
+    border: 1px solid #fff;
+    height: 400px;
+    line-height: 400px;
+    margin-top: 30px;
+    font-size: 20px;
+    text-align: center;
+}
+
+.note_p {
+    margin-top: 10px;
+    color: #808080;
+}
+
+.note_username {
+    text-align: right;
+    padding-top: 15px;
+    padding-right: 10px;
+    font-size: 16px;
+    color: #909090;
+}
+
+.note_time {
+    color: #808080;
+    font-size: 12px;
+    margin: 4px 0px;
+}
+
+.note_each {
+    color:#333;
+    margin-bottom: 10px;
+    font-size: 14px;
+    clear: both;
+    display: block;
+}
+
+.note_content {
+    font-size: 14px;
+    line-height: 25px;
+    overflow: hidden;
+    padding-left: 10px;
+    word-wrap: break-word;
+    white-space: pre-wrap;
+}
+
+/*首页日记列表*/
+.days {
+    margin-left: 60px;
+    border: 1px solid #CCCCCC;
+    border-radius: 3px;
+    padding: 6px 12px;
+}
+
+.index_list {
+    margin: 15px 0px;
+}
+
+.main {
+    padding-top: 15px;
+    padding-bottom: 20px;
+}
+
+.note_tip {
+    font-size: 16px;
+    color: #808080;
+    margin-top: 10px;
+    margin-bottom: 3px;
+}
+
+.note_add {
+    font-size: 14px;
+}
+
+.mt-10 {
+    margin-top: 10px;
+}
+
+.mb-10 {
+    margin-bottom: 20px;
+}
+
+/*
+ * 注册页面
+ * */
+
+.reg_title {
+    font-size: 18px;
+    margin-top: 20px;
+}
+
+.reg_memo {
+    font-size: 12px;
+    color: #808080;
+    margin-bottom: 20px;
+}
+
+.reg_item {
+    font-size: 14px;
+    color: #333;
+
+}
+
+.reg_sider {
+    margin-top: 50px;
+    padding-top: 20px;
+    height: 70px;
+    border-left: 1px solid #a0a0a0;
+    padding-left: 20px;
+    line-height: 25px;
+}
+
+.reg_bottom {
+    width: 100px;
+    height: 35px;
+    font-size: 16px;
+    font-weight: bold;
+}
+
+.reg_input {
+    margin-top: 10px;
+    margin-bottom: 30px;
+}
+
+.err {
+    color: #B03A16;
+    font-weight: bold;
+}
+
+.index_desc {
+    height: 130px;
+    background-color: #E7EEF1;
+    padding-bottom: 10px;
+    margin-bottom: 5px;
+    padding-top: 30px;
+}
+
+.index_desc h2{
+    font-size: 20px;
+    font-weight: bold;
+    color: #336699;
+}
+
+.index_desc .memo {
+    color: #808080;
+    font-size: 16px;
+}
+
+.reason {
+    color: #333;
+    margin-top: 20px;
+    font-size: 16px;
+}
+
+.reason span {
+    color: #009966;
+    font-weight: bold;
+}
+.reg_img {
+    margin-top: 40px;
+}
+.index_user {
+    font-size: 16px;
+    color: #808080;
+    line-height: 16px;
+}
+
+.note_author {
+    color: #808080;
+    text-align: right;
+}
+
+.reg_ok {
+    text-align: center;
+    margin-top: 20px;
+}
+
+.reg_ok span {
+    line-height: 64px;
+    font-size: 20px;
+}
+
+.reg_ok a {
+    font-size: 16px;
+}
+
+.default_avatar {
+    height: 300px;
+    text-align: center;
+    line-height: 300px;
+    border: 3px dashed #808080;
+    font-size: 18px;
+    color: #999;
+}
+
+.default_avatar_small {
+    height: 120px;
+    width:  160px;
+    text-align: center;
+    line-height: 120px;
+    border: 3px dashed #808080;
+    font-size: 18px;
+    color: #999;
+}
+
+/*tab设置*/
+.tabs-holder {
+    background: none repeat scroll 0 0 #F5F5F5;
+    border-bottom: 1px solid #E5E5E5;
+    border-radius: 3px 3px 0 0;
+    height: 35px;
+    line-height: 18px;
+    margin: 10px 0 20px;
+	padding-left:10px;
+}
+
+.tabs-holder .tabpanel li{
+    display: inline-block;
+    float: left;
+    margin-top: 5px;
+}
+
+.tabs-holder .tabpanel a {
+    padding: 6px 19px 6px 20px;
+}
+
+.tabs-holder .tabpanel a {
+    background: none repeat scroll 0 0 #F5F5F5;
+}
+
+.tabs-holder .tabpanel a {
+
+}
+
+.tabs-holder .tabpanel a {
+    color: #005EAC;
+}
+
+.tabs-holder .tabpanel a {
+    float: left;
+    font-weight: bold;
+    outline: 0 none;
+    text-align: center;
+}
+
+.tabs-holder .current a {
+    background: none repeat scroll 0 0 #FFFFFF;
+    border-color: #E5E5E5;
+    border-radius: 3px 3px 0 0;
+    border-style: solid solid none;
+    border-width: 1px 1px 0;
+    color: #333333;
+    font-weight: bold;
+    padding: 5px 19px 5px 20px;
+	position: relative;
+	top:1px;
+	border-bottom:2px solid #ffffff;
+}
+
+.memo {
+    font-size: 12px;
+    color: #808080;
+}
+
+/*图片边框*/
+.img_shadow img {
+    background-color: #fff;
+    padding-right: 4px;
+    padding-bottom: 4px;
+    -moz-box-shadow: 3px 3px 4px #DDDDDD;
+    -webkit-box-shadow: 3px 3px 4px #DDDDDD;
+    box-shadow: 3px 3px 4px #DDDDDD;
+    /* For IE 8 */
+    -ms-filter: "progid:DXImageTransform.Microsoft.Shadow(Strength=4, Direction=135, Color='#DDDDDD')";
+    /* For IE 5.5 - 7 */
+    filter: progid:DXImageTransform.Microsoft.Shadow(Strength=4, Direction=135, Color='#DDDDDD');
+}
+
+.rand {
+    color: #808080;
+    margin-top: 10px;
+    margin-bottom:20px;
+}
+
+.user_list td {
+    vertical-align:top;
+    padding-right: 17px;
+    padding-bottom: 10px;
+}
+
+.about h2 {
+    font-size: 16px;
+    font-weight: bold;
+}
+.about{
+	margin-top:30px;
+}
+.back_link{
+	font-size: 16px;
+    font-weight: bold;
+    margin-top: 30px;
+    text-align: right;
+}
+.back_link a,.item div a,.add_link{
+	color:blue;
+}
+.add_link{
+	border: 1px solid #DDDDDD;
+    border-radius: 3px 3px 3px 3px;
+    box-shadow: 0 1px 0 #CCCCCC;
+    color: #999999;
+    padding: 5px 10px;
+}
+.wirte{
+	text-align:right;
+}
+.about .item {
+    padding-bottom: 10px;
+}
+.item div{
+	font: 14px/30px tahoma,arial,宋体,sans-serif;
+    padding: 5px 0 20px;
+}
+
+.quote {
+    margin-top: 14px;
+    color: #808080;
+    font-size: 16px;
+    padding-left: 20px;
+	background: url(/img/open-quote.gif) no-repeat left top;
+}
+
+.quote span {
+    padding-right: 20px;
+	background: url(/img/close-quote.gif) no-repeat right top;
+}
+
+.submit_button {
+    margin-top: 15px;
+    margin-bottom: 22px;
+    padding: 2px 3px;
+    font-size: 16px;
+}
+
+.privacy_tip {
+    font-size: 18px;
+    color: #505050;
+}
+
+.note_item {
+    padding-left: 15px;
+    padding-top: 10px;
+}
+
+.form_item {
+    padding-top: 8px;
+    padding-bottom: 8px;
+    font-size: 16px;
+}
+
+.fs-16 {
+    font-size: 16px;
+}
+
+.set_password {
+    font-size: 16px;
+    margin-bottom: 20px;
+}
+
+/*日历*/
+.calendar {
+    text-align:center;
+    background-color:#fff;
+    margin:0;
+    border-radius: 6px;
+    padding: 14px;
+}
+
+.calendar_year {
+    float: right;
+}
+.calendar_year a, .calendar_month a {
+    color: #808080;
+}
+
+.calendar td {
+    height:30px;
+    width:40px;
+    line-height:20px;
+    background-repeat:no-repeat;
+    background-position:center;
+    font-size:11px;
+    color:#4f4f35;
+}
+
+.calendar td a {
+    display:block;
+    color:#428BCA;
+    text-decoration:none;
+    background-position:center;
+    line-height:24px;
+    background-repeat:no-repeat;
+    font-weight: bold;
+}
+
+
+.calendar .today {
+    background-position:center;
+    color:#fff;
+    background-repeat:no-repeat;
+}
+
+.calendar .today a {
+    background-position:center;
+    color:#fff;
+    font-weight:700;
+    background-repeat:no-repeat;
+}
+
+.calendar .pad {
+    background-position:center;
+    color:#fff;
+    font-weight:700;
+    background-repeat:no-repeat;
+}
+
+.calendar_title {
+    color: #808080;
+    font-size: 16px;
+    margin-bottom: 10px;
+    margin-top: 30px;
+    padding: 4px 6px 5px;
+}
+
+.share {
+    padding-top: 10px;
+}
+
+.share a{
+    padding-right: 10px;
+}
+
+.page_bar {
+    margin: 15px auto;
+    text-align: center;
+    width: 300px;
+}
+
+.page_item {
+    color: #428BCA;
+    background-color: #FFFFFF;
+    border: 1px solid #DDDDDD;
+    border-radius: 15px;
+    display: inline-block;
+    padding: 5px 14px;
+    margin-right: 30px;
+}
+
+.page_item a {
+    color: #428BCA;
+}
+.page_itme:hover{
+	color:#ffffff;
+}
+
+.date {
+    background: url("/img/calendar.gif") no-repeat scroll 0 0 transparent;
+    color: #666666;
+    float: left;
+    font: 22px/100% Arial,Helvetica,sans-serif;
+    height: 50px;
+    padding: 0 2px 0 0;
+    text-align: center;
+    width: 45px;
+}
+
+.date span {
+    color: #FFFFFF;
+    display: block;
+    font: 11px Arial,Helvetica,sans-serif;
+    height: 16px;
+    padding-top: 6px;
+    text-align: center;
+}
+
+/* new ui*/
+.main_left, .siderbar_right, .main_right, .siderbar_left {
+    float: left;
+}
+.main_left {
+    width: 570px;
+    margin-right: 30px;
+}
+.siderbar_right {
+    width: 240px;
+    margin-right: 0px;
+}
+.main_right {
+    width: 510px;
+    margin-right: 0px;
+}
+.siderbar_left {
+    width: 300px;
+    margin-right: 30px;
+}

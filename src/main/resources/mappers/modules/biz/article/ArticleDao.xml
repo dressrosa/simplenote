@@ -1,0 +1,114 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.xiaoyu.modules.biz.article.dao.ArticleDao">
+	<sql id="Base_Column_List">
+		a.id as id,
+		a.user_id as userId,
+		a.title as title,
+		a.content as content,
+		a.create_date as createDate,
+		a.update_date as updateDate,
+		a.del_flag as delFlag
+	</sql>
+
+	<select id="get" resultType="Article" parameterType="Article">
+		select
+		<include refid="Base_Column_List" />
+		from biz_article as a
+		where a.id = #{id} and a.del_flag=0
+	</select>
+	
+	<!-- 分页查询用户信息 -->
+	<select id="findByList" resultType="Article" parameterType="Article">
+		select
+		<include refid="Base_Column_List" />
+		from biz_article as a where a.del_flag=0
+	</select>
+	
+	<delete id="delete" parameterType="Article">
+		update biz_article set
+		del_flag=1
+		where id = #{id}
+	</delete>
+
+
+	<insert id="insert" parameterType="Article">
+		insert into biz_article
+		<trim prefix="(" suffix=")" suffixOverrides=",">
+			<if test="id != null">
+				id,
+			</if>
+			<if test="userId != null">
+				user_id,
+			</if>
+			<if test="title != null">
+				title,
+			</if>
+			<if test="createDate != null">
+				create_date,
+			</if>
+			<if test="updateDate != null">
+				update_date,
+			</if>
+			<if test="delFlag != null">
+				del_flag,
+			</if>
+			<if test="content != null">
+				content,
+			</if>
+		</trim>
+		<trim prefix="values (" suffix=")" suffixOverrides=",">
+			<if test="id != null">
+				#{id},
+			</if>
+			<if test="userId != null">
+				#{userId},
+			</if>
+			<if test="title != null">
+				#{title},
+			</if>
+			<if test="createDate != null">
+				#{createDate},
+			</if>
+			<if test="updateDate != null">
+				#{updateDate},
+			</if>
+			<if test="delFlag != null">
+				#{delFlag},
+			</if>
+			<if test="content != null">
+				#{content},
+			</if>
+		</trim>
+	</insert>
+
+
+	<update id="update" parameterType="Article">
+		update biz_article
+		<set>
+			<if test="userId != null">
+				user_id = #{userId},
+			</if>
+			<if test="title != null">
+				title = #{title},
+			</if>
+			<if test="createDate != null">
+				create_date = #{createDate},
+			</if>
+			<if test="updateDate != null">
+				update_date = #{updateDate},
+			</if>
+			<if test="delFlag != null">
+				del_flag = #{delFlag},
+			</if>
+			<if test="content != null">
+				content = #{content},
+			</if>
+		</set>
+		where id = #{id}
+	</update>
+	
+<select id="isExist" parameterType="Article" resultType="java.lang.Integer">
+		select count(*) from biz_article where id=#{id} and del_flag=0
+	</select>
+</mapper>

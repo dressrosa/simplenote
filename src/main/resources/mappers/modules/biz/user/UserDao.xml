@@ -1,0 +1,75 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.xiaoyu.modules.biz.user.dao.UserDao">
+
+	<sql id="columns">
+		a.id as id,
+		a.description as description,
+		a.create_date as createDate,
+		a.update_date as updateDate,
+		a.del_flag as delFlag,
+		a.name as name,
+		a.img as img
+	</sql>
+
+	<sql id="userJoins">
+	</sql>
+
+
+	<!-- 根据登录名查询用户 -->
+	<select id="get" resultType="User" parameterType="User">
+		select
+		<include refid="columns" />
+		from biz_user as a
+		where a.id=#{id} and a.del_flag=0
+	</select>
+
+	<!-- 分页查询用户信息 -->
+	<select id="findByList" resultType="User" parameterType="User">
+		select
+		a.id as id,
+		a.description as description,
+		date_format(a.create_date,'%Y-%m-%d') as createDate,
+		a.update_date as updateDate,
+		a.del_flag as delFlag,
+		a.name as name,
+		a.img as img
+		from biz_user as a where a.del_flag=0
+	</select>
+
+	<!-- 插入用户 -->
+	<insert id="insert" parameterType="User">
+		insert into biz_user
+		(id,name,img,description,create_date,update_date,del_flag)
+		values(#{id},#{name},#{img},#{createDate},#{updateDate},#{delFlag})
+	</insert>
+
+	<!-- 更新用户 -->
+	<update id="update">
+		update biz_user
+		set 
+		<if test="name != null">
+		name=#{name},
+		</if>
+		<if test="description != null">
+		description=#{description},
+		</if>
+		<if test="img != null">
+		img=#{img},
+		</if>
+		<if test="updateDate != null">
+		update_date=#{updateDate}		
+		</if>
+		where id=#{id} and del_flag=0
+	</update>
+
+
+
+	<!-- 逻辑删除用户 -->
+	<update id="delete">
+		delete from biz_user where id=#{id}
+	</update>
+	<select id="isExist" parameterType="User" resultType="java.lang.Integer">
+		select count(*) from biz_user where id=#{id} and del_flag=0
+	</select>
+</mapper>
