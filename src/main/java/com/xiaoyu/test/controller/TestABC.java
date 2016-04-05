@@ -1,117 +1,116 @@
 /**
  * 不要因为走了很远就忘记当初出发的目的:whatever happened,be yourself
- */ 
+ */
 package com.xiaoyu.test.controller;
-import java.util.ArrayDeque;
+
 import java.util.Date;
-import java.util.Deque;
-import java.util.concurrent.TimeUnit;
+import java.util.LinkedList;
+import org.apache.commons.lang3.RandomUtils;
+import com.xiaoyu.common.utils.TimeUtils;
 
-import org.springframework.security.access.intercept.RunAsManager;
-
-/**
- * @author xiaoyu
- *2016年4月3日
+/**简单的生产消费者
+ * @author xiaoyu 2016年4月3日
  */
 public class TestABC {
-	
+
 	public static void main(String args[]) {
-		Deque<Event> deque = new ArrayDeque<Event>();
-		WriterTask w = new WriterTask(deque);
-		for(int i =0 ; i < 3; i++) {
-			Thread t = new Thread(w);
-			t.start();
-		}
-		Thread a = new Thread(new CleanerTask(deque));
-		a.start();
+		LinkedList<Object> list = new LinkedList<>();
+		Consumer con = new Consumer(list);
+		Producer pro = new Producer(list);
+		Thread tc = new Thread(con);
+		Thread tp = new Thread(pro);
+		tp.start();
+
+		tc.start();
+
 	}
+
 }
 
-class Event {
-	private Date date;
-	private String event;
-	public Date getDate() {
-		return date;
-	}
-	public void setDate(Date date) {
-		this.date = date;
-	}
-	public String getEvent() {
-		return event;
-	}
-	public void setEvent(String event) {
-		this.event = event;
-	}
-	
-	
-}
+class Consumer implements Runnable {
 
-class WriterTask implements Runnable {
+	private LinkedList<Object> list;
+
+	public Consumer(LinkedList<Object> list) {
+		this.list = list;
+	}
 
 	@Override
 	public void run() {
 		// TODO Auto-generated method stub
-		for(int i = 1; i< 100; i++) {
-			Event event = new Event();
-			event.setDate(new Date());
-			event.setEvent(String.
-					format("the thread %s has generated"
-							+ "an event" , Thread.currentThread().getId()));
-			deque.addFirst(event);
+		while (true) {
+			consume();
+		}
+
+	}
+
+	private synchronized void consume() {
+		while (list.size() == 0) {
 			try {
-				TimeUnit.SECONDS.sleep(1);
+				System.out.println("暂无进货,请等待!!");
+				wait(1000);
 			} catch (InterruptedException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
-			
+		}
+		Object o = list.remove();
+		System.out.println("消费了一个商品:"
+				+ TimeUtils.format((Date) o, "yyyy-MM-dd HH:mm:ss") + " 当前存货:"
+				+ list.size());
+		notifyAll();
+		try {
+			Thread.sleep(1000);
+		} catch (InterruptedException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
 		}
 	}
-	
-	private Deque<Event> deque;
-	public WriterTask (Deque<Event> deque) {
-		this.deque = deque;
-	}
-	
-}
-	
- class CleanerTask implements Runnable {
 
-	private Deque<Event> deque;
-	
-	public CleanerTask(Deque<Event> deque) {
-		this.deque = deque;
-		Thread.currentThread().setDaemon(true);
+}
+
+class Producer implements Runnable {
+
+	private LinkedList<Object> list;
+
+	public Producer(LinkedList<Object> list) {
+		this.list = list;
 	}
+
 	@Override
 	public void run() {
-		// TODO Auto-generated method stub
-		while(true) {
-			Date date = new Date();
-			clean(date);
+		while (true) {
+			produce();
 		}
 	}
-	private void clean(Date date) {
+
+	private synchronized void produce() {
 		// TODO Auto-generated method stub
-		long difference;
-		boolean delete;
-		if(deque.size() == 0) {
-			return ;
-		}
-		delete = false;
-		
-		do {
-			Event e = deque.getLast();
-			difference = date.getTime() - e.getDate().getTime();
-			if(difference > 5000 || deque.size() > 10) {
-				System.out.printf("Cleaner:%s\n",e.getEvent());
-				deque.removeLast();
-				delete = true;
+		if (list.size() == 10) {
+			try {
+				System.out.println("生产达到了10个,放假5天............");
+				wait(5000);
+			} catch (InterruptedException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
 			}
-		}while (difference > 5000 || deque.size() > 10);
-		if(delete) {
-			System.out.println("Cleaner:Size of the queue"+deque.size());
+		}
+		System.out.println("开始投入生产:");
+		Date d = new Date();
+		list.add(d);
+		System.out.println("生产了一个:"
+				+ TimeUtils.format((d),
+						"yyyy-MM-dd HH:mm:ss" + " 当前存货:" + list.size()));
+		System.out.println("通知消费");
+		notifyAll();
+		try {
+			int a = RandomUtils.nextInt(1, 10);
+			Thread.sleep(a * 1000);
+			System.out.println("睡眠:" + a + "秒");
+		} catch (InterruptedException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
 		}
 	}
-	
+
 }
