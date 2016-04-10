@@ -14,6 +14,7 @@
 <meta http-equiv="Pragma" content="no-cache">
 <link href="/wuzhi/common.css" rel="stylesheet" type="text/css">
 <script src="/jquery/jquery-1.12.2.min.js" type="text/javascript"></script>
+<script type="text/javascript" src="/xiaoyu/jquerysession.js"></script>
 <style type="text/css">
 
 </style>
@@ -43,9 +44,10 @@
 			</div>
 
 			<div class="prepend-10 span-4 last" style="text-align: right;">
-				<a class="header_w" style="padding-right: 15px;"
-					href="#">注册</a> <a class="header_w"
-					style="padding-right: 0px;" href="/html/app/webLogin.html">登录</a>
+				<a class="header_w" style="padding-right: 15px;" href="#" id="register">注册</a> 
+				<a class="header_w" style="padding-right: 0px;" href="/html/app/webLogin.html" id="login">登录</a>
+				<a class="header_w" style="padding-right: 15px; display: none;" id="nickName" href="#"></a>
+				<a class="header_w" style="padding-right: 0px; display:none;" href="#" id="logout">退出</a>
 			</div>
 		</div>
 	</div>
@@ -94,10 +96,18 @@
 	</div>
 
 </body>
-<script src="/jquery/jquery-1.12.2.min.js" type="text/javascript"></script>
-<script>
-function showContent(item) {
-	alert(item);
-};
+
+<script type="text/javascript">
+	function showContent(item) {
+		alert(item);
+	};
+	var userInfo = JSON.parse($.session.get('user'));
+	if (userInfo != null && userInfo != 'undefined') {
+		$("#nickName").html(userInfo.nickName).attr("href",
+				'/html/app/userDetail.html').css("display", "");
+		$("#register").css("display", "none");
+		$("#login").css("display", "none");
+		$("#logout").css("display", "");
+	}
 </script>
 </html>

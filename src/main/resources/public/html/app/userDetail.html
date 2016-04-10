@@ -57,10 +57,16 @@
 	</div>
 
 </body>
+
 <script type="text/javascript">
 var userInfo  = JSON.parse($.session.get('user'));
-$("#nickName").html(userInfo.nickName);
-$("#description").html(userInfo.description);
-$("#img").attr("src",userInfo.img);
+if(userInfo != null&&userInfo!='undefined') {
+	$("#nickName").html(userInfo.nickName);
+	$("#description").html(userInfo.description);
+	$("#img").attr("src",userInfo.img);
+}
+else {
+	alert("呵呵");
+}
 </script>
 </html>

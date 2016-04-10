@@ -1,7 +1,7 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
 	pageEncoding="UTF-8"%>
 <%@ include file="/WEB-INF/jsp/common/head.jsp"%>
-<title>${user.name}</title>
+<title>${user.nickName}</title>
 </head>
 <body>
 	<%@ include file="/WEB-INF/jsp/common/container"%>
