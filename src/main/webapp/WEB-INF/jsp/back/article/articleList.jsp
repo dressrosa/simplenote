@@ -54,7 +54,7 @@
 
 										</div>
 										<div class="sponsorData" id="${article.user.id }">
-											<dt>${article.user.name}</dt>
+											<dt>${article.user.nickName}</dt>
 											<span><img src="${article.user.img}"
 												class="img-circle" height="160px" width="160px" /></span>
 											<p>${article.user.description }</p>

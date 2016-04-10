@@ -15,5 +15,7 @@ import com.xiaoyu.modules.biz.user.entity.User;
  */
 @Repository
 public interface UserDao extends BaseDao<User> {
+
+	public User getForLogin(User user);
 	
 }

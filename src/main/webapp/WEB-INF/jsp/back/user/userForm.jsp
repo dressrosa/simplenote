@@ -17,7 +17,7 @@
 								<h3 class="panel-title">信息修改</h3>
 							</div>
 							<div class="panel-body">
-								<label>姓名</label> <input value="${user.name}" type="text"
+								<label>姓名</label> <input value="${user.nickName}" type="text"
 									class="form-control" id="name" name="name" placeholder="请输入姓名">
 								<!-- <span class="help-block">这里填写帮助信息.</span> -->
 							</div>

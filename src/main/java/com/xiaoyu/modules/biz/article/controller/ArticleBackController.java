@@ -16,11 +16,14 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.github.pagehelper.Page;
 import com.google.common.collect.Lists;
 import com.xiaoyu.common.utils.EhCacheUtil;
 import com.xiaoyu.modules.biz.article.entity.Article;
+import com.xiaoyu.modules.biz.article.entity.ArticleAttr;
+import com.xiaoyu.modules.biz.article.service.ArticleAttrService;
 import com.xiaoyu.modules.biz.article.service.ArticleService;
 import com.xiaoyu.modules.biz.user.entity.User;
 import com.xiaoyu.modules.biz.user.service.UserService;
@@ -40,6 +43,8 @@ public class ArticleBackController {
 	@Autowired
 	private UserService userService;
 
+	@Autowired
+	private ArticleAttrService articleAttrService;
 	/**
 	 * 获取文章详情
 	 * 
@@ -150,4 +155,12 @@ public class ArticleBackController {
 		return "back/article/articleList";
 	}
 
+	@RequestMapping(value="changeView",method=RequestMethod.POST)
+	@ResponseBody
+	public String changeView(String id) {
+		ArticleAttr attr = new ArticleAttr();
+		attr.setArticleId(id);
+		int total = this.articleAttrService.updateReadNum(attr);
+		return total+"";
+	}
 }

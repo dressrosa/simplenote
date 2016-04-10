@@ -22,9 +22,9 @@
 					<c:forEach items="${list}" var="user">
 						<tr>
 							<td><a onclick="getDetail('get',${user.id})">
-							${user.name}</td>
+							${user.nickName}</td>
 							</a>
-							<td><a href="${user.img}" title="${user.name}" data-jbox-image="gallery1">
+							<td><a href="${user.img}" title="${user.nickName}" data-jbox-image="gallery1">
 							<img src="${user.img}" id="img" name="img"
 								class="img-circle" width="50px;" height="50px">
 							</a>

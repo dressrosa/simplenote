@@ -4,12 +4,13 @@
 
 	<sql id="columns">
 		a.id as id,
+		a.nick_name as nickName,
+		a.login_name as loginName,
+		a.img as img,
 		a.description as description,
 		a.create_date as createDate,
 		a.update_date as updateDate,
-		a.del_flag as delFlag,
-		a.name as name,
-		a.img as img
+		a.del_flag as delFlag
 	</sql>
 
 	<sql id="userJoins">
@@ -21,18 +22,26 @@
 		select
 		<include refid="columns" />
 		from biz_user as a
-		where a.id=#{id} and a.del_flag=0
+		where 
+		a.del_flag=0
+		<if test="id != null">
+		and a.id=#{id}
+		</if>
+		<if test="loginName != null">
+		and a.login_name=#{loginName}
+		</if>
 	</select>
 
 	<!-- 分页查询用户信息 -->
 	<select id="findByList" resultType="User" parameterType="User">
 		select
 		a.id as id,
+		a.nick_name as nickName,
 		a.description as description,
 		date_format(a.create_date,'%Y-%m-%d') as createDate,
 		a.update_date as updateDate,
 		a.del_flag as delFlag,
-		a.name as name,
+		a.login_name as name,
 		a.img as img
 		from biz_user as a where a.del_flag=0
 	</select>
@@ -40,16 +49,16 @@
 	<!-- 插入用户 -->
 	<insert id="insert" parameterType="User">
 		insert into biz_user
-		(id,name,img,description,create_date,update_date,del_flag)
-		values(#{id},#{name},#{img},#{createDate},#{updateDate},#{delFlag})
+		(id,nick_name,login_name,img,description,create_date,update_date,del_flag)
+		values(#{id},#{nickName},#{loginName},#{img},#{createDate},#{updateDate},#{delFlag})
 	</insert>
 
 	<!-- 更新用户 -->
 	<update id="update">
 		update biz_user
 		set 
-		<if test="name != null">
-		name=#{name},
+		<if test="nickName != null">
+		nick_name=#{nickName},
 		</if>
 		<if test="description != null">
 		description=#{description},
@@ -67,9 +76,35 @@
 
 	<!-- 逻辑删除用户 -->
 	<update id="delete">
-		delete from biz_user where id=#{id}
+		update biz_user set del_flag=1 where id=#{id}
 	</update>
 	<select id="isExist" parameterType="User" resultType="java.lang.Integer">
-		select count(*) from biz_user where id=#{id} and del_flag=0
+	select count(*) from biz_user as a
+	where
+	1=1
+	<if test="id != null">
+		and a.id=#{id}
+	</if>
+	<if test="loginName != null">
+		and a.login_name=#{loginName}
+	</if>
+	and a.del_flag=0
+	</select>
+	
+	
+	<!-- 根据登录名查询用户 -->
+	<select id="getForLogin" resultType="User" parameterType="User">
+		select
+		<include refid="columns" />
+		,a.password as password
+		from biz_user as a
+		where 
+		a.del_flag=0
+		<if test="id != null">
+		and a.id=#{id}
+		</if>
+		<if test="loginName != null">
+		and a.login_name=#{loginName}
+		</if>
 	</select>
 </mapper>

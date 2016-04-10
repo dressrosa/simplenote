@@ -7,6 +7,7 @@ import java.io.IOException;
 
 import javax.servlet.http.HttpServletRequest;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -22,6 +23,8 @@ import com.xiaoyu.modules.biz.user.entity.User;
 @Transactional(readOnly=true)
 public class UserService extends BaseService<UserDao,User> {
 
+	@Autowired
+	private UserDao userDao;
 //	@Transactional(readOnly=false)
 //	public int saveUser(User user, HttpServletRequest request) {
 //		String path = null;
@@ -46,6 +49,10 @@ public class UserService extends BaseService<UserDao,User> {
 		}
 		user.setImg(path);
 		return super.update(user);
+	}
+
+	public User getForLogin(User user) {
+		return this.userDao.getForLogin(user);
 	}
 
 	

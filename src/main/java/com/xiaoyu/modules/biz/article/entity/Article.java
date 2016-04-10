@@ -21,9 +21,21 @@ public class Article extends BaseEntity{
 	private String title;
 	private String content;
 	private User user;
+	private Integer readNum;
+	private Integer commentNum;
 	
-	
-	
+	public Integer getReadNum() {
+		return readNum;
+	}
+	public void setReadNum(Integer readNum) {
+		this.readNum = readNum;
+	}
+	public Integer getCommentNum() {
+		return commentNum;
+	}
+	public void setCommentNum(Integer commentNum) {
+		this.commentNum = commentNum;
+	}
 	public User getUser() {
 		return user;
 	}

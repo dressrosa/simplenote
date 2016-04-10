@@ -127,7 +127,42 @@ function uploadFile() {
 	});
 	myModal.open();
 }
-
+/**
+ *login 
+ * */
+function login(item) {
+	$.ajax({
+		cache : false,
+		type : "POST",
+		url : item,
+		data : $('#xyForm').serialize(),
+		async : false,
+		error : function(data) {
+			new jBox('Notice', {
+				color : 'red',
+				animation: 'tada',
+				content :'服务器错误'
+			});
+			return false;
+		},
+		success : function(data) {
+			var jsonObj = jQuery.parseJSON(data);
+			if (jsonObj.message == 'success') {
+				//$.session.set('user',jsonObj.user,false);
+				$.session.set('user',JSON.stringify(jsonObj.user),false);
+				window.location.href="/html/app/userDetail.html";
+				return true;
+			} else {
+				new jBox('Notice', {
+					color : 'red',
+					animation: 'tada',
+					content :  jsonObj.message
+				});
+				return false;
+			}
+		}
+	});
+};
 //tool function
 
 /**时间转化

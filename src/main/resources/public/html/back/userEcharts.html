@@ -28,7 +28,7 @@
 			option = null;
 			option = {
 				title : {
-					text : '统计图表',
+					//text : '统计图表',
 					subtext : '用户信息'
 				},
 				tooltip : {
@@ -38,7 +38,7 @@
 					data : [ '注册时间','id号' ]
 				},
 				toolbox : {
-					show : false,
+					show : true,
 					feature : {
 						dataZoom : {},
 						dataView : {
@@ -52,23 +52,27 @@
 					}
 				},
 				xAxis : {
+					name:'注册时间',
+					nameLocation:'end',
 					type : 'category',
 					boundaryGap : false,
-					// data :  dateData
-					data : nameData
+					data :  dateData
+					
 				},
 				yAxis : {
+					name:'id',
+					nameLocation:'end',
 					type : 'value',
 					axisLabel : {
 						formatter : '{value}'
 					} 
 					
 				},
-				series : [ {
-					name : '注册时间',
+				series : [/* {
+					name : '名字',
 					type : 'line',
-					data : dateData//[11, 11, 15, 13, 12, 13, 10], 
-					/* markPoint : {
+					data : nameData//[11, 11, 15, 13, 12, 13, 10], 
+					 markPoint : {
 						data : [ {
 							type : 'max',
 							name : '最大值'
@@ -82,8 +86,8 @@
 				    data: [
 				        {type: 'average', name: 'å¹³åå¼'}
 				    ]
-				}*/
-					}, {
+				}
+					},*/ {
 					name : 'id',
 					type : 'line',
 					data : idData//[1, -2, 2, 5, 3, 2, 0],
