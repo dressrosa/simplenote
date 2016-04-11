@@ -82,11 +82,13 @@
 
         get: function(key)
         {
-            return window.sessionStorage.getItem(key) || this._getFallback(key);
+            return decodeURIComponent(window.sessionStorage.getItem(key))|| decodeURIComponent(this._getFallback(key));
         },
 
         set: function(key, value, onceOnly)
         {
+        	/*solve chinese character cannot set to cookie */
+        	value  = encodeURIComponent(value);
             try {
                 window.sessionStorage.setItem(key, value);
             } catch (e) {}

@@ -22,7 +22,7 @@
 		<connectionSource
 			class="ch.qos.logback.core.db.DriverManagerConnectionSource">
 			<driverClass>com.mysql.jdbc.Driver</driverClass>
-			<url>jdbc:mysql://localhost:3306/xiaoyu?useUnicode=true</url>
+			<url>jdbc:mysql://localhost:3306/xiaoyu?useSSL=false</url><!--配置useSSL=false用于SSL未提供的刷屏WARN  -->
 			<user>root</user>
 			<password>root</password>
 		</connectionSource>
@@ -31,14 +31,15 @@
 	<logger name="org.springframework" level="WARN" />
 	<logger name="com.opensymphony" level="WARN" />
 	<logger name="org.apache" level="WARN" />
+
 	<!-- 默认级别和输出 -->
 	<root level="DEBUG">
 		<!-- <appender-ref ref="FILE" /> -->
 		<appender-ref ref="STDOUT" />
-		<appender-ref ref="DB" /> 
+		<appender-ref ref="DB" />
 	</root>
 	<!-- 指定包下的log级别 additivity设置不向上传递 -->
-	<logger name="controller" level="DEBUG" additivity="false" />
+	<logger name="com.xiaoyu.modules.biz" level="DEBUG" additivity="false" />
 
 	<!--生产环境 -->
 	<!-- <appender name="FILE" class="ch.qos.logback.core.rolling.RollingFileAppender"> 

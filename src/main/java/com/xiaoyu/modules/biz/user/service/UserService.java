@@ -52,7 +52,11 @@ public class UserService extends BaseService<UserDao,User> {
 	}
 
 	public User getForLogin(User user) {
-		return this.userDao.getForLogin(user);
+		User u = this.userDao.getForLogin(user);
+		if(u == null) {
+			return user;
+		}
+		return u;
 	}
 
 	

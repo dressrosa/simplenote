@@ -86,7 +86,6 @@ public class ArticleBackController {
 		Page<Article> page = this.articleService.findByPage(new Article(), 1,
 				12);
 		List<Article> list = page.getResult();
-		User u = new User();
 		for (Article a : list) {
 //			String temp=null;
 //			try {
@@ -96,7 +95,7 @@ public class ArticleBackController {
 //				// TODO Auto-generated catch block
 //				e.printStackTrace();
 //			}
-			
+			User u = new User();
 			a.setContent(a.getContent().substring(0, 250));
 			u.setId(a.getUserId());
 			u = this.userService.get(u);

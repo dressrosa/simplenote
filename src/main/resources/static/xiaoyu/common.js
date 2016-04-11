@@ -131,6 +131,16 @@ function uploadFile() {
  *login 
  * */
 function login(item) {
+	if($("#password").val()==''||$("#loginName").val()=='') {
+		$('.tooltip').jBox('Tooltip',{
+			content:'姓名和密码都不能为空（*＾-＾*）',
+			attach:$("#xyForm"),
+			closeOnClick:'body',
+			color:'red',
+			target:$("#xyForm")
+		}).open();
+		return;
+	}
 	$.ajax({
 		cache : false,
 		type : "POST",
