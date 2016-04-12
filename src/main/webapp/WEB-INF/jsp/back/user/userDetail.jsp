@@ -2,6 +2,7 @@
 	pageEncoding="UTF-8"%>
 <%@ include file="/WEB-INF/jsp/common/head.jsp"%>
 <title>${user.nickName}</title>
+<link href="/wuzhi/common.css" rel="stylesheet" type="text/css">
 </head>
 <body>
 	<%@ include file="/WEB-INF/jsp/common/container"%>

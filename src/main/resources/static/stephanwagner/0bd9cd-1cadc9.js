@@ -1,12 +1,12 @@
 var images = [ {
-	text : 'Fraser Island, Australia, August 2005',
+	text : '海贼王1',
 	src : '/xiaoyu/slideshow/img/1.jpg'
 }, {
-	text : 'Whitsunday Islands, Australia, September 2005',
+	text : '海贼王2',
 	src : '/xiaoyu/slideshow/img/2.jpg'
 },  {
-	text : 'Changdeokgung Palace, South Korea, April 2010',
-	src : '/xiaoyu/slideshow/img/2.jpg'
+	text : '海贼王3',
+	src : '/xiaoyu/slideshow/img/3.png'
 }, ];
 var interval = 6000;
 var duration_image = 800;
