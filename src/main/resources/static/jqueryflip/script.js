@@ -48,7 +48,7 @@ $('.sponsorFlip').bind("dblclick",function(){
 		}
 		else
 		{
-			window.location.href="/back/user/get?id="+elem[0].id;
+			window.location.href="/back/user/get?id="+elem.attr('name');
 		}
 	});
 	

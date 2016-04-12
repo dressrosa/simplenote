@@ -3,8 +3,8 @@
 	pageEncoding="UTF-8"%>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
 <%@ taglib prefix="form" uri="http://www.springframework.org/tags/form"%>
-<%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
-<%@ taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions" %>
+<%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt"%>
+<%@ taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions"%>
 <link rel="icon" type="image/ico" href="/xiaoyu/img/favicon.ico">
 <meta name="robots" content="nofollow">
 <meta name="robots" content="noarchive">
@@ -14,9 +14,9 @@
 <meta http-equiv="Pragma" content="no-cache">
 <link href="/wuzhi/common.css" rel="stylesheet" type="text/css">
 <script src="/jquery/jquery-1.12.2.min.js" type="text/javascript"></script>
+<script src="/xiaoyu/common.js" type="text/javascript"></script>
 <script type="text/javascript" src="/xiaoyu/jquerysession.js"></script>
 <style type="text/css">
-
 </style>
 </head>
 <script>
@@ -44,10 +44,13 @@
 			</div>
 
 			<div class="prepend-10 span-4 last" style="text-align: right;">
-				<a class="header_w" style="padding-right: 15px;" href="#" id="register">注册</a> 
-				<a class="header_w" style="padding-right: 0px;" href="/html/app/webLogin.html" id="login">登录</a>
-				<a class="header_w" style="padding-right: 15px; display: none;" id="nickName" href="#"></a>
-				<a class="header_w" style="padding-right: 0px; display:none;" href="#" id="logout">退出</a>
+				<a class="header_w" style="padding-right: 15px;display: none;" href="#"
+					id="register">注册</a> <a class="header_w"
+					style="padding-right: 0px;display: none;" href="/html/app/webLogin.html"
+					id="login">登录</a> <a class="header_w"
+					style="padding-right: 15px; display: none;" id="nickName" href="#"></a>
+				<a class="header_w" style="padding-right: 0px; display: none;"
+					href="#" id="logout" onclick="logout()">退出</a>
 			</div>
 		</div>
 	</div>
@@ -67,24 +70,29 @@
 		<div class="main_right">
 			<div
 				style="color: #909090; margin-bottom: 15px; border-bottom: 2px #8FA5AB solid; height: 22px;">
-				<span style="font-size: 16px; line-height: 20px;"><fmt:formatDate value="${article.createDate}"  pattern="yyyy-MM-dd"/></span>
-				<span style="font-size: 16px; line-height: 20px;">浏览量:<strong id="readNum">${article.readNum}</strong></span>
+				<span style="font-size: 16px; line-height: 20px;"><fmt:formatDate
+						value="${article.createDate}" pattern="yyyy-MM-dd" /></span> <span
+					style="font-size: 16px; line-height: 20px;">浏览量:<strong
+					id="readNum">${article.readNum}</strong></span>
 			</div>
 			<div class="note_each">
 				<!-- <div class="note_time">16:42</div> -->
 				<div class="note_content">${article.content}</div>
 			</div>
 			<div class="note_each">
-				<div class="note_time"><fmt:formatDate value="${article.createDate}"  pattern="HH:mm:ss"/></div>
-				
+				<div class="note_time">
+					<fmt:formatDate value="${article.createDate}" pattern="HH:mm:ss" />
+				</div>
+
 				<div class="note_content">${article.user.description }</div>
 			</div>
 		</div>
 		<div class="note_username">-- ${article.user.nickName}</div>
 	</div>
-<div class="footer container">
- <span class="span-13" onclick="showContent('${article.id}')" id="commentArea">查看评论</span>
-</div>
+	<div class="footer container">
+		<span class="span-13" onclick="showContent('${article.id}')"
+			id="commentArea">查看评论</span>
+	</div>
 	<div class="footer container">
 		<hr class="hr-10">
 		<div class="copyright span-5 append-9">
@@ -108,6 +116,9 @@
 		$("#register").css("display", "none");
 		$("#login").css("display", "none");
 		$("#logout").css("display", "");
+	}else {
+		$("#login").css("display", "");
+		$("#register").css("display", "");
 	}
 </script>
 </html>

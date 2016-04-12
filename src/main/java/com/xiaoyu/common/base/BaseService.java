@@ -34,14 +34,14 @@ public abstract class BaseService<D extends BaseDao<T>,T extends BaseEntity> {
 	 */
 	public T get(T t) {
 		T temp = null;
-		if (this.isExist(t)) {
+		//if (this.isExist(t)) {
 			temp = this.tDao.get(t);
 			if (null == temp) {
 				return t;
 			}
 			return temp;
-		}
-		return t;
+		//}
+		//return t;
 	}
 
 	/**

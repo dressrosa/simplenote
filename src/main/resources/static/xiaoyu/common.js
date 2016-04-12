@@ -1,4 +1,7 @@
 
+
+
+
 var confirmjBox;
 $(document).ready(function() {
 	confirmjBox = new jBox('Confirm',{
@@ -130,15 +133,27 @@ function uploadFile() {
 /**
  *login 
  * */
+var num = 0;
 function login(item) {
+	var tip = '姓名和密码都不能为空（*＾-＾*）';
 	if($("#password").val()==''||$("#loginName").val()=='') {
+		if(num >3&& num < 6) {
+			tip='能不能认真点输,老是不对←_←';
+		}
+		else if(num >= 6 && num <10) {
+			tip='我严重怀疑你到底有没有注册';
+		}
+		else if(num>=10) {
+			tip='我认为你在玩我,我要保留对你的爱'
+		}
 		$('.tooltip').jBox('Tooltip',{
-			content:'姓名和密码都不能为空（*＾-＾*）',
+			content:tip,
 			attach:$("#xyForm"),
 			closeOnClick:'body',
 			color:'red',
 			target:$("#xyForm")
 		}).open();
+		num++;
 		return;
 	}
 	$.ajax({
@@ -158,7 +173,14 @@ function login(item) {
 		success : function(data) {
 			var jsonObj = jQuery.parseJSON(data);
 			if (jsonObj.message == 'success') {
-				//$.session.set('user',jsonObj.user,false);
+				//record user ip
+				$.ajax({
+					type : 'POST',
+					url : '/app/user/loginRecord',
+					data : {
+						userId:jsonObj.user.id
+					}
+				});
 				$.session.set('user',JSON.stringify(jsonObj.user),false);
 				window.location.href="/html/app/userDetail.html";
 				return true;
@@ -173,6 +195,12 @@ function login(item) {
 		}
 	});
 };
+/*logout*/
+function logout() {
+	$.session.remove('user');
+	window.location.href = window.location.href.replace(/#/g,''); 
+} 
+
 //tool function
 
 /**时间转化

@@ -36,6 +36,7 @@ import com.xiaoyu.modules.biz.user.service.UserService;
 @Controller
 @EnableAutoConfiguration
 @RequestMapping(value = "back/article")
+
 public class ArticleBackController {
 
 	@Autowired
@@ -87,14 +88,6 @@ public class ArticleBackController {
 				12);
 		List<Article> list = page.getResult();
 		for (Article a : list) {
-//			String temp=null;
-//			try {
-//				temp = new String(a.getContent().getBytes(),"ISO-8859-1");
-//				temp =  new String(temp.substring(0, 260).getBytes(),"IOS-8859-1");
-//			} catch (UnsupportedEncodingException e) {
-//				// TODO Auto-generated catch block
-//				e.printStackTrace();
-//			}
 			User u = new User();
 			a.setContent(a.getContent().substring(0, 250));
 			u.setId(a.getUserId());

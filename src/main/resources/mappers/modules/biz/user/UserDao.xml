@@ -50,7 +50,7 @@
 	<insert id="insert" parameterType="User">
 		insert into biz_user
 		(id,nick_name,login_name,img,description,create_date,update_date,del_flag)
-		values(#{id},#{nickName},#{loginName},#{img},#{createDate},#{updateDate},#{delFlag})
+		values(#{id},#{nickName},#{loginName},#{img},#{description},#{createDate},#{updateDate},#{delFlag})
 	</insert>
 
 	<!-- 更新用户 -->

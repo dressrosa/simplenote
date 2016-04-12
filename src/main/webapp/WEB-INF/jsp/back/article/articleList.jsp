@@ -7,6 +7,7 @@
 <script src="/jqueryflip/jquery-ui.min.js" type="text/javascript"></script>
 <script src="/jqueryflip/jquery.flip.min.js" type="text/javascript"></script>
 <script src="/jqueryflip/script.js" type="text/javascript"></script>
+<script src="/xiaoyu/common.js" type="text/javascript"></script>
 <link rel="stylesheet" type="text/css" href="/jqueryflip/flip.css" />
 <style>
 </style>
@@ -47,7 +48,7 @@
 							<c:forEach begin="0" end="3" var="article" items="${child}">
 								<dl>
 									<div class="sponsor" title="点心醒梦">
-										<div class="sponsorFlip" id="${article.id}">
+										<div class="sponsorFlip" id="${article.id}" name="${article.user.id }">
 											<dt>${article.title}</dt>
 											<p>${article.content}</p>
 											<div class="g-line" style="width: 25%; margin: 25px auto;"></div>
