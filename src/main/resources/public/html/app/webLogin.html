@@ -48,7 +48,7 @@
 		style="margin: 0px auto; background: activeborder; background-image: url('/xiaoyu/img/loginbackground.jpg');">
 		<div class=""
 			style=" padding: 10px 10px 10px;margin-bottom: 20px; border: 1px solid transparent; border-radius: 4px; -webkit-box-shadow: 0 1px 1px rgba(0, 0, 0, .05); box-shadow: 0 1px 1px rgba(0, 0, 0, .05);">
-			<form id="xyForm" role="form" modelAttribute="user" action="" 
+			<form id="xyForm" role="form" modelAttribute="user" action="/back/user/login" 
 				method="post" style="width: 20%; margin: 0px auto;">
 
 				<div class="input-group">
@@ -64,9 +64,9 @@
 					<span class="input-group-addon" onclick="showPwd()">可见</span>
 				</div><br>
 				<ul class="list-group">
-					<input type="button" value="登录"
+					<input type="submit" value="登录"
 						class="btn btn-primary btn-large btn-block"
-						onclick="login('/app/user/loginWeb')" />
+						 />
 						<span class="tooltip"></span>
 				</ul>
 		</div>

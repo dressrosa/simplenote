@@ -70,7 +70,7 @@ public class Md5Utils {
 	}
 
 	public static void main(String[] args) {
-		System.out.println(Md5Utils.MD5("123456"));
+		System.out.println(Md5Utils.MD5("888888"));
 		System.out.println(Md5Utils.MD5("加密"));
 	}
 }

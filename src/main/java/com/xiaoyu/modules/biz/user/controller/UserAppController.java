@@ -9,9 +9,9 @@ import java.util.Map;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
-import javax.websocket.Session;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.autoconfigure.web.ServerProperties.Session;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -39,6 +39,15 @@ public class UserAppController {
 	private UserService userService;
 	
 	
+	/**ajax
+	 *@author xiaoyu
+	 *@param request
+	 *@param response
+	 *@param loginName
+	 *@param password
+	 *@return
+	 *@time 2016年4月14日下午8:23:52
+	 */
 	@RequestMapping(value="loginWeb",method=RequestMethod.POST)
 	@ResponseBody
 	public Object loginWeb(HttpServletRequest request, HttpServletResponse response
@@ -49,6 +58,7 @@ public class UserAppController {
 			map.put("message","请按规则出牌,别想PASS");
 			return map;
 		}
+		
 		User user = new User();
 		user.setLoginName(loginName);
 		user = this.userService.getForLogin(user);
@@ -66,11 +76,15 @@ public class UserAppController {
 		map.put("message", "success");
 		map.put("code", StateConstant.SUCCESS.toString());
 		map.put("user", user);
-//		HttpSession session = request.getSession(true);
-//		session.setAttribute("user", user);
-//		session.setMaxInactiveInterval(60);
+		//登录名存入session
+		HttpSession session = request.getSession(true);
+		session.setAttribute("user_loginName", user.getLoginName());
+		session.setMaxInactiveInterval(60);
 		return map;
 	}
+	
+	
+	
 	
 	/**记录ip
 	 *@author xiaoyu
@@ -86,5 +100,26 @@ public class UserAppController {
 		record.setUserId(userId);
 		record.setLoginIp(loginIp);
 		this.userService.saveUserRecord(record);
+	}
+	
+	/**退出登陆
+	 *@author xiaoyu
+	 *@param request
+	 *@param response
+	 *@time 2016年4月14日下午7:21:06
+	 */
+	@RequestMapping(value="logout")
+	public void logout(HttpServletRequest request,HttpServletResponse response) {
+		HttpSession session  = request.getSession(false);
+		if(session != null) {
+			session.invalidate();
+		}
+		String url = response.encodeRedirectURL(request.getContextPath()+"/");
+		try {
+			response.sendRedirect(url);
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 	}
 }

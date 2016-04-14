@@ -19,21 +19,18 @@
 <style type="text/css">
 </style>
 </head>
-<script>
-	$(document).ready(function() {
+<script type="text/javascript">
+//$(document).ready(function() {
 		var item = '${article.id}';
 		$.ajax({
 			type : 'POST',
+			async : true,
 			url : '/back/article/changeView',
 			data : {
 				id : item
 			}
-		// ,
-		/* 	success : function(data) {
-				$("#readNum").html(data);
-			} */
 		});
-	});
+//	});
 </script>
 <body>
 	<div class="header">
@@ -50,7 +47,7 @@
 					id="login">登录</a> <a class="header_w"
 					style="padding-right: 15px; display: none;" id="nickName" href="#"></a>
 				<a class="header_w" style="padding-right: 0px; display: none;"
-					href="#" id="logout" onclick="logout()">退出</a>
+					 id="logout" href="/app/user/logout">退出</a>
 			</div>
 		</div>
 	</div>

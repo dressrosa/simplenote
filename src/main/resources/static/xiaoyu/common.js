@@ -181,7 +181,7 @@ function login(item) {
 						userId:jsonObj.user.id
 					}
 				});
-				$.session.set('user',JSON.stringify(jsonObj.user),false);
+				//$.session.set('user',JSON.stringify(jsonObj.user),false);
 				window.location.href="/html/app/userDetail.html";
 				return true;
 			} else {

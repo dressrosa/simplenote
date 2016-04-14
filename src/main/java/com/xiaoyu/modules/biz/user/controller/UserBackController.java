@@ -3,8 +3,11 @@
  */ 
 package com.xiaoyu.modules.biz.user.controller;
 
+import java.util.Map;
+
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
@@ -18,8 +21,12 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import com.alibaba.fastjson.JSON;
 import com.fasterxml.jackson.databind.util.JSONPObject;
 import com.github.pagehelper.Page;
+import com.google.common.collect.Maps;
+import com.xiaoyu.common.utils.StringUtils;
+import com.xiaoyu.modules.biz.user.UserConstant;
 import com.xiaoyu.modules.biz.user.entity.User;
 import com.xiaoyu.modules.biz.user.service.UserService;
+import com.xiaoyu.modules.sys.constant.StateConstant;
 
 
 
@@ -35,10 +42,10 @@ public class UserBackController{
 	@Autowired
 	private  UserService userService;
 	
-	@RequestMapping(value="login",method=RequestMethod.POST)
-	public String login(@ModelAttribute User user,Model model) {
-		return "success";
-	}
+//	@RequestMapping(value="login",method=RequestMethod.POST)
+//	public String login(@ModelAttribute User user,Model model) {
+//		return "success";
+//	}
 	
 	/**查看详情
 	 *@author xiaoyu
@@ -100,5 +107,51 @@ public class UserBackController{
 		Page<User> page = this.userService.findByPage(user, 1, 5);
 		model.addAttribute("list", page.getResult());
 		return "back/user/userList";
+	}
+	
+	
+	/**正常登录
+	 *@author xiaoyu
+	 *@param request
+	 *@param response
+	 *@param loginName
+	 *@param password
+	 *@return
+	 *@time 2016年4月14日下午8:24:06
+	 */
+	@RequestMapping(value="login",method=RequestMethod.POST)
+	public String login(HttpServletRequest request, HttpServletResponse response
+			,String loginName,String password,Model model) {
+	
+		HttpSession session = request.getSession(false);
+		if(session != null) {
+			
+		}
+		else {
+			response.encodeRedirectURL("/html/app/webLogin.html");
+		}
+		if(StringUtils.isBlank(loginName)||StringUtils.isBlank(password)) {
+			model.addAttribute("errorMsg", "姓名和密码不能为空");
+			response.encodeRedirectURL("/html/app/webLogin.html");
+		}
+		
+		User user = new User();
+		user.setLoginName(loginName);
+		user = this.userService.getForLogin(user);
+		if(StringUtils.isBlank(user.getId())) {
+			model.addAttribute("errorMsg", UserConstant.NoUser.toString());
+			response.encodeRedirectURL("/html/app/webLogin.html");
+		}
+		if(!password.equalsIgnoreCase(user.getPassword())) {
+			model.addAttribute("message", UserConstant.WRONGPWD.toString());
+			response.encodeRedirectURL("/html/app/webLogin.html");
+		}
+		user.setPassword(null);
+		model.addAttribute("user", user);
+		//登录名存入session
+		HttpSession session = request.getSession(true);
+		session.setAttribute("user_loginName", user.getLoginName());
+		session.setMaxInactiveInterval(60);
+		return "back/article/articleForm";
 	}
 }
