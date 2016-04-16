@@ -79,13 +79,14 @@ public class EncodeFilterConfiguration implements Filter {
 				+ "requestURI:" + req.getRequestURI() + "\n"
 		// +"parts:"+req.getParts()+"\n"
 		);
-		if (0 == req.getParameterMap().size()) {
-			res.sendRedirect(req.getRequestURI() + "?"
-					+ System.currentTimeMillis());
-			//这里直接跳转页面,就返回了 无需继续执行,继续执行等于二次请求 会报错
-			//Cannot call sendError() after the response has been committed
-			return;
-		}
+		//无参url添加时间
+//		if (0 == req.getParameterMap().size()) {
+//			res.sendRedirect(req.getRequestURI() + "?"
+//					+ System.currentTimeMillis());
+//			//这里直接跳转页面,就返回了 无需继续执行,继续执行等于二次请求 会报错
+//			//Cannot call sendError() after the response has been committed
+//			return;
+//		}
 		
 		
 		chain.doFilter(req, res);// 请求转发

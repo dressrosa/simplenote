@@ -75,7 +75,7 @@ public class ArticleBackController {
 	 * @time 2016年4月1日下午4:08:19
 	 */
 	@RequestMapping(value = "homePageList", method = RequestMethod.GET)
-	public String homePageList(Model model) {
+	public String homePageList(Model model,HttpServletRequest request,HttpServletResponse response) {
 		if (EhCacheUtil.IsExist("SystemCache")) {// 从缓存取
 			@SuppressWarnings("unchecked")
 			List<Object> total = (List<Object>) EhCacheUtil.get("SystemCache",
@@ -155,5 +155,14 @@ public class ArticleBackController {
 		attr.setArticleId(id);
 		int total = this.articleAttrService.updateReadNum(attr);
 		return total+"";
+	}
+	
+	@RequestMapping(value="addArticle")
+	public String addArticle(HttpServletResponse response,HttpServletRequest request) {
+		System.out.println("缓存时间:"+request.getSession().getMaxInactiveInterval());
+		if(request.getSession().getAttributeNames().hasMoreElements()) {
+			System.out.println(request.getSession().getAttributeNames().nextElement());
+		}
+		return "back/article/articleForm";
 	}
 }

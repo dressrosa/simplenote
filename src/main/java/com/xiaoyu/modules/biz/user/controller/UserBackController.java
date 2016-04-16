@@ -3,8 +3,10 @@
  */ 
 package com.xiaoyu.modules.biz.user.controller;
 
+import java.io.IOException;
 import java.util.Map;
 
+import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
@@ -42,10 +44,10 @@ public class UserBackController{
 	@Autowired
 	private  UserService userService;
 	
-//	@RequestMapping(value="login",method=RequestMethod.POST)
-//	public String login(@ModelAttribute User user,Model model) {
-//		return "success";
-//	}
+	@RequestMapping(value="loginPage")
+	public String login() {
+		return "common/login";
+	}
 	
 	/**查看详情
 	 *@author xiaoyu
@@ -117,22 +119,30 @@ public class UserBackController{
 	 *@param loginName
 	 *@param password
 	 *@return
+	 * @throws IOException 
 	 *@time 2016年4月14日下午8:24:06
 	 */
 	@RequestMapping(value="login",method=RequestMethod.POST)
-	public String login(HttpServletRequest request, HttpServletResponse response
-			,String loginName,String password,Model model) {
-	
+	public void login(HttpServletRequest request, HttpServletResponse response
+			,String loginName,String password,Model model) throws IOException {
+		
 		HttpSession session = request.getSession(false);
+		String redirectUrl = null;
 		if(session != null) {
-			
+			session.setMaxInactiveInterval(60);
+			System.out.println("缓存时间:"+session.getMaxInactiveInterval());
+			while(session.getAttributeNames().hasMoreElements()) {
+				System.out.println(session.getAttributeNames().nextElement());
+			}
 		}
 		else {
-			response.encodeRedirectURL("/html/app/webLogin.html");
+			redirectUrl = response.encodeRedirectURL("/common/login");
+			response.sendRedirect(redirectUrl);
 		}
 		if(StringUtils.isBlank(loginName)||StringUtils.isBlank(password)) {
 			model.addAttribute("errorMsg", "姓名和密码不能为空");
-			response.encodeRedirectURL("/html/app/webLogin.html");
+			redirectUrl = response.encodeRedirectURL("/common/login");
+			response.sendRedirect(redirectUrl);
 		}
 		
 		User user = new User();
@@ -140,18 +150,35 @@ public class UserBackController{
 		user = this.userService.getForLogin(user);
 		if(StringUtils.isBlank(user.getId())) {
 			model.addAttribute("errorMsg", UserConstant.NoUser.toString());
-			response.encodeRedirectURL("/html/app/webLogin.html");
+			redirectUrl = response.encodeRedirectURL("/common/login");
+			response.sendRedirect(redirectUrl);
 		}
 		if(!password.equalsIgnoreCase(user.getPassword())) {
 			model.addAttribute("message", UserConstant.WRONGPWD.toString());
-			response.encodeRedirectURL("/html/app/webLogin.html");
+			redirectUrl = response.encodeRedirectURL("/common/login");
+			 response.sendRedirect(redirectUrl);
 		}
 		user.setPassword(null);
-		model.addAttribute("user", user);
+		//model.addAttribute("user", user);
 		//登录名存入session
-		HttpSession session = request.getSession(true);
-		session.setAttribute("user_loginName", user.getLoginName());
-		session.setMaxInactiveInterval(60);
-		return "back/article/articleForm";
+		HttpSession session1 = request.getSession(true);
+		session1.setAttribute("user", user);
+		//不管怎么设置过期时间 都没用 暂不知道为撒
+		//session1.setMaxInactiveInterval(2060);
+		System.out.println("缓存时间:"+session1.getMaxInactiveInterval());
+		redirectUrl = response.encodeRedirectURL("/back/article/addArticle");
+		response.sendRedirect(redirectUrl);
+		
+//		try {
+//			request.getRequestDispatcher("/back/article/articleForm").forward(request, response);
+//		} catch (ServletException e) {
+//			// TODO Auto-generated catch block
+//			e.printStackTrace();
+//		} catch (IOException e) {
+//			// TODO Auto-generated catch block
+//			e.printStackTrace();
+//		}
+		//encodeRedirectURL("back/article/articleForm");
+		//return "back/article/articleForm";
 	}
 }

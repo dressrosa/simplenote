@@ -114,12 +114,12 @@ public class UserAppController {
 		if(session != null) {
 			session.invalidate();
 		}
-		String url = response.encodeRedirectURL(request.getContextPath()+"/");
-		try {
-			response.sendRedirect(url);
-		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
+//		String url = response.encodeRedirectURL(request.getContextPath()+"/");
+//		try {
+//			response.sendRedirect(url);
+//		} catch (IOException e) {
+//			// TODO Auto-generated catch block
+//			e.printStackTrace();
+//		}
 	}
 }

@@ -197,8 +197,15 @@ function login(item) {
 };
 /*logout*/
 function logout() {
-	$.session.remove('user');
-	window.location.href = window.location.href.replace(/#/g,''); 
+	//$.session.remove('user');
+	//window.location.href = window.location.href.replace(/#/g,''); 
+	$.ajax({
+		type : "POST",
+		url : "/app/user/logout",
+		success: function() {
+			window.location.href = window.location.href.replace(/#/g,'');
+		}
+	});
 } 
 
 //tool function

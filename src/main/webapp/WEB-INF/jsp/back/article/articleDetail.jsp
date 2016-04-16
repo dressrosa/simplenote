@@ -15,22 +15,21 @@
 <link href="/wuzhi/common.css" rel="stylesheet" type="text/css">
 <script src="/jquery/jquery-1.12.2.min.js" type="text/javascript"></script>
 <script src="/xiaoyu/common.js" type="text/javascript"></script>
-<script type="text/javascript" src="/xiaoyu/jquerysession.js"></script>
 <style type="text/css">
 </style>
 </head>
 <script type="text/javascript">
-//$(document).ready(function() {
-		var item = '${article.id}';
-		$.ajax({
-			type : 'POST',
-			async : true,
-			url : '/back/article/changeView',
-			data : {
-				id : item
-			}
-		});
-//	});
+	//$(document).ready(function() {
+	var item = '${article.id}';
+	$.ajax({
+		type : 'POST',
+		async : true,
+		url : '/back/article/changeView',
+		data : {
+			id : item
+		}
+	});
+	//	});
 </script>
 <body>
 	<div class="header">
@@ -41,19 +40,24 @@
 			</div>
 
 			<div class="prepend-10 span-4 last" style="text-align: right;">
-				<a class="header_w" style="padding-right: 15px;display: none;" href="#"
-					id="register">注册</a> <a class="header_w"
-					style="padding-right: 0px;display: none;" href="/html/app/webLogin.html"
-					id="login">登录</a> <a class="header_w"
-					style="padding-right: 15px; display: none;" id="nickName" href="#"></a>
-				<a class="header_w" style="padding-right: 0px; display: none;"
-					 id="logout" href="/app/user/logout">退出</a>
+				<c:if test="${not empty sessionScope.user}">
+					<a class="header_w" style="padding-right: 15px;"
+						id="nickName" href="/back/user/get?id=${sessionScope.user.id }">${sessionScope.user.nickName}</a>
+					<a class="header_w" style="padding-right: 0px;"
+						id="logout" href="" onclick="logout()">退出</a>
+				</c:if>
+				<c:if test="${empty sessionScope.user}">
+					<a class="header_w" style="padding-right: 15px;" href="#"
+						id="register">注册</a>
+					<a class="header_w" style="padding-right: 0px;"
+						href="/back/user/loginPage" id="login">登录</a>
+				</c:if>
+
 			</div>
 		</div>
 	</div>
 
 	<meta name="robots" content="none">
-
 	<div class="container main">
 		<div class="siderbar_left">
 			<div class="img_shadow" style="padding-top: 4px;">
@@ -106,7 +110,7 @@
 	function showContent(item) {
 		alert(item);
 	};
-	var userInfo = JSON.parse($.session.get('user'));
+	/* var userInfo = JSON.parse($.session.get('user'));
 	if (userInfo != null && userInfo != 'undefined') {
 		$("#nickName").html(userInfo.nickName).attr("href",
 				'/html/app/userDetail.html').css("display", "");
@@ -116,6 +120,6 @@
 	}else {
 		$("#login").css("display", "");
 		$("#register").css("display", "");
-	}
+	} */
 </script>
 </html>

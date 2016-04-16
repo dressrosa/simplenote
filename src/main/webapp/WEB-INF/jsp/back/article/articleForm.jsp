@@ -29,9 +29,19 @@
 				<span><a class="header_w" href="/xiaoyu/xiaoyu.me.html">首页</a></span>
 			</div>
 			<div class="prepend-10 span-4 last" style="text-align: right;">
-				<a class="header_w" style="padding-right: 15px;" id="nickName" href="#">${user.nickName}</a>
-				<a class="header_w" style="padding-right: 0px;"
-					 id="logout" href="/app/user/logout">退出</a>
+				<c:if test="${not empty sessionScope.user}">
+					<a class="header_w" style="padding-right: 15px;"
+						id="nickName" href="/back/user/get?id=${sessionScope.user.id }">${sessionScope.user.nickName}</a>
+					<a class="header_w" style="padding-right: 0px;"
+						id="logout" href="" onclick="logout()">退出</a>
+				</c:if>
+				<c:if test="${empty sessionScope.user}">
+					<a class="header_w" style="padding-right: 15px;" href="#"
+						id="register">注册</a>
+					<a class="header_w" style="padding-right: 0px;"
+						href="/back/user/loginPage" id="login">登录</a>
+				</c:if>
+
 			</div>
 		</div>
 	</div>

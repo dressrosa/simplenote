@@ -24,6 +24,7 @@
 		<mybatis.version>3.3.1</mybatis.version>
 		<mybatisspring.version>1.2.4</mybatisspring.version>
 		<HikariCP.version>2.4.4</HikariCP.version>
+		<lucene.version>4.10.0</lucene.version>
 	</properties>
 	<dependencies>
 		<dependency>
@@ -183,7 +184,24 @@
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-starter-redis</artifactId>
 		</dependency>
+	<!--lucene -->
+	<dependency>
+		<groupId>org.apache.lucene</groupId>
+		<artifactId>lucene-core</artifactId>
+		<version>${lucene.version}</version>
+	</dependency>
 
+	<dependency>
+		<groupId>org.apache.lucene</groupId>
+		<artifactId>lucene-analyzers-common</artifactId>
+		<version>${lucene.version}</version>
+	</dependency>
+
+	<dependency>
+		<groupId>org.apache.lucene</groupId>
+		<artifactId>lucene-queryparser</artifactId>
+		<version>${lucene.version}</version>
+	</dependency>
 		<!--第三方配置 -->
 		<!--极光推送 -->
 		<dependency>
