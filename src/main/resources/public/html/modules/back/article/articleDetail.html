@@ -1,0 +1,131 @@
+<!--吾志的网页风格 http://wuzhi.me  感谢大神的力量-->
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+<meta name="viewport"
+	content="width=device-width, initial-scale=1.0, maximum-scale=1.0,
+	 user-scalable=yes" />
+<meta http-equiv="Expires" content="0" />
+<meta http-equiv="Cache-Control" content="no-cache" />
+<meta http-equiv="Cache-Control" content="no-store" />
+<link rel="icon" type="image/ico" href="/xiaoyu/img/favicon.ico"
+	class="img-circle" />
+<link href="/bootstrap-3.3.6-dist/css/bootstrap.min.css"
+	rel="stylesheet" />
+<link href="/jBox-0.3.2/jBox.css" rel="stylesheet" />
+<link rel="stylesheet" href="/stephanwagner/97f7f8-00a5dd.css" />
+<script src="/jquery/jquery-1.12.2.min.js" type="text/javascript"></script>
+<script src="/jBox-0.3.2/jBox.min.js" type="text/javascript"></script>
+<script src="/bootstrap-3.3.6-dist/js/bootstrap.min.js"
+	type="text/javascript"></script>
+<script type="text/javascript" src="/xiaoyu/jquerysession.js"></script>
+<script type="text/javascript" src="/xiaoyu/common.js"></script>
+
+<meta name="robots" content="nofollow" />
+<meta name="robots" content="noarchive" />
+
+<title th:text="${article.title}"></title>
+<meta content="记录每个人生活的点点滴滴。" name="description" />
+<meta http-equiv="Pragma" content="no-cache" />
+<link href="/wuzhi/common.css" rel="stylesheet" type="text/css" />
+<style type="text/css">
+</style>
+</head>
+<script type="text/javascript">
+	//$(document).ready(function() {
+	var item = '${article.id}';
+	$.ajax({
+		type : 'POST',
+		async : true,
+		url : '/back/article/changeView',
+		data : {
+			id : item
+		}
+	});
+	//	});
+</script>
+<body>
+	<div class="header">
+		<div class="container">
+
+			<div class="span-10">
+				<span><a class="header_w" href="/xiaoyu/xiaoyu.me.html">首页</a></span>
+			</div>
+
+			<!-- <div th:if="${sessionScope.user}"
+				class="prepend-10 span-4 last" style="text-align: right;">
+
+				<a class="header_w" style="padding-right: 15px;" id="nickName"
+					th:href="/back/user/get?id=${sessionScope.user.id }">${sessionScope.user.nickName}</a>
+				<a class="header_w" style="padding-right: 0px;" id="logout" href=""
+					onclick="logout()">退出</a>
+			</div>
+			<div th:if="${sessionScope.user}"
+				class="prepend-10 span-4 last" style="text-align: right;">
+				<a class="header_w" style="padding-right: 15px;" href="#"
+					id="register">注册</a> <a class="header_w"
+					style="padding-right: 0px;" href="/back/user/loginPage" id="login">登录</a>
+			</div> -->
+		</div>
+	</div>
+	<meta name="robots" content="none" />
+	<div class="container main">
+		<div class="siderbar_left">
+			<div class="img_shadow" style="padding-top: 4px;">
+				<img th:src="${article.user.img}" th:alt="${article.user.nickName}"
+					width="270px" />
+			</div>
+			<div class="quote">
+				<span th:text="${article.user.description }"></span>
+			</div>
+		</div>
+		<div class="main_right">
+			<div
+				style="color: #909090; margin-bottom: 15px; border-bottom: 2px #8FA5AB solid; height: 22px;">
+				<span style="font-size: 16px; line-height: 20px;"
+					th:text=" ${#calendars.format(article.createDate, 'YYYY--MM--dd')}">
+				</span> <span style="font-size: 16px; line-height: 20px;">浏览量:<strong
+					id="readNum" th:text="${article.readNum}"></strong></span>
+			</div>
+			<div class="note_each">
+				<div class="note_time"
+					th:text=" ${#calendars.format(article.createDate, 'HH:mm')}">16:42</div>
+				<div class="note_content" th:text="${article.content}"></div>
+			</div>
+		</div>
+		<div class="note_username" th:text="${article.user.nickName}">--
+		</div>
+	</div>
+	<div class="footer container">
+		<span class="span-13" onclick="showContent('${article.id}')"
+			id="commentArea">查看评论</span>
+	</div>
+	<div class="footer container">
+		<hr class="hr-10" />
+		<div class="copyright span-5 append-0">
+			©2016-20xx 小雨 <a href="#">xiaoyu.me</a>
+		</div>
+		<div class="span-2 last">
+			<a href="#">关于ME</a>
+		</div>
+	</div>
+
+</body>
+<!-- /* var userInfo = JSON.parse($.session.get('user'));
+	if (userInfo != null && userInfo != 'undefined') {
+		$("#nickName").html(userInfo.nickName).attr("href",
+				'/html/app/userDetail.html').css("display", "");
+		$("#register").css("display", "none");
+		$("#login").css("display", "none");
+		$("#logout").css("display", "");
+	}else {
+		$("#login").css("display", "");
+		$("#register").css("display", "");
+	} */ -->
+<script type="text/javascript">
+	function showContent(item) {
+		alert(item);
+	};
+</script>
+
+</html>

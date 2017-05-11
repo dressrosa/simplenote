@@ -3,13 +3,13 @@
  *
  */
 
-/** 清除内外边距 **/
+/** 娓呴櫎鍐呭杈硅窛 **/
 body, h1, h2, h3, h4, h5, h6, hr, p, blockquote, dl, dt, dd, ul, ol, li, pre, form, fieldset, legend, button, input, textarea, th, td {
     margin: 0;
     padding: 0;
 }
 
-/** 设置默认字体 **/
+/** 璁剧疆榛樿瀛椾綋 **/
 body, button, input, select /* for ie */ {
     font: 12px/1.5 tahoma, arial, \5b8b\4f53, sans-serif;
 }
@@ -18,32 +18,32 @@ h1, h2, h3, h4, h5, h6 {
     font-size: 100%;
 }
 
-/* 将斜体扶正 */
+/* 灏嗘枩浣撴壎姝� */
 address, cite, dfn, em, var {
     font-style: normal;
 }
 
-/* 统一等宽字体 */
+/* 缁熶竴绛夊瀛椾綋 */
 code, kbd, pre, samp {
     font-family: courier new, courier, monospace;
 }
 
-/* 小于 12px 的中文很难阅读，让 small 正常化 */
+/* 灏忎簬 12px 鐨勪腑鏂囧緢闅鹃槄璇伙紝璁� small 姝ｅ父鍖� */
 small {
     font-size: 12px;
 }
 
-/** 重置列表元素 **/
+/** 閲嶇疆鍒楄〃鍏冪礌 **/
 ul, ol {
     list-style: none;
 }
 
-/** 重置文本格式元素 **/
+/** 閲嶇疆鏂囨湰鏍煎紡鍏冪礌 **/
 a {
     text-decoration: none;
 }
 
-/* 重置，减少对行高的影响 */
+/* 閲嶇疆锛屽噺灏戝琛岄珮鐨勫奖鍝� */
 sup {
     vertical-align: text-top;
 }
@@ -52,22 +52,22 @@ sub {
     vertical-align: text-bottom;
 }
 
-/** 重置表单元素 **/
+/** 閲嶇疆琛ㄥ崟鍏冪礌 **/
 legend {
     color: #000;
 }
 
-/* img 搭车：让链接里的 img 无边框 */
+/* img 鎼溅锛氳閾炬帴閲岀殑 img 鏃犺竟妗� */
 fieldset, img {
     border: 0;
 }
 
-/* 使得表单元素在 ie 下能继承字体大小 */
+/* 浣垮緱琛ㄥ崟鍏冪礌鍦� ie 涓嬭兘缁ф壙瀛椾綋澶у皬 */
 button, input, select, textarea {
     font-size: 100%;
 }
 
-/** 重置表格元素 **/
+/** 閲嶇疆琛ㄦ牸鍏冪礌 **/
 table {
     border-collapse: collapse;
     border-spacing: 0;
@@ -94,7 +94,7 @@ grid.css
 
 /* Use this class on any .span / container to see the grid. */
 .showgrid {
-    /* 显示背景gird
+    /* 鏄剧ず鑳屾櫙gird
     background: url(src/grid.png);
      */
 }
@@ -686,7 +686,7 @@ button, input.button { position:relative;top:0.25em; }
     white-space: pre-wrap;
 }
 
-/*首页日记列表*/
+/*棣栭〉鏃ヨ鍒楄〃*/
 .days {
     margin-left: 60px;
     border: 1px solid #CCCCCC;
@@ -723,7 +723,7 @@ button, input.button { position:relative;top:0.25em; }
 }
 
 /*
- * 注册页面
+ * 娉ㄥ唽椤甸潰
  * */
 
 .reg_title {
@@ -845,7 +845,7 @@ button, input.button { position:relative;top:0.25em; }
     color: #999;
 }
 
-/*tab设置*/
+/*tab璁剧疆*/
 .tabs-holder {
     background: none repeat scroll 0 0 #F5F5F5;
     border-bottom: 1px solid #E5E5E5;
@@ -904,7 +904,7 @@ button, input.button { position:relative;top:0.25em; }
     color: #808080;
 }
 
-/*图片边框*/
+/*鍥剧墖杈规*/
 .img_shadow img {
     background-color: #fff;
     padding-right: 4px;
@@ -960,7 +960,7 @@ button, input.button { position:relative;top:0.25em; }
     padding-bottom: 10px;
 }
 .item div{
-	font: 14px/30px tahoma,arial,宋体,sans-serif;
+	font: 14px/30px tahoma,arial,瀹嬩綋,sans-serif;
     padding: 5px 0 20px;
 }
 
@@ -1009,7 +1009,7 @@ button, input.button { position:relative;top:0.25em; }
     margin-bottom: 20px;
 }
 
-/*日历*/
+/*鏃ュ巻*/
 .calendar {
     text-align:center;
     background-color:#fff;
@@ -1142,6 +1142,6 @@ button, input.button { position:relative;top:0.25em; }
     margin-right: 0px;
 }
 .siderbar_left {
-    width: 300px;
+    width: 270px;
     margin-right: 30px;
 }
