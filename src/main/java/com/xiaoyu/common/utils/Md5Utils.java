@@ -10,8 +10,8 @@ import java.security.MessageDigest;
  */
 public class Md5Utils {
 
-	private final static String[] hexDigits = { "0", "1", "2", "3", "4", "5",
-			"6", "7", "8", "9", "a", "b", "c", "d", "e", "f" };
+	private final static String[] hexDigits = { "0", "1", "2", "3", "4", "5", "6", "7", "8", "9", "a", "b", "c", "d",
+			"e", "f" };
 
 	public static String MD5(String s) {
 		return MD5Encode(s);
@@ -61,16 +61,11 @@ public class Md5Utils {
 		try {
 			resultString = origin;
 			MessageDigest md = MessageDigest.getInstance("MD5");
-			resultString = byteArrayToHexString(md.digest(resultString
-					.getBytes()));
+			resultString = byteArrayToHexString(md.digest(resultString.getBytes()));
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
 		return resultString;
 	}
 
-	public static void main(String[] args) {
-		System.out.println(Md5Utils.MD5("888888"));
-		System.out.println(Md5Utils.MD5("加密"));
-	}
 }

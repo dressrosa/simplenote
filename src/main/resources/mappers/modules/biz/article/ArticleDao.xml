@@ -11,7 +11,7 @@
 		a.del_flag as delFlag
 	</sql>
 
-	<select id="get" resultType="Article" parameterType="Article">
+	<select id="get" resultType="com.xiaoyu.modules.biz.article.entity.Article" parameterType="com.xiaoyu.modules.biz.article.entity.Article">
 		select
 		<include refid="Base_Column_List" />
 		,t.read_num as readNum,
@@ -22,20 +22,20 @@
 	</select>
 	
 	<!-- 分页查询用户信息 -->
-	<select id="findByList" resultType="Article" parameterType="Article">
+	<select id="findByList" resultType="com.xiaoyu.modules.biz.article.entity.Article" parameterType="com.xiaoyu.modules.biz.article.entity.Article">
 		select
 		<include refid="Base_Column_List" />
 		from biz_article as a where a.del_flag=0
 	</select>
 	
-	<delete id="delete" parameterType="Article">
+	<delete id="delete" parameterType="com.xiaoyu.modules.biz.article.entity.Article">
 		update biz_article set
 		del_flag=1
 		where id = #{id}
 	</delete>
 
 
-	<insert id="insert" parameterType="Article">
+	<insert id="insert" parameterType="com.xiaoyu.modules.biz.article.entity.Article">
 		insert into biz_article
 		<trim prefix="(" suffix=")" suffixOverrides=",">
 			<if test="id != null">
@@ -86,7 +86,7 @@
 	</insert>
 
 
-	<update id="update" parameterType="Article">
+	<update id="update" parameterType="com.xiaoyu.modules.biz.article.entity.Article">
 		update biz_article
 		<set>
 			<if test="userId != null">
@@ -111,7 +111,7 @@
 		where id = #{id}
 	</update>
 	
-<select id="isExist" parameterType="Article" resultType="java.lang.Integer">
+<select id="isExist" parameterType="com.xiaoyu.modules.biz.article.entity.Article" resultType="java.lang.Integer">
 		select count(*) from biz_article where id=#{id} and del_flag=0
 	</select>
 </mapper>

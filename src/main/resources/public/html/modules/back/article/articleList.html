@@ -1,0 +1,102 @@
+<html xmlns:th="http://www.thymeleaf.org"
+    xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+    layout:decorate="layout">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+<meta name="viewport"
+    content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=yes" />
+<meta http-equiv="Expires" content="0" />
+<meta http-equiv="Cache-Control" content="no-cache" />
+<meta http-equiv="Cache-Control" content="no-store" />
+<link rel="icon" type="image/ico" href="/xiaoyu/img/favicon.ico"
+    class="img-circle" />
+<link href="/bootstrap-3.3.6-dist/css/bootstrap.min.css"
+    rel="stylesheet" />
+<link href="/jBox-0.3.2/jBox.css" rel="stylesheet" />
+<link rel="stylesheet" href="/stephanwagner/97f7f8-00a5dd.css" />
+<script src="/jquery/jquery-1.12.2.min.js" type="text/javascript"></script>
+<script src="/jBox-0.3.2/jBox.min.js" type="text/javascript"></script>
+<script src="/bootstrap-3.3.6-dist/js/bootstrap.min.js"
+    type="text/javascript"></script>
+<script type="text/javascript" src="/xiaoyu/jquerysession.js"></script>
+<script type="text/javascript" src="/xiaoyu/common.js"></script> 
+ 
+<link href="/wuzhi/common.css" rel="stylesheet" type="text/css" />
+<link href="/stephanwagner/9aad28-424d89.css" rel="stylesheet" />
+<script src="/jqueryflip/jquery-ui.min.js" type="text/javascript"></script>
+<script src="/jqueryflip/jquery.flip.min.js" type="text/javascript"></script>
+<script src="/jqueryflip/script.js" type="text/javascript"></script>
+<script src="/xiaoyu/common.js" type="text/javascript"></script>
+<link rel="stylesheet" type="text/css" href="/jqueryflip/flip.css" />
+<style>
+</style>
+<script>
+	$(function() {
+		$(".col-xs-3").sortable({
+			connectWith : '.col-xs-3',//级联其他
+			containment: "document",//作用范围
+			delay: 150,//延迟效果
+			revert: true //动画
+			
+		});
+		$(".col-xs-3").disableSelection();
+	});
+</script>
+<title>文章列表</title>
+</head>
+<body>
+
+	<div class="container-fluid">
+		<div class="header">
+			<div class="container">
+
+				<div class="span-10">
+					<span><a class="header_w" href="/xiaoyu/xiaoyu.me.html">首页</a></span>
+
+				</div>
+			</div>
+		</div>
+
+		<div class="row-fluid">
+			<div class="span12">
+				<div class="row-fluid">
+					<c:forEach begin="0" end="4" var="child" items="${list}"
+						varStatus="status">
+						<div th:each="child:${list}" 
+						class="col-xs-3 span3" 
+							style="font-family: cursive; font-size: medium;top: 15px;">
+							<c:forEach begin="0" end="3" var="article" items="${child}">
+								<dl th:each="article:${child}" >
+									<div class="sponsor" title="点心醒梦">
+										<div class="sponsorFlip" id="${article.id}" name="${article.user.id }">
+											<dt th:text="${article.title}"></dt>
+											<p th:text="${article.content}"></p>
+											<div class="g-line" style="width: 25%; margin: 25px auto;"></div>
+
+										</div>
+										<div class="sponsorData" id="th:text=${article.content}">
+											<dt th:text="${article.user.nickName}"></dt>
+											<span><img th:src="${article.user.img}"
+												class="img-circle" height="160px" width="160px" /></span>
+											<p th:text="${article.user.description }"></p>
+											<div class="g-line" style="width: 25%; margin: 25px auto;"></div>
+										</div>
+									</div>
+								</dl>
+							</c:forEach>
+
+						</div>
+
+					</c:forEach>
+
+				</div>
+			</div>
+		</div>
+		<div id="footer">
+			©<a href="">xiao yu</a>
+		</div>
+	</div>
+</body>
+
+
+</html>

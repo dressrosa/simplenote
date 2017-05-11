@@ -7,32 +7,35 @@
 		a.readNum as readNum,
 		a.commentNum as commentNum,
 		a.create_date as createDate,
-		a.update_date as updateDate,
+		a.update_date
+		as updateDate,
 		a.del_flag as delFlag
 	</sql>
 
-	<select id="get" resultType="ArticleAttr" parameterType="ArticleAttr">
+	<select id="get" resultType="com.xiaoyu.modules.biz.article.entity.ArticleAttr"
+		parameterType="com.xiaoyu.modules.biz.article.entity.ArticleAttr">
 		select
 		<include refid="Base_Column_List" />
 		from biz_article_attr as a
 		where a.id = #{id} and a.del_flag=0
 	</select>
-	
+
 	<!-- 分页查询用户信息 -->
-	<select id="findByList" resultType="ArticleAttr" parameterType="ArticleAttr">
+	<select id="findByList" resultType="com.xiaoyu.modules.biz.article.entity.ArticleAttr"
+		parameterType="com.xiaoyu.modules.biz.article.entity.ArticleAttr">
 		select
 		<include refid="Base_Column_List" />
 		from biz_article_attr as a where a.del_flag=0
 	</select>
-	
-	<delete id="delete" parameterType="ArticleAttr">
+
+	<delete id="delete" parameterType="com.xiaoyu.modules.biz.article.entity.ArticleAttr">
 		update biz_article_attr set
 		del_flag=1
 		where id = #{id}
 	</delete>
 
 
-	<insert id="insert" parameterType="ArticleAttr">
+	<insert id="insert" parameterType="com.xiaoyu.modules.biz.article.entity.ArticleAttr">
 		insert into biz_article_attr
 		<trim prefix="(" suffix=")" suffixOverrides=",">
 			<if test="id != null">
@@ -83,7 +86,7 @@
 	</insert>
 
 
-	<update id="update" parameterType="ArticleAttr">
+	<update id="update" parameterType="com.xiaoyu.modules.biz.article.entity.ArticleAttr">
 		update biz_article_attr
 		<set>
 			<if test="articleId != null">
@@ -107,22 +110,24 @@
 		</set>
 		where id = #{id}
 	</update>
-	
-<select id="isExist" parameterType="ArticleAttr" resultType="java.lang.Integer">
-	select count(*) from biz_article_attr 
-	where del_flag=0
-	<if test="id != null">
-	and id=#{id} 
-	</if>
-	<if test="articleId != null">
-	and article_id = #{articleId}
-	</if>
-	
-</select>
 
-<select id="getForUpdate" parameterType="ArticleAttr" resultType="ArticleAttr">
-	select * from biz_article_attr
-	where article_id=#{articleId}
-	for update 
-</select>
+	<select id="isExist" parameterType="com.xiaoyu.modules.biz.article.entity.ArticleAttr"
+		resultType="java.lang.Integer">
+		select count(*) from biz_article_attr
+		where del_flag=0
+		<if test="id != null">
+			and id=#{id}
+		</if>
+		<if test="articleId != null">
+			and article_id = #{articleId}
+		</if>
+
+	</select>
+
+	<select id="getForUpdate" parameterType="com.xiaoyu.modules.biz.article.entity.ArticleAttr"
+		resultType="com.xiaoyu.modules.biz.article.entity.ArticleAttr">
+		select * from biz_article_attr
+		where article_id=#{articleId}
+		for update
+	</select>
 </mapper>

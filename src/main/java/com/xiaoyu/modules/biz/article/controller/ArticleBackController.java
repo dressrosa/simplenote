@@ -3,15 +3,12 @@
  */
 package com.xiaoyu.modules.biz.article.controller;
 
-import java.io.UnsupportedEncodingException;
 import java.util.List;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
-import org.springframework.boot.autoconfigure.web.ServerProperties.Session;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.ModelAttribute;
@@ -35,9 +32,7 @@ import com.xiaoyu.modules.biz.user.service.UserService;
  * @author xiaoyu 2016年3月29日
  */
 @Controller
-@EnableAutoConfiguration
 @RequestMapping(value = "back/article")
-
 public class ArticleBackController {
 
 	@Autowired

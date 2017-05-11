@@ -34,14 +34,13 @@ public class JedisPoolConfiguration{
 	@Value("${redis.pool.port}")
 	private Integer port;//端口
 	
-	
-	@Bean(name="jedisPool")
+	@Bean(name = "jedisPool")
 	public JedisPool jedisConfig() {
 		JedisPoolConfig config = new JedisPoolConfig();
 		config.setMaxIdle(maxIdle);
 		config.setTestOnBorrow(true);
 		config.setTestOnReturn(true);
-		JedisPool pool = new JedisPool(config,host, port);
+		JedisPool pool = new JedisPool(config, host, port);
 		return pool;
 	}
 }

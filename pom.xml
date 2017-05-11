@@ -1,30 +1,26 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
 	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
 	<modelVersion>4.0.0</modelVersion>
+	<groupId>xiaoyu</groupId>
+	<artifactId>xiaoyuSite </artifactId>
+	<version>1.0.0.RELEASE</version>
 	<parent>
 		<groupId>org.springframework.boot</groupId>
-		<artifactId>spring-boot-starters</artifactId>
-		<version>1.3.3.RELEASE</version>
+		<artifactId>spring-boot-starter-parent</artifactId>
+		<version>1.4.0.RELEASE</version>
 	</parent>
-	<artifactId>spring-boot-starter-web</artifactId>
-	<name>Spring Boot Web Starter</name>
-	<description>Spring Boot Web Starter</description>
-	<url>http://projects.spring.io/spring-boot/</url>
+
+
 	<!--打成war包 -->
 	<!-- <packaging>war</packaging> -->
-	<organization>
-		<name>Pivotal Software, Inc.</name>
-		<url>http://www.spring.io</url>
-	</organization>
+
 	<!--version -->
 	<properties>
-		<main.basedir>${basedir}/../..</main.basedir>
 		<redis.version>2.0</redis.version>
 		<mysql.version>5.1.38</mysql.version>
 		<mybatis.version>3.3.1</mybatis.version>
 		<mybatisspring.version>1.2.4</mybatisspring.version>
 		<HikariCP.version>2.4.4</HikariCP.version>
-		<lucene.version>4.10.0</lucene.version>
 	</properties>
 	<dependencies>
 		<dependency>
@@ -69,7 +65,11 @@
 			<artifactId>javax.jms-api</artifactId>
 			<version>2.0.1</version>
 		</dependency>
-
+		<!--模版引擎 -->
+		<dependency>
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-starter-thymeleaf</artifactId>
+		</dependency>
 		<!--tomcat -->
 
 		<dependency>
@@ -148,12 +148,9 @@
 		<dependency>
 			<groupId>com.google.guava</groupId>
 			<artifactId>guava</artifactId>
+			<version>19.0</version>
 		</dependency>
-		<!-- redis -->
-		<dependency>
-			<groupId>redis.clients</groupId>
-			<artifactId>jedis</artifactId>
-		</dependency>
+
 		<!-- common lang -->
 		<dependency>
 			<groupId>org.apache.commons</groupId>
@@ -187,78 +184,50 @@
 			<groupId>org.springframework.session</groupId>
 			<artifactId>spring-session</artifactId>
 		</dependency>
+		<!-- redis -->
+		<dependency>
+			<groupId>redis.clients</groupId>
+			<artifactId>jedis</artifactId>
+		</dependency>
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-starter-redis</artifactId>
 		</dependency>
-		<!--lucene -->
-		<dependency>
-			<groupId>org.apache.lucene</groupId>
-			<artifactId>lucene-core</artifactId>
-			<version>${lucene.version}</version>
-		</dependency>
 
-		<dependency>
-			<groupId>org.apache.lucene</groupId>
-			<artifactId>lucene-analyzers-common</artifactId>
-			<version>${lucene.version}</version>
-		</dependency>
-
-		<dependency>
-			<groupId>org.apache.lucene</groupId>
-			<artifactId>lucene-queryparser</artifactId>
-			<version>${lucene.version}</version>
-		</dependency>
 
 		<!--阿里rocketmq -->
-		<dependency>
-			<groupId>com.alibaba.rocketmq</groupId>
-			<artifactId>rocketmq-client</artifactId>
-			<version>3.2.6</version>
-		</dependency>
+		<!-- <dependency> <groupId>com.alibaba.rocketmq</groupId> <artifactId>rocketmq-client</artifactId> 
+			<version>3.2.6</version> </dependency> -->
 		<!--mongoDB -->
-		<dependency>
-			<groupId>org.mongodb</groupId>
-			<artifactId>mongo-java-driver</artifactId>
-			<version>3.2.2</version>
-		</dependency>
-		<dependency>
-			<groupId>org.springframework.boot</groupId>
-			<artifactId>spring-boot-starter-data-mongodb</artifactId>
-		</dependency>
+		<!-- <dependency> <groupId>org.mongodb</groupId> <artifactId>mongo-java-driver</artifactId> 
+			<version>3.2.2</version> </dependency> -->
+		<!-- <dependency> <groupId>org.springframework.boot</groupId> <artifactId>spring-boot-starter-data-mongodb</artifactId> 
+			</dependency> -->
 		<!-- <dependency> <groupId>org.springframework.data</groupId> <artifactId>spring-data-mongodb</artifactId> 
 			<version>1.9.1.RELEASE</version> </dependency> -->
 
 		<!--第三方配置 -->
 		<!--极光推送 -->
-		<dependency>
-			<groupId>cn.jpush.api</groupId>
-			<artifactId>jpush-client</artifactId>
-			<version>3.2.9</version>
-		</dependency>
+		<!-- <dependency> <groupId>cn.jpush.api</groupId> <artifactId>jpush-client</artifactId> 
+			<version>3.2.9</version> </dependency> -->
 	</dependencies>
+	<!--创建可执行的jar -->
+	<!-- <build> <plugins> <plugin> <groupId>org.springframework.boot</groupId> 
+		<artifactId>spring-boot-maven-plugin</artifactId> <executions> <execution> 
+		<goals> <goal>repackage</goal> </goals> </execution> </executions> </plugin> 
+		</plugins> <plugin> <groupId>org.apache.maven.plugins</groupId> <artifactId>maven-compiler-plugin</artifactId> 
+		<version>2.3.2</version> <configuration> <showDeprecation>true</showDeprecation> 
+		</configuration> </plugin> </build> -->
 	<!--创建可执行的jar -->
 	<build>
 		<plugins>
 			<plugin>
 				<groupId>org.springframework.boot</groupId>
 				<artifactId>spring-boot-maven-plugin</artifactId>
-				<executions>
-					<execution>
-						<goals>
-							<goal>repackage</goal>
-						</goals>
-					</execution>
-				</executions>
+				<configuration>
+					<includeSystemScope>true</includeSystemScope>
+				</configuration>
 			</plugin>
 		</plugins>
-		<plugin>
-			<groupId>org.apache.maven.plugins</groupId>
-			<artifactId>maven-compiler-plugin</artifactId>
-			<version>2.3.2</version>
-			<configuration>
-				<showDeprecation>true</showDeprecation>
-			</configuration>
-		</plugin>
 	</build>
 </project>

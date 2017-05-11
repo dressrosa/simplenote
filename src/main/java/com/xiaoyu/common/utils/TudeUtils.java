@@ -39,16 +39,14 @@ public class TudeUtils {
 	 *            纬度2
 	 * @return 俩地距离(整数字符串，单位 km)
 	 */
-	public static String getDistanceBetween2Place(String longiA, String latiA,
-			String longiB, String latiB) {
+	public static String getDistanceBetween2Place(String longiA, String latiA, String longiB, String latiB) {
 		double radLatiA = rad(str2Double(latiA));
 		double radLatiB = rad(str2Double(latiB));
 		double a = radLatiA - radLatiB;
 		double b = rad(str2Double(longiA)) - rad(str2Double(longiB));
 
-		double distance = 2 * Math.asin(Math.sqrt(Math.pow(Math.sin(a / 2), 2)
-				+ Math.cos(radLatiA) * Math.cos(radLatiB)
-				* Math.pow(Math.sin(b / 2), 2)));
+		double distance = 2 * Math.asin(Math.sqrt(
+				Math.pow(Math.sin(a / 2), 2) + Math.cos(radLatiA) * Math.cos(radLatiB) * Math.pow(Math.sin(b / 2), 2)));
 		distance *= EARTH_RADIUS;
 		distance = Math.round(distance * 10000) / 10000;
 		String distanceStr = double2Str(distance);
@@ -68,14 +66,12 @@ public class TudeUtils {
 	 * @return Map
 	 * @time 2015年11月23日上午10:27:40
 	 */
-	public static Map<String, Double> squrle4Points(String longitude,
-			String latitude, String round) {
+	public static Map<String, Double> squrle4Points(String longitude, String latitude, String round) {
 		double longi = str2Double(longitude);
 		double lati = str2Double(latitude);
 		double r = str2Double(round);
 		// 计算经度弧度,从弧度转换为角度
-		double dLongitude = 2 * (Math.asin(Math.sin(r / (2 * EARTH_RADIUS))
-				/ Math.cos(Math.toRadians(lati))));
+		double dLongitude = 2 * (Math.asin(Math.sin(r / (2 * EARTH_RADIUS)) / Math.cos(Math.toRadians(lati))));
 		dLongitude = Math.toDegrees(dLongitude);
 		// 计算纬度角度
 		double dLatitude = r / EARTH_RADIUS;
@@ -97,8 +93,7 @@ public class TudeUtils {
 	 * @return
 	 */
 	public static boolean compareDisInRound(String str1, String round) {
-		return Integer.parseInt(str1) - Integer.parseInt(round) <= 0 ? true
-				: false;
+		return Integer.parseInt(str1) - Integer.parseInt(round) <= 0 ? true : false;
 	}
 
 	private static double str2Double(String str) {
@@ -112,10 +107,4 @@ public class TudeUtils {
 		return String.valueOf(d);
 	}
 
-	public static void main(String args[]) {
-		String a = getDistanceBetween2Place("116.318552", "40.041332",
-				"116.318921", "40.042227");
-		System.out.println(a);
-		System.out.println(compareDisInRound(a, "1000"));
-	}
 }

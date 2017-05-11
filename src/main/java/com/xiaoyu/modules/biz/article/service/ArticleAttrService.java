@@ -8,7 +8,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.xiaoyu.common.base.BaseService;
-import com.xiaoyu.common.utils.IdGenerator;
 import com.xiaoyu.modules.biz.article.dao.ArticleAttrDao;
 import com.xiaoyu.modules.biz.article.entity.ArticleAttr;
 
