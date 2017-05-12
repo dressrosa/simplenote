@@ -7,7 +7,8 @@
 <meta name="viewport" content="width=840">
 <meta name="author" content="xiaoyu">
 <meta name="description" content="xiaoyu like freedom">
-<link href="/bootstrap-3.3.6-dist/css/bootstrap.min.css" rel="stylesheet" >
+<link href="/bootstrap-3.3.6-dist/css/bootstrap.min.css"
+	rel="stylesheet">
 <link rel="icon" type="image/ico" href="/xiaoyu/img/favicon.ico">
 <link rel="stylesheet" href="/stephanwagner/97f7f8-00a5dd.css">
 <link href="/stephanwagner/fonts.css" rel="stylesheet">
@@ -21,13 +22,14 @@
 
 	<div id="header">
 		<h1>
-			<a href="#" class="xiaoyu_a">xiao yu</a>
-			<img src="/xiaoyu/img/xiaoyu.png" class="img-circle" height="50px" width="50px"/>
+			<a href="#" class="xiaoyu_a">xiao yu</a> <img
+				src="/xiaoyu/img/xiaoyu.png" class="img-circle" height="50px"
+				width="50px" />
 		</h1>
 		<a href="/back/article/homePageList" class="header-icon icon-globe"><span
 			class="label">xiaoyu</span></a> <a
-			href="/back/user/list?pageNum=1&pageSize=12"
-			class="header-icon icon-code"><span class="label">CSDN</span></a><!-- href="http://blog.csdn.net/ruanjian1111ban" -->
+			href="https://github.com/dressrosa/springbootDemo"
+			class="header-icon icon-code"><span class="label">GITHUB</span></a>
 	</div>
 	<div id="content">
 		<div id="slideshow-images" class="" style="height: 658.35px;">
@@ -55,15 +57,19 @@
 	<script src="/stephanwagner/0bd9cd-1cadc9.js"></script>
 </body>
 <script type="text/javascript">
- $(document).ready(function(){
-	$('.xiaoyu_a').mouseenter(
-			function() {
-				/* var img1 = '<img src="/xiaoyu/img/xiaoyu.png" class="img-circle" height="50px" width="50px"/>';
-				var ring = $(".xiaoyu_a").append(img1);
-				setTimeout((function() {
-					ring.remove();
-				}), 600); */
-			});
-}); 
+	$(document)
+			.ready(
+					function() {
+						$('.xiaoyu_a')
+								.mouseenter(
+										function() {
+											var img1 = '<img src="/xiaoyu/img/xiaoyu.png" class="img-circle" height="50px" width="50px"/>';
+											var ring = $(".xiaoyu_a").append(
+													img1);
+											setTimeout((function() {
+												ring.remove();
+											}), 600);
+										});
+					});
 </script>
 </html>

@@ -1,3 +1,2 @@
-
-
-基于springboot+jsp的web框架搭建
+一个简单的个人网站  
+基于springboot和html

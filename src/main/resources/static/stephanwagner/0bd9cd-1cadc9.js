@@ -7,7 +7,10 @@ var images = [ {
 },  {
 	text : '海贼王3',
 	src : '/xiaoyu/slideshow/img/3.png'
-}, ];
+},  {
+	text : '海贼王4',
+	src : '/xiaoyu/slideshow/img/4.jpg'
+},];
 var interval = 6000;
 var duration_image = 800;
 var duration_text = 300;
