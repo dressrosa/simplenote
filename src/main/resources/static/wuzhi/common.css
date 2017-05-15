@@ -88,7 +88,7 @@ grid.css
 
 /* A container should group all your columns. */
 .container {
-    width: 840px;
+    /* width: 840px; */
     margin: 0 auto;
 }
 
