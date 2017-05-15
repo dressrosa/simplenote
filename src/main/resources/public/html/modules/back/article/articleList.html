@@ -39,12 +39,19 @@
 		});
 		$(".col-xs-3").disableSelection();
 	});
+	$(document).ready(function() {
+		if (!isPC()) {
+			$(".col-xs-3").css("width", "100%");
+		}
+
+	});
 </script>
 <title>文章列表</title>
 </head>
 <body>
 
-	<div class="container-fluid">
+	<div class="container-fluid"
+		style="padding-right: 0px; padding-right: 0px;">
 		<div class="header">
 			<div class="container">
 
