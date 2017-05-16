@@ -151,11 +151,11 @@ function login(item) {
 		return;
 	}
 	$.ajax({
-		cache : false,
+		//cache : false,
 		type : "POST",
 		url : item,
 		data : $('#xyForm').serialize(),
-		async : false,
+		async : true,
 		error : function(data) {
 			new jBox('Notice', {
 				color : 'red',
@@ -177,7 +177,8 @@ function login(item) {
 						userId : jsonObj.data.id
 					}
 				});
-				// $.session.set('user',JSON.stringify(jsonObj.user),false);
+				//console.log( JSON.stringify(jsonObj.data));
+				$.session.set('user',JSON.stringify(jsonObj.data), false);
 				window.location.href = "/modules/back/user/userDetail.html";
 				return true;
 			} else {
@@ -193,7 +194,7 @@ function login(item) {
 };
 /* logout */
 function logout() {
-	// $.session.remove('user');
+	$.session.remove('user');
 	// window.location.href = window.location.href.replace(/#/g,'');
 	$.ajax({
 		type : "POST",

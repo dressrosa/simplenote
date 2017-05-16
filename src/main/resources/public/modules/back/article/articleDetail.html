@@ -32,7 +32,7 @@
 </style>
 </head>
 <script type="text/javascript">
-	var userInfo = $.session.get('user');
+	var userInfo =jQuery.parseJSON( $.session.get('user'));
 
 	$(document).ready(
 			function() {
@@ -41,7 +41,8 @@
 				} else {
 					$("#userSpan").css("display", "block");
 					$("#userSpan").find("#nickName").attr("href",
-							"/back/user/get?id= " + userInfo.id);
+							"/back/user/get/" + userInfo.id);
+					$("#userSpan").find("#nickName").text(userInfo.nickName);
 				}
 
 				var item = $(".note_content").attr("id");
