@@ -658,7 +658,7 @@ button, input.button { position:relative;top:0.25em; }
 .note_username {
     text-align: right;
     padding-top: 15px;
-    padding-right: 10px;
+    padding-right: 25px;
     font-size: 16px;
     color: #909090;
 }
@@ -1138,10 +1138,10 @@ button, input.button { position:relative;top:0.25em; }
     margin-right: 0px;
 }
 .main_right {
-    width: 510px;
-    margin-right: 0px;
+    width: 70%;
+    margin-right: 10px;
 }
 .siderbar_left {
-    width: 270px;
+    width: 25%;
     margin-right: 30px;
 }

@@ -32,48 +32,56 @@
 </style>
 </head>
 <script type="text/javascript">
-	//$(document).ready(function() {
-	var item = '${article.id}';
-	$.ajax({
-		type : 'POST',
-		async : true,
-		url : '/back/article/changeView',
-		data : {
-			id : item
-		}
-	});
-	//	});
+	var userInfo = $.session.get('user');
+
+	$(document).ready(
+			function() {
+				if (userInfo == 'null') {
+					$("#loginSpan").css("display", "block");
+				} else {
+					$("#userSpan").css("display", "block");
+					$("#userSpan").find("#nickName").attr("href",
+							"/back/user/get?id= " + userInfo.id);
+				}
+
+				var item = $(".note_content").attr("id");
+				$.ajax({
+					type : 'POST',
+					async : true,
+					url : '/back/article/changeView',
+					data : {
+						id : item
+					}
+				});
+				if (isPC()) {
+					$(".main_right").css("width", "70%")
+				} else {
+					$(".main_right").css("width", "100%")
+				}
+
+			});
 </script>
 <body>
 	<div class="header">
 		<div class="container">
-
-			<div class="span-10">
-				<span><a class="header_w" href="/xiaoyu/xiaoyu.me.html">首页</a></span>
-			</div>
-
-			<!-- <div th:if="${sessionScope.user}"
-				class="prepend-10 span-4 last" style="text-align: right;">
-
-				<a class="header_w" style="padding-right: 15px;" id="nickName"
-					th:href="/back/user/get?id=${sessionScope.user.id }">${sessionScope.user.nickName}</a>
+			<span><a class="header_w" href="/xiaoyu.me.html">首页</a></span> <span
+				id="userSpan" style="float: right; display: none;"> <a
+				class="header_w" style="padding-right: 15px;" id="nickName" href="#">xxx</a>
 				<a class="header_w" style="padding-right: 0px;" id="logout" href=""
-					onclick="logout()">退出</a>
-			</div>
-			<div th:if="${sessionScope.user}"
-				class="prepend-10 span-4 last" style="text-align: right;">
-				<a class="header_w" style="padding-right: 15px;" href="#"
-					id="register">注册</a> <a class="header_w"
-					style="padding-right: 0px;" href="/back/user/loginPage" id="login">登录</a>
-			</div> -->
+				onclick="logout()">退出</a>
+			</span> <span id="loginSpan" style="float: right; display: none;"> <a
+				class="header_w" style="padding-right: 15px;" href="#" id="register">注册</a>
+				<a class="header_w" style="padding-right: 0px;"
+				href="/common/login.html" id="login">登录</a>
+			</span>
 		</div>
 	</div>
 	<meta name="robots" content="none" />
 	<div class="container main">
 		<div class="siderbar_left">
 			<div class="img_shadow" style="padding-top: 4px;">
-				<img th:src="${article.user.img}" th:alt="${article.user.nickName}"
-					width="270px" />
+				<img th:src="'http://www.hanhande.com/'+${article.user.img}"
+					th:alt="${article.user.nickName}" style="width: 100%;" />
 			</div>
 			<div class="quote">
 				<span th:text="${article.user.description }"></span>
@@ -83,17 +91,19 @@
 			<div
 				style="color: #909090; margin-bottom: 15px; border-bottom: 2px #8FA5AB solid; height: 22px;">
 				<span style="font-size: 16px; line-height: 20px;"
-					th:text=" ${#calendars.format(article.createDate, 'YYYY--MM--dd')}">
-				</span> <span style="font-size: 16px; line-height: 20px;">浏览量:<strong
+					th:text=" ${#calendars.format(article.createDate, 'YYYY-MM-dd')}">
+				</span> <span style="font-size: 16px; line-height: 20px; float: right;">浏览量:<strong
 					id="readNum" th:text="${article.readNum}"></strong></span>
 			</div>
 			<div class="note_each">
 				<div class="note_time"
 					th:text=" ${#calendars.format(article.createDate, 'HH:mm')}">16:42</div>
-				<div class="note_content" th:text="${article.content}"></div>
+				<div th:id="${article.id}" class="note_content"
+					th:text="${article.content}"></div>
 			</div>
 		</div>
-		<div class="note_username" th:text="${article.user.nickName}">--
+		<div class="note_username">
+			<label>--</label><label th:text="${article.user.nickName}"></label>
 		</div>
 	</div>
 	<div class="footer container">
@@ -101,12 +111,14 @@
 			id="commentArea">查看评论</span>
 	</div>
 	<div class="footer container">
-		<hr class="hr-10" />
+		<hr class="hr-10" style="width: 98%; margin-left: 0px;" />
 		<div class="copyright span-5 append-0">
-			©2016-20xx 小雨 <a href="#">xiaoyu.me</a>
+			©2016-2017 小雨 <a href="#">xiaoyu.me</a>
 		</div>
 		<div class="span-2 last">
-			<a href="#">关于ME</a>
+			<a href="https://github.com/dressrosa"
+				style="width: 100%; display: block; background: url(https://assets-cdn.github.com/favicon.ico) no-repeat; text-indent: 40px; height: 33px;">
+			</a>
 		</div>
 	</div>
 

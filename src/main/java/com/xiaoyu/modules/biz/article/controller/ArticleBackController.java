@@ -12,6 +12,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
@@ -32,7 +33,6 @@ import com.xiaoyu.modules.biz.user.service.UserService;
  * @author xiaoyu 2016年3月29日
  */
 @Controller
-@RequestMapping(value = "back/article")
 public class ArticleBackController {
 
 	@Autowired
@@ -42,6 +42,7 @@ public class ArticleBackController {
 
 	@Autowired
 	private ArticleAttrService articleAttrService;
+
 	/**
 	 * 获取文章详情
 	 * 
@@ -53,9 +54,11 @@ public class ArticleBackController {
 	 * @return
 	 * @time 2016年3月29日下午9:20:30
 	 */
-	@RequestMapping(value = "get", method = RequestMethod.GET)
-	public String get(@ModelAttribute Article article, Model model,
-			HttpServletRequest request, HttpServletResponse response) {
+	@RequestMapping(value = "back/article/get/{articleId}", method = RequestMethod.GET)
+	public String get(@PathVariable String articleId, Model model, HttpServletRequest request,
+			HttpServletResponse response) {
+		Article article = new Article();
+		article.setId(articleId);
 		Article a = this.articleService.get(article);
 		model.addAttribute(a);
 		return "back/article/articleDetail";
@@ -69,19 +72,17 @@ public class ArticleBackController {
 	 * @return
 	 * @time 2016年4月1日下午4:08:19
 	 */
-	@RequestMapping(value = "homePageList", method = RequestMethod.GET)
-	public String homePageList(Model model,HttpServletRequest request,HttpServletResponse response) {
+	@RequestMapping(value = "back/article/homePageList", method = RequestMethod.GET)
+	public String homePageList(Model model, HttpServletRequest request, HttpServletResponse response) {
 		if (EhCacheUtil.IsExist("SystemCache")) {// 从缓存取
 			@SuppressWarnings("unchecked")
-			List<Object> total = (List<Object>) EhCacheUtil.get("SystemCache",
-					"pageList");
+			List<Object> total = (List<Object>) EhCacheUtil.get("SystemCache", "pageList");
 			model.addAttribute("list", total);
 			if (total != null && total.size() > 0) {
 				return "back/article/articleList";
 			}
 		}
-		Page<Article> page = this.articleService.findByPage(new Article(), 1,
-				12);
+		Page<Article> page = this.articleService.findByPage(new Article(), 1, 12);
 		List<Article> list = page.getResult();
 		for (Article a : list) {
 			User u = new User();
@@ -126,11 +127,9 @@ public class ArticleBackController {
 	 * @return
 	 * @time 2016年3月30日下午2:16:59
 	 */
-	@RequestMapping(value = "list", method = RequestMethod.GET)
-	public String list(@ModelAttribute Article article, Model model,
-			Integer pageNum, Integer pageSize) {
-		Page<Article> page = this.articleService.findByPage(article, pageNum,
-				pageSize);
+	@RequestMapping(value = "back/article/list", method = RequestMethod.GET)
+	public String list(@ModelAttribute Article article, Model model, Integer pageNum, Integer pageSize) {
+		Page<Article> page = this.articleService.findByPage(article, pageNum, pageSize);
 		List<Article> list = page.getResult();
 		User u = new User();
 		for (Article a : list) {
@@ -143,19 +142,19 @@ public class ArticleBackController {
 		return "back/article/articleList";
 	}
 
-	@RequestMapping(value="changeView",method=RequestMethod.POST)
+	@RequestMapping(value = "back/article/changeView", method = RequestMethod.POST)
 	@ResponseBody
 	public String changeView(String id) {
 		ArticleAttr attr = new ArticleAttr();
 		attr.setArticleId(id);
 		int total = this.articleAttrService.updateReadNum(attr);
-		return total+"";
+		return total + "";
 	}
-	
-	@RequestMapping(value="addArticle")
-	public String addArticle(HttpServletResponse response,HttpServletRequest request) {
-		System.out.println("缓存时间:"+request.getSession().getMaxInactiveInterval());
-		if(request.getSession().getAttributeNames().hasMoreElements()) {
+
+	@RequestMapping(value = "addArticle")
+	public String addArticle(HttpServletResponse response, HttpServletRequest request) {
+		System.out.println("缓存时间:" + request.getSession().getMaxInactiveInterval());
+		if (request.getSession().getAttributeNames().hasMoreElements()) {
 			System.out.println(request.getSession().getAttributeNames().nextElement());
 		}
 		return "back/article/articleForm";

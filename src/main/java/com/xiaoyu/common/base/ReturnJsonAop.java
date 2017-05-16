@@ -15,9 +15,9 @@ import com.alibaba.fastjson.JSON;
  * @author xiaoyu
  *2016年3月30日
  */
-@Configuration
-@EnableAutoConfiguration
-@Aspect
+//@Configuration
+//@EnableAutoConfiguration
+//@Aspect
 public class ReturnJsonAop {
 
 	/**对返回类型为Object类型的进行aop转化

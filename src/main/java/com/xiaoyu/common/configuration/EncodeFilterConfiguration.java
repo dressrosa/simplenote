@@ -26,8 +26,7 @@ import org.springframework.stereotype.Component;
 @Component
 public class EncodeFilterConfiguration implements Filter {
 
-	private static Logger logger = Logger
-			.getLogger(EncodeFilterConfiguration.class);
+	private static Logger logger = Logger.getLogger(EncodeFilterConfiguration.class);
 
 	@Override
 	public void init(FilterConfig filterConfig) throws ServletException {
@@ -40,32 +39,29 @@ public class EncodeFilterConfiguration implements Filter {
 	}
 
 	@Override
-	public void doFilter(ServletRequest request, ServletResponse response,
-			FilterChain chain) throws IOException, ServletException {
+	public void doFilter(ServletRequest request, ServletResponse response, FilterChain chain)
+			throws IOException, ServletException {
 		logger.info(">>>>>>>>>>>>>>>>>>>进入过滤器<<<<<<<<<<<<<<<<<<<<<<<<");
 		HttpServletResponse res = (HttpServletResponse) response;
 		HttpServletRequest req = (HttpServletRequest) request;
 		/*
-		 * stackoverflow 解释:
-		 * In order to create a session, you (almost
-		 * always) need to set a Session cookie. That is not possible when the
-		 * response has already been committed (i.e. the HTTP headers already
-		 * sent to the client). In this case, it seems that Facelets internally
-		 * needs a session for something.
+		 * stackoverflow 解释: In order to create a session, you (almost always)
+		 * need to set a Session cookie. That is not possible when the response
+		 * has already been committed (i.e. the HTTP headers already sent to the
+		 * client). In this case, it seems that Facelets internally needs a
+		 * session for something.
 		 */
 		req.getSession(true);
-		
-		res.setCharacterEncoding("utf-8");// 设置编码格式
-		res.setHeader("myName", "xiaoyu");// 设置请求头
+
+		res.setCharacterEncoding("UTF-8");// 设置编码格式
+		res.setHeader("author", "xiaoyu");// 设置请求头
 		// 对于无参请求 设置时间戳 不允许页面缓存
 		req.setCharacterEncoding("utf-8");
 		// Method[] m= req.getClass().getMethods();
 		logger.info("请求详细信息:\n"
 				// +"contentLength:"+req.getContentLength()+"\n"
 				// +"contentType:"+req.getContentType()+"\n"
-				+ "contentPath:"
-				+ req.getContextPath()
-				+ "\n"
+				+ "contentPath:" + req.getContextPath() + "\n"
 				// /+"localAddr:"+req.getLocalAddr()+"\n"
 				// +"localName:"+req.getLocalName()+"\n"
 				// +"method:"+req.getMethod()+"\n"
@@ -74,21 +70,19 @@ public class EncodeFilterConfiguration implements Filter {
 				// +"queryString:"+req.getQueryString()+"\n"
 				// +"remoteAddr:"+req.getRemoteAddr()+"\n"
 				// +"remoteHost:"+req.getRemoteHost()+"\n"
-				+ "requestURL:" + req.getRequestURL() + "\n"
-				+ "servletContext:" + req.getServletContext() + "\n"
+				+ "requestURL:" + req.getRequestURL() + "\n" + "servletContext:" + req.getServletContext() + "\n"
 				+ "requestURI:" + req.getRequestURI() + "\n"
 		// +"parts:"+req.getParts()+"\n"
 		);
-		//无参url添加时间
-//		if (0 == req.getParameterMap().size()) {
-//			res.sendRedirect(req.getRequestURI() + "?"
-//					+ System.currentTimeMillis());
-//			//这里直接跳转页面,就返回了 无需继续执行,继续执行等于二次请求 会报错
-//			//Cannot call sendError() after the response has been committed
-//			return;
-//		}
-		
-		
+		// 无参url添加时间
+		// if (0 == req.getParameterMap().size()) {
+		// res.sendRedirect(req.getRequestURI() + "?"
+		// + System.currentTimeMillis());
+		// //这里直接跳转页面,就返回了 无需继续执行,继续执行等于二次请求 会报错
+		// //Cannot call sendError() after the response has been committed
+		// return;
+		// }
+
 		chain.doFilter(req, res);// 请求转发
 
 	}

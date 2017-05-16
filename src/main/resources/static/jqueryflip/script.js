@@ -45,9 +45,9 @@ $(document).ready(function() {
 	$('.sponsorFlip').bind("dblclick", function() {
 		var elem = $(this);
 		if (elem.data('flipped')) {
-			window.location.href = "/back/article/get?id=" + elem[0].id;
+			window.location.href = "/back/article/get/" + elem[0].id;
 		} else {
-			window.location.href = "/back/user/get?id=" + elem.attr('name');
+			window.location.href = "/back/user/get/" + elem.attr('name');
 		}
 	});
 
