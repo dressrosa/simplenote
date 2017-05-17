@@ -77,7 +77,7 @@ public class MvcConfiguration extends WebMvcConfigurerAdapter {
 		// mappings.setProperty("RuntimeException", "runtimeError");
 		// r.setExceptionMappings(mappings); // None by default
 		// 只能拦截Exception，404错误是拦截不了
-		r.setDefaultErrorView("/common/500"); // 产生exception后跳转的页面
+		r.setDefaultErrorView("common/500"); // 产生exception后跳转的页面
 		r.setExceptionAttribute("ex"); // Default is "exception"
 		r.setWarnLogCategory("info"); // No default//TODO 未明白配置
 		logger.info("mvc配置:" + r.getOrder());

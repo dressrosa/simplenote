@@ -3,7 +3,10 @@
  */
 package com.xiaoyu.modules.biz.article.controller;
 
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -11,7 +14,6 @@ import javax.servlet.http.HttpServletResponse;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -19,6 +21,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.github.pagehelper.Page;
 import com.google.common.collect.Lists;
+import com.xiaoyu.common.base.ResponseMapper;
 import com.xiaoyu.common.utils.EhCacheUtil;
 import com.xiaoyu.modules.biz.article.entity.Article;
 import com.xiaoyu.modules.biz.article.entity.ArticleAttr;
@@ -37,11 +40,20 @@ public class ArticleBackController {
 
 	@Autowired
 	private ArticleService articleService;
+
 	@Autowired
 	private UserService userService;
 
 	@Autowired
 	private ArticleAttrService articleAttrService;
+
+	private Map<String, Object> article2Map(Article a) {
+		Map<String, Object> map = new HashMap<>();
+		map.put("articleId", a.getId());
+		map.put("content", a.getContent().length() > 150 ? a.getContent().substring(0, 149) : a.getContent());
+		map.put("title", a.getTitle());
+		return map;
+	}
 
 	/**
 	 * 获取文章详情
@@ -54,14 +66,17 @@ public class ArticleBackController {
 	 * @return
 	 * @time 2016年3月29日下午9:20:30
 	 */
-	@RequestMapping(value = "back/article/get/{articleId}", method = RequestMethod.GET)
+	@RequestMapping(value = "public/article/{articleId}", method = RequestMethod.GET)
 	public String get(@PathVariable String articleId, Model model, HttpServletRequest request,
 			HttpServletResponse response) {
 		Article article = new Article();
 		article.setId(articleId);
 		Article a = this.articleService.get(article);
+		if (a == null) {
+			return "common/404";
+		}
 		model.addAttribute(a);
-		return "back/article/articleDetail";
+		return "article/articleDetail";
 	}
 
 	/**
@@ -72,21 +87,21 @@ public class ArticleBackController {
 	 * @return
 	 * @time 2016年4月1日下午4:08:19
 	 */
-	@RequestMapping(value = "back/article/homePageList", method = RequestMethod.GET)
-	public String homePageList(Model model, HttpServletRequest request, HttpServletResponse response) {
+	@RequestMapping(value = "public/article/hot", method = RequestMethod.GET)
+	public String hotList(Model model, HttpServletRequest request, HttpServletResponse response) {
 		if (EhCacheUtil.IsExist("SystemCache")) {// 从缓存取
 			@SuppressWarnings("unchecked")
 			List<Object> total = (List<Object>) EhCacheUtil.get("SystemCache", "pageList");
 			model.addAttribute("list", total);
 			if (total != null && total.size() > 0) {
-				return "back/article/articleList";
+				return "article/articleList";
 			}
 		}
 		Page<Article> page = this.articleService.findByPage(new Article(), 1, 12);
 		List<Article> list = page.getResult();
 		for (Article a : list) {
 			User u = new User();
-			a.setContent(a.getContent().substring(0, 250));
+			a.setContent(a.getContent().length() > 200 ? a.getContent().substring(0, 200) : a.getContent());
 			u.setId(a.getUserId());
 			u = this.userService.get(u);
 			a.setUser(u);
@@ -113,7 +128,7 @@ public class ArticleBackController {
 		total.add(childList4);
 		EhCacheUtil.put("SystemCache", "pageList", total);// 存入缓存
 		model.addAttribute("list", total);
-		return "back/article/articleList";
+		return "article/articleList";
 	}
 
 	/**
@@ -127,36 +142,42 @@ public class ArticleBackController {
 	 * @return
 	 * @time 2016年3月30日下午2:16:59
 	 */
-	@RequestMapping(value = "back/article/list", method = RequestMethod.GET)
-	public String list(@ModelAttribute Article article, Model model, Integer pageNum, Integer pageSize) {
+	@RequestMapping(value = "public/article/list", method = RequestMethod.POST)
+	@ResponseBody
+	public String list(HttpServletRequest request, String userId, Integer pageNum, Integer pageSize) {
+		ResponseMapper mapper = ResponseMapper.createMapper();
+		Article article = new Article();
+		article.setUserId(userId);
+		if (pageNum == null || pageSize == null || pageNum < 0 || pageSize < 0) {
+			pageNum = 0;
+			pageSize = 10;
+		}
 		Page<Article> page = this.articleService.findByPage(article, pageNum, pageSize);
 		List<Article> list = page.getResult();
-		User u = new User();
-		for (Article a : list) {
-			a.setContent(a.getContent().substring(0, 250));
-			u.setId(a.getUserId());
-			u = this.userService.get(u);
-			a.setUser(u);
+		List<Map<String, Object>> total = new ArrayList<>();
+		if (list != null && list.size() > 0) {
+			for (Article a : list) {
+				total.add(this.article2Map(a));
+			}
 		}
-		model.addAttribute("list", list);
-		return "back/article/articleList";
+		return mapper.setData(total).getResultJson();
 	}
 
-	@RequestMapping(value = "back/article/changeView", method = RequestMethod.POST)
+	@RequestMapping(value = "public/article/changeView/{articleId}", method = RequestMethod.POST)
 	@ResponseBody
-	public String changeView(String id) {
+	public String changeView(HttpServletRequest requset, @PathVariable String id) {
 		ArticleAttr attr = new ArticleAttr();
 		attr.setArticleId(id);
 		int total = this.articleAttrService.updateReadNum(attr);
 		return total + "";
 	}
 
-	@RequestMapping(value = "addArticle")
+	@RequestMapping(value = "private/article/add")
 	public String addArticle(HttpServletResponse response, HttpServletRequest request) {
 		System.out.println("缓存时间:" + request.getSession().getMaxInactiveInterval());
 		if (request.getSession().getAttributeNames().hasMoreElements()) {
 			System.out.println(request.getSession().getAttributeNames().nextElement());
 		}
-		return "back/article/articleForm";
+		return "article/articleForm";
 	}
 }

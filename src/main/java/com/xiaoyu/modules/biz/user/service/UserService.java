@@ -6,8 +6,6 @@ package com.xiaoyu.modules.biz.user.service;
 import java.io.IOException;
 import java.util.Date;
 
-import javax.servlet.http.HttpServletRequest;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;

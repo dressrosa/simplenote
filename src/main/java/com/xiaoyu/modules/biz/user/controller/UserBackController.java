@@ -10,7 +10,6 @@ import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.ModelAttribute;
@@ -24,6 +23,7 @@ import com.xiaoyu.common.base.ResponseMapper;
 import com.xiaoyu.common.base.ResultConstant;
 import com.xiaoyu.common.utils.StringUtils;
 import com.xiaoyu.modules.biz.user.entity.User;
+import com.xiaoyu.modules.biz.user.entity.UserRecord;
 import com.xiaoyu.modules.biz.user.service.UserService;
 
 /**
@@ -32,7 +32,6 @@ import com.xiaoyu.modules.biz.user.service.UserService;
  * @author xiaoyu 2016年3月23日
  */
 @Controller
-@EnableAutoConfiguration
 public class UserBackController {
 
 	@Autowired
@@ -43,14 +42,17 @@ public class UserBackController {
 	 * 
 	 * @author xiaoyu
 	 */
-	@RequestMapping(value = "back/user/get/{userId}", method = RequestMethod.GET)
+	@RequestMapping(value = "public/user/{userId}", method = RequestMethod.GET)
 	public String get(@PathVariable String userId, Model model, HttpServletRequest request,
 			HttpServletResponse response) {
 		User user = new User();
 		user.setId(userId);
 		User u = this.userService.get(user);
+		if (u == null) {
+			return "common/404";
+		}
 		model.addAttribute(u);
-		return "back/user/userDetail";
+		return "user/userDetail";
 	}
 
 	/**
@@ -58,7 +60,7 @@ public class UserBackController {
 	 * 
 	 * @author xiaoyu
 	 */
-	@RequestMapping(value = "back/user/save", method = RequestMethod.POST)
+	@RequestMapping(value = "private/user/save", method = RequestMethod.POST)
 	@ResponseBody
 	public String save(@ModelAttribute User user, Model model) {
 		int total = this.userService.save(user);
@@ -78,11 +80,11 @@ public class UserBackController {
 	 * @return
 	 * @time 2016年3月31日下午4:26:56
 	 */
-	@RequestMapping(value = "back/user/goUpdate", method = RequestMethod.GET)
+	@RequestMapping(value = "private/user/goUpdate", method = RequestMethod.GET)
 	public String goUpdate(@ModelAttribute User user, Model model) {
 		user = this.userService.get(user);
 		model.addAttribute("user", user);
-		return "back/user/userForm";
+		return "user/userForm";
 	}
 
 	/**
@@ -90,7 +92,7 @@ public class UserBackController {
 	 * 
 	 * @author xiaoyu
 	 */
-	@RequestMapping(value = "back/user/update", method = RequestMethod.POST)
+	@RequestMapping(value = "private/user/update", method = RequestMethod.POST)
 	@ResponseBody
 	public String update(@ModelAttribute User user, Model model) {
 		int total = this.userService.update(user);
@@ -105,11 +107,11 @@ public class UserBackController {
 	 * 
 	 * @author xiaoyu
 	 */
-	@RequestMapping(value = "back/user/list", method = RequestMethod.GET)
+	@RequestMapping(value = "public/user/list", method = RequestMethod.GET)
 	public String list(@ModelAttribute User user, Model model) {
 		Page<User> page = this.userService.findByPage(user, 1, 5);
 		model.addAttribute("list", page.getResult());
-		return "back/user/userList";
+		return "user/userList";
 	}
 
 	/**
@@ -124,7 +126,7 @@ public class UserBackController {
 	 * @throws IOException
 	 * @time 2016年4月14日下午8:24:06
 	 */
-	@RequestMapping(value = "back/user/login", method = RequestMethod.POST)
+	@RequestMapping(value = "public/user/login", method = RequestMethod.POST)
 	@ResponseBody
 	public String login(HttpServletRequest request, HttpServletResponse response, String loginName, String password)
 			throws IOException {
@@ -133,13 +135,13 @@ public class UserBackController {
 		ResponseMapper mapper = ResponseMapper.createMapper();
 
 		if (session != null) {
+			User u = (User) session.getAttribute(loginName + password);
 			session.setMaxInactiveInterval(60);
 			System.out.println("缓存时间:" + session.getMaxInactiveInterval());
 			// while (session.getAttributeNames().hasMoreElements()) {
 			// System.out.println(session.getAttributeNames().nextElement());
 			// }
-		} else {
-			return mapper.getResultJson();
+			return mapper.setData(u).getResultJson();
 		}
 		if (StringUtils.isBlank(loginName) || StringUtils.isBlank(password)) {
 			mapper.setCode(ResultConstant.ARGS_ERROR).setMessage("姓名和密码不能为空");
@@ -155,15 +157,57 @@ public class UserBackController {
 		}
 
 		user.setPassword(null);
-		mapper.setData(user);
 		// 登录名存入session
 		HttpSession session1 = request.getSession(true);
-		session1.setAttribute("user", user);
+		session1.setAttribute(loginName + password, user);
 		// 不管怎么设置过期时间 都没用 暂不知道为撒
 		// session1.setMaxInactiveInterval(2060);
 		System.out.println("缓存时间:" + session1.getMaxInactiveInterval());
 
-		return mapper.getResultJson();
+		return mapper.setData(user).getResultJson();
 
+	}
+
+	/**
+	 * 记录ip
+	 * 
+	 * @author xiaoyu
+	 * @param request
+	 * @param userId
+	 * @return
+	 * @time 2016年4月12日上午10:30:37
+	 */
+	@RequestMapping(value = "private/user/loginRecord", method = RequestMethod.POST)
+	@ResponseBody
+	public void loginRecord(HttpServletRequest request, String userId) {
+		String loginIp = request.getRemoteHost();
+		UserRecord record = new UserRecord();
+		record.setUserId(userId);
+		record.setLoginIp(loginIp);
+		this.userService.saveUserRecord(record);
+	}
+
+	/**
+	 * 退出登陆
+	 * 
+	 * @author xiaoyu
+	 * @param request
+	 * @param response
+	 * @time 2016年4月14日下午7:21:06
+	 */
+	@RequestMapping(value = "private/user/logout")
+	public void logout(HttpServletRequest request, HttpServletResponse response) {
+		HttpSession session = request.getSession(false);
+		if (session != null) {
+			session.invalidate();
+		}
+		// String url =
+		// response.encodeRedirectURL(request.getContextPath()+"/");
+		// try {
+		// response.sendRedirect(url);
+		// } catch (IOException e) {
+		// // TODO Auto-generated catch block
+		// e.printStackTrace();
+		// }
 	}
 }

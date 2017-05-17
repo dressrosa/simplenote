@@ -969,12 +969,12 @@ button, input.button { position:relative;top:0.25em; }
     color: #808080;
     font-size: 16px;
     padding-left: 20px;
-	background: url(/img/open-quote.gif) no-repeat left top;
+	/* background: url(/img/open-quote.gif) no-repeat left top; */
 }
 
 .quote span {
     padding-right: 20px;
-	background: url(/img/close-quote.gif) no-repeat right top;
+	/* background: url(/img/close-quote.gif) no-repeat right top; */
 }
 
 .submit_button {

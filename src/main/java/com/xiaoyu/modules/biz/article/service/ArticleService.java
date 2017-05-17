@@ -1,6 +1,6 @@
 /**
  * 不要因为走了很远就忘记当初出发的目的:whatever happened,be yourself
- */ 
+ */
 package com.xiaoyu.modules.biz.article.service;
 
 import java.util.Date;
@@ -20,12 +20,11 @@ import com.xiaoyu.modules.biz.user.dao.UserDao;
 import com.xiaoyu.modules.biz.user.entity.User;
 
 /**
- * @author xiaoyu
- *2016年3月29日
+ * @author xiaoyu 2016年3月29日
  */
 @Service
-@Transactional(readOnly=true)
-public class ArticleService extends BaseService<ArticleDao,Article>{
+@Transactional(readOnly = true)
+public class ArticleService extends BaseService<ArticleDao, Article> {
 
 	@Autowired
 	private UserDao userDao;
@@ -33,25 +32,28 @@ public class ArticleService extends BaseService<ArticleDao,Article>{
 	private ArticleDao articleDao;
 	@Autowired
 	private ArticleAttrDao attrDao;
-	
+
 	@Override
 	public Article get(Article t) {
-		Article a =  super.get(t);
-		User u = new User();
-		u.setId(a.getUserId());
-		u = this.userDao.get(u);
-		a.setUser(u);
+		Article a = super.get(t);
+		if (a != null && a.getUserId() != null) {
+			User u = new User();
+			u.setId(a.getUserId());
+			u = this.userDao.get(u);
+			a.setUser(u);
+		}
 		return a;
 	}
 
 	@Override
+	@Transactional(readOnly = false)
 	public int save(Article t) {
 		ArticleAttr attr = new ArticleAttr();
 		int temp = 0;
-		if(null == t) {
+		if (null == t) {
 			return temp;
 		}
-		if(StringUtils.isNotBlank(t.getId())) {
+		if (StringUtils.isNotBlank(t.getId())) {
 			return temp;
 		}
 		Date date = new Date();
@@ -64,13 +66,10 @@ public class ArticleService extends BaseService<ArticleDao,Article>{
 			attr.setId(IdGenerator.uuid());
 			attr.setCreateDate(date);
 			attr.setUpdateDate(date);
-			return this.attrDao.insert(attr);			
-		}
-		catch(RuntimeException e)  {
+			return this.attrDao.insert(attr);
+		} catch (RuntimeException e) {
 			throw e;
 		}
 	}
 
-	
-	
 }

@@ -8,58 +8,54 @@
 <meta http-equiv="Expires" content="0" />
 <meta http-equiv="Cache-Control" content="no-cache" />
 <meta http-equiv="Cache-Control" content="no-store" />
+<meta name="robots" content="nofollow" />
+<meta name="robots" content="noarchive" />
+<meta http-equiv="Pragma" content="no-cache" />
 <link rel="icon" type="image/ico" href="/xiaoyu/img/favicon.ico"
 	class="img-circle" />
 <link href="/bootstrap-3.3.6-dist/css/bootstrap.min.css"
 	rel="stylesheet" />
 <link href="/jBox-0.3.2/jBox.css" rel="stylesheet" />
 <link rel="stylesheet" href="/stephanwagner/97f7f8-00a5dd.css" />
+<link href="/wuzhi/common.css" rel="stylesheet" type="text/css" />
 <script src="/jquery/jquery-1.12.2.min.js" type="text/javascript"></script>
 <script src="/jBox-0.3.2/jBox.min.js" type="text/javascript"></script>
 <script src="/bootstrap-3.3.6-dist/js/bootstrap.min.js"
 	type="text/javascript"></script>
 <script type="text/javascript" src="/xiaoyu/jquerysession.js"></script>
 <script type="text/javascript" src="/xiaoyu/common.js"></script>
-
-<meta name="robots" content="nofollow" />
-<meta name="robots" content="noarchive" />
+<script type="text/javascript" src="/xiaoyu/xiaoyu.js"></script>
 
 <title th:text="${article.title}"></title>
-<meta content="记录每个人生活的点点滴滴。" name="description" />
-<meta http-equiv="Pragma" content="no-cache" />
-<link href="/wuzhi/common.css" rel="stylesheet" type="text/css" />
+<meta content="唯有读书,不慵不扰" name="description" />
 <style type="text/css">
 </style>
 </head>
 <script type="text/javascript">
-	var userInfo =jQuery.parseJSON( $.session.get('user'));
+	var userInfo = jQuery.parseJSON($.session.get('user'));
 
 	$(document).ready(
 			function() {
-				if (userInfo == 'null') {
+				if (checkNull(userInfo)) {
 					$("#loginSpan").css("display", "block");
 				} else {
 					$("#userSpan").css("display", "block");
 					$("#userSpan").find("#nickName").attr("href",
-							"/back/user/get/" + userInfo.id);
+							"/public/user/" + userInfo.id);
 					$("#userSpan").find("#nickName").text(userInfo.nickName);
 				}
 
 				var item = $(".note_content").attr("id");
 				$.ajax({
-					type : 'POST',
+					type : 'post',
 					async : true,
-					url : '/back/article/changeView',
-					data : {
-						id : item
-					}
+					url : '/public/article/changeView/' + item,
 				});
 				if (isPC()) {
 					$(".main_right").css("width", "70%")
 				} else {
 					$(".main_right").css("width", "100%")
 				}
-
 			});
 </script>
 <body>
@@ -73,7 +69,8 @@
 			</span> <span id="loginSpan" style="float: right; display: none;"> <a
 				class="header_w" style="padding-right: 15px;" href="#" id="register">注册</a>
 				<a class="header_w" style="padding-right: 0px;"
-				href="/common/login.html" id="login">登录</a>
+				th:onclick="'javascript:gotoLogin(\''+'/public/article/'+${article.id}+'\')' "
+				id="login">登录</a>
 			</span>
 		</div>
 	</div>
@@ -81,7 +78,7 @@
 	<div class="container main">
 		<div class="siderbar_left">
 			<div class="img_shadow" style="padding-top: 4px;">
-				<img th:src="'http://www.hanhande.com/'+${article.user.img}"
+				<img th:src="${article.user.img}"
 					th:alt="${article.user.nickName}" style="width: 100%;" />
 			</div>
 			<div class="quote">
@@ -124,17 +121,6 @@
 	</div>
 
 </body>
-<!-- /* var userInfo = JSON.parse($.session.get('user'));
-	if (userInfo != null && userInfo != 'undefined') {
-		$("#nickName").html(userInfo.nickName).attr("href",
-				'/html/app/userDetail.html').css("display", "");
-		$("#register").css("display", "none");
-		$("#login").css("display", "none");
-		$("#logout").css("display", "");
-	}else {
-		$("#login").css("display", "");
-		$("#register").css("display", "");
-	} */ -->
 <script type="text/javascript">
 	function showContent(item) {
 		alert(item);

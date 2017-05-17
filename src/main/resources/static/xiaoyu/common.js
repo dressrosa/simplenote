@@ -117,7 +117,7 @@ function uploadFile() {
 		draggable : "title",
 		title : "上传图片",
 		ajax : {
-			url : "/html/back/uploadFile.html",
+			url : "/back/uploadFile.html",
 			reload : true
 		},
 		onCloseComplete : function(e) {
@@ -125,6 +125,14 @@ function uploadFile() {
 		},
 	});
 	myModal.open();
+}
+/*
+ * 转向登陆页面,并记录当前页面的地址
+ */
+function gotoLogin(nowUrl) {
+	console.log("dizhi:"+nowUrl);
+	$.session.set('nowUrl', nowUrl, true);
+	window.location.href = "/common/login.html";
 }
 /**
  * login
@@ -151,7 +159,7 @@ function login(item) {
 		return;
 	}
 	$.ajax({
-		//cache : false,
+		// cache : false,
 		type : "POST",
 		url : item,
 		data : $('#xyForm').serialize(),
@@ -167,19 +175,33 @@ function login(item) {
 		success : function(data) {
 			var jsonObj = jQuery.parseJSON(data);
 			console.log(jsonObj);
+
 			if (jsonObj.code == '0') {
 				// record user ip
 				$.ajax({
 					type : 'post',
 					async : true,
-					url : '/app/user/loginRecord',
+					url : '/private/user/loginRecord',
 					data : {
 						userId : jsonObj.data.id
-					}
+					},
+					beforeSend : function(xhr) {
+						xhr.setRequestHeader('userId', jsonObj.data.id);
+					}// 这里设置header
 				});
-				//console.log( JSON.stringify(jsonObj.data));
-				$.session.set('user',JSON.stringify(jsonObj.data), false);
-				window.location.href = "/modules/back/user/userDetail.html";
+				// console.log( JSON.stringify(jsonObj.data));
+				// save the login info
+				$.session.set('user', JSON.stringify(jsonObj.data), false);
+				// go to the previous page,or go to the home
+				var nowUrl = $.session.get("nowUrl");
+				console.log("跳转地址:"+nowUrl);
+				if (checkNull(nowUrl)) {
+					window.location.href = "/xiaoyu.me.html";
+				} else {
+					$.session.remove("nowUrl");
+					window.location.href = nowUrl;
+				}
+
 				return true;
 			} else {
 				new jBox('Notice', {
@@ -198,7 +220,7 @@ function logout() {
 	// window.location.href = window.location.href.replace(/#/g,'');
 	$.ajax({
 		type : "POST",
-		url : "/app/user/logout",
+		url : "/private/user/logout",
 		success : function() {
 			window.location.href = window.location.href.replace(/#/g, '');
 		}
@@ -243,4 +265,9 @@ function isPC() {
 		}
 	}
 	return flag;
+}
+function checkNull(item) {
+	if (item == null || item == 'null' || item == undefined || item == '')
+		return true;
+	return false;
 }

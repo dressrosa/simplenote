@@ -8,15 +8,15 @@ import org.springframework.boot.context.embedded.ConfigurableEmbeddedServletCont
 import org.springframework.boot.context.embedded.EmbeddedServletContainerCustomizer;
 import org.springframework.boot.web.servlet.ErrorPage;
 import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpStatus;
-import org.springframework.stereotype.Controller;
 
 /**
  * 错误页面
  * 
  * @author xiaoyu 2016年3月21日
  */
-@Controller
+@Configuration
 @EnableAutoConfiguration
 public class ErrorPageConfiguration {
 
@@ -27,8 +27,8 @@ public class ErrorPageConfiguration {
 			@Override
 			public void customize(ConfigurableEmbeddedServletContainer container) {
 
-				ErrorPage error404Page = new ErrorPage(HttpStatus.NOT_FOUND, "/public/common/404.html");
-				ErrorPage error500Page = new ErrorPage(HttpStatus.INTERNAL_SERVER_ERROR, "/public/common/500.html");
+				ErrorPage error404Page = new ErrorPage(HttpStatus.NOT_FOUND, "/modules/common/404.html");
+				ErrorPage error500Page = new ErrorPage(HttpStatus.INTERNAL_SERVER_ERROR, "/modules/common/500.html");
 				container.addErrorPages(error500Page);
 				container.addErrorPages(error404Page);
 			}

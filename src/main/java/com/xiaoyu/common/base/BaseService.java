@@ -21,7 +21,7 @@ import com.xiaoyu.common.utils.StringUtils;
  * @author xiaoyu 2016年3月22日
  */
 @Transactional(readOnly = true)
-public abstract class BaseService<D extends BaseDao<T>,T extends BaseEntity> {
+public abstract class BaseService<D extends BaseDao<T>, T extends BaseEntity> {
 
 	@Autowired
 	private D tDao;
@@ -36,14 +36,8 @@ public abstract class BaseService<D extends BaseDao<T>,T extends BaseEntity> {
 	 */
 	public T get(T t) {
 		T temp = null;
-		//if (this.isExist(t)) {
-			temp = this.tDao.get(t);
-			if (null == temp) {
-				return t;
-			}
-			return temp;
-		//}
-		//return t;
+		temp = this.tDao.get(t);
+		return temp;
 	}
 
 	/**
@@ -54,7 +48,7 @@ public abstract class BaseService<D extends BaseDao<T>,T extends BaseEntity> {
 	 * @return
 	 * @time 2016年3月22日下午3:14:41
 	 */
-	@Transactional(readOnly=false)
+	@Transactional(readOnly = false)
 	public int delete(T t) {
 		return this.tDao.delete(t);
 	}
@@ -91,21 +85,24 @@ public abstract class BaseService<D extends BaseDao<T>,T extends BaseEntity> {
 		if (null == t) {
 			return page;
 		}
+
 		PageHelper.startPage(pageNum, pageSize);
 		page = (Page<T>) this.tDao.findByList(t);
 		return page;
 	}
-	
-	/**更新
-	 *@author xiaoyu
-	 *@param t
-	 *@return
-	 *@time 2016年3月22日下午3:38:49
+
+	/**
+	 * 更新
+	 * 
+	 * @author xiaoyu
+	 * @param t
+	 * @return
+	 * @time 2016年3月22日下午3:38:49
 	 */
-	@Transactional(readOnly=false)
+	@Transactional(readOnly = false)
 	public int update(T t) {
 		int temp = 0;
-		if(null == t) {
+		if (null == t) {
 			return temp;
 		}
 		Date date = new Date();
@@ -114,19 +111,21 @@ public abstract class BaseService<D extends BaseDao<T>,T extends BaseEntity> {
 		return temp;
 	}
 
-	/**保存
-	 *@author xiaoyu
-	 *@param t
-	 *@return 
-	 *@time 2016年3月22日下午3:39:25
+	/**
+	 * 保存
+	 * 
+	 * @author xiaoyu
+	 * @param t
+	 * @return
+	 * @time 2016年3月22日下午3:39:25
 	 */
-	@Transactional(readOnly=false)
+	@Transactional(readOnly = false)
 	public int save(T t) {
 		int temp = 0;
-		if(null == t) {
+		if (null == t) {
 			return temp;
 		}
-		if(StringUtils.isNotBlank(t.getId())) {
+		if (StringUtils.isNotBlank(t.getId())) {
 			return temp;
 		}
 		Date date = new Date();
@@ -136,6 +135,7 @@ public abstract class BaseService<D extends BaseDao<T>,T extends BaseEntity> {
 		temp = this.tDao.insert(t);
 		return temp;
 	}
+
 	/**
 	 * 判断是否存在
 	 * 
