@@ -19,26 +19,34 @@
 	type="text/javascript"></script>
 <script type="text/javascript" src="/xiaoyu/jquerysession.js"></script>
 <script type="text/javascript" src="/xiaoyu/common.js"></script>
-<link rel="icon" type="image/ico" href="/xiaoyu/img/favicon.ico">
-<meta name="robots" content="nofollow">
-<meta name="robots" content="noarchive">
+<link rel="icon" type="image/ico" href="/xiaoyu/img/favicon.ico" />
+<meta name="robots" content="nofollow" />
+<meta name="robots" content="noarchive" />
 <title>写日志</title>
-<meta http-equiv="Pragma" content="no-cache">
+<meta http-equiv="Pragma" content="no-cache" />
 <link href="/wuzhi/common.css" rel="stylesheet" type="text/css" />
 <style type="text/css">
 </style>
 </head>
 <script type="text/javascript">
-	//$(document).ready(function() {
-	//	});
+	$(document).ready(function() {
+
+	});
 </script>
 <body>
 	<div class="header">
 		<div class="container">
-			<div class="span-10">
-				<span><a class="header_w" href="/xiaoyu.me.html">首页</a></span>
-			</div>
-
+			<span><a class="header_w" href="/xiaoyu.me.html">首页</a></span> <span
+				id="userSpan" style="float: right; display: none;"> <a
+				class="header_w" style="padding-right: 15px;" id="nickName" href="#">xxx</a>
+				<a class="header_w" style="padding-right: 0px;" id="logout" href=""
+				onclick="logout()">退出</a>
+			</span> <span id="loginSpan" style="float: right; display: none;"> <a
+				class="header_w" style="padding-right: 15px;" href="#" id="register">注册</a>
+				<a class="header_w" style="padding-right: 0px;"
+				th:onclick="'javascript:gotoLogin(\''+'/private/article/add'+'\')' "
+				id="login">登录</a>
+			</span>
 		</div>
 	</div>
 
@@ -46,17 +54,25 @@
 	<div class="container main">
 		<div class="main">
 			<div class="note_each">
-				<div class="note_content">>此处写文章</div>
+				<div class="note_content" style="white-space: normal;">
+					<textarea id="articleContent" class="textarea" required="required"
+						placeholder="见字如面,不慵不扰" style="width: 100%; resize: none"></textarea>
+				</div>
+				<input type="button" class="button" value="发表" onclick="publish()"
+					style="float: right; font-size: 15px; background-color: #FFFFFF;" />
+
 			</div>
 		</div>
 	</div>
 	<div class="footer container">
-		<hr class="hr-10">
-		<div class="copyright span-5 append-9">
-			©2016-20xx 小雨 <a href="#">xiaoyu.me</a>
+		<hr class="hr-10" style="width: 98%; margin-left: 0px;" />
+		<div class="copyright span-5 append-0">
+			©2016-2017 小雨 <a href="#">xiaoyu.me</a>
 		</div>
 		<div class="span-2 last">
-			<a href="#">关于ME</a>
+			<a href="https://github.com/dressrosa"
+				style="width: 100%; display: block; background: url(https://assets-cdn.github.com/favicon.ico) no-repeat; text-indent: 40px; height: 33px;">
+			</a>
 		</div>
 	</div>
 

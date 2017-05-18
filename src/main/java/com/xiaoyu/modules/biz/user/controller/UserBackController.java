@@ -4,6 +4,9 @@
 package com.xiaoyu.modules.biz.user.controller;
 
 import java.io.IOException;
+import java.util.Date;
+import java.util.HashMap;
+import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -21,6 +24,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import com.github.pagehelper.Page;
 import com.xiaoyu.common.base.ResponseMapper;
 import com.xiaoyu.common.base.ResultConstant;
+import com.xiaoyu.common.utils.Md5Utils;
 import com.xiaoyu.common.utils.StringUtils;
 import com.xiaoyu.modules.biz.user.entity.User;
 import com.xiaoyu.modules.biz.user.entity.UserRecord;
@@ -114,6 +118,15 @@ public class UserBackController {
 		return "user/userList";
 	}
 
+	private Map<String, Object> user2Map(User u) {
+		Map<String, Object> map = new HashMap<>();
+		map.put("id", u.getId());
+		map.put("description", u.getDescription());
+		map.put("img", u.getImg());
+		map.put("nickName", u.getNickName());
+		return map;
+	}
+
 	/**
 	 * 正常登录
 	 * 
@@ -130,18 +143,18 @@ public class UserBackController {
 	@ResponseBody
 	public String login(HttpServletRequest request, HttpServletResponse response, String loginName, String password)
 			throws IOException {
-
 		HttpSession session = request.getSession(false);
 		ResponseMapper mapper = ResponseMapper.createMapper();
 
 		if (session != null) {
-			User u = (User) session.getAttribute(loginName + password);
-			session.setMaxInactiveInterval(60);
+			Map<String, Object> map = (Map<String, Object>) session.getAttribute(request.getHeader("token"));
+			session.setMaxInactiveInterval(60 * 60 * 3);
 			System.out.println("缓存时间:" + session.getMaxInactiveInterval());
 			// while (session.getAttributeNames().hasMoreElements()) {
 			// System.out.println(session.getAttributeNames().nextElement());
 			// }
-			return mapper.setData(u).getResultJson();
+			if (map != null)
+				return mapper.setData(map).getResultJson();
 		}
 		if (StringUtils.isBlank(loginName) || StringUtils.isBlank(password)) {
 			mapper.setCode(ResultConstant.ARGS_ERROR).setMessage("姓名和密码不能为空");
@@ -159,12 +172,16 @@ public class UserBackController {
 		user.setPassword(null);
 		// 登录名存入session
 		HttpSession session1 = request.getSession(true);
-		session1.setAttribute(loginName + password, user);
+		session1.setMaxInactiveInterval(60 * 60 * 3);
+		// 用户id和密码和当前时间生成的md5用于token
+		String token = Md5Utils.MD5(user.getId() + password + new Date().getTime());
+		session1.setAttribute(token, user);
 		// 不管怎么设置过期时间 都没用 暂不知道为撒
 		// session1.setMaxInactiveInterval(2060);
 		System.out.println("缓存时间:" + session1.getMaxInactiveInterval());
-
-		return mapper.setData(user).getResultJson();
+		Map<String, Object> result = this.user2Map(user);
+		result.put("token", token);
+		return mapper.setData(result).getResultJson();
 
 	}
 

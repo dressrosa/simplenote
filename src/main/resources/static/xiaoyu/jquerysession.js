@@ -26,7 +26,7 @@
                }
             }
 
-            document.cookie = this._generatePrefix() + "=" + document.location.protocol + ';path=/;expires=' + (new Date((new Date).getTime() + 120000)).toUTCString();
+            document.cookie = this._generatePrefix() + "=" + document.location.protocol + ';path=/;expires=' + (new Date((new Date).getTime() + 10800)).toUTCString();
 
         },
 
@@ -51,7 +51,7 @@
         {
             var cookie = this._generatePrefix() + key + "=" + value + "; path=/";
             if (onceOnly) {
-                cookie += "; expires=" + (new Date(Date.now() + 120000)).toUTCString();
+                cookie += "; expires=" + (new Date(Date.now() + 10800)).toUTCString();
             }
             document.cookie = cookie;
             this._cookieCache[key] = value;

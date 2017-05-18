@@ -10,6 +10,7 @@ import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -17,11 +18,13 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.github.pagehelper.Page;
 import com.google.common.collect.Lists;
 import com.xiaoyu.common.base.ResponseMapper;
+import com.xiaoyu.common.base.ResultConstant;
 import com.xiaoyu.common.utils.EhCacheUtil;
 import com.xiaoyu.modules.biz.article.entity.Article;
 import com.xiaoyu.modules.biz.article.entity.ArticleAttr;
@@ -172,8 +175,25 @@ public class ArticleBackController {
 		return total + "";
 	}
 
-	@RequestMapping(value = "private/article/add")
-	public String addArticle(HttpServletResponse response, HttpServletRequest request) {
+	@RequestMapping(value = "private/article/add", method = RequestMethod.POST)
+	@ResponseBody
+	public String addArticle(HttpServletRequest request, @RequestParam(required = true) String content,
+			@RequestParam(required = true) String userId, @RequestParam(required = true) String token) {
+		ResponseMapper mapper = ResponseMapper.createMapper();
+		HttpSession session = request.getSession(false);
+		if (session == null)
+			return mapper.setCode(ResultConstant.LOGIN_INVALIDATE).setMessage("登录失效,请刷新登录1").getResultJson();
+		User user = (User) session.getAttribute(token);
+		if (user == null)
+			return mapper.setCode(ResultConstant.LOGIN_INVALIDATE).setMessage("登录失效,请刷新登录2").getResultJson();
+		if (!userId.equals(user.getId()))
+			return mapper.setCode(ResultConstant.LOGIN_INVALIDATE).setMessage("登录失效,请刷新登录3").getResultJson();
+		String articleId = this.articleService.addArticle(userId, content);
+		return mapper.setData(articleId).getResultJson();
+	}
+
+	@RequestMapping(value = "public/article/write")
+	public String write(HttpServletResponse response, HttpServletRequest request) {
 		System.out.println("缓存时间:" + request.getSession().getMaxInactiveInterval());
 		if (request.getSession().getAttributeNames().hasMoreElements()) {
 			System.out.println(request.getSession().getAttributeNames().nextElement());

@@ -15,5 +15,8 @@ public class ResultConstant {
 
 	public static final String EXISTS = "4";
 	public static final String EXISTS_MESSAGE = "数据已经存在";
+	
+	public static final String LOGIN_INVALIDATE="20001";
+	public static final String LOGIN_INVALIDATE_MESSAGE = "登录失效";
 
 }

@@ -23,24 +23,11 @@
 <script type="text/javascript" src="/xiaoyu/xiaoyu.js"></script>
 </head>
 <script type="text/javascript">
-	var userInfo = jQuery.parseJSON($.session.get('user'));
-
+	 
 	$(document).ready(
 			function() {
-				if (checkNull(userInfo)) {
-					$("#loginSpan").css("display", "block");
-				} else {
-					$("#userSpan").css("display", "block");
-					$("#userSpan").find("#nickName").attr("href",
-							"/public/user/" + userInfo.id);
-					$("#userSpan").find("#nickName").text(userInfo.nickName);
-				}
-
+				 
 			});
-
-	
-
-
 
 </script>
 <script th:inline="javascript">  
@@ -51,7 +38,7 @@
             async : true,
             url : '/public/article/list',
             data:{
-            	userId:'1'
+            	userId:userId
             },
             success : function(data) {
             	var obj = jQuery.parseJSON(data);
@@ -112,6 +99,11 @@
 		<div class="g-line" style="margin: 25px auto;"></div>
 		<a href="mailto:1546428286@qq.com">1546428286@qq.com</a>
 	</div>
+	<script type="text/javascript">
+        $(document).ready(function() {
+        	writeBox();
+        });
+    </script>
 </body>
 
 </html>

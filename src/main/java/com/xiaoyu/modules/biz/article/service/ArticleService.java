@@ -72,4 +72,26 @@ public class ArticleService extends BaseService<ArticleDao, Article> {
 		}
 	}
 
+	@Transactional(readOnly = false)
+	public String addArticle(String userId, String content) {
+		Article t = new Article();
+		ArticleAttr attr = new ArticleAttr();
+		Date date = new Date();
+		t.setId(IdGenerator.uuid());
+		t.setCreateDate(date);
+		t.setUpdateDate(date);
+		t.setContent(content);
+		t.setUserId(userId);
+		try {
+			this.articleDao.insert(t);
+			attr.setArticleId(t.getId());
+			attr.setId(IdGenerator.uuid());
+			attr.setCreateDate(date);
+			attr.setUpdateDate(date);
+			this.attrDao.insert(attr);
+		} catch (RuntimeException e) {
+			throw e;
+		}
+		return t.getId();
+	}
 }

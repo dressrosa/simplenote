@@ -11,8 +11,7 @@
 <meta name="robots" content="nofollow" />
 <meta name="robots" content="noarchive" />
 <meta http-equiv="Pragma" content="no-cache" />
-<link rel="icon" type="image/ico" href="/xiaoyu/img/favicon.ico"
-	class="img-circle" />
+<link rel="icon" type="image/ico" href="/xiaoyu/img/favicon.ico" />
 <link href="/bootstrap-3.3.6-dist/css/bootstrap.min.css"
 	rel="stylesheet" />
 <link href="/jBox-0.3.2/jBox.css" rel="stylesheet" />
@@ -32,31 +31,20 @@
 </style>
 </head>
 <script type="text/javascript">
-	var userInfo = jQuery.parseJSON($.session.get('user'));
+	$(document).ready(function() {
 
-	$(document).ready(
-			function() {
-				if (checkNull(userInfo)) {
-					$("#loginSpan").css("display", "block");
-				} else {
-					$("#userSpan").css("display", "block");
-					$("#userSpan").find("#nickName").attr("href",
-							"/public/user/" + userInfo.id);
-					$("#userSpan").find("#nickName").text(userInfo.nickName);
-				}
-
-				var item = $(".note_content").attr("id");
-				$.ajax({
-					type : 'post',
-					async : true,
-					url : '/public/article/changeView/' + item,
-				});
-				if (isPC()) {
-					$(".main_right").css("width", "70%")
-				} else {
-					$(".main_right").css("width", "100%")
-				}
-			});
+		var item = $(".note_content").attr("id");
+		$.ajax({
+			type : 'post',
+			async : true,
+			url : '/public/article/changeView/' + item,
+		});
+		if (isPC()) {
+			$(".main_right").css("width", "70%")
+		} else {
+			$(".main_right").css("width", "100%")
+		}
+	});
 </script>
 <body>
 	<div class="header">
@@ -74,12 +62,11 @@
 			</span>
 		</div>
 	</div>
-	<meta name="robots" content="none" />
 	<div class="container main">
 		<div class="siderbar_left">
 			<div class="img_shadow" style="padding-top: 4px;">
-				<img th:src="${article.user.img}"
-					th:alt="${article.user.nickName}" style="width: 100%;" />
+				<img th:src="${article.user.img}" th:alt="${article.user.nickName}"
+					style="width: 100%;" />
 			</div>
 			<div class="quote">
 				<span th:text="${article.user.description }"></span>
@@ -104,10 +91,7 @@
 			<label>--</label><label th:text="${article.user.nickName}"></label>
 		</div>
 	</div>
-	<div class="footer container">
-		<span class="span-13" onclick="showContent('${article.id}')"
-			id="commentArea">查看评论</span>
-	</div>
+
 	<div class="footer container">
 		<hr class="hr-10" style="width: 98%; margin-left: 0px;" />
 		<div class="copyright span-5 append-0">
@@ -119,12 +103,10 @@
 			</a>
 		</div>
 	</div>
-
+	<script type="text/javascript">
+		$(document).ready(function() {
+			writeBox();
+		});
+	</script>
 </body>
-<script type="text/javascript">
-	function showContent(item) {
-		alert(item);
-	};
-</script>
-
 </html>

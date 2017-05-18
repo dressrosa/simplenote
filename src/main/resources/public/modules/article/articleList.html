@@ -42,13 +42,25 @@
 		});
 		$(".col-xs-3").disableSelection();
 	});
-	$(document).ready(function() {
-		if (!isPC()) {
-			$(".col-xs-3").css("width", "100%");
-			$("#footer").css("display", "none");
-		}
 
-	});
+	var userInfo = jQuery.parseJSON($.session.get('user'));
+
+	$(document).ready(
+			function() {
+				if (!isPC()) {
+					$(".col-xs-3").css("width", "100%");
+					$("#footer").css("display", "none");
+				}
+
+				if (checkNull(userInfo)) {
+					$("#loginSpan").css("display", "block");
+				} else {
+					$("#userSpan").css("display", "block");
+					$("#userSpan").find("#nickName").attr("href",
+							"/public/user/" + userInfo.id);
+					$("#userSpan").find("#nickName").text(userInfo.nickName);
+				}
+			});
 </script>
 <title>文章列表</title>
 </head>
@@ -58,21 +70,29 @@
 		style="padding-right: 0px; padding-left: 0px;">
 		<div class="header">
 			<div class="container">
-
-				<div class="span-10">
-					<span><a class="header_w" href="/xiaoyu.me.html">首页</a></span>
-
-				</div>
+				<span><a class="header_w" href="/xiaoyu.me.html">首页</a></span> <span
+					id="userSpan" style="float: right; display: none;"> <a
+					class="header_w" style="padding-right: 15px;" id="nickName"
+					href="#">xxx</a> <a class="header_w" style="padding-right: 0px;"
+					id="logout" href="" onclick="logout()">退出</a>
+				</span> <span id="loginSpan" style="float: right; display: none;"> <a
+					class="header_w" style="padding-right: 15px;" href="#"
+					id="register">注册</a> <a class="header_w"
+					style="padding-right: 0px;"
+					th:onclick="'javascript:gotoLogin(\''+'/public/article/hot'+'\')' "
+					id="login">登录</a>
+				</span>
 			</div>
 		</div>
 
 		<div class="row-fluid">
 			<div class="span12">
 				<div class="row-fluid">
-					<div th:each="child:${list}" class="col-xs-3 span3"
+					<div th:each="child,state1:${list}" class="col-xs-3 span3"
 						style="font-family: cursive; font-size: medium; top: 15px;">
-						<dl th:each="article:${child}">
-							<div class="sponsor" th:title="${article.title}">
+						<dl th:each="article,state2:${child}">
+							<div class="sponsor" th:title="${article.title}"
+								th:if="${(state1.index*3+state2.index)%2==0}">
 								<div class="sponsorFlip" th:id="${article.id}"
 									th:name="${article.user.id }">
 									<dt th:text="${article.title}"></dt>
@@ -87,6 +107,24 @@
 									<div class="g-line" style="width: 25%; margin: 25px auto;"></div>
 								</div>
 							</div>
+							<div class="sponsor" th:title="${article.title}"
+								th:if="${(state1.index*3+state2.index)%2==1}">
+								<div class="sponsorFlip" th:id="${article.id}"
+									th:name="${article.user.id }">
+									<dt th:text="${article.user.nickName}"></dt>
+									<span><img th:src="${article.user.img}"
+										class="img-circle" height="160px" width="160px" /></span>
+									<p th:text="${article.user.description }"></p>
+									<div class="g-line" style="width: 25%; margin: 25px auto;"></div>
+								</div>
+								<div class="sponsorData">
+									<dt th:text="${article.title}"></dt>
+									<p th:text="${article.content}"></p>
+									<div class="g-line" style="width: 25%; margin: 25px auto;"></div>
+
+
+								</div>
+							</div>
 						</dl>
 
 					</div>
@@ -98,6 +136,7 @@
 			©<a href="">xiao yu</a>
 		</div>
 	</div>
+
 </body>
 
 

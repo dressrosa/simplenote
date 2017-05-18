@@ -1,10 +1,21 @@
 var confirmjBox;
-$(document).ready(function() {
-	confirmjBox = new jBox('Confirm', {
-		confirmButton : '确认',
-		cancelButton : '取消'
-	});
-});
+$(document).ready(
+		function() {
+			confirmjBox = new jBox('Confirm', {
+				confirmButton : '确认',
+				cancelButton : '取消'
+			});
+
+			var userInfo = jQuery.parseJSON($.session.get('user'));
+			if (checkNull(userInfo)) {
+				$("#loginSpan").css("display", "block");
+			} else {
+				$("#userSpan").css("display", "block");
+				$("#userSpan").find("#nickName").attr("href",
+						"/public/user/" + userInfo.id);
+				$("#userSpan").find("#nickName").text(userInfo.nickName);
+			}
+		});
 /**
  * 更新信息
  * 
@@ -82,7 +93,69 @@ function postForm(item) {
 		}
 	});
 }
-
+function publish() {
+	var userInfo = jQuery.parseJSON($.session.get("user"));
+	if (checkNull(userInfo)) {
+		new jBox('Notice', {
+			color : 'red',
+			animation : 'tada',
+			autoClose : 2000,
+			content : '请先登录!'
+		});
+		return false;
+	}
+	var content = $("#articleContent");
+	if (checkNull(content.val())) {
+		new jBox('Notice', {
+			color : 'red',
+			animation : 'tada',
+			autoClose : 2000,
+			content : '请君留字!'
+		});
+		return false;
+	}
+	var userId = userInfo.id;
+	var token = userInfo.token;
+	$.ajax({
+		type : "post",
+		url : "/private/article/add",
+		data : {
+			userId : userId,
+			token : token,
+			content : content.val()
+		},
+		async : true,
+		error : function(data) {
+			new jBox('Notice', {
+				color : 'red',
+				animation : 'tada',
+				content : '发表失败!'
+			});
+			return false;
+		},
+		success : function(data) {
+			var jsonObj = jQuery.parseJSON(data);
+			if (jsonObj.code == '0') {
+				window.location.href = "/public/article/" + jsonObj.data;
+			}
+			if (jsonObj.code = '20001') {
+				$.session.remove('user');
+				new jBox('Notice', {
+					color : 'red',
+					animation : 'tada',
+					content : jsonObj.message
+				});
+			} else {
+				new jBox('Notice', {
+					color : 'red',
+					animation : 'tada',
+					content : jsonObj.message
+				});
+			}
+			return true;
+		}
+	});
+}
 /**
  * 根据id查看详情
  * 
@@ -130,7 +203,6 @@ function uploadFile() {
  * 转向登陆页面,并记录当前页面的地址
  */
 function gotoLogin(nowUrl) {
-	console.log("dizhi:"+nowUrl);
 	$.session.set('nowUrl', nowUrl, true);
 	window.location.href = "/common/login.html";
 }
@@ -186,7 +258,11 @@ function login(item) {
 						userId : jsonObj.data.id
 					},
 					beforeSend : function(xhr) {
-						xhr.setRequestHeader('userId', jsonObj.data.id);
+						var userInfo = $.session.get("user");
+						if (!checkNull(userInfo)) {
+							xhr.setRequestHeader('token', userInfo.token);
+						}
+
 					}// 这里设置header
 				});
 				// console.log( JSON.stringify(jsonObj.data));
@@ -194,7 +270,7 @@ function login(item) {
 				$.session.set('user', JSON.stringify(jsonObj.data), false);
 				// go to the previous page,or go to the home
 				var nowUrl = $.session.get("nowUrl");
-				console.log("跳转地址:"+nowUrl);
+				console.log("跳转地址:" + nowUrl);
 				if (checkNull(nowUrl)) {
 					window.location.href = "/xiaoyu.me.html";
 				} else {
