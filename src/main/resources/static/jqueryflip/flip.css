@@ -25,10 +25,9 @@
 	left: 0;
 	top: 0;
 	width: 100%;
-	/* height: 85%; */
+	height: 24%;
 	border: 1px solid #ddd;
-	/* background: url("img/background1.jpg") repeat center center #f9f9f9;
- */
+	background: url("img/background2.jpg") repeat center center #f9f9f9;
 }
 
 .sponsorFlip:hover {
@@ -41,11 +40,10 @@
 
 .sponsorFlip img {
 	/* Centering the logo image in the middle of the sponsorFlip div */
-	/* position:absolute;
-	top:50%;
-	left:50%;
-	margin:-70px 0 0 -70px; */
-	
+	border-radius: 50%;
+	height: 100px;
+	width: 100px;
+	margin-top: -40px;
 }
 
 .sponsorData {

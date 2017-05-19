@@ -26,6 +26,20 @@
 <meta http-equiv="Pragma" content="no-cache" />
 <link href="/wuzhi/common.css" rel="stylesheet" type="text/css" />
 <style type="text/css">
+body {
+	font-family: "Helvetica Neue", Helvetica, Arial, "PingFang SC",
+		"Hiragino Sans GB", "WenQuanYi Micro Hei", "Microsoft Yahei",
+		sans-serif;
+	font-size: 14px;
+	background: #f7f8fa;
+}
+
+.main {
+	max-width: 1200px;
+	margin: 0px auto;
+	padding-bottom: 20px;
+	display: block;
+}
 </style>
 </head>
 <script type="text/javascript">
@@ -36,7 +50,7 @@
 <body>
 	<div class="header">
 		<div class="container">
-			<span><a class="header_w" href="/xiaoyu.me.html">首页</a></span> <span
+			<span><a class="header_w" href="/public/article/hot">首页</a></span> <span
 				id="userSpan" style="float: right; display: none;"> <a
 				class="header_w" style="padding-right: 15px;" id="nickName" href="#">xxx</a>
 				<a class="header_w" style="padding-right: 0px;" id="logout" href=""
@@ -44,7 +58,7 @@
 			</span> <span id="loginSpan" style="float: right; display: none;"> <a
 				class="header_w" style="padding-right: 15px;" href="#" id="register">注册</a>
 				<a class="header_w" style="padding-right: 0px;"
-				th:onclick="'javascript:gotoLogin(\''+'/private/article/add'+'\')' "
+				th:onclick="'javascript:gotoLogin(\''+'/public/article/write'+'\')' "
 				id="login">登录</a>
 			</span>
 		</div>
@@ -53,29 +67,30 @@
 
 	<div class="container main">
 		<div class="main">
-			<div class="note_each">
-				<div class="note_content" style="white-space: normal;">
-					<textarea id="articleContent" class="textarea" required="required"
-						placeholder="见字如面,不慵不扰" style="width: 100%; resize: none"></textarea>
-				</div>
-				<input type="button" class="button" value="发表" onclick="publish()"
-					style="float: right; font-size: 15px; background-color: #FFFFFF;" />
 
+			<div class="note_content" style="white-space: normal;">
+				<textarea id="articleContent" class="textarea" required="required"
+					placeholder="见字如面,不慵不扰" style="width: 100%; resize: none"></textarea>
 			</div>
+			<input type="button" class="button" value="发表" onclick="publish()"
+				style="float: right; font-size: 15px; background-color: #FFFFFF;" />
+
+
 		</div>
 	</div>
 	<div class="footer container">
 		<hr class="hr-10" style="width: 98%; margin-left: 0px;" />
-		<div class="copyright span-5 append-0">
-			©2016-2017 小雨 <a href="#">xiaoyu.me</a>
+		<div class="copyright " style="float: left; margin-right: 3px;">
+			<font style="margin-right: 3px;">©2016-2017 小雨 </font><a
+				href="/xiaoyu.me.html">xiaoyu.me</a>
 		</div>
-		<div class="span-2 last">
+		<div
+			style="width: 35px; float: left; margin-left: 10px; margin-top: -5px;">
 			<a href="https://github.com/dressrosa"
 				style="width: 100%; display: block; background: url(https://assets-cdn.github.com/favicon.ico) no-repeat; text-indent: 40px; height: 33px;">
 			</a>
 		</div>
 	</div>
-
 </body>
 
 <script type="text/javascript">

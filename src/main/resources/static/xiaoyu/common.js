@@ -240,6 +240,7 @@ function login(item) {
 			new jBox('Notice', {
 				color : 'red',
 				animation : 'tada',
+				autoClose : 1000,
 				content : '服务器错误'
 			});
 			return false;
@@ -283,6 +284,7 @@ function login(item) {
 				new jBox('Notice', {
 					color : 'red',
 					animation : 'tada',
+					autoClose : 1000,
 					content : jsonObj.message
 				});
 				return false;

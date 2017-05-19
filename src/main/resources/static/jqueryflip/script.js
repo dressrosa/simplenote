@@ -47,18 +47,38 @@ $(document).ready(function() {
 	if (isPC()) {
 		$('.sponsorFlip').bind("dblclick", function() {
 			var elem = $(this);
-			if (elem.data('flipped')) {
-				window.location.href = "/public/article/" + elem[0].id;
+			console.log(elem.attr('lang'));
+			if ('forUser' == elem.attr('lang')) {
+				if (elem.data('flipped')) {
+					window.location.href = "/public/user/" + elem.attr('id');
+					return;
+				}
+				window.location.href = "/public/article/" + elem.attr('name');
 			} else {
+				if(elem.data('flipped')) {
+					window.location.href = "/public/article/" + elem.attr('id');
+					return;
+				}
 				window.location.href = "/public/user/" + elem.attr('name');
+				
 			}
+
 		});
 
 	}
 	if (!isPC())
 		$('.sponsorFlip').bind('click', function() {
 			var elem = $(this);
-			window.location.href = "/public/article/" + elem[0].id;
+			console.log(elem.attr('lang'));
+			if ('forUser' == elem.attr('lang')) {
+				
+					window.location.href = "/public/user/" + elem.attr('id');
+				
+			} else {
+				window.location.href = "/public/article/" + elem.attr('id');
+				
+			}
+
 		});
 
 	/*

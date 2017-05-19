@@ -27,7 +27,15 @@
 
 <title th:text="${article.title}"></title>
 <meta content="唯有读书,不慵不扰" name="description" />
+
 <style type="text/css">
+body {
+	font-family: "Helvetica Neue", Helvetica, Arial, "PingFang SC",
+		"Hiragino Sans GB", "WenQuanYi Micro Hei", "Microsoft Yahei",
+		sans-serif;
+	font-size: 14px;
+	background: #f7f8fa;
+}
 </style>
 </head>
 <script type="text/javascript">
@@ -39,17 +47,20 @@
 			async : true,
 			url : '/public/article/changeView/' + item,
 		});
-		if (isPC()) {
-			$(".main_right").css("width", "70%")
-		} else {
-			$(".main_right").css("width", "100%")
+		if (!isPC()) {
+			$(".main").css("display", "block");
+			$(".siderbar_left").css("display", "flex");
+			var img = $(".img_shadow").find("img")
+			img.css("border-radius", "50%");
+			img.css("width", "100px");
+			img.css("height", "100px");
 		}
 	});
 </script>
 <body>
 	<div class="header">
 		<div class="container">
-			<span><a class="header_w" href="/xiaoyu.me.html">首页</a></span> <span
+			<span><a class="header_w" href="/public/article/hot">首页</a></span> <span
 				id="userSpan" style="float: right; display: none;"> <a
 				class="header_w" style="padding-right: 15px;" id="nickName" href="#">xxx</a>
 				<a class="header_w" style="padding-right: 0px;" id="logout" href=""
@@ -65,8 +76,7 @@
 	<div class="container main">
 		<div class="siderbar_left">
 			<div class="img_shadow" style="padding-top: 4px;">
-				<img th:src="${article.user.img}" th:alt="${article.user.nickName}"
-					style="width: 100%;" />
+				<img th:src="${article.user.img}" th:alt="${article.user.nickName}" />
 			</div>
 			<div class="quote">
 				<span th:text="${article.user.description }"></span>
@@ -86,18 +96,20 @@
 				<div th:id="${article.id}" class="note_content"
 					th:text="${article.content}"></div>
 			</div>
-		</div>
-		<div class="note_username">
-			<label>--</label><label th:text="${article.user.nickName}"></label>
+			<div class="note_username">
+				<label>--</label><label th:text="${article.user.nickName}"></label>
+			</div>
 		</div>
 	</div>
 
 	<div class="footer container">
 		<hr class="hr-10" style="width: 98%; margin-left: 0px;" />
-		<div class="copyright span-5 append-0">
-			©2016-2017 小雨 <a href="#">xiaoyu.me</a>
+		<div class="copyright " style="float: left; margin-right: 3px;">
+			<font style="margin-right: 3px;">©2016-2017 小雨 </font><a
+				href="/xiaoyu.me.html">xiaoyu.me</a>
 		</div>
-		<div class="span-2 last">
+		<div
+			style="width: 35px; float: left; margin-left: 10px; margin-top: -5px;">
 			<a href="https://github.com/dressrosa"
 				style="width: 100%; display: block; background: url(https://assets-cdn.github.com/favicon.ico) no-repeat; text-indent: 40px; height: 33px;">
 			</a>

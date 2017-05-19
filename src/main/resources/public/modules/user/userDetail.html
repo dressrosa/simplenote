@@ -21,12 +21,85 @@
 <title th:text="${user.nickName}"></title>
 <link href="/wuzhi/common.css" rel="stylesheet" type="text/css" />
 <script type="text/javascript" src="/xiaoyu/xiaoyu.js"></script>
+<style type="text/css">
+body {
+	font-family: "Helvetica Neue", Helvetica, Arial, "PingFang SC",
+		"Hiragino Sans GB", "WenQuanYi Micro Hei", "Microsoft Yahei",
+		sans-serif;
+	font-size: 14px;
+	background: #f7f8fa;
+}
+
+.list-group-item {
+	position: relative;
+	display: block;
+	padding: 10px 15px;
+	margin-bottom: 5px;
+	background-color: #fff;
+	border: 1px solid #ddd;
+}
+
+.list-group-item:last-child {
+	border-bottom: 0px;
+}
+
+.camera {
+	background-color: #f5f5f500;
+	position: relative;
+	top: 5px;
+	right: 5px;
+	z-index: 1;
+	float: right;
+	opacity: 0.5;
+}
+
+.content-left {
+	width: 794px;
+	float: left;
+	margin-right: 3px;
+}
+
+.content-right {
+	width: 396px;
+	block: color;
+	border: 1px solid #ddd;
+	margin-left: 3px;
+	block: color;
+	border-bottom: 0px;
+}
+
+.main {
+	width: 1200px;
+	display: block;
+	margin: 0px auto;
+}
+
+.content {
+	justify-content: space-between;
+	display: flex;
+	width: 1200px;
+	background: #fff;
+	border: 1px solid #e7eaf1;
+	border-radius: 2px;
+	box-shadow: 0 1px 3px rgba(0, 37, 55, .05);
+	box-sizing: border-box;
+	margin: 3px;
+	/* display: inline-block; */
+}
+</style>
 </head>
+
 <script type="text/javascript">
 	 
 	$(document).ready(
 			function() {
-				 
+				 if(!isPC()) {
+					    $(".main").css("width","100%");
+					    $(".content").css("width","100%");
+					    $(".content").css("display","block");
+					    $(".content-left").css("width","100%");
+					    $(".content-right").css("width","100%");
+				 }
 			});
 
 </script>
@@ -46,8 +119,8 @@
                 var arHtml="";
                 	if(obj.data != null||obj.data.len >=0) {
                 		$.each(obj.data,function(index,ar) {
-                			arHtml += '<li class="list-group-item" id="'+ar.articleId+'">';
-                			arHtml+='<label>'+ar.title+'</label>';
+                			arHtml += '<li class="list-group-item" style="cursor: pointer;"  id="'+ar.articleId+'">';
+                			arHtml+='<label>'+'</label>';
                 			arHtml+='<p>'+ar.content+'...'+'</p>'
                 			arHtml+='</li>';
                 		});
@@ -68,7 +141,7 @@
 <body>
 	<div class="header">
 		<div class="container">
-			<span><a class="header_w" href="/xiaoyu.me.html">首页</a></span> <span
+			<span><a class="header_w" href="/public/article/hot">首页</a></span> <span
 				id="userSpan" style="float: right; display: none;"> <a
 				class="header_w" style="padding-right: 15px;" id="nickName" href="#">xxx</a>
 				<a class="header_w" style="padding-right: 0px;" id="logout" href=""
@@ -81,20 +154,41 @@
 			</span>
 		</div>
 	</div>
-	<div class="content">
-		<div class="panel panel-default">
-			<div class="panel-heading" th:text="${user.nickName}"></div>
+	<div class="main">
+		<div class="panel panel-default"
+			style="background: url(http://xiaoyu-0719.oss-cn-beijing.aliyuncs.com/4.jpg) repeat;">
+			<button class="camera" type="button" style="">
+				<svg viewBox="0 0 20 16" class="Icon Icon--camera Icon--left"
+					width="14" height="16" aria-hidden="true"
+					style="height: 16px; width: 34px;">
+                    <title></title><g>
+                    <path
+						d="M18.094 2H15s-1-2-2-2H7C6 0 5 2 5 2H2C0 2 0 3.967 0 3.967V14c0 2 2.036 2 2.036 2H17c3 0 3-1.983 3-1.983V4c0-2-1.906-2-1.906-2zM10 12c-1.933 0-3.5-1.567-3.5-3.5S8.067 5 10 5s3.5 1.567 3.5 3.5S11.933 12 10 12zm0 1.5c-2.76 0-5-2.24-5-5s2.24-5 5-5 5 2.24 5 5-2.24 5-5 5zm7.5-8c-.552 0-1-.448-1-1s.448-1 1-1 1 .448 1 1-.448 1-1 1z"
+						fill-rule="evenodd"></path></g></svg>
+			</button>
+
 			<div class="panel-body">
 				<img alt="" th:src="${user.img}" class="img-circle" height="100px"
-					width="100px" />
+					width="100px" style="margin-left: 25px" />
 			</div>
+
+			<div class="panel-body"
+				style="padding: 10px 35px; background-color: #f5f5f500; border-color: #f5f5f500;"
+				th:text="${user.nickName}"></div>
 			<div class="panel-body" th:text="${user.description}"></div>
-			<ul class="list-group">
-				<!-- <li class="list-group-item"><label>标题</label>
-					<p>内容</p></li> -->
-			</ul>
+
+		</div>
+		<div class="content" style="">
+			<div class="content-left">
+				<ul class="list-group">
+					<!-- <li class="list-group-item"><label>标题</label>
+                    <p>内容</p></li> -->
+				</ul>
+			</div>
+			<div class="content-right">hehe</div>
 		</div>
 	</div>
+
 	<div id="content-text">
 		<div class="g-line" style="margin: 25px auto;"></div>
 		<a href="mailto:1546428286@qq.com">1546428286@qq.com</a>

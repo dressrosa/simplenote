@@ -28,7 +28,62 @@
 <script type="text/javascript" src="/xiaoyu/xiaoyu.js"></script>
 <meta content="唯有读书,不慵不扰" name="description" />
 
-<style>
+<style type="text/css">
+body {
+	font-family: "Helvetica Neue", Helvetica, Arial, "PingFang SC",
+		"Hiragino Sans GB", "WenQuanYi Micro Hei", "Microsoft Yahei",
+		sans-serif;
+	font-size: 14px;
+	background: #f7f8fa;
+}
+
+.list-group-item:last-child {
+	border-bottom: 0px;
+}
+
+.camera {
+	background-color: #f5f5f500;
+	position: relative;
+	top: 5px;
+	right: 5px;
+	z-index: 1;
+	float: right;
+	opacity: 0.5;
+}
+
+.content-left {
+	width: 794px;
+	float: left;
+	margin-right: 3px;
+}
+
+.content-right {
+	width: 396px;
+	block: color;
+	border: 1px solid #ddd;
+	margin-left: 3px;
+	block: color;
+	border-bottom: 0px;
+}
+
+.main {
+	max-width: 1200px;
+	display: block;
+	margin: 0px auto;
+}
+
+.content {
+	justify-content: space-between;
+	display: flex;
+	width: 1200px;
+	background: #fff;
+	border: 1px solid #e7eaf1;
+	border-radius: 2px;
+	box-shadow: 0 1px 3px rgba(0, 37, 55, .05);
+	box-sizing: border-box;
+	margin: 3px;
+	/* display: inline-block; */
+}
 </style>
 <script>
 	$(function() {
@@ -49,6 +104,8 @@
 			function() {
 				if (!isPC()) {
 					$(".col-xs-3").css("width", "100%");
+					$(".content").css("display","block");
+					$(".content").css("width","100%");
 					$("#footer").css("display", "none");
 				}
 
@@ -66,74 +123,63 @@
 </head>
 <body>
 
-	<div class="container-fluid"
-		style="padding-right: 0px; padding-left: 0px;">
-		<div class="header">
-			<div class="container">
-				<span><a class="header_w" href="/xiaoyu.me.html">首页</a></span> <span
-					id="userSpan" style="float: right; display: none;"> <a
-					class="header_w" style="padding-right: 15px;" id="nickName"
-					href="#">xxx</a> <a class="header_w" style="padding-right: 0px;"
-					id="logout" href="" onclick="logout()">退出</a>
-				</span> <span id="loginSpan" style="float: right; display: none;"> <a
-					class="header_w" style="padding-right: 15px;" href="#"
-					id="register">注册</a> <a class="header_w"
-					style="padding-right: 0px;"
-					th:onclick="'javascript:gotoLogin(\''+'/public/article/hot'+'\')' "
-					id="login">登录</a>
-				</span>
-			</div>
+
+
+	<div class="header">
+		<div class="container">
+			<span><a class="header_w" href="/public/article/hot">首页</a></span> <span
+				id="userSpan" style="float: right; display: none;"> <a
+				class="header_w" style="padding-right: 15px;" id="nickName" href="#">xxx</a>
+				<a class="header_w" style="padding-right: 0px;" id="logout" href=""
+				onclick="logout()">退出</a>
+			</span> <span id="loginSpan" style="float: right; display: none;"> <a
+				class="header_w" style="padding-right: 15px;" href="#" id="register">注册</a>
+				<a class="header_w" style="padding-right: 0px;"
+				th:onclick="'javascript:gotoLogin(\''+'/public/article/hot'+'\')' "
+				id="login">登录</a>
+			</span>
 		</div>
-
-		<div class="row-fluid">
-			<div class="span12">
-				<div class="row-fluid">
-					<div th:each="child,state1:${list}" class="col-xs-3 span3"
-						style="font-family: cursive; font-size: medium; top: 15px;">
-						<dl th:each="article,state2:${child}">
-							<div class="sponsor" th:title="${article.title}"
-								th:if="${(state1.index*3+state2.index)%2==0}">
-								<div class="sponsorFlip" th:id="${article.id}"
-									th:name="${article.user.id }">
-									<dt th:text="${article.title}"></dt>
-									<p th:text="${article.content}"></p>
-									<div class="g-line" style="width: 25%; margin: 25px auto;"></div>
-								</div>
-								<div class="sponsorData">
-									<dt th:text="${article.user.nickName}"></dt>
-									<span><img th:src="${article.user.img}"
-										class="img-circle" height="160px" width="160px" /></span>
-									<p th:text="${article.user.description }"></p>
-									<div class="g-line" style="width: 25%; margin: 25px auto;"></div>
-								</div>
-							</div>
-							<div class="sponsor" th:title="${article.title}"
-								th:if="${(state1.index*3+state2.index)%2==1}">
-								<div class="sponsorFlip" th:id="${article.id}"
-									th:name="${article.user.id }">
-									<dt th:text="${article.user.nickName}"></dt>
-									<span><img th:src="${article.user.img}"
-										class="img-circle" height="160px" width="160px" /></span>
-									<p th:text="${article.user.description }"></p>
-									<div class="g-line" style="width: 25%; margin: 25px auto;"></div>
-								</div>
-								<div class="sponsorData">
-									<dt th:text="${article.title}"></dt>
-									<p th:text="${article.content}"></p>
-									<div class="g-line" style="width: 25%; margin: 25px auto;"></div>
-
-
-								</div>
-							</div>
-						</dl>
-
+	</div>
+	<div class="main">
+		<div class="content">
+		
+			<div th:each="child,state1:${list}" class="col-xs-3" style="margin-top:20px;">
+				<dl th:each="article,state2:${child}">
+					<div class="sponsor" th:title="${article.title}"
+						th:if="${(state1.index*3+state2.index)%2==0}">
+						<div class="sponsorFlip" th:id="${article.id}"
+							th:name="${article.user.id}" lang="forArticle">
+							 
+							<p th:text="${article.content}"></p>
+							<div class="g-line" style="width: 25%; margin: 25px auto;"></div>
+						</div>
+						<div class="sponsorData">
+							<span><img th:src="${article.user.img}" /></span>
+							<dt th:text="${article.user.nickName}"></dt>
+							<p th:text="${article.user.description }"></p>
+							<div class="g-line" style="width: 25%; margin: 25px auto;"></div>
+						</div>
 					</div>
-
-				</div>
+					<div class="sponsor" th:title="${article.title}"
+						th:if="${(state1.index*3+state2.index)%2==1}">
+						<div class="sponsorFlip" th:id="${article.user.id}"
+							th:name="${article.id}" lang="forUser">
+							<span><img th:src="${article.user.img}" /></span>
+							<dt th:text="${article.user.nickName}"></dt>
+							<p th:text="${article.user.description }"></p>
+							<div class="g-line" style="width: 25%; margin: 25px auto;"></div>
+						</div>
+						<div class="sponsorData">
+							<dt th:text="${article.title}"></dt>
+							<p th:text="${article.content}"></p>
+							<div class="g-line" style="width: 25%; margin: 25px auto;"></div>
+						</div>
+					</div>
+				</dl>
 			</div>
 		</div>
 		<div id="footer">
-			©<a href="">xiao yu</a>
+			©<a href="/xiaoyu.me.html">xiao yu</a>
 		</div>
 	</div>
 

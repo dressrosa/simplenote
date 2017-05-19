@@ -145,7 +145,7 @@ public class UserBackController {
 			throws IOException {
 		HttpSession session = request.getSession(false);
 		ResponseMapper mapper = ResponseMapper.createMapper();
-
+		System.out.println("loginName:" + loginName + " password:" + password);
 		if (session != null) {
 			Map<String, Object> map = (Map<String, Object>) session.getAttribute(request.getHeader("token"));
 			session.setMaxInactiveInterval(60 * 60 * 3);

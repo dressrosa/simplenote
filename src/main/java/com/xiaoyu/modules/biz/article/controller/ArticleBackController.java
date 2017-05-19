@@ -104,7 +104,7 @@ public class ArticleBackController {
 		List<Article> list = page.getResult();
 		for (Article a : list) {
 			User u = new User();
-			a.setContent(a.getContent().length() > 200 ? a.getContent().substring(0, 200) : a.getContent());
+			a.setContent(a.getContent().length() > 100 ? a.getContent().substring(0, 99) : a.getContent());
 			u.setId(a.getUserId());
 			u = this.userService.get(u);
 			a.setUser(u);
