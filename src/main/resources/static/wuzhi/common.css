@@ -1737,7 +1737,7 @@ button, input.button {
 }
 
 .main_right {
-	/* width: 70%; */
+	width: 100%;
 	margin-right: 10px;
 }
 

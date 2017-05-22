@@ -39,6 +39,12 @@ public abstract class BaseService<D extends BaseDao<T>, T extends BaseEntity> {
 		temp = this.tDao.get(t);
 		return temp;
 	}
+	
+	public T get(String id) {
+		T temp = null;
+		temp = this.tDao.getById(id);
+		return temp;
+	}
 
 	/**
 	 * 删除

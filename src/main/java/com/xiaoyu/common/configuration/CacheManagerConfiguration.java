@@ -5,15 +5,14 @@ package com.xiaoyu.common.configuration;
 
 import javax.annotation.Resource;
 
-import net.sf.ehcache.CacheManager;
-
 import org.apache.log4j.Logger;
-import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
 import org.springframework.cache.annotation.EnableCaching;
 import org.springframework.cache.ehcache.EhCacheManagerFactoryBean;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.core.io.ClassPathResource;
+
+import net.sf.ehcache.CacheManager;
 
 /**
  * 设置ehcache为默认cachemanager
@@ -21,7 +20,7 @@ import org.springframework.core.io.ClassPathResource;
  * @author xiaoyu 2016年3月18日
  */
 @Configuration
-@EnableAutoConfiguration
+//@EnableAutoConfiguration
 @EnableCaching// 启用缓存
 public class CacheManagerConfiguration {
 

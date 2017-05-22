@@ -1,7 +1,7 @@
 /**
  * 不要因为走了很远就忘记当初出发的目的:whatever happened,be yourself
  */
-package com.xiaoyu.modules.biz.article.controller;
+package com.xiaoyu.modules.sys.controller;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -26,12 +26,15 @@ import com.google.common.collect.Lists;
 import com.xiaoyu.common.base.ResponseMapper;
 import com.xiaoyu.common.base.ResultConstant;
 import com.xiaoyu.common.utils.EhCacheUtil;
+import com.xiaoyu.common.utils.StringUtils;
 import com.xiaoyu.modules.biz.article.entity.Article;
 import com.xiaoyu.modules.biz.article.entity.ArticleAttr;
 import com.xiaoyu.modules.biz.article.service.ArticleAttrService;
 import com.xiaoyu.modules.biz.article.service.ArticleService;
+import com.xiaoyu.modules.biz.article.service.api.IArticleService;
 import com.xiaoyu.modules.biz.user.entity.User;
 import com.xiaoyu.modules.biz.user.service.UserService;
+import com.xiaoyu.modules.sys.constant.PageUrl;
 
 /**
  * 文章
@@ -42,7 +45,7 @@ import com.xiaoyu.modules.biz.user.service.UserService;
 public class ArticleBackController {
 
 	@Autowired
-	private ArticleService articleService;
+	private IArticleService articleService;
 
 	@Autowired
 	private UserService userService;
@@ -70,16 +73,12 @@ public class ArticleBackController {
 	 * @time 2016年3月29日下午9:20:30
 	 */
 	@RequestMapping(value = "public/article/{articleId}", method = RequestMethod.GET)
-	public String get(@PathVariable String articleId, Model model, HttpServletRequest request,
-			HttpServletResponse response) {
-		Article article = new Article();
-		article.setId(articleId);
-		Article a = this.articleService.get(article);
-		if (a == null) {
-			return "common/404";
+	public String detail(@PathVariable String articleId, HttpServletRequest request, HttpServletResponse response) {
+
+		if (StringUtils.isBlank(articleId)) {
+			return PageUrl.Not_Found;
 		}
-		model.addAttribute(a);
-		return "article/articleDetail";
+		return this.articleService.detail(articleId);
 	}
 
 	/**
@@ -91,47 +90,9 @@ public class ArticleBackController {
 	 * @time 2016年4月1日下午4:08:19
 	 */
 	@RequestMapping(value = "public/article/hot", method = RequestMethod.GET)
-	public String hotList(Model model, HttpServletRequest request, HttpServletResponse response) {
-		if (EhCacheUtil.IsExist("SystemCache")) {// 从缓存取
-			@SuppressWarnings("unchecked")
-			List<Object> total = (List<Object>) EhCacheUtil.get("SystemCache", "pageList");
-			model.addAttribute("list", total);
-			if (total != null && total.size() > 0) {
-				return "article/articleList";
-			}
-		}
-		Page<Article> page = this.articleService.findByPage(new Article(), 1, 12);
-		List<Article> list = page.getResult();
-		for (Article a : list) {
-			User u = new User();
-			a.setContent(a.getContent().length() > 100 ? a.getContent().substring(0, 99) : a.getContent());
-			u.setId(a.getUserId());
-			u = this.userService.get(u);
-			a.setUser(u);
-		}
-		List<Article> childList1 = Lists.newArrayList();
-		List<Article> childList2 = Lists.newArrayList();
-		List<Article> childList3 = Lists.newArrayList();
-		List<Article> childList4 = Lists.newArrayList();
-		List<Object> total = Lists.newArrayList();
-		for (int i = 0; i < list.size(); i++) {
-			if (i < 3) {
-				childList1.add(list.get(i));
-			} else if (i > 2 && i < 6) {
-				childList2.add(list.get(i));
-			} else if (i > 5 && i < 9) {
-				childList3.add(list.get(i));
-			} else {
-				childList4.add(list.get(i));
-			}
-		}
-		total.add(childList1);
-		total.add(childList2);
-		total.add(childList3);
-		total.add(childList4);
-		EhCacheUtil.put("SystemCache", "pageList", total);// 存入缓存
-		model.addAttribute("list", total);
-		return "article/articleList";
+	@ResponseBody
+	public String hotList(HttpServletRequest request, HttpServletResponse response) {
+		return this.articleService.hotList();
 	}
 
 	/**
@@ -148,25 +109,26 @@ public class ArticleBackController {
 	@RequestMapping(value = "public/article/list", method = RequestMethod.POST)
 	@ResponseBody
 	public String list(HttpServletRequest request, String userId, Integer pageNum, Integer pageSize) {
-		ResponseMapper mapper = ResponseMapper.createMapper();
-		Article article = new Article();
-		article.setUserId(userId);
-		if (pageNum == null || pageSize == null || pageNum < 0 || pageSize < 0) {
-			pageNum = 0;
-			pageSize = 10;
-		}
-		Page<Article> page = this.articleService.findByPage(article, pageNum, pageSize);
-		List<Article> list = page.getResult();
-		List<Map<String, Object>> total = new ArrayList<>();
-		if (list != null && list.size() > 0) {
-			for (Article a : list) {
-				total.add(this.article2Map(a));
-			}
-		}
-		return mapper.setData(total).getResultJson();
+//		ResponseMapper mapper = ResponseMapper.createMapper();
+//		Article article = new Article();
+//		article.setUserId(userId);
+//		if (pageNum == null || pageSize == null || pageNum < 0 || pageSize < 0) {
+//			pageNum = 0;
+//			pageSize = 10;
+//		}
+//		Page<Article> page = this.articleService.findByPage(article, pageNum, pageSize);
+//		List<Article> list = page.getResult();
+//		List<Map<String, Object>> total = new ArrayList<>();
+//		if (list != null && list.size() > 0) {
+//			for (Article a : list) {
+//				total.add(this.article2Map(a));
+//			}
+//		}
+//		return mapper.setData(total).getResultJson();
+		return "";
 	}
 
-	@RequestMapping(value = "public/article/changeView/{articleId}", method = RequestMethod.POST)
+	@RequestMapping(value = "public/article/changeView/{articleId}")
 	@ResponseBody
 	public String changeView(HttpServletRequest requset, @PathVariable String id) {
 		ArticleAttr attr = new ArticleAttr();
@@ -188,8 +150,8 @@ public class ArticleBackController {
 			return mapper.setCode(ResultConstant.LOGIN_INVALIDATE).setMessage("登录失效,请刷新登录2").getResultJson();
 		if (!userId.equals(user.getId()))
 			return mapper.setCode(ResultConstant.LOGIN_INVALIDATE).setMessage("登录失效,请刷新登录3").getResultJson();
-		String articleId = this.articleService.addArticle(userId, content);
-		return mapper.setData(articleId).getResultJson();
+		return this.articleService.publish(userId, content);
+
 	}
 
 	@RequestMapping(value = "public/article/write")
@@ -200,4 +162,5 @@ public class ArticleBackController {
 		}
 		return "article/articleForm";
 	}
+
 }

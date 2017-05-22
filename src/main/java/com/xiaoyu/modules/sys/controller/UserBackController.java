@@ -1,7 +1,7 @@
 /**
  * 不要因为走了很远就忘记当初出发的目的:whatever happened,be yourself
  */
-package com.xiaoyu.modules.biz.user.controller;
+package com.xiaoyu.modules.sys.controller;
 
 import java.io.IOException;
 import java.util.Date;
@@ -29,6 +29,7 @@ import com.xiaoyu.common.utils.StringUtils;
 import com.xiaoyu.modules.biz.user.entity.User;
 import com.xiaoyu.modules.biz.user.entity.UserRecord;
 import com.xiaoyu.modules.biz.user.service.UserService;
+import com.xiaoyu.modules.sys.constant.PageUrl;
 
 /**
  * 用于后台页面
@@ -57,6 +58,14 @@ public class UserBackController {
 		}
 		model.addAttribute(u);
 		return "user/userDetail";
+	}
+
+	@RequestMapping(value = "private/user/modify/{userId}", method = RequestMethod.GET)
+	public String detail(@PathVariable String userId, HttpServletRequest request) {
+		ResponseMapper mapper = ResponseMapper.createMapper();
+		if(StringUtils.isBlank(userId))
+			return PageUrl.Not_Found;
+		return mapper.setData(this.userService.get(userId)).getResultJson();
 	}
 
 	/**
@@ -123,7 +132,7 @@ public class UserBackController {
 		map.put("id", u.getId());
 		map.put("description", u.getDescription());
 		map.put("img", u.getImg());
-		map.put("nickName", u.getNickName());
+		map.put("nickName", u.getNickname());
 		return map;
 	}
 

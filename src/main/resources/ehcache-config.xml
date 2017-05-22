@@ -1,16 +1,18 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<ehcache xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-	xsi:noNamespaceSchemaLocation="http://ehcache.org/ehcache.xsd"
-	updateCheck="false">
+<ehcache updateCheck="false">
+	<!-- xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="http://ehcache.org/ehcache.xsd" -->
 	<!--硬盘缓存位置 -->
 	<diskStore path="/xiaoyu/ehCache" />
 	<!--默认缓存 -->
 	<defaultCache eternal="false" maxElementsInMemory="1000"
-		timeToIdleSeconds="300" overflowToDisk="true" 
-		timeToLiveSeconds="600" />
-	
-	<cache name="SystemCache" eternal="false" maxElementsInMemory="100" timeToLiveSeconds="120"
-		overflowToDisk="true" clearOnFlush="true"/> 
+		timeToIdleSeconds="300" overflowToDisk="true" timeToLiveSeconds="600" />
+
+	<cache name="SystemCache" eternal="false" maxElementsInMemory="100"
+		timeToLiveSeconds="120" overflowToDisk="true" clearOnFlush="true">
+		<!-- <cacheDecoratorFactory class="" ,
+			properties="blah=true,someValue=2000" />
+ -->
+	</cache>
 
 
 	<!-- 缓存配置 name:缓存名称。 maxElementsInMemory：缓存最大个数。 eternal:对象是否永久有效，一但设置了，timeout将不起作用。 

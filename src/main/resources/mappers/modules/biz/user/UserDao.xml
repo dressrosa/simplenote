@@ -34,7 +34,15 @@
 			and a.login_name=#{loginName}
 		</if>
 	</select>
-
+	<select id="getById" resultType="com.xiaoyu.modules.biz.user.entity.User"
+		parameterType="java.lang.String">
+		select
+		<include refid="columns" />
+		from biz_user as a
+		where
+		a.del_flag=0
+		and a.id=#{id}
+	</select>
 	<!-- 分页查询用户信息 -->
 	<select id="findByList" resultType="com.xiaoyu.modules.biz.user.entity.User"
 		parameterType="com.xiaoyu.modules.biz.user.entity.User">

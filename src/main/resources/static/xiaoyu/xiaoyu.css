@@ -1,0 +1,76 @@
+body {
+	font-family: "Helvetica Neue", Helvetica, Arial, "PingFang SC",
+		"Hiragino Sans GB", "WenQuanYi Micro Hei", "Microsoft Yahei",
+		sans-serif;
+	font-size: 14px;
+	background: #f7f8fa;
+}
+
+.list-group-item {
+	position: relative;
+	display: block;
+	padding: 10px 15px;
+	margin-bottom: 5px;
+	background-color: #fff;
+	border: 1px solid #ddd;
+}
+
+.list-group-item:last-child {
+	border-bottom: 0px;
+}
+
+.camera {
+	background-color: #f5f5f500;
+	position: relative;
+	top: 5px;
+	right: 5px;
+	z-index: 1;
+	float: right;
+	opacity: 0.5;
+	display: none;
+}
+
+.panel-body {
+	padding: 15px;
+	margin-top: 5px;
+}
+
+.content-left {
+	width: 794px;
+	float: left;
+	margin-right: 3px;
+}
+
+.content-right {
+	width: 396px;
+	block: color;
+	border: 1px solid #ddd;
+	margin-left: 3px;
+	block: color;
+	border-bottom: 0px;
+}
+
+.main {
+	width: 1200px;
+	display: block;
+	margin: 0px auto;
+}
+
+.content {
+	justify-content: space-between;
+	display: flex;
+	width: 1200px;
+	background: #fff;
+	border: 1px solid #e7eaf1;
+	border-radius: 2px;
+	box-shadow: 0 1px 3px rgba(0, 37, 55, .05);
+	box-sizing: border-box;
+	margin: 3px;
+	/* display: inline-block; */
+}
+
+.avatar {
+	border-radius: 50%;
+	height: 100px;
+	width: 100px;
+}

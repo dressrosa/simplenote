@@ -46,12 +46,12 @@ public class UserService extends BaseService<UserDao,User> {
 	@Transactional(readOnly=false)
 	public int uploadImg(User user) {
 		String path = null;
-		try {
-			 path = ImgUtils.upload(user.getImgFile());
-		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
+//		try {
+//			 path = ImgUtils.upload(user.getImgFile());
+//		} catch (IOException e) {
+//			// TODO Auto-generated catch block
+//			e.printStackTrace();
+//		}
 		user.setImg(path);
 		return super.update(user);
 	}

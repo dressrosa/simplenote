@@ -31,7 +31,7 @@
 	<logger name="org.springframework" level="WARN" />
 	<logger name="com.opensymphony" level="WARN" />
 	<logger name="org.apache" level="WARN" />
-
+	<logger name="com.zaxxer.hikari" level="WARN" />
 
 	<!-- 指定包下的log级别 additivity设置不向上传递 -->
 	<logger name="com.xiaoyu.modules.biz" level="DEBUG" additivity="false" />

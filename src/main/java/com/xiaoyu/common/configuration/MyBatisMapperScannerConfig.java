@@ -13,8 +13,9 @@ import org.springframework.context.annotation.Configuration;
  * @author xiaoyu
  *2016年3月16日
  */
-@Configuration
-@EnableAutoConfiguration
+@Deprecated
+//@Configuration
+//@EnableAutoConfiguration
 //@AutoConfigureAfter(DataSourceConfiguration.class)//在datasource初始化后
 public class MyBatisMapperScannerConfig {
 	
@@ -26,7 +27,7 @@ public class MyBatisMapperScannerConfig {
 		MapperScannerConfigurer config = new MapperScannerConfigurer();
 		config.setAnnotationClass(org.springframework.stereotype.Repository.class);//指定扫描的注解接口
 		config.setSqlSessionFactoryBeanName("sqlSessionFactory");
-		config.setBasePackage("com.xiaoyu");//TODO 暂时未理解
+		//config.setBasePackage("com.xiaoyu");//TODO 暂时未理解
 		return config;
 	}
 	
