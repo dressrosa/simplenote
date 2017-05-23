@@ -69,6 +69,8 @@ public class ArticleService extends BaseService<ArticleDao, Article> implements 
 		if (a != null) {
 			map.put("userId", a.getId());
 			map.put("nickname", a.getNickname());
+			map.put("avatar", a.getImg());
+			map.put("description", a.getDescription());
 			map.put("createDate", a.getImg());
 		}
 		return map;

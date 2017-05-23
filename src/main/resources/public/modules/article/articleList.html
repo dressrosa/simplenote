@@ -1,4 +1,4 @@
-<html xmlns:th="http://www.thymeleaf.org">
+<html>
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
 <meta name="viewport"
@@ -17,114 +17,24 @@
 <link href="/stephanwagner/9aad28-424d89.css" rel="stylesheet" />
 <link rel="stylesheet" type="text/css" href="/jqueryflip/flip.css" />
 <script src="/jquery/jquery-1.12.2.min.js" type="text/javascript"></script>
+<script src="/jqueryflip/jquery-ui.min.js" type="text/javascript"></script>
 <script src="/jBox-0.3.2/jBox.min.js" type="text/javascript"></script>
 <script src="/bootstrap-3.3.6-dist/js/bootstrap.min.js"
 	type="text/javascript"></script>
 <script type="text/javascript" src="/xiaoyu/jquerysession.js"></script>
 <script type="text/javascript" src="/xiaoyu/common.js"></script>
-<script src="/jqueryflip/jquery-ui.min.js" type="text/javascript"></script>
-<script src="/jqueryflip/jquery.flip.min.js" type="text/javascript"></script>
-<script src="/jqueryflip/script.js" type="text/javascript"></script>
+<script type="text/javascript" src="/xiaoyu/modules/user/hot.js"></script>
 <script type="text/javascript" src="/xiaoyu/xiaoyu.js"></script>
 <meta content="唯有读书,不慵不扰" name="description" />
-
+<link rel="stylesheet" type="text/css" href="/xiaoyu/xiaoyu.css" />
 <style type="text/css">
-body {
-	font-family: "Helvetica Neue", Helvetica, Arial, "PingFang SC",
-		"Hiragino Sans GB", "WenQuanYi Micro Hei", "Microsoft Yahei",
-		sans-serif;
-	font-size: 14px;
-	background: #f7f8fa;
-}
-
-.list-group-item:last-child {
-	border-bottom: 0px;
-}
-
-.camera {
-	background-color: #f5f5f500;
-	position: relative;
-	top: 5px;
-	right: 5px;
-	z-index: 1;
-	float: right;
-	opacity: 0.5;
-}
-
-.content-left {
-	width: 794px;
-	float: left;
-	margin-right: 3px;
-}
-
-.content-right {
-	width: 396px;
-	block: color;
-	border: 1px solid #ddd;
-	margin-left: 3px;
-	block: color;
-	border-bottom: 0px;
-}
-
-.main {
-	max-width: 1200px;
-	display: block;
-	margin: 0px auto;
-}
-
-.content {
-	justify-content: space-between;
-	display: flex;
-	width: 1200px;
-	background: #fff;
-	border: 1px solid #e7eaf1;
-	border-radius: 2px;
-	box-shadow: 0 1px 3px rgba(0, 37, 55, .05);
-	box-sizing: border-box;
-	margin: 3px;
-	/* display: inline-block; */
-}
 </style>
 <script>
-	$(function() {
-		$(".col-xs-3").sortable({
-			connectWith : '.col-xs-3',//级联其他
-			containment : "document",//作用范围
-			delay : 150,//延迟效果
-			revert : true
-		//动画
-
-		});
-		$(".col-xs-3").disableSelection();
-	});
-
-	var userInfo = jQuery.parseJSON($.session.get('user'));
-
-	$(document).ready(
-			function() {
-				if (!isPC()) {
-					$(".col-xs-3").css("width", "100%");
-					$(".content").css("display","block");
-					$(".content").css("width","100%");
-					$("#footer").css("display", "none");
-				}
-
-				if (checkNull(userInfo)) {
-					$("#loginSpan").css("display", "block");
-				} else {
-					$("#userSpan").css("display", "block");
-					$("#userSpan").find("#nickName").attr("href",
-							"/public/user/" + userInfo.id);
-					$("#userSpan").find("#nickName").text(userInfo.nickName);
-				}
-			});
+	
 </script>
 <title>文章列表</title>
 </head>
 <body>
-
-
-
 	<div class="header">
 		<div class="container">
 			<span><a class="header_w" href="/public/article/hot">首页</a></span> <span
@@ -141,49 +51,18 @@ body {
 		</div>
 	</div>
 	<div class="main">
-		<div class="content">
-		
-			<div th:each="child,state1:${list}" class="col-xs-3" style="margin-top:20px;">
-				<dl th:each="article,state2:${child}">
-					<div class="sponsor" th:title="${article.title}"
-						th:if="${(state1.index*3+state2.index)%2==0}">
-						<div class="sponsorFlip" th:id="${article.id}"
-							th:name="${article.user.id}" lang="forArticle">
-							 
-							<p th:text="${article.content}"></p>
-							<div class="g-line" style="width: 25%; margin: 25px auto;"></div>
-						</div>
-						<div class="sponsorData">
-							<span><img th:src="${article.user.img}" /></span>
-							<dt th:text="${article.user.nickName}"></dt>
-							<p th:text="${article.user.description }"></p>
-							<div class="g-line" style="width: 25%; margin: 25px auto;"></div>
-						</div>
-					</div>
-					<div class="sponsor" th:title="${article.title}"
-						th:if="${(state1.index*3+state2.index)%2==1}">
-						<div class="sponsorFlip" th:id="${article.user.id}"
-							th:name="${article.id}" lang="forUser">
-							<span><img th:src="${article.user.img}" /></span>
-							<dt th:text="${article.user.nickName}"></dt>
-							<p th:text="${article.user.description }"></p>
-							<div class="g-line" style="width: 25%; margin: 25px auto;"></div>
-						</div>
-						<div class="sponsorData">
-							<dt th:text="${article.title}"></dt>
-							<p th:text="${article.content}"></p>
-							<div class="g-line" style="width: 25%; margin: 25px auto;"></div>
-						</div>
-					</div>
-				</dl>
-			</div>
-		</div>
+		<div class="content"></div>
 		<div id="footer">
 			©<a href="/xiaoyu.me.html">xiao yu</a>
 		</div>
 	</div>
 
 </body>
+<script src="/jqueryflip/jquery.flip.min.js" type="text/javascript"></script>
+<script src="/jqueryflip/script.js" type="text/javascript"></script>
+<script type="text/javascript">
+	
+</script>
 
 
 </html>
