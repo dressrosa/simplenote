@@ -3,7 +3,7 @@
 		$.ajax({
 		type : "get",
 		async : false,
-		url : '/public/article/hot',
+		url : '/api/v1/article/hot',
 		success : function(data) {
 			var obj = jQuery.parseJSON(data);
 			if (obj.code == '0') {

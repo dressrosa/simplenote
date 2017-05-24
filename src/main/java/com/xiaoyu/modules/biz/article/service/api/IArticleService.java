@@ -3,6 +3,8 @@
  */
 package com.xiaoyu.modules.biz.article.service.api;
 
+import javax.servlet.http.HttpServletRequest;
+
 /**
  * 2017年5月22日下午5:20:01
  * 
@@ -13,7 +15,9 @@ public interface IArticleService {
 
 	public String detail(String articleId);
 
-	public String publish(String userId, String content);
-	
 	public String hotList();
+
+	public String list(HttpServletRequest request, String userId, Integer pageNum, Integer pageSize);
+
+	public String addArticle(HttpServletRequest request, String content, String userId, String token);
 }

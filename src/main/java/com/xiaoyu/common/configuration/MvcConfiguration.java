@@ -5,11 +5,10 @@ package com.xiaoyu.common.configuration;
 
 import java.nio.charset.Charset;
 import java.util.List;
+
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
 import org.springframework.context.annotation.Bean;
-import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.core.Ordered;
 import org.springframework.http.converter.HttpMessageConverter;
@@ -23,6 +22,7 @@ import org.springframework.web.servlet.config.annotation.ViewResolverRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurerAdapter;
 import org.springframework.web.servlet.handler.SimpleMappingExceptionResolver;
 import org.springframework.web.servlet.view.InternalResourceViewResolver;
+
 import com.alibaba.fastjson.serializer.SerializerFeature;
 import com.alibaba.fastjson.support.spring.FastJsonHttpMessageConverter;
 
@@ -36,8 +36,7 @@ import com.alibaba.fastjson.support.spring.FastJsonHttpMessageConverter;
 @Configuration
 // @EnableWebMvc
 // Optionally setup Spring MVC defaults if you aren’t doing so elsewhere4
-@EnableAutoConfiguration
-@ComponentScan(basePackages = "com.xiaoyu.modules.biz")
+//@ComponentScan(basePackages = "com.xiaoyu.modules.sys.controller")
 public class MvcConfiguration extends WebMvcConfigurerAdapter {
 
 	private static Logger logger = Logger.getLogger(MvcConfiguration.class);

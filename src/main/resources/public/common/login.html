@@ -28,7 +28,6 @@
 		} else {
 			$("#xyForm").css("width", "100%");
 		}
-
 	});
 
 	function showPwd(item) {
@@ -40,7 +39,6 @@
 			pwd.attr("type", "password");
 			item.innerHTML = '可见';
 		}
-
 	};
 </script>
 <body>
@@ -74,7 +72,7 @@
 				<br>
 				<ul class="list-group">
 					<input type="button" value="登录"
-						onclick="login('/public/user/login')"
+						onclick="login()"
 						class="btn btn-primary btn-large btn-block" />
 					<span class="tooltip"></span>
 				</ul>

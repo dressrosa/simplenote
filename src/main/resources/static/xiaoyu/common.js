@@ -11,11 +11,16 @@ $(document).ready(
 				$("#loginSpan").css("display", "block");
 			} else {
 				$("#userSpan").css("display", "block");
-				$("#userSpan").find("#nickName").attr("href",
-						"/public/user/" + userInfo.id);
-				$("#userSpan").find("#nickName").text(userInfo.nickName);
+				$("#userSpan").find("#nickname").attr("href",
+						"/user/" + userInfo.userId);
+				$("#userSpan").find("#nickname").text(userInfo.nickname);
 			}
 		});
+
+
+function setTitle(item) {
+	document.title = item;
+}
 /**
  * 更新信息
  * 
@@ -210,7 +215,7 @@ function gotoLogin(nowUrl) {
  * login
  */
 var num = 0;
-function login(item) {
+function login() {
 	var tip = '姓名和密码都不能为空（*＾-＾*）';
 	if ($("#password").val() == '' || $("#loginName").val() == '') {
 		if (num > 3 && num < 6) {
@@ -231,9 +236,8 @@ function login(item) {
 		return;
 	}
 	$.ajax({
-		// cache : false,
-		type : "POST",
-		url : item,
+		type : "post",
+		url : '/api/v1/user/login',
 		data : $('#xyForm').serialize(),
 		async : true,
 		error : function(data) {
@@ -254,7 +258,7 @@ function login(item) {
 				$.ajax({
 					type : 'post',
 					async : true,
-					url : '/private/user/loginRecord',
+					url : '/api/v1/user/loginRecord',
 					data : {
 						userId : jsonObj.data.id
 					},

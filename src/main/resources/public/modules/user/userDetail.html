@@ -1,4 +1,4 @@
-<html xmlns:th="http://www.thymeleaf.org">
+<html>
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
 <meta name="viewport"
@@ -17,84 +17,27 @@
 	type="text/javascript"></script>
 <script type="text/javascript" src="/xiaoyu/jquerysession.js"></script>
 
-<title th:text="${user.nickName}+'-个人中心'"></title>
+<title></title>
 <link href="/wuzhi/common.css" rel="stylesheet" type="text/css" />
 <link href="/xiaoyu/xiaoyu.css" rel="stylesheet" type="text/css" />
+<script type="text/javascript" src="/xiaoyu/modules/user/user.js"></script>
 <script type="text/javascript" src="/xiaoyu/common.js"></script>
 <script type="text/javascript" src="/xiaoyu/xiaoyu.js"></script>
 <style type="text/css">
 </style>
 </head>
 
-<script type="text/javascript" th:inline="javascript">
-	$(document).ready(
-			function() {
-				 if(!isPC()) {
-					    $(".main").css("width","100%");
-					    $(".content").css("width","100%");
-					    $(".content").css("display","block");
-					    $(".content-left").css("width","100%");
-					    $(".content-right").css("width","100%");
-				 }
-				 var userInfo = jQuery.parseJSON($.session.get("user"));
-				 var thisUserId = [[${user.id}]];
-				 if(!checkNull(userInfo)) {
-					 if(userInfo.id == thisUserId) {
-						    $(".camera").css("display","block");
-					 }
-				 }
-				 
-			});
-
-</script>
-<script th:inline="javascript">  
-        var userId = [[${user.id}]];  
-     
-        $.ajax({
-            type : "post",
-            async : true,
-            url : '/public/article/list',
-            data:{
-            	userId:userId
-            },
-            success : function(data) {
-            	var obj = jQuery.parseJSON(data);
-                if (obj.code == '0') {
-                var arHtml="";
-                	if(obj.data != null||obj.data.len >=0) {
-                		$.each(obj.data,function(index,ar) {
-                			arHtml += '<li class="list-group-item" style="cursor: pointer;"  id="'+ar.articleId+'">';
-                			arHtml+='<label>'+'</label>';
-                			arHtml+='<p>'+ar.content+'...'+'</p>'
-                			arHtml+='</li>';
-                		});
-                		
-                		$(".list-group").html(arHtml);
-                	}
-                } 
-                $(".list-group-item").on("click",function(){
-                    var elem =$(this);
-                    window.location.href = '/public/article/'+elem.attr("id");
-                })
-                return true;
-            }
-        });
-       
-  
-    </script>
 <body>
 	<div class="header">
 		<div class="container">
 			<span><a class="header_w" href="/public/article/hot">首页</a></span> <span
 				id="userSpan" style="float: right; display: none;"> <a
-				class="header_w" style="padding-right: 15px;" id="nickName" href="#">xxx</a>
+				class="header_w" style="padding-right: 15px;" id="nickname" href="#">xxx</a>
 				<a class="header_w" style="padding-right: 0px;" id="logout" href=""
 				onclick="logout()">退出</a>
 			</span> <span id="loginSpan" style="float: right; display: none;"> <a
 				class="header_w" style="padding-right: 15px;" href="#" id="register">注册</a>
-				<a class="header_w" style="padding-right: 0px;"
-				th:onclick="'javascript:gotoLogin(\''+'/public/user/'+${user.id}+'\')' "
-				id="login">登录</a>
+				<a class="header_w" style="padding-right: 0px;" id="login">登录</a>
 			</span>
 		</div>
 	</div>
@@ -112,13 +55,12 @@
 			</button>
 
 			<div class="panel-body">
-				<img alt="" th:id="${user.id}" th:src="${user.img}" class="avatar" />
+				<img alt="" class="avatar" />
 			</div>
 
-			<div class="panel-body"
-				style="padding: 10px 35px; background-color: #f5f5f500; border-color: #f5f5f500;"
-				th:text="${user.nickName}"></div>
-			<div class="panel-body" th:text="${user.description}"></div>
+			<div class="panel-body nickname_panel"
+				style="padding: 10px 35px; background-color: #f5f5f500; border-color: #f5f5f500;"></div>
+			<div class="panel-body des_panel"></div>
 
 		</div>
 		<div class="content" style="">
@@ -137,10 +79,10 @@
 		<a href="mailto:1546428286@qq.com">1546428286@qq.com</a>
 	</div>
 	<script type="text/javascript">
-        $(document).ready(function() {
-        	writeBox();
-        });
-    </script>
+		$(document).ready(function() {
+			writeBox();
+		});
+	</script>
 </body>
 
 </html>

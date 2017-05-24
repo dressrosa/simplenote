@@ -53,14 +53,13 @@ $(document).ready(function() {
 					window.location.href = "/public/user/" + elem.attr('id');
 					return;
 				}
-				window.location.href = "/public/article/" + elem.attr('name');
+				window.location.href = "/article/" + elem.attr('name');
 			} else {
 				if(elem.data('flipped')) {
-					window.location.href = "/public/article/" + elem.attr('id');
+					window.location.href = "/article/" + elem.attr('id');
 					return;
 				}
 				window.location.href = "/public/user/" + elem.attr('name');
-				
 			}
 
 		});
@@ -71,11 +70,10 @@ $(document).ready(function() {
 			var elem = $(this);
 			console.log(elem.attr('lang'));
 			if ('forUser' == elem.attr('lang')) {
-				
-					window.location.href = "/public/user/" + elem.attr('id');
+				window.location.href = "/public/user/" + elem.attr('id');
 				
 			} else {
-				window.location.href = "/public/article/" + elem.attr('id');
+				window.location.href = "/article/" + elem.attr('id');
 				
 			}
 

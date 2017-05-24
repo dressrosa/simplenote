@@ -42,6 +42,7 @@ body {
 }
 </style>
 </head>
+
 <script type="text/javascript">
 	$(document).ready(function() {
 
@@ -58,7 +59,7 @@ body {
 			</span> <span id="loginSpan" style="float: right; display: none;"> <a
 				class="header_w" style="padding-right: 15px;" href="#" id="register">注册</a>
 				<a class="header_w" style="padding-right: 0px;"
-				th:onclick="'javascript:gotoLogin(\''+'/public/article/write'+'\')' "
+				onclick="'javascript:gotoLogin(\''+'/public/article/write'+'\')' "
 				id="login">登录</a>
 			</span>
 		</div>

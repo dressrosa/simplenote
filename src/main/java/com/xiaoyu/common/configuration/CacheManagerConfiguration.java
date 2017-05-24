@@ -20,32 +20,35 @@ import net.sf.ehcache.CacheManager;
  * @author xiaoyu 2016年3月18日
  */
 @Configuration
-//@EnableAutoConfiguration
-@EnableCaching// 启用缓存
+@EnableCaching // 启用缓存
 public class CacheManagerConfiguration {
 
 	private static Logger logger = Logger.getLogger(CacheManagerConfiguration.class);
-	
+
 	@Resource(name = "ecacheManager")
 	private CacheManager cacheManager;
 
-	/**注册cachebean
-	 *@author xiaoyu
-	 *@param factory
-	 *@return
-	 *@time 2016年3月18日下午8:40:12
+	/**
+	 * 注册cachebean
+	 * 
+	 * @author xiaoyu
+	 * @param factory
+	 * @return
+	 * @time 2016年3月18日下午8:40:12
 	 */
 	@Bean(name = "ecacheManager")
 	public CacheManager cacheManager(EhCacheManagerFactoryBean factory) {
 		cacheManager = factory.getObject();
-		logger.info("缓存管理器配置:"+cacheManager.getName());
+		logger.info("缓存管理器配置:" + cacheManager.getName());
 		return cacheManager;
 	}
 
-	/**ecache bean工厂
-	 *@author xiaoyu
-	 *@return
-	 *@time 2016年3月18日下午8:38:22
+	/**
+	 * ecache bean工厂
+	 * 
+	 * @author xiaoyu
+	 * @return
+	 * @time 2016年3月18日下午8:38:22
 	 */
 	@Bean
 	public EhCacheManagerFactoryBean ehCacheManagerFactoryBean() {

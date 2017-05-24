@@ -1,81 +1,149 @@
 /**
  * 不要因为走了很远就忘记当初出发的目的:whatever happened,be yourself
- */ 
+ */
 package com.xiaoyu.modules.biz.user.service;
 
-import java.io.IOException;
 import java.util.Date;
+import java.util.HashMap;
+import java.util.Map;
+
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpSession;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.xiaoyu.common.base.BaseService;
+import com.xiaoyu.common.base.ResponseMapper;
+import com.xiaoyu.common.base.ResultConstant;
 import com.xiaoyu.common.utils.IdGenerator;
-import com.xiaoyu.common.utils.ImgUtils;
+import com.xiaoyu.common.utils.Md5Utils;
+import com.xiaoyu.common.utils.StringUtils;
 import com.xiaoyu.modules.biz.user.dao.UserDao;
 import com.xiaoyu.modules.biz.user.dao.UserRecordDao;
 import com.xiaoyu.modules.biz.user.entity.User;
 import com.xiaoyu.modules.biz.user.entity.UserRecord;
+
 /**
- * @author xiaoyu
- *2016年3月16日
+ * @author xiaoyu 2016年3月16日
  */
 @Service
-@Transactional(readOnly=true)
-public class UserService extends BaseService<UserDao,User> {
+@Transactional(readOnly = true)
+public class UserService extends BaseService<UserDao, User> implements IUserService {
 
 	@Autowired
 	private UserDao userDao;
-	
+
 	@Autowired
 	private UserRecordDao userRecordDao;
-//	@Transactional(readOnly=false)
-//	public int saveUser(User user, HttpServletRequest request) {
-//		String path = null;
-//		try {
-//			 path = ImgUtils.saveImg(user.getImgFile(),request);
-//		} catch (IOException e) {
-//			// TODO Auto-generated catch block
-//			e.printStackTrace();
-//		}
-//		user.setImg(path);
-//		return super.save(user);
-//	}
+	// @Transactional(readOnly=false)
+	// public int saveUser(User user, HttpServletRequest request) {
+	// String path = null;
+	// try {
+	// path = ImgUtils.saveImg(user.getImgFile(),request);
+	// } catch (IOException e) {
+	// // TODO Auto-generated catch block
+	// e.printStackTrace();
+	// }
+	// user.setImg(path);
+	// return super.save(user);
+	// }
 
-	@Transactional(readOnly=false)
+	@Transactional(readOnly = false)
 	public int uploadImg(User user) {
 		String path = null;
-//		try {
-//			 path = ImgUtils.upload(user.getImgFile());
-//		} catch (IOException e) {
-//			// TODO Auto-generated catch block
-//			e.printStackTrace();
-//		}
+		// try {
+		// path = ImgUtils.upload(user.getImgFile());
+		// } catch (IOException e) {
+		// // TODO Auto-generated catch block
+		// e.printStackTrace();
+		// }
 		user.setImg(path);
 		return super.update(user);
 	}
 
-	public User getForLogin(User user) {
+	private Map<String, Object> user2Map(User u) {
+		Map<String, Object> map = new HashMap<>();
+		map.put("userId", u.getId());
+		map.put("description", u.getDescription());
+		map.put("avatar", u.getImg());
+		map.put("nickname", u.getNickname());
+		return map;
+	}
+
+	private User getForLogin(User user) {
 		User u = this.userDao.getForLogin(user);
-		if(u == null) {
+		if (u == null) {
 			return user;
 		}
 		return u;
 	}
 
-	/**保存登录记录
-	 *@author xiaoyu
-	 *@param record
-	 *@return
-	 *@time 2016年4月12日上午10:29:29
-	 */
-	@Transactional(readOnly=false)
-	public int saveUserRecord(UserRecord record) {
+	@Override
+	public String login(HttpServletRequest request, String loginName, String password) {
+		HttpSession session = request.getSession(false);
+		ResponseMapper mapper = ResponseMapper.createMapper();
+		if (session != null) {
+			Map<String, Object> map = (Map<String, Object>) session.getAttribute(request.getHeader("token"));
+			session.setMaxInactiveInterval(60 * 60 * 3);
+			// while (session.getAttributeNames().hasMoreElements()) {
+			// System.out.println(session.getAttributeNames().nextElement());
+			// }
+			if (map != null)
+				return mapper.setData(map).getResultJson();
+		}
+		if (StringUtils.isBlank(loginName) || StringUtils.isBlank(password)) {
+			mapper.setCode(ResultConstant.ARGS_ERROR).setMessage("姓名和密码不能为空");
+			return mapper.getResultJson();
+		}
+
+		User user = new User();
+		user.setLoginName(loginName);
+		user = this.getForLogin(user);
+		if (StringUtils.isBlank(user.getId()) || !password.equalsIgnoreCase(user.getPassword())) {
+			mapper.setCode(ResultConstant.ARGS_ERROR).setMessage("用户名或密码不正确");
+			return mapper.getResultJson();
+		}
+
+		user.setPassword(null);
+		// 登录名存入session
+		HttpSession session1 = request.getSession(true);
+		session1.setMaxInactiveInterval(60 * 60 * 3);
+		// 用户id和密码和当前时间生成的md5用于token
+		String token = Md5Utils.MD5(user.getId() + password + new Date().getTime());
+		session1.setAttribute(token, user);
+		// 不管怎么设置过期时间 都没用 暂不知道为撒
+		// session1.setMaxInactiveInterval(2060);
+		Map<String, Object> result = this.user2Map(user);
+		result.put("token", token);
+		return mapper.setData(result).getResultJson();
+	}
+
+	@Override
+	public String loginRecord(HttpServletRequest request, String userId) {
+		String loginIp = request.getRemoteHost();
+		UserRecord record = new UserRecord();
+		record.setUserId(userId);
+		record.setLoginIp(loginIp);
 		Date date = new Date();
 		record.setId(IdGenerator.uuid());
 		record.setUpdateDate(date);
 		record.setCreateDate(date);
-		return this.userRecordDao.insert(record);
+		this.userRecordDao.insert(record);
+		return null;
+	}
+
+	@Override
+	public String userDetail(HttpServletRequest request, String userId) {
+		ResponseMapper mapper = ResponseMapper.createMapper();
+		User user = new User();
+		user.setId(userId);
+		User u = this.userDao.get(user);
+		if (u == null) {
+			return mapper.setCode(ResultConstant.NOT_DATA).getResultJson();
+		}
+
+		return mapper.setData(this.user2Map(u)).getResultJson();
 	}
 }

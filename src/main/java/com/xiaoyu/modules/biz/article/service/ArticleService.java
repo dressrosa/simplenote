@@ -9,10 +9,12 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpSession;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import org.springframework.ui.Model;
 
 import com.github.pagehelper.Page;
 import com.google.common.collect.Lists;
@@ -21,6 +23,7 @@ import com.xiaoyu.common.base.ResponseMapper;
 import com.xiaoyu.common.base.ResultConstant;
 import com.xiaoyu.common.utils.EhCacheUtil;
 import com.xiaoyu.common.utils.IdGenerator;
+import com.xiaoyu.common.utils.TimeUtils;
 import com.xiaoyu.modules.biz.article.dao.ArticleAttrDao;
 import com.xiaoyu.modules.biz.article.dao.ArticleDao;
 import com.xiaoyu.modules.biz.article.entity.Article;
@@ -48,7 +51,8 @@ public class ArticleService extends BaseService<ArticleDao, Article> implements 
 		Map<String, Object> map = new HashMap<>();
 		map.put("articleId", a.getId());
 		map.put("content", a.getContent());
-		map.put("createDate", a.getCreateDate());
+		map.put("createDate", TimeUtils.format(a.getCreateDate(), "yyyy-MM-dd"));
+		map.put("createTime", TimeUtils.format(a.getCreateDate(), "HH:mm"));
 		map.put("readNum", a.getReadNum());
 		map.put("title", a.getTitle());
 		map.put("user", this.user2Map(this.userDao.getById(a.getUserId())));
@@ -58,7 +62,7 @@ public class ArticleService extends BaseService<ArticleDao, Article> implements 
 	private Map<String, Object> article2Map1(Article a) {
 		Map<String, Object> map = new HashMap<>();
 		map.put("articleId", a.getId());
-		map.put("content", a.getContent().length() > 100 ? a.getContent().substring(0, 99) : a.getContent());
+		map.put("content", a.getContent().length() > 200 ? a.getContent().substring(0, 199) : a.getContent());
 		map.put("title", a.getTitle());
 		map.put("user", this.user2Map(this.userDao.getById(a.getUserId())));
 		return map;
@@ -71,7 +75,6 @@ public class ArticleService extends BaseService<ArticleDao, Article> implements 
 			map.put("nickname", a.getNickname());
 			map.put("avatar", a.getImg());
 			map.put("description", a.getDescription());
-			map.put("createDate", a.getImg());
 		}
 		return map;
 	}
@@ -87,7 +90,7 @@ public class ArticleService extends BaseService<ArticleDao, Article> implements 
 	}
 
 	@Transactional(readOnly = false)
-	public String publish(String userId, String content) {
+	private String publish(String userId, String content) {
 		ResponseMapper mapper = ResponseMapper.createMapper();
 		Article t = new Article();
 		ArticleAttr attr = new ArticleAttr();
@@ -128,10 +131,10 @@ public class ArticleService extends BaseService<ArticleDao, Article> implements 
 		List<Article> list = page.getResult();
 		List<Object> total = new ArrayList<>();
 
-		List<Map<String,Object>> childList1 = Lists.newArrayList();
-		List<Map<String,Object>> childList2 = Lists.newArrayList();
-		List<Map<String,Object>> childList3 = Lists.newArrayList();
-		List<Map<String,Object>> childList4 = Lists.newArrayList();
+		List<Map<String, Object>> childList1 = Lists.newArrayList();
+		List<Map<String, Object>> childList2 = Lists.newArrayList();
+		List<Map<String, Object>> childList3 = Lists.newArrayList();
+		List<Map<String, Object>> childList4 = Lists.newArrayList();
 
 		for (int i = 0; i < list.size(); i++) {
 			if (i < 3) {
@@ -149,8 +152,42 @@ public class ArticleService extends BaseService<ArticleDao, Article> implements 
 		total.add(childList3);
 		total.add(childList4);
 		EhCacheUtil.put("SystemCache", "pageList", total);// 存入缓存
-		//model.addAttribute("list", total);
-		//return "article/articleList";
+		// model.addAttribute("list", total);
+		// return "article/articleList";
 		return mapper.setData(total).getResultJson();
+	}
+
+	@Override
+	public String list(HttpServletRequest request, String userId, Integer pageNum, Integer pageSize) {
+		ResponseMapper mapper = ResponseMapper.createMapper();
+		Article article = new Article();
+		article.setUserId(userId);
+		if (pageNum == null || pageSize == null || pageNum < 0 || pageSize < 0) {
+			pageNum = 0;
+			pageSize = 10;
+		}
+		Page<Article> page = this.findByPage(article, pageNum, pageSize);
+		List<Article> list = page.getResult();
+		List<Map<String, Object>> total = new ArrayList<>();
+		if (list != null && list.size() > 0) {
+			for (Article a : list) {
+				total.add(this.article2Map1(a));
+			}
+		}
+		return mapper.setData(total).getResultJson();
+	}
+
+	@Override
+	public String addArticle(HttpServletRequest request, String content, String userId, String token) {
+		ResponseMapper mapper = ResponseMapper.createMapper();
+		HttpSession session = request.getSession(false);
+		if (session == null)
+			return mapper.setCode(ResultConstant.LOGIN_INVALIDATE).setMessage("登录失效,请刷新登录1").getResultJson();
+		User user = (User) session.getAttribute(token);
+		if (user == null)
+			return mapper.setCode(ResultConstant.LOGIN_INVALIDATE).setMessage("登录失效,请刷新登录2").getResultJson();
+		if (!userId.equals(user.getId()))
+			return mapper.setCode(ResultConstant.LOGIN_INVALIDATE).setMessage("登录失效,请刷新登录3").getResultJson();
+		return this.publish(userId, content);
 	}
 }

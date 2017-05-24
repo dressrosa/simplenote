@@ -23,7 +23,7 @@
 	type="text/javascript"></script>
 <script type="text/javascript" src="/xiaoyu/jquerysession.js"></script>
 <script type="text/javascript" src="/xiaoyu/common.js"></script>
-<script type="text/javascript" src="/xiaoyu/modules/user/hot.js"></script>
+<script type="text/javascript" src="/xiaoyu/modules/article/hot.js"></script>
 <script type="text/javascript" src="/xiaoyu/xiaoyu.js"></script>
 <meta content="唯有读书,不慵不扰" name="description" />
 <link rel="stylesheet" type="text/css" href="/xiaoyu/xiaoyu.css" />
@@ -37,15 +37,15 @@
 <body>
 	<div class="header">
 		<div class="container">
-			<span><a class="header_w" href="/public/article/hot">首页</a></span> <span
+			<span><a class="header_w" href="#">首页</a></span> <span
 				id="userSpan" style="float: right; display: none;"> <a
-				class="header_w" style="padding-right: 15px;" id="nickName" href="#">xxx</a>
+				class="header_w" style="padding-right: 15px;" id="nickname" href="#">xxx</a>
 				<a class="header_w" style="padding-right: 0px;" id="logout" href=""
 				onclick="logout()">退出</a>
 			</span> <span id="loginSpan" style="float: right; display: none;"> <a
 				class="header_w" style="padding-right: 15px;" href="#" id="register">注册</a>
 				<a class="header_w" style="padding-right: 0px;"
-				th:onclick="'javascript:gotoLogin(\''+'/public/article/hot'+'\')' "
+				th:onclick="'javascript:gotoLogin(\''+'/article/hot'+'\')' "
 				id="login">登录</a>
 			</span>
 		</div>
