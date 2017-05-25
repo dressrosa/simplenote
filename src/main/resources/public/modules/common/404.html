@@ -1,35 +1,65 @@
 <html>
 <head>
+<meta name="viewport"
+	content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=yes" />
 <meta http-equiv="Pragma" content="no-cache" />
 <meta charset="UTF-8" />
-<meta name="viewport" content="width=840" />
 <meta name="author" content="xiaoyu" />
+<script src="/jquery/jquery-1.12.2.min.js" type="text/javascript"></script>
 <link href="/bootstrap-3.3.6-dist/css/bootstrap.min.css"
 	rel="stylesheet" />
 <link rel="stylesheet" href="/stephanwagner/97f7f8-00a5dd.css" />
 <link rel="icon" type="image/ico" href="/xiaoyu/img/favicon.ico" />
+
 <title>404</title>
 <style type="text/css">
+.font_big {
+	font-size: 300px;
+	font-family: cursive;
+	font-weight: bolder;
+}
 </style>
 </head>
-<body style="text-align: center; background-color: #FAEBD7;">
+<script type="text/javascript">
+	function isPC() {
+		var userAgentInfo = navigator.userAgent;
+		var Agents = [ "Android", "iPhone", "SymbianOS", "Windows Phone",
+				"iPad", "iPod" ];
+		var flag = true;
+		for (var v = 0; v < Agents.length; v++) {
+			if (userAgentInfo.indexOf(Agents[v]) > 0) {
+				flag = false;
+				break;
+			}
+		}
+		return flag;
+	}
+	$(document).ready(function() {
+		if (!isPC()) {
+			$(".font_big").css("font-size", "140px");
+			$(".font_big").find("img").css({
+				"height" : "180px",
+				"width" : "140"
+			});
+		}
+
+	});
+</script>
+<body>
 	<div id="header">
 		<h1>
 			<img src="/xiaoyu/img/xiaoyu.png" class="img-circle" height="50px"
 				width="50px" />
 		</h1>
-		<a href="/public/article/hot" class="header-icon icon-globe"><span
+		<a href="/article/hot" class="header-icon icon-globe"><span
 			class="label">xiaoyu</span></a> <a
 			href="https://github.com/dressrosa/springbootDemo"
-			class="header-icon icon-code"><span class="label">GITHUB</span></a>
+			class="header-icon icon-code"><span class="label">github</span></a>
 	</div>
-	<div style="padding: 50px; margin: 0, auto; margin-top: 100px;">
-		<span
-			style="font-size: 250px; font-family: cursive; font-weight: bolder; width: 300px; height: 360px;">4</span>
-		<span style="font-size: 400px;"><img alt=""
-			src="/xiaoyu/img/404.jpg" width="300px" height="360px"
-			class="img-circle" style="" /></span> <span
-			style="font-size: 250px; font-family: cursive; font-weight: bolder; width: 300px; height: 360px;">4</span>
+	<div style="padding: 50px; margin-top: 100px; text-align: center;">
+		<span class="font_big">4<img src="/xiaoyu/img/404.jpg"
+			style="width: 250px; height: 300px; border-radius: 50%;" />4
+		</span>
 	</div>
 </body>
 </html>

@@ -46,9 +46,9 @@ input::-moz-focus-inner,button::-moz-focus-inner {
 	font-family: 'icons';
 	src: url('/fonts/icons/icons.eot?wh3ep7');
 	src: url('/fonts/icons/icons.eot?#iefix-wh3ep7')
-		format('embedded-opentype'), url('/fonts/icons/icons.woff?wh3ep7')
-		format('woff'), url('/fonts/icons/icons.ttf?wh3ep7')
-		format('truetype'), url('/fonts/icons/icons.svg?wh3ep7#icons')
+		format('embedded-opentype'), url('https://stephanwagner.me/fonts/icons/icons.woff?wh3ep7')
+		format('woff'), url('https://stephanwagner.me/fonts/icons/icons.ttf?wh3ep7')
+		format('truetype'), url('https://stephanwagner.me/fonts/icons/icons.svg?wh3ep7#icons')
 		format('svg');
 	font-weight: normal;
 	font-style: normal
@@ -775,7 +775,7 @@ a:hover,.link:hover {
 
 @font-face {
 	font-family: 'Daniel';
-	src: url('/fonts/Daniel.woff') format('woff'), url('/fonts/Daniel.ttf')
+	src: url('/fonts/Daniel.woff') format('woff'), url('https://stephanwagner.me/fonts/Daniel.ttf')
 		format('truetype')
 }
 

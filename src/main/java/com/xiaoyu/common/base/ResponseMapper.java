@@ -1,7 +1,7 @@
 package com.xiaoyu.common.base;
 
-import java.util.HashMap;
 import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
 
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.serializer.SerializerFeature;
@@ -34,16 +34,17 @@ public class ResponseMapper {
 	/**
 	 * 封装响应的数据,避免单例导致的多线程问题
 	 */
-	private static final ThreadLocal<Map<String, Object>> local = new ThreadLocal<Map<String, Object>>() {
+	private final static ThreadLocal<ConcurrentHashMap<String, Object>> local = new ThreadLocal<ConcurrentHashMap<String, Object>>() {
 		@Override
-		protected Map<String, Object> initialValue() {
-			final Map<String, Object> dataMap = new HashMap<>(8);
+		protected ConcurrentHashMap<String, Object> initialValue() {
+			final ConcurrentHashMap<String, Object> dataMap = new ConcurrentHashMap<>(8);
 			dataMap.put(CODE, ResultConstant.SUCCESS);
-			dataMap.put(MESSAGE, null);
-			dataMap.put(COUNT, null);
-			dataMap.put(DATA, null);
+			dataMap.put(MESSAGE, "");
+			dataMap.put(COUNT, "");
+			dataMap.put(DATA, "");
 			return dataMap;
 		}
+
 	};
 
 	private ResponseMapper() {
@@ -52,22 +53,27 @@ public class ResponseMapper {
 	/**
 	 * 内部类
 	 */
-	// private static final class MapperInstance {
-	// public static final ResponseMapper mapper = new ResponseMapper();
-	// }
-	//
-	// // 返回单例
-	// public static final ResponseMapper createMapper() {
-	// return MapperInstance.mapper;
-	// }
-
-	public static ResponseMapper createMapper() {
-		return new ResponseMapper();
+	private static final class MapperInstance {
+		public static final ResponseMapper mapper = new ResponseMapper();
 	}
+
+	// 返回单例
+	public static final ResponseMapper createMapper() {
+		return MapperInstance.mapper;
+	}
+
+	// public static ResponseMapper createMapper() {
+	// return new ResponseMapper();
+	// }
 
 	// 返回json数据
 	public String getResultJson() {
-		return JSON.toJSONString(getLocalMap(), filter, SerializerFeature.WriteNullStringAsEmpty);
+		System.out.println(this.toString());
+		String result = JSON.toJSONString(getLocalMap(), filter, SerializerFeature.WriteNullStringAsEmpty);
+		System.out.println("code:" + getLocalMap().get("code"));
+		getLocalMap().clear();
+		getLocalMap().put(CODE, ResultConstant.SUCCESS);
+		return result;
 	}
 
 	private final Map<String, Object> getLocalMap() {

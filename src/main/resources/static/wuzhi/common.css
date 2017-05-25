@@ -863,7 +863,7 @@ input[type=text], input[type=password], input.text, input.title,
 
 input[type=text]:focus, input[type=password]:focus, input.text:focus,
 	input.title:focus, textarea:focus {
-	border-color: #F6C86F;
+	border-color: #ffb5b5;
 }
 
 select {
@@ -1120,7 +1120,8 @@ button, input.button {
 
 .header {
 	height: 45px;
-	background-color: #34495E;
+	/* background-color: #34495E; */
+	background-color:black;
 	box-shadow: 0px 0px 5px rgba(0, 0, 0, 0.5)
 }
 
@@ -1141,7 +1142,7 @@ button, input.button {
 	font-size: 16px;
 	line-height: 45px;
 	padding-right: 15px;
-	font-weight: bold;
+	font-weight: 100;
 }
 
 .header a:hover {
@@ -1281,13 +1282,7 @@ button, input.button {
 	margin: 15px 0px;
 }
 
-.main {
-	max-width: 1200px;
-	margin: 0px auto;
-	padding-top: 15px;
-	padding-bottom: 20px;
-	display: flex;
-}
+
 
 .note_tip {
 	font-size: 16px;

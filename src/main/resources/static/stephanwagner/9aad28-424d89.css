@@ -1410,7 +1410,7 @@ h2:hover .permalink, h3:hover .permalink {
 }
 
 #footer {
-	border-top: 2px solid #03ADE0;
+	border-top: 1px solid #e80643f2;
 	height: 50px;
 	line-height: 50px;
 	overflow: hidden;

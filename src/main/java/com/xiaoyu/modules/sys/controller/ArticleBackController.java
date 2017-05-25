@@ -4,7 +4,6 @@
 package com.xiaoyu.modules.sys.controller;
 
 import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -12,14 +11,12 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
-
 import com.xiaoyu.common.base.ResponseMapper;
 import com.xiaoyu.common.base.ResultConstant;
 import com.xiaoyu.common.utils.StringUtils;
 import com.xiaoyu.modules.biz.article.entity.ArticleAttr;
 import com.xiaoyu.modules.biz.article.service.ArticleAttrService;
 import com.xiaoyu.modules.biz.article.service.api.IArticleService;
-import com.xiaoyu.modules.sys.constant.PageUrl;
 
 /**
  * 文章
@@ -47,9 +44,9 @@ public class ArticleBackController {
 	 * @time 2016年3月29日下午9:20:30
 	 */
 	@RequestMapping(value = "api/v1/article/{articleId}", method = RequestMethod.GET)
-	public String detail(@PathVariable String articleId, HttpServletRequest request, HttpServletResponse response) {
+	public String detail(@PathVariable String articleId, HttpServletRequest request) {
 		if (StringUtils.isBlank(articleId)) {
-			return PageUrl.Not_Found;
+			return ResponseMapper.createMapper().setCode(ResultConstant.ARGS_ERROR).getResultJson();
 		}
 		return this.articleService.detail(articleId);
 	}
@@ -63,7 +60,7 @@ public class ArticleBackController {
 	 * @time 2016年4月1日下午4:08:19
 	 */
 	@RequestMapping(value = "api/v1/article/hot", method = RequestMethod.GET)
-	public String hotList(HttpServletRequest request, HttpServletResponse response) {
+	public String hotList(HttpServletRequest request) {
 		return this.articleService.hotList();
 	}
 

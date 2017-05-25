@@ -37,7 +37,7 @@ import com.xiaoyu.modules.sys.constant.PageUrl;
  * @author xiaoyu 2016年3月29日
  */
 @Service
-@Transactional(readOnly = true)
+@Transactional
 public class ArticleService extends BaseService<ArticleDao, Article> implements IArticleService {
 
 	@Autowired
@@ -63,6 +63,15 @@ public class ArticleService extends BaseService<ArticleDao, Article> implements 
 		Map<String, Object> map = new HashMap<>();
 		map.put("articleId", a.getId());
 		map.put("content", a.getContent().length() > 200 ? a.getContent().substring(0, 199) : a.getContent());
+		map.put("title", a.getTitle());
+		map.put("user", this.user2Map(this.userDao.getById(a.getUserId())));
+		return map;
+	}
+
+	private Map<String, Object> article2Map2(Article a) {
+		Map<String, Object> map = new HashMap<>();
+		map.put("articleId", a.getId());
+		map.put("content", a.getContent().length() > 100 ? a.getContent().substring(0, 99) : a.getContent());
 		map.put("title", a.getTitle());
 		map.put("user", this.user2Map(this.userDao.getById(a.getUserId())));
 		return map;
@@ -138,13 +147,13 @@ public class ArticleService extends BaseService<ArticleDao, Article> implements 
 
 		for (int i = 0; i < list.size(); i++) {
 			if (i < 3) {
-				childList1.add(this.article2Map1(list.get(i)));
+				childList1.add(this.article2Map2(list.get(i)));
 			} else if (i > 2 && i < 6) {
-				childList2.add(this.article2Map1(list.get(i)));
+				childList2.add(this.article2Map2(list.get(i)));
 			} else if (i > 5 && i < 9) {
-				childList3.add(this.article2Map1(list.get(i)));
+				childList3.add(this.article2Map2(list.get(i)));
 			} else {
-				childList4.add(this.article2Map1(list.get(i)));
+				childList4.add(this.article2Map2(list.get(i)));
 			}
 		}
 		total.add(childList1);

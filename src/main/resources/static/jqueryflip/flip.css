@@ -25,17 +25,17 @@
 	left: 0;
 	top: 0;
 	width: 100%;
-	height: 24%;
-	border: 1px solid #ddd;
-	background: url("img/background2.jpg") repeat center center #f9f9f9;
+	height: 25%;
+	border-top: 1px solid #ddd;
+	/* background: url("img/background2.jpg") repeat center center #f9f9f9; */
 }
 
 .sponsorFlip:hover {
-	border: 1px solid #999;
+	border-top: 1px solid #ddd;
 	/* CSS3 inset shadow: */
-	-moz-box-shadow: 0 0 30px #999 inset;
-	-webkit-box-shadow: 0 0 30px #999 inset;
-	box-shadow: 0 0 30px #999 inset;
+	-moz-box-shadow: 0 0 30px #e49393ba inset;
+	-webkit-box-shadow: 0 0 30px #e49393ba inset;
+	box-shadow: 0 0 30px #e49393ba inset;
 }
 
 .sponsorFlip img {

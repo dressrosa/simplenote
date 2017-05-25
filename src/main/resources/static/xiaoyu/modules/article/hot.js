@@ -1,8 +1,8 @@
- function getData() {
-	//var ajaxPromise =
+ 
+	var $ajaxPromise =
 		$.ajax({
 		type : "get",
-		async : false,
+		async : true,
 		url : '/api/v1/article/hot',
 		success : function(data) {
 			var obj = jQuery.parseJSON(data);
@@ -48,23 +48,31 @@
 					
 				}
 			}
+			 addHeadForImg();
+			 $('.sponsorFlip').bind('click', function() {
+					var elem = $(this);
+					console.log(elem.attr('lang'));
+					if ('forUser' == elem.attr('lang')) {
+						window.location.href = "/user/" + elem.attr('id');
+						
+					} else {
+						window.location.href = "/article/" + elem.attr('id');
+						
+					}
+
+				});
 			return true;
 		}
 	});
- }
-
-
-
-$(function() {
-
-});
+ 
+ 
 
 var userInfo = jQuery.parseJSON($.session.get('user'));
 
 $(document).ready(
 		function() {
-			 getData();
-			//ajaxPromise.promise().done(function(){
+			 
+			$ajaxPromise.promise().done(function(){
 				$(".col-xs-3").sortable({
 					connectWith : '.col-xs-3',// 级联其他
 					containment : "document",// 作用范围
@@ -79,7 +87,7 @@ $(document).ready(
 					$(".content").css("width", "100%");
 					$("#footer").css("display", "none");
 				}
-			//});
+			});
 			
 
 			
@@ -89,8 +97,8 @@ $(document).ready(
 				$("#loginSpan").css("display", "block");
 			} else {
 				$("#userSpan").css("display", "block");
-				$("#userSpan").find("#nickName").attr("href",
-						"/public/user/" + userInfo.id);
-				$("#userSpan").find("#nickName").text(userInfo.nickName);
+				$("#userSpan").find("#nickname").attr("href",
+						"/user/" + userInfo.userId);
+				$("#userSpan").find("#nickname").text(userInfo.nickname);
 			}
 		});

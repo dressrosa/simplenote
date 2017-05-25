@@ -98,69 +98,7 @@ function postForm(item) {
 		}
 	});
 }
-function publish() {
-	var userInfo = jQuery.parseJSON($.session.get("user"));
-	if (checkNull(userInfo)) {
-		new jBox('Notice', {
-			color : 'red',
-			animation : 'tada',
-			autoClose : 2000,
-			content : '请先登录!'
-		});
-		return false;
-	}
-	var content = $("#articleContent");
-	if (checkNull(content.val())) {
-		new jBox('Notice', {
-			color : 'red',
-			animation : 'tada',
-			autoClose : 2000,
-			content : '请君留字!'
-		});
-		return false;
-	}
-	var userId = userInfo.id;
-	var token = userInfo.token;
-	$.ajax({
-		type : "post",
-		url : "/private/article/add",
-		data : {
-			userId : userId,
-			token : token,
-			content : content.val()
-		},
-		async : true,
-		error : function(data) {
-			new jBox('Notice', {
-				color : 'red',
-				animation : 'tada',
-				content : '发表失败!'
-			});
-			return false;
-		},
-		success : function(data) {
-			var jsonObj = jQuery.parseJSON(data);
-			if (jsonObj.code == '0') {
-				window.location.href = "/public/article/" + jsonObj.data;
-			}
-			if (jsonObj.code = '20001') {
-				$.session.remove('user');
-				new jBox('Notice', {
-					color : 'red',
-					animation : 'tada',
-					content : jsonObj.message
-				});
-			} else {
-				new jBox('Notice', {
-					color : 'red',
-					animation : 'tada',
-					content : jsonObj.message
-				});
-			}
-			return true;
-		}
-	});
-}
+
 /**
  * 根据id查看详情
  * 

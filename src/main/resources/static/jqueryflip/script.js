@@ -50,7 +50,7 @@ $(document).ready(function() {
 			console.log(elem.attr('lang'));
 			if ('forUser' == elem.attr('lang')) {
 				if (elem.data('flipped')) {
-					window.location.href = "/public/user/" + elem.attr('id');
+					window.location.href = "/user/" + elem.attr('id');
 					return;
 				}
 				window.location.href = "/article/" + elem.attr('name');
@@ -59,7 +59,7 @@ $(document).ready(function() {
 					window.location.href = "/article/" + elem.attr('id');
 					return;
 				}
-				window.location.href = "/public/user/" + elem.attr('name');
+				window.location.href = "/user/" + elem.attr('name');
 			}
 
 		});
@@ -70,7 +70,7 @@ $(document).ready(function() {
 			var elem = $(this);
 			console.log(elem.attr('lang'));
 			if ('forUser' == elem.attr('lang')) {
-				window.location.href = "/public/user/" + elem.attr('id');
+				window.location.href = "/user/" + elem.attr('id');
 				
 			} else {
 				window.location.href = "/article/" + elem.attr('id');

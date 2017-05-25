@@ -7,8 +7,10 @@
 <meta http-equiv="Expires" content="0" />
 <meta http-equiv="Cache-Control" content="no-cache" />
 <meta http-equiv="Cache-Control" content="no-store" />
-<link rel="icon" type="image/ico" href="/xiaoyu/img/favicon.ico"
-	class="img-circle" />
+<meta http-equiv="Pragma" content="no-cache" />
+<meta name="robots" content="nofollow" />
+<meta name="robots" content="noarchive" />
+<link rel="icon" type="image/ico" href="/xiaoyu/img/favicon.ico" />
 <link href="/bootstrap-3.3.6-dist/css/bootstrap.min.css"
 	rel="stylesheet" />
 <link href="/jBox-0.3.2/jBox.css" rel="stylesheet" />
@@ -19,39 +21,21 @@
 	type="text/javascript"></script>
 <script type="text/javascript" src="/xiaoyu/jquerysession.js"></script>
 <script type="text/javascript" src="/xiaoyu/common.js"></script>
-<link rel="icon" type="image/ico" href="/xiaoyu/img/favicon.ico" />
-<meta name="robots" content="nofollow" />
-<meta name="robots" content="noarchive" />
-<title>写日志</title>
-<meta http-equiv="Pragma" content="no-cache" />
+<script type="text/javascript" src="/xiaoyu/xiaoyu.js"></script>
+<script type="text/javascript" src="/xiaoyu/modules/article/article.js"></script>
+<title>执笔</title>
 <link href="/wuzhi/common.css" rel="stylesheet" type="text/css" />
-<style type="text/css">
-body {
-	font-family: "Helvetica Neue", Helvetica, Arial, "PingFang SC",
-		"Hiragino Sans GB", "WenQuanYi Micro Hei", "Microsoft Yahei",
-		sans-serif;
-	font-size: 14px;
-	background: #f7f8fa;
-}
+<link href="/xiaoyu/xiaoyu.css" rel="stylesheet" type="text/css" />
 
-.main {
-	max-width: 1200px;
-	margin: 0px auto;
-	padding-bottom: 20px;
-	display: block;
-}
-</style>
 </head>
 
 <script type="text/javascript">
-	$(document).ready(function() {
-
-	});
+	
 </script>
 <body>
 	<div class="header">
 		<div class="container">
-			<span><a class="header_w" href="/public/article/hot">首页</a></span> <span
+			<span><a class="header_w" href="/article/hot">首页</a></span> <span
 				id="userSpan" style="float: right; display: none;"> <a
 				class="header_w" style="padding-right: 15px;" id="nickName" href="#">xxx</a>
 				<a class="header_w" style="padding-right: 0px;" id="logout" href=""
@@ -59,28 +43,25 @@ body {
 			</span> <span id="loginSpan" style="float: right; display: none;"> <a
 				class="header_w" style="padding-right: 15px;" href="#" id="register">注册</a>
 				<a class="header_w" style="padding-right: 0px;"
-				onclick="'javascript:gotoLogin(\''+'/public/article/write'+'\')' "
-				id="login">登录</a>
+				onclick="javascript:gotoLogin('/article/write')" id="login">登录</a>
 			</span>
 		</div>
 	</div>
 
 
-	<div class="container main">
-		<div class="main">
+	<div class="container">
+		<div class="main_write">
 
 			<div class="note_content" style="white-space: normal;">
 				<textarea id="articleContent" class="textarea" required="required"
 					placeholder="见字如面,不慵不扰" style="width: 100%; resize: none"></textarea>
 			</div>
-			<input type="button" class="button" value="发表" onclick="publish()"
-				style="float: right; font-size: 15px; background-color: #FFFFFF;" />
-
+			<input type="button" class="btn" value="发表" id="publish" />
 
 		</div>
 	</div>
 	<div class="footer container">
-		<hr class="hr-10" style="width: 98%; margin-left: 0px;" />
+		<hr class="hr_line" />
 		<div class="copyright " style="float: left; margin-right: 3px;">
 			<font style="margin-right: 3px;">©2016-2017 小雨 </font><a
 				href="/xiaoyu.me.html">xiaoyu.me</a>

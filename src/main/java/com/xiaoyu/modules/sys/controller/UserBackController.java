@@ -6,26 +6,19 @@ package com.xiaoyu.modules.sys.controller;
 import java.io.IOException;
 
 import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.github.pagehelper.Page;
 import com.xiaoyu.common.base.ResponseMapper;
 import com.xiaoyu.common.base.ResultConstant;
 import com.xiaoyu.common.utils.StringUtils;
-import com.xiaoyu.modules.biz.user.entity.User;
-import com.xiaoyu.modules.biz.user.entity.UserRecord;
 import com.xiaoyu.modules.biz.user.service.IUserService;
-import com.xiaoyu.modules.sys.constant.PageUrl;
 
 /**
  * 用于后台页面
