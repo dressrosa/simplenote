@@ -20,54 +20,28 @@ import com.xiaoyu.common.base.ResultConstant;
 import com.xiaoyu.common.utils.IdGenerator;
 import com.xiaoyu.common.utils.Md5Utils;
 import com.xiaoyu.common.utils.StringUtils;
+import com.xiaoyu.modules.biz.user.dao.LoginRecordDao;
 import com.xiaoyu.modules.biz.user.dao.UserDao;
-import com.xiaoyu.modules.biz.user.dao.UserRecordDao;
+import com.xiaoyu.modules.biz.user.entity.LoginRecord;
 import com.xiaoyu.modules.biz.user.entity.User;
-import com.xiaoyu.modules.biz.user.entity.UserRecord;
 
 /**
  * @author xiaoyu 2016年3月16日
  */
 @Service
-@Transactional(readOnly = true)
 public class UserService extends BaseService<UserDao, User> implements IUserService {
 
 	@Autowired
 	private UserDao userDao;
 
 	@Autowired
-	private UserRecordDao userRecordDao;
-	// @Transactional(readOnly=false)
-	// public int saveUser(User user, HttpServletRequest request) {
-	// String path = null;
-	// try {
-	// path = ImgUtils.saveImg(user.getImgFile(),request);
-	// } catch (IOException e) {
-	// // TODO Auto-generated catch block
-	// e.printStackTrace();
-	// }
-	// user.setImg(path);
-	// return super.save(user);
-	// }
-
-	@Transactional(readOnly = false)
-	public int uploadImg(User user) {
-		String path = null;
-		// try {
-		// path = ImgUtils.upload(user.getImgFile());
-		// } catch (IOException e) {
-		// // TODO Auto-generated catch block
-		// e.printStackTrace();
-		// }
-		user.setImg(path);
-		return super.update(user);
-	}
+	private LoginRecordDao userRecordDao;
 
 	private Map<String, Object> user2Map(User u) {
 		Map<String, Object> map = new HashMap<>();
 		map.put("userId", u.getId());
 		map.put("description", u.getDescription());
-		map.put("avatar", u.getImg());
+		map.put("avatar", u.getAvatar());
 		map.put("nickname", u.getNickname());
 		return map;
 	}
@@ -121,15 +95,13 @@ public class UserService extends BaseService<UserDao, User> implements IUserServ
 	}
 
 	@Override
-	public String loginRecord(HttpServletRequest request, String userId) {
+	public String loginRecord(HttpServletRequest request, String userId, String device) {
 		String loginIp = request.getRemoteHost();
-		UserRecord record = new UserRecord();
+		LoginRecord record = new LoginRecord();
 		record.setUserId(userId);
 		record.setLoginIp(loginIp);
-		Date date = new Date();
+		record.setDevice(device);
 		record.setId(IdGenerator.uuid());
-		record.setUpdateDate(date);
-		record.setCreateDate(date);
 		this.userRecordDao.insert(record);
 		return null;
 	}
@@ -146,4 +118,5 @@ public class UserService extends BaseService<UserDao, User> implements IUserServ
 
 		return mapper.setData(this.user2Map(u)).getResultJson();
 	}
+
 }

@@ -103,7 +103,7 @@ $(document).ready(function() {
 		$.ajax({
 			type : 'POST',
 			async : true,
-			url : '/public/article/changeView/' + item,
+			url : '/api/v1/article/viewNum/' + item,
 			error : function(data) {
 				console.log(data);
 			},

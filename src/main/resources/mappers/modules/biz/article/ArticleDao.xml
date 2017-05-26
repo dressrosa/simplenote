@@ -7,9 +7,7 @@
 		a.title as title,
 		a.content
 		as content,
-		a.create_date as createDate,
-		a.update_date as updateDate,
-		a.del_flag as delFlag
+		a.create_date as createDate
 	</sql>
 
 	<select id="get" resultType="com.xiaoyu.modules.biz.article.entity.Article"

@@ -5,11 +5,7 @@
 		a.id as id,
 		a.article_id as articleId,
 		a.readNum as readNum,
-		a.commentNum as commentNum,
-		a.create_date as createDate,
-		a.update_date
-		as updateDate,
-		a.del_flag as delFlag
+		a.commentNum as commentNum
 	</sql>
 
 	<select id="get" resultType="com.xiaoyu.modules.biz.article.entity.ArticleAttr"

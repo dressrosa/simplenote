@@ -4,7 +4,6 @@
 package com.xiaoyu.modules.biz.article.service;
 
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -23,6 +22,7 @@ import com.xiaoyu.common.base.ResponseMapper;
 import com.xiaoyu.common.base.ResultConstant;
 import com.xiaoyu.common.utils.EhCacheUtil;
 import com.xiaoyu.common.utils.IdGenerator;
+import com.xiaoyu.common.utils.JedisUtils;
 import com.xiaoyu.common.utils.TimeUtils;
 import com.xiaoyu.modules.biz.article.dao.ArticleAttrDao;
 import com.xiaoyu.modules.biz.article.dao.ArticleDao;
@@ -82,7 +82,7 @@ public class ArticleService extends BaseService<ArticleDao, Article> implements 
 		if (a != null) {
 			map.put("userId", a.getId());
 			map.put("nickname", a.getNickname());
-			map.put("avatar", a.getImg());
+			map.put("avatar", a.getAvatar());
 			map.put("description", a.getDescription());
 		}
 		return map;
@@ -103,18 +103,13 @@ public class ArticleService extends BaseService<ArticleDao, Article> implements 
 		ResponseMapper mapper = ResponseMapper.createMapper();
 		Article t = new Article();
 		ArticleAttr attr = new ArticleAttr();
-		Date date = new Date();
 		t.setId(IdGenerator.uuid());
-		t.setCreateDate(date);
-		t.setUpdateDate(date);
 		t.setContent(content);
 		t.setUserId(userId);
 		try {
 			this.articleDao.insert(t);
 			attr.setArticleId(t.getId());
 			attr.setId(IdGenerator.uuid());
-			attr.setCreateDate(date);
-			attr.setUpdateDate(date);
 			this.attrDao.insert(attr);
 		} catch (RuntimeException e) {
 			throw e;
@@ -198,5 +193,23 @@ public class ArticleService extends BaseService<ArticleDao, Article> implements 
 		if (!userId.equals(user.getId()))
 			return mapper.setCode(ResultConstant.LOGIN_INVALIDATE).setMessage("登录失效,请刷新登录3").getResultJson();
 		return this.publish(userId, content);
+	}
+
+	@Override
+	public String addReadNum(HttpServletRequest request, String articleId) {
+		String ip = request.getRemoteHost();
+		if (JedisUtils.get("user:login:" + ip) != null) {
+			return ResponseMapper.createMapper().getResultJson();
+		}
+		ArticleAttr attr = new ArticleAttr();
+		attr.setArticleId(articleId);
+		attr = this.attrDao.getForUpdate(attr);// 行级锁
+		ArticleAttr temp = new ArticleAttr();
+		temp.setId(attr.getId());
+		temp.setArticleId(attr.getArticleId());
+		temp.setReadNum(attr.getReadNum() + 1);
+		this.attrDao.update(temp);
+		JedisUtils.set("user:login:" + ip, temp.getReadNum().toString(), 60 * 10);
+		return ResponseMapper.createMapper().setData(temp.getReadNum()).getResultJson();
 	}
 }

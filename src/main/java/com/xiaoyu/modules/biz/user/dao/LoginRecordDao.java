@@ -6,7 +6,7 @@ package com.xiaoyu.modules.biz.user.dao;
 
 import org.springframework.stereotype.Repository;
 import com.xiaoyu.common.base.BaseDao;
-import com.xiaoyu.modules.biz.user.entity.UserRecord;
+import com.xiaoyu.modules.biz.user.entity.LoginRecord;
 
 
 /**
@@ -14,6 +14,6 @@ import com.xiaoyu.modules.biz.user.entity.UserRecord;
  *2016年4月12日
  */
 @Repository
-public interface UserRecordDao extends BaseDao<UserRecord> {
+public interface LoginRecordDao extends BaseDao<LoginRecord> {
 	
 }

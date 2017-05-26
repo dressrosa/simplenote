@@ -64,7 +64,6 @@ public class UserBackController {
 			return mapper.setCode(ResultConstant.ARGS_ERROR).getResultJson();
 		}
 		return this.userService.login(request, loginName, password);
-
 	}
 
 	/**
@@ -77,9 +76,9 @@ public class UserBackController {
 	 * @time 2016年4月12日上午10:30:37
 	 */
 	@RequestMapping(value = "api/v1/user/loginRecord", method = RequestMethod.POST)
-	public String loginRecord(HttpServletRequest request, String userId) {
+	public String loginRecord(HttpServletRequest request, String userId,String device) {
 		if (StringUtils.isNotBlank(userId))
-			return this.userService.loginRecord(request, userId);
+			return this.userService.loginRecord(request, userId,device);
 		return null;
 	}
 

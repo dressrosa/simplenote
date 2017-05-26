@@ -59,9 +59,6 @@ var $ajaxPromise2 = $
 				return true;
 			}
 		});
-$("#login").bind("click", function() {
-	gotoLogin('/user/' + userId);
-});
 
 $(document).ready(function() {
 	$ajaxPromise1.promise().done(function() {
@@ -77,7 +74,9 @@ $(document).ready(function() {
 		$(".content-left").css("width", "100%");
 		$(".content-right").css("width", "100%");
 	}
-
+	$("#login").bind("click", function() {
+		gotoLogin('/user/' + userId);
+	});
 	var $userInfo = jQuery.parseJSON($.session.get("user"));
 	var $thisUserId = userId;
 	if (!checkNull($userInfo)) {
@@ -85,5 +84,4 @@ $(document).ready(function() {
 			$(".camera").css("display", "block");
 		}
 	}
-
 });

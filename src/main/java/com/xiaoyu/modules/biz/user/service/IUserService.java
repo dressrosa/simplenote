@@ -9,7 +9,7 @@ public interface IUserService {
 
 	public String login(HttpServletRequest request, String loginName, String password);
 
-	public String loginRecord(HttpServletRequest request, String userId);
+	public String loginRecord(HttpServletRequest request, String userId, String device);
 	
 	public String userDetail(HttpServletRequest request, String userId);
 }

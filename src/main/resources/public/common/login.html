@@ -12,77 +12,93 @@
 	rel="stylesheet">
 <link href="/jBox-0.3.2/jBox.css" rel="stylesheet">
 <link rel="stylesheet" href="/stephanwagner/97f7f8-00a5dd.css">
+<link href="/xiaoyu/common.css" rel="stylesheet">
+<link href="/xiaoyu/xiaoyu.css" rel="stylesheet">
 <script src="/jquery/jquery-1.12.2.min.js" type="text/javascript"></script>
 <script src="/jBox-0.3.2/jBox.min.js" type="text/javascript"></script>
 <script src="/bootstrap-3.3.6-dist/js/bootstrap.min.js"
 	type="text/javascript"></script>
 <script type="text/javascript" src="/xiaoyu/jquerysession.js"></script>
 <script type="text/javascript" src="/xiaoyu/common.js"></script>
-
+<script type="text/javascript" src="/xiaoyu/modules/user/login.js"></script>
 <title>登录</title>
+<style type="text/css">
+body {
+	background-size: cover;
+	background: url('http://xiaoyu-0719.oss-cn-beijing.aliyuncs.com/4.jpg')
+		center no-repeat fixed;
+}
+
+.login_input {
+	margin: 3px;
+	width: 250px;
+}
+
+.login_panel {
+	position: absolute;
+	top: 50%;
+	left: 20%;
+	margin: 0px auto;
+	padding: 10px 10px 10px;
+	margin-bottom: 20px;
+	border: 1px solid transparent;
+	border-radius: 4px;
+	-webkit-box-shadow: 0 1px 1px rgba(0, 0, 0, .05);
+	box-shadow: 0 1px 1px rgba(0, 0, 0, .05);
+	margin: 0px auto;
+	margin: 0px auto;
+}
+
+.addon {
+	font-size: 10px;
+	font-weight: 400;
+	line-height: 1;
+	color: #555;
+	text-align: center;
+	background-color: #eee;
+	border: 1px solid #ccc;
+	border-radius: 4px;
+	width: 40px;
+}
+</style>
 </head>
-<script type="text/javascript">
-	$(document).ready(function() {
-		if (isPC()) {
-			$("#xyForm").css("width", "20%");
-		} else {
-			$("#xyForm").css("width", "100%");
-		}
-	});
 
-	function showPwd(item) {
-		var pwd = $("#password");
-		if (pwd.attr("type") == "password") {
-			pwd.attr("type", "text");
-			item.innerHTML = '隐藏';
-		} else {
-			pwd.attr("type", "password");
-			item.innerHTML = '可见';
-		}
-	};
-</script>
 <body>
-	<div id="header">
-		<h1>
-			<a href="/xiaoyu.me.html" class="xiaoyu_a">xiao yu</a> <img
-				src="/xiaoyu/img/xiaoyu.png" class="img-circle" height="50px"
-				width="50px" />
-		</h1>
-	</div>
-	<div class="content"
-		style="background: activeborder; background-image: url('/xiaoyu/img/loginbackground.jpg');">
-		<div class=""
-			style="margin: 0px auto; padding: 10px 10px 10px; margin-bottom: 20px; border: 1px solid transparent; border-radius: 4px; -webkit-box-shadow: 0 1px 1px rgba(0, 0, 0, .05); box-shadow: 0 1px 1px rgba(0, 0, 0, .05);">
+
+	<div style="display: block;">
+		<div class="login_panel">
 			<form id="xyForm" role="form" action="#" method="post"
-				style="width: 20%; margin: 0px auto;">
-
-				<div class="input-group">
-					<span class="input-group-addon">姓名</span> <input type="text"
-						placeholder="LoginName" class="form-control" required="required"
-						name="loginName" id="loginName" maxlength="20">
+				style="margin: 5px auto; padding: 5px; width: 150x;">
+				<input class="login_input" type="text" placeholder="LoginName"
+					class="form-control" required="required" name="loginName"
+					id="loginName" maxlength="20">
+				<div style="float: left; display: flex;">
+					<input class="login_input" type="password" placeholder="Password"
+						class="form-control" required="required" name="password"
+						id="password" maxlength="20"> <span class="addon"
+						onclick="showPwd(this)">可见</span>
 				</div>
-				<br>
-
-				<div class="input-group">
-					<span class="input-group-addon">密码</span> <input type="password"
-						placeholder="Password" class="form-control" required="required"
-						name="password" id="password" maxlength="20"> <span
-						class="input-group-addon" onclick="showPwd(this)">可见</span>
-				</div>
-				<br>
 				<ul class="list-group">
 					<input type="button" value="登录"
-						onclick="login()"
-						class="btn btn-primary btn-large btn-block" />
+						class="btn btn-large btn-block logining" />
 					<span class="tooltip"></span>
 				</ul>
+			</form>
 		</div>
-
-		</form>
-	</div>
-	<div id="content-text">
-		<div class="g-line" style="margin: 25px auto;"></div>
-		<a href="mailto:1546428286@qq.com">1546428286@qq.com</a>
+		<div class="footer container"
+			style="background: #ffffff66; line-height: 2; position: absolute; bottom: 0; left: 0; width: 100%; text-align: center">
+			<div class="hr1-line" style="margin-bottom: 10px"></div>
+			<div class="copyright " style="float: left; margin-right: 3px;">
+				<font style="margin-right: 3px;">©2016-2017 小雨 </font><a
+					href="/xiaoyu.me.html">xiaoyu.me</a>
+			</div>
+			<div
+				style="width: 35px; float: left; margin-left: 10px; margin-top: -5px;">
+				<a href="https://github.com/dressrosa"
+					style="width: 100%; display: block; background: url(https://assets-cdn.github.com/favicon.ico) no-repeat; text-indent: 40px; height: 33px;">
+				</a>
+			</div>
+		</div>
 	</div>
 </body>
 

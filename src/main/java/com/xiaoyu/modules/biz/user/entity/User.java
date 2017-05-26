@@ -3,8 +3,6 @@
  */
 package com.xiaoyu.modules.biz.user.entity;
 
-import org.springframework.web.multipart.MultipartFile;
-
 import com.xiaoyu.common.base.BaseEntity;
 
 /**
@@ -16,17 +14,27 @@ public class User extends BaseEntity {
 
 	private String nickname;
 	private String loginName;
-	private String img;
-	// private MultipartFile imgFile;
+	private String avatar;
+	private Integer sex;
 	private String description;
 	private String password;
+
+	public Integer getSex() {
+		return sex;
+	}
+
+	public User setSex(Integer sex) {
+		this.sex = sex;
+		return this;
+	}
 
 	public String getPassword() {
 		return password;
 	}
 
-	public void setPassword(String password) {
+	public User setPassword(String password) {
 		this.password = password;
+		return this;
 	}
 
 	public String getDescription() {
@@ -37,28 +45,31 @@ public class User extends BaseEntity {
 		this.description = description;
 	}
 
-	public String getImg() {
-		return img;
+	public String getAvatar() {
+		return avatar;
 	}
 
-	public void setImg(String img) {
-		this.img = img;
+	public User setAvatar(String avatar) {
+		this.avatar = avatar;
+		return this;
 	}
 
 	public String getNickname() {
 		return nickname;
 	}
 
-	public void setNickname(String nickname) {
+	public User setNickname(String nickname) {
 		this.nickname = nickname;
+		return this;
 	}
 
 	public String getLoginName() {
 		return loginName;
 	}
 
-	public void setLoginName(String loginName) {
+	public User setLoginName(String loginName) {
 		this.loginName = loginName;
+		return this;
 	}
 
 }

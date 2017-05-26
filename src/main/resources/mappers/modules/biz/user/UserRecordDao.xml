@@ -1,36 +1,29 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
-<mapper namespace="com.xiaoyu.modules.biz.user.dao.UserRecordDao">
+<mapper namespace="com.xiaoyu.modules.biz.user.dao.LoginRecordDao">
 
 	<sql id="columns">
 		a.id as id,
 		a.user_id as userId,
 		a.login_ip as loginIp,
-		a.create_date as createDate,
-		a.update_date as updateDate,
-		a.del_flag as
-		delFlag
+		a.create_date as createDate
 	</sql>
 
 	<sql id="userRecordJoins">
 	</sql>
 
-	<select id="findByList" resultType="com.xiaoyu.modules.biz.user.entity.UserRecord"
-		parameterType="com.xiaoyu.modules.biz.user.entity.UserRecord">
+	<select id="findByList" resultType="com.xiaoyu.modules.biz.user.entity.LoginRecord"
+		parameterType="com.xiaoyu.modules.biz.user.entity.LoginRecord">
 		select
 		<include refid="columns" />
-		from biz_user_record as a
+		from biz_user_login_record as a
 		where a.del_flag=0
 	</select>
 
-	<insert id="insert" parameterType="com.xiaoyu.modules.biz.user.entity.UserRecord">
-		insert into biz_user_record
-		(id,user_id,login_ip,create_date,update_date,del_flag)
-		values(#{id},#{userId},#{loginIp},#{createDate},#{updateDate},#{delFlag})
+	<insert id="insert" parameterType="com.xiaoyu.modules.biz.user.entity.LoginRecord">
+		insert into biz_user_login_record
+		(id,user_id,login_ip,device)
+		values(#{id},#{userId},#{loginIp},#{device})
 	</insert>
-
-	<update id="delete">
-		update biz_user_record set del_flag=1 where id=#{id}
-	</update>
 
 </mapper>

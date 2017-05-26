@@ -11,11 +11,10 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
+
 import com.xiaoyu.common.base.ResponseMapper;
 import com.xiaoyu.common.base.ResultConstant;
 import com.xiaoyu.common.utils.StringUtils;
-import com.xiaoyu.modules.biz.article.entity.ArticleAttr;
-import com.xiaoyu.modules.biz.article.service.ArticleAttrService;
 import com.xiaoyu.modules.biz.article.service.api.IArticleService;
 
 /**
@@ -28,9 +27,6 @@ public class ArticleBackController {
 
 	@Autowired
 	private IArticleService articleService;
-
-	@Autowired
-	private ArticleAttrService articleAttrService;
 
 	/**
 	 * 获取文章详情
@@ -83,12 +79,12 @@ public class ArticleBackController {
 		return this.articleService.list(request, userId, pageNum, pageSize);
 	}
 
-	@RequestMapping(value = "public/article/changeView/{articleId}")
-	public String changeView(HttpServletRequest requset, @PathVariable String id) {
-		ArticleAttr attr = new ArticleAttr();
-		attr.setArticleId(id);
-		int total = this.articleAttrService.updateReadNum(attr);
-		return total + "";
+	@RequestMapping(value = "api/v1/article/viewNum/{articleId}")
+	public String changeViewNum(HttpServletRequest request, @PathVariable String articleId) {
+		if (StringUtils.isBlank(articleId)) {
+			return ResponseMapper.createMapper().setCode(ResultConstant.ARGS_ERROR).getResultJson();
+		}
+		return this.articleService.addReadNum(request, articleId);
 	}
 
 	@RequestMapping(value = "api/v1/article/add", method = RequestMethod.POST)

@@ -81,7 +81,7 @@ body {
 	box-shadow: 0 1px 3px rgba(0, 37, 55, .05);
 	box-sizing: border-box;
 	margin: 1px;
-	padding: 1px;
+	padding: 10px;
 	/* display: inline-block; */
 }
 
@@ -118,4 +118,12 @@ body {
 	float: none;
 	height: 5px;
 	border: none;
+}
+
+.hr1-line {
+	position: relative;
+	height: 1px;
+	margin: auto;
+	background: #bbb;
+	margin-bottom: 10px;
 }

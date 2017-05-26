@@ -26,40 +26,45 @@ public class Article extends BaseEntity {
 		return readNum;
 	}
 
-	public void setReadNum(Integer readNum) {
+	public Article setReadNum(Integer readNum) {
 		this.readNum = readNum;
+		return this;
 	}
 
 	public Integer getCommentNum() {
 		return commentNum;
 	}
 
-	public void setCommentNum(Integer commentNum) {
+	public Article setCommentNum(Integer commentNum) {
 		this.commentNum = commentNum;
+		return this;
 	}
 
 	public String getUserId() {
 		return userId;
 	}
 
-	public void setUserId(String userId) {
+	public Article setUserId(String userId) {
 		this.userId = userId;
+		return this;
 	}
 
 	public String getTitle() {
 		return title;
 	}
 
-	public void setTitle(String title) {
+	public Article setTitle(String title) {
 		this.title = title;
+		return this;
 	}
 
 	public String getContent() {
 		return content;
 	}
 
-	public void setContent(String content) {
+	public Article setContent(String content) {
 		this.content = content;
+		return this;
 	}
 
 }
