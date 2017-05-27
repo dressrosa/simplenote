@@ -11,14 +11,15 @@ var login = function() {
 			if (num == 14)
 				num = 0;
 		}
-
 		$('.tooltip').jBox('Tooltip', {
 			content : tip,
-			attach : $("#xyForm"),
+			pointer : false,
+			animation : 'zoomIn',
+			attch : $("#xyForm"),
 			closeOnClick : 'body',
-			color : 'red',
 			target : $("#xyForm")
 		}).open();
+
 		num++;
 		return;
 	}
@@ -28,12 +29,15 @@ var login = function() {
 		data : $('#xyForm').serialize(),
 		async : true,
 		error : function(data) {
-			new jBox('Notice', {
-				color : 'red',
-				animation : 'tada',
-				autoClose : 1000,
-				content : '服务器错误'
-			});
+			tip = "服务器错误"
+			$('.tooltip').jBox('Tooltip', {
+				content : tip,
+				pointer : false,
+				animation : 'zoomIn',
+				attch : $("#xyForm"),
+				closeOnClick : 'body',
+				target : $("#xyForm")
+			}).open();
 			return false;
 		},
 		success : function(data) {
@@ -73,34 +77,148 @@ var login = function() {
 
 				return true;
 			} else {
-				new jBox('Notice', {
-					color : 'red',
-					animation : 'tada',
-					autoClose : 1000,
-					content : jsonObj.message
-				});
+				$('.tooltip').jBox('Tooltip', {
+					content : jsonObj.message,
+					pointer : false,
+					animation : 'zoomIn',
+					attch : $("#xyForm"),
+					closeOnClick : 'body',
+					target : $("#xyForm")
+				}).open();
+
 				return false;
 			}
 		}
 	});
 };
+var register = function() {
+	var tip = '姓名和密码都不能为空（*＾-＾*）';
+	var $pwd1 = $("#password1");
+	var $name1 = $("#loginName1");
+	var $repwd1 = $("#repassword");
+	if ($pwd1.val() == '' || $name1.val() == '' || $repwd1.val() == '') {
+		tip = "不能不填哦"
+		$('.tooltip').jBox('Tooltip', {
+			content : tip,
+			pointer : false,
+			animation : 'zoomIn',
+			attch : $("#xyForm1"),
+			closeOnClick : 'body',
+			target : $("#xyForm1")
+		}).open();
+		return;
+	}
+	if (!isEmail($name1.val()) && !isMobile($name1.val())) {
+		tip = "请填写正确的邮箱或手机号哦"
+		$('.tooltip').jBox('Tooltip', {
+			content : tip,
+			pointer : false,
+			animation : 'zoomIn',
+			attch : $("#xyForm1"),
+			closeOnClick : 'body',
+			target : $("#xyForm1")
+		}).open();
+		return;
+	}
+	if (!checkPwd($pwd1.val())) {
+		tip = "密码长度至少6位哦"
+		$('.tooltip').jBox('Tooltip', {
+			content : tip,
+			pointer : false,
+			animation : 'zoomIn',
+			attch : $("#xyForm1"),
+			closeOnClick : 'body',
+			target : $("#xyForm1")
+		}).open();
+		return;
+	}
+	if ($pwd1.val() != $repwd1.val()) {
+		tip = "密码填写不一致哦"
+		$('.tooltip').jBox('Tooltip', {
+			content : tip,
+			pointer : false,
+			animation : 'zoomIn',
+			attch : $("#xyForm1"),
+			closeOnClick : 'body',
+			target : $("#xyForm1")
+		}).open();
+		return;
+	}
 
+	$.ajax({
+		type : "post",
+		url : '/api/v1/user/register',
+		data : $('#xyForm1').serialize(),
+		async : true,
+		error : function(data) {
+			tip = "服务器错误";
+			$('.tooltip').jBox('Tooltip', {
+				content : tip,
+				pointer : false,
+				animation : 'zoomIn',
+				attch : $("#xyForm1"),
+				closeOnClick : 'body',
+				target : $("#xyForm1")
+			}).open();
+			$(".registering").removeAttr("disabled");
+			return false;
+		},
+		success : function(data) {
+			var jsonObj = jQuery.parseJSON(data);
+			if (jsonObj.code == '0') {
+				$(".registerform").css("display", "none");
+				$(".loginform").css("display", "block");
+				$('.tooltip').jBox('Tooltip', {
+					content : "注册成功,不如登录看看吧",
+					pointer : false,
+					animation : 'zoomIn',
+					attch : $("#xyForm"),
+					closeOnClick : 'body',
+					target : $("#xyForm")
+				}).open();
+				$(".registering").removeAttr("disabled");
+				return true;
+			} else {
+				$('.tooltip').jBox('Tooltip', {
+					content : jsonObj.message,
+					pointer : false,
+					animation : 'zoomIn',
+					attch : $("#xyForm1"),
+					closeOnClick : 'body',
+					target : $("#xyForm1")
+				}).open();
+				$(".registering").removeAttr("disabled");
+				return false;
+			}
+
+		}
+	});
+	$(".registering").attr("disabled", "disabled");
+}
 
 var showPwd = function(item) {
-	var pwd = $("#password");
+	var pwd = $(".pwd");
 	if (pwd.attr("type") == "password") {
 		pwd.attr("type", "text");
-		item.innerHTML = '隐藏';
+		$(item).css("color", "#de5252b5");
 	} else {
 		pwd.attr("type", "password");
-		item.innerHTML = '可见';
+		$(item).css("color", "#c1b6b6");
 	}
 };
 $(document).ready(function() {
-	if (isPC()) {
-		$("#xyForm").css("width", "20%");
-	} else {
-		$("#xyForm").css("width", "100%");
+	if (!isPC()) {
+		$(".panel_form").css("width", "100%");
 	}
-	$(".logining").bind("click",login);
+
+	$(".logining").bind("click", login);
+	$(".registering").bind("click", register);
+	$(".goregister").bind("click", function() {
+		$(".loginform").css("display", "none");
+		$(".registerform").css("display", "block");
+	});
+	$(".gologin").bind("click", function() {
+		$(".registerform").css("display", "none");
+		$(".loginform").css("display", "block");
+	});
 });

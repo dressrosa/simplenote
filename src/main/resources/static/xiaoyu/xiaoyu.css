@@ -4,6 +4,21 @@ body {
 	background: #f7f8fa;
 }
 
+.header {
+	height: 45px;
+	background-color: black;
+	box-shadow: 0px 0px 5px rgba(0, 0, 0, 0.5);
+}
+
+.header_w {
+	color: #ddd;
+	font-size: 16px;
+	line-height: 45px;
+	padding-right: 15px;
+	font-weight: 100;
+	font-weight: bold;
+}
+
 .list-group-item {
 	position: relative;
 	display: block;
@@ -19,8 +34,8 @@ body {
 
 .main {
 	max-width: 1200px;
-	margin: 0px auto;
-	padding-top: 15px;
+	margin: 10px auto;
+	/* padding-top: 15px; */
 	padding-bottom: 20px;
 	display: flex;
 }
@@ -47,7 +62,7 @@ body {
 .panel-body {
 	padding: 15px;
 	margin-top: 5px;
-	color: rgba(0, 0, 0, .0001);
+	color: #ffffff;
 }
 
 .content-left {
@@ -85,6 +100,19 @@ body {
 	/* display: inline-block; */
 }
 
+.hot {
+	justify-content: space-between;
+	display: flex;
+	width: 1200px;
+	background: #fff;
+	border-radius: 2px;
+	box-shadow: 0 1px 3px rgba(0, 37, 55, .05);
+	box-sizing: border-box;
+	margin: 1px;
+	padding: 10px;
+	/* display: inline-block; */
+}
+
 .avatar {
 	border-radius: 50%;
 	height: 100px;
@@ -107,6 +135,21 @@ body {
 	border: 1px solid transparent;
 	border-radius: 4px;
 	cursor: pointer;
+}
+
+.comment_bar {
+	background-color: #ffffff00;
+	display: flex;
+	margin: 5px auto;
+	padding: 2px;
+}
+
+.bar_part {
+	margin-left: 5px;
+	color: #656363;
+	font-size: 5px;
+	padding: 2px;
+	color: #a7a7a7;
 }
 
 .hr_line {

@@ -26,7 +26,7 @@ address, cite, dfn, em, var {
 
 /* 缁熶竴绛夊瀛椾綋 */
 code, kbd, pre, samp {
-	font-family: courier new, courier, monospace;
+	font-family: 'Lato', "PingFang SC", "Microsoft YaHei", sans-serif;
 }
 
 /* 灏忎簬 12px 鐨勪腑鏂囧緢闅鹃槄璇伙紝璁� small 姝ｅ父鍖� */

@@ -12,7 +12,6 @@ import javax.servlet.http.HttpSession;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 
 import com.xiaoyu.common.base.BaseService;
 import com.xiaoyu.common.base.ResponseMapper;
@@ -73,9 +72,9 @@ public class UserService extends BaseService<UserDao, User> implements IUserServ
 		}
 
 		User user = new User();
-		user.setLoginName(loginName);
+		user.setLoginName(loginName.trim());
 		user = this.getForLogin(user);
-		if (StringUtils.isBlank(user.getId()) || !password.equalsIgnoreCase(user.getPassword())) {
+		if (StringUtils.isBlank(user.getId()) || !Md5Utils.MD5(password.trim()).equalsIgnoreCase(user.getPassword())) {
 			mapper.setCode(ResultConstant.ARGS_ERROR).setMessage("用户名或密码不正确");
 			return mapper.getResultJson();
 		}
@@ -117,6 +116,21 @@ public class UserService extends BaseService<UserDao, User> implements IUserServ
 		}
 
 		return mapper.setData(this.user2Map(u)).getResultJson();
+	}
+
+	@Override
+	public String register(HttpServletRequest request, String loginName, String password) {
+		ResponseMapper mapper = ResponseMapper.createMapper();
+		User user = new User();
+		user.setLoginName(loginName.trim()).setPassword(Md5Utils.MD5(password.trim())).setNickname(loginName.trim());
+		if (this.userDao.isExist(user) > 0) {
+			return mapper.setCode(ResultConstant.EXISTS).setMessage("此账号早已注册").getResultJson();
+		}
+		user.setId(IdGenerator.uuid());
+		if (this.userDao.insert(user) > 0) {
+			return mapper.getResultJson();
+		}
+		return mapper.setCode(ResultConstant.EXCEPTION).setMessage("抱歉,注册没成功").getResultJson();
 	}
 
 }

@@ -46,4 +46,9 @@ public class RouteController {
 		return "article/articleForm";
 	}
 
+	@RequestMapping(value = "login", method = RequestMethod.GET)
+	public String goLogin(HttpServletRequest request) {
+		return "common/login";
+	}
+
 }

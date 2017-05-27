@@ -266,4 +266,14 @@ public class StringUtils extends org.apache.commons.lang3.StringUtils {
 		return result.toString();
 	}
 
+	public static boolean isEmail(String str) {
+		String regex = "^([a-z0-9A-Z]+[-|_|\\.]?)+[a-z0-9A-Z]@([a-z0-9A-Z]+(-[a-z0-9A-Z]+)?\\.)+[a-zA-Z]{2,}$";
+		return Pattern.matches(regex, str);
+	}
+
+	public static boolean isMobile(String str) {
+		String regex = "^1[345789]\\d{9}$";
+		return Pattern.matches(regex, str);
+	}
+
 }

@@ -12,6 +12,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -66,6 +67,24 @@ public class UserBackController {
 		return this.userService.login(request, loginName, password);
 	}
 
+	@RequestMapping(value = "api/v1/user/register", method = RequestMethod.POST)
+	@ResponseBody
+	public String register(HttpServletRequest request, @RequestParam(required = true) String loginName,
+			@RequestParam(required = true) String password, @RequestParam(required = true) String repassword)
+			throws IOException {
+		ResponseMapper mapper = ResponseMapper.createMapper();
+		if (!StringUtils.isMobile(loginName) && !StringUtils.isEmail(loginName)) {
+			return mapper.setCode(ResultConstant.ARGS_ERROR).setMessage("请填写正确的邮箱或手机号").getResultJson();
+		}
+		if (password.length() < 6) {
+			return mapper.setCode(ResultConstant.ARGS_ERROR).setMessage("密码长度至少6位").getResultJson();
+		}
+		if (!password.equals(repassword)) {
+			return mapper.setCode(ResultConstant.ARGS_ERROR).setMessage("密码填写不一致").getResultJson();
+		}
+		return this.userService.register(request, loginName, password);
+	}
+
 	/**
 	 * 记录ip
 	 * 
@@ -76,9 +95,9 @@ public class UserBackController {
 	 * @time 2016年4月12日上午10:30:37
 	 */
 	@RequestMapping(value = "api/v1/user/loginRecord", method = RequestMethod.POST)
-	public String loginRecord(HttpServletRequest request, String userId,String device) {
+	public String loginRecord(HttpServletRequest request, String userId, String device) {
 		if (StringUtils.isNotBlank(userId))
-			return this.userService.loginRecord(request, userId,device);
+			return this.userService.loginRecord(request, userId, device);
 		return null;
 	}
 

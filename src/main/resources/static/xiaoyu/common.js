@@ -146,7 +146,7 @@ function uploadFile() {
  */
 function gotoLogin(nowUrl) {
 	$.session.set('nowUrl', nowUrl, true);
-	window.location.href = "/common/login.html";
+	window.location.href = "/login";
 }
 /* logout */
 var logout = function() {
@@ -158,6 +158,24 @@ var logout = function() {
 			window.location.href = window.location.href.replace(/#/g, '');
 		}
 	});
+}
+function isEmail(str) {
+	var re = /^(\w-*\.*)+@(\w-?)+(\.\w{2,})+$/
+	if (re.test(str))
+		return true;
+	return false;
+
+}
+function checkPwd(str) {
+	if (str.length >= 6)
+		return true;
+	return false;
+}
+function isMobile(str) {
+	var re = /^1\d{10}$/
+	if (re.test(str))
+		return true;
+	return false;
 }
 function getAgent() {
 	var agent = navigator.userAgent.toLowerCase();

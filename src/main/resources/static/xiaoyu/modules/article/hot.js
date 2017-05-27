@@ -43,7 +43,7 @@
 											arHtml+=childHtml;
 										});
 										arHtml+='</div>';
-										$(".content").append(arHtml);
+										$(".hot").append(arHtml);
 									});
 					
 				}
@@ -83,15 +83,11 @@ $(document).ready(
 				 $(".col-xs-3").disableSelection();
 				 if (!isPC()) {
 					$(".col-xs-3").css("width", "100%");
-					$(".content").css("display", "block");
-					$(".content").css("width", "100%");
+					$(".hot").css("display", "block");
+					$(".hot").css("width", "100%");
 					$("#footer").css("display", "none");
 				}
 			});
-			
-
-			
-			
 
 			if (checkNull(userInfo)) {
 				$("#loginSpan").css("display", "block");

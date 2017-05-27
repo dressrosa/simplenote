@@ -12,6 +12,9 @@ var $ajaxPromise1 = $.ajax({
 			if (!checkNull($user)) {
 				setTitle($user.nickname + '-个人中心');
 				var $userPanel = $(".panel-default");
+				if (checkNull($user.avatar)) {
+					$user.avatar = 'common/avatar.png';
+				}
 				$userPanel.find("img").attr("src", $user.avatar);
 				$userPanel.find("img").attr("id", $user.userId);
 				$userPanel.find(".nickname_panel").html($user.nickname);
@@ -45,14 +48,21 @@ var $ajaxPromise2 = $
 													+ ar.articleId + '">';
 											arHtml += '<label>' + '</label>';
 											arHtml += '<p>' + ar.content
-													+ '...' + '</p>'
+													+ '...' + '</p>';
+
+											arHtml += '<div class="comment_bar"><div class="bar_part">';
+											arHtml += '<i class="icon_like"></i><label style="margin: 2px;">点赞</label></div>';
+											arHtml += '<div class="bar_part"><i class="icon_comment_alt"></i><label style="margin: 2px;">评论</label></div>';
+											arHtml += '<div class="bar_part"><i class="icon_heart_alt"></i><label style="margin: 2px;">收藏</label></div>';
+											arHtml += '</div>';
 											arHtml += '</li>';
+
 										});
 						$(".list-group").html(arHtml);
 					}
 				}
-				$(".list-group-item").on("click", function() {
-					var elem = $(this);
+				$("p").on("click", function() {
+					var elem = $(this).parent();
 					window.location.href = '/article/' + elem.attr("id");
 				})
 				addHeadForImg();

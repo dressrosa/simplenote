@@ -12,8 +12,8 @@
 	rel="stylesheet">
 <link href="/jBox-0.3.2/jBox.css" rel="stylesheet">
 <link rel="stylesheet" href="/stephanwagner/97f7f8-00a5dd.css">
-<link href="/xiaoyu/common.css" rel="stylesheet">
 <link href="/xiaoyu/xiaoyu.css" rel="stylesheet">
+<link href="/icon1/style.css" rel="stylesheet">
 <script src="/jquery/jquery-1.12.2.min.js" type="text/javascript"></script>
 <script src="/jBox-0.3.2/jBox.min.js" type="text/javascript"></script>
 <script src="/bootstrap-3.3.6-dist/js/bootstrap.min.js"
@@ -22,6 +22,9 @@
 <script type="text/javascript" src="/xiaoyu/common.js"></script>
 <script type="text/javascript" src="/xiaoyu/modules/user/login.js"></script>
 <title>登录</title>
+<script type="text/javascript">
+	
+</script>
 <style type="text/css">
 body {
 	background-size: cover;
@@ -31,13 +34,17 @@ body {
 
 .login_input {
 	margin: 3px;
-	width: 250px;
+	width: 100%;
+	padding: 5px;
+	background: #ffffffe6;
+	border: 1px solid transparent;
+	border-radius: 4px;
 }
 
 .login_panel {
-	position: absolute;
-	top: 50%;
-	left: 20%;
+	position: relative;
+	display: -webkit-box;
+	top: 300px;
 	margin: 0px auto;
 	padding: 10px 10px 10px;
 	margin-bottom: 20px;
@@ -45,42 +52,89 @@ body {
 	border-radius: 4px;
 	-webkit-box-shadow: 0 1px 1px rgba(0, 0, 0, .05);
 	box-shadow: 0 1px 1px rgba(0, 0, 0, .05);
-	margin: 0px auto;
-	margin: 0px auto;
 }
 
 .addon {
-	font-size: 10px;
-	font-weight: 400;
-	line-height: 1;
-	color: #555;
 	text-align: center;
-	background-color: #eee;
-	border: 1px solid #ccc;
 	border-radius: 4px;
-	width: 40px;
+	width: 45px;
+	margin-bottom: 3px;
+	margin-top: 3px;
+	margin-left: -50px;
+	margin-right: -3px;
+	padding: 14px;
+	color: #c1b6b6;
+}
+
+.xbtn {
+	margin: 3px;
+	width: 100%;
+	/* float: right; */
+	font-size: 15px;
+	border: 1px solid transparent;
+	border-radius: 4px;
+	background-color: #ff4949d9;
+	border: 1px solid transparent;
+}
+
+.panel_form {
+	width: 500px;
+	margin: 5px auto;
+	padding: 50px;
+	background: #f0ffff4a;
+	border-radius: 4px;
+}
+
+.change {
+	margin: 3px;
+	color: #ffffff00;
+	cursor: pointer;
+}
+
+a:hover {
+	color: #ff4949d9;
 }
 </style>
 </head>
 
 <body>
 
+
+
 	<div style="display: block;">
 		<div class="login_panel">
+
 			<form id="xyForm" role="form" action="#" method="post"
-				style="margin: 5px auto; padding: 5px; width: 150x;">
-				<input class="login_input" type="text" placeholder="LoginName"
-					class="form-control" required="required" name="loginName"
-					id="loginName" maxlength="20">
-				<div style="float: left; display: flex;">
-					<input class="login_input" type="password" placeholder="Password"
-						class="form-control" required="required" name="password"
-						id="password" maxlength="20"> <span class="addon"
-						onclick="showPwd(this)">可见</span>
+				class="panel_form loginform">
+				<input class="login_input" type="text" placeholder="邮箱/手机号"
+					required="required" name="loginName" id="loginName" maxlength="20">
+				<div style="float: left; display: flex; width: 100%;">
+					<input class="login_input pwd" type="password" placeholder="密码"
+						required="required" name="password" id="password" maxlength="20">
+					<label class="addon icon-eye" onclick="showPwd(this)"></label>
 				</div>
 				<ul class="list-group">
-					<input type="button" value="登录"
-						class="btn btn-large btn-block logining" />
+					<input type="button" value="登录" class="xbtn logining" />
+					<a class="change goregister">注册</a>
+					<span class="tooltip"></span>
+				</ul>
+
+			</form>
+			<form id="xyForm1" role="form" action="#" method="post"
+				class="panel_form registerform" style="display: none;">
+				<input class="login_input" type="text" placeholder="邮箱/手机号"
+					required="required" name="loginName" id="loginName1" maxlength="20">
+				<div style="float: left; display: flex; width: 100%;">
+					<input class="login_input pwd" type="password" placeholder="密码"
+						required="required" name="password" id="password1" maxlength="20">
+					<label class="addon icon-eye" onclick="showPwd(this)"></label>
+				</div>
+				<input class="login_input" type="password" placeholder="确认密码"
+					required="required" name="repassword" id="repassword"
+					maxlength="20">
+				<ul class="list-group">
+					<input type="button" value="注册" class="xbtn registering" />
+					<a class="change gologin">登录</a>
 					<span class="tooltip"></span>
 				</ul>
 			</form>

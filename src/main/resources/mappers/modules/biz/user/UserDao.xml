@@ -75,6 +75,9 @@
 			<if test="loginName != null">
 				login_name,
 			</if>
+			<if test="password != null">
+				password
+			</if>
 		</trim>
 		<trim prefix="values (" suffix=")" suffixOverrides=",">
 			<if test="id != null">
@@ -85,6 +88,9 @@
 			</if>
 			<if test="loginName != null">
 				#{loginName},
+			</if>
+			<if test="password != null">
+				#{password}
 			</if>
 		</trim>
 	</insert>

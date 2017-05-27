@@ -32,24 +32,29 @@ var $ajaxPromise = $.ajax({
 });
 
 function publish() {
+	var tip = "";
 	var userInfo = jQuery.parseJSON($.session.get("user"));
 	if (checkNull(userInfo)) {
-		new jBox('Notice', {
-			color : 'red',
-			animation : 'tada',
-			autoClose : 800,
-			content : '请先登录!'
-		});
+		tip = "登录后再来写写吧";
+		$('.tooltip').jBox('Tooltip', {
+			content : tip,
+			pointer : false,
+			animation : 'zoomIn',
+			closeOnClick : 'body',
+			target : $(".btn")
+		}).open();
 		return false;
 	}
 	var content = $("#articleContent");
 	if (checkNull(content.val())) {
-		new jBox('Notice', {
-			color : 'red',
-			animation : 'tada',
-			autoClose : 800,
-			content : '请君留字!'
-		});
+		tip = "不如先写几个字吧"
+		$('.tooltip').jBox('Tooltip', {
+			content : tip,
+			pointer : false,
+			animation : 'zoomIn',
+			closeOnClick : 'body',
+			target : $(".btn")
+		}).open();
 		return false;
 	}
 	var userId = userInfo.userId;
@@ -64,11 +69,14 @@ function publish() {
 		},
 		async : true,
 		error : function(data) {
-			new jBox('Notice', {
-				color : 'red',
-				animation : 'tada',
-				content : '发表失败!'
-			});
+			tip = "没成功,是不是没网啊"
+			$('.tooltip').jBox('Tooltip', {
+				content : tip,
+				pointer : false,
+				animation : 'zoomIn',
+				closeOnClick : 'body',
+				target : $(".btn")
+			}).open();
 			return false;
 		},
 		success : function(data) {
@@ -78,17 +86,22 @@ function publish() {
 			}
 			if (jsonObj.code = '20001') {
 				$.session.remove('user');
-				new jBox('Notice', {
-					color : 'red',
-					animation : 'tada',
-					content : jsonObj.message
-				});
+				$('.tooltip').jBox('Tooltip', {
+					content : jsonObj.message,
+					pointer : false,
+					animation : 'zoomIn',
+					closeOnClick : 'body',
+					target : $(".btn")
+				}).open();
+
 			} else {
-				new jBox('Notice', {
-					color : 'red',
-					animation : 'tada',
-					content : jsonObj.message
-				});
+				$('.tooltip').jBox('Tooltip', {
+					content : jsonObj.message,
+					pointer : false,
+					animation : 'zoomIn',
+					closeOnClick : 'body',
+					target : $(".btn")
+				}).open();
 			}
 			return true;
 		}
