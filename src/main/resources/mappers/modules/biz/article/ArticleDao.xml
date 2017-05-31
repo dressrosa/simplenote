@@ -15,10 +15,13 @@
 		select
 		<include refid="Base_Column_List" />
 		,t.read_num as readNum,
-		t.comment_num as commentNum
+		t.collect_num as collectNum,
+		t.comment_num as
+		commentNum
 		from biz_article as
 		a
-		left join biz_article_attr as t on t.article_id=a.id
+		left join biz_article_attr as t on
+		t.article_id=a.id
 		where a.id =
 		#{id} and a.del_flag='0'
 	</select>
@@ -28,25 +31,47 @@
 		select
 		<include refid="Base_Column_List" />
 		,t.read_num as readNum,
-		t.comment_num as commentNum
+		t.collect_num as collectNum,
+		t.comment_num as
+		commentNum
 		from biz_article as
 		a
-		left join biz_article_attr as t on t.article_id=a.id
+		left join biz_article_attr as t on
+		t.article_id=a.id
 		where a.id =
 		#{id} and a.del_flag='0'
 	</select>
 
 	<!-- 分页查询用户信息 -->
 	<select id="findByList" resultType="com.xiaoyu.modules.biz.article.entity.Article"
-		parameterType="com.xiaoyu.modules.biz.article.entity.Article">
+		parameterType="java.lang.String">
 		select
 		<include refid="Base_Column_List" />
-		from biz_article as a where a.del_flag='0'
+		from biz_article as a
+		where a.del_flag='0'
 		<if test="userId != null">
 			and a.user_id=#{userId}
 		</if>
 	</select>
-
+	<select id="findByListWithAttr" resultType="com.xiaoyu.modules.biz.article.entity.ArticleVo"
+		parameterType="java.lang.String">
+		select
+		<include refid="Base_Column_List" />
+		,t.read_num as 'attr.readNum',
+		t.collect_num as 'attr.collectNum',
+		t.like_num as 'attr.likeNum',
+		t.comment_num as
+		'attr.commentNum'
+		from
+		biz_article as a
+		left join
+		biz_article_attr as t on
+		t.article_id=a.id
+		where a.del_flag='0'
+		<if test="userId != null">
+			and a.user_id=#{userId}
+		</if>
+	</select>
 	<delete id="delete" parameterType="com.xiaoyu.modules.biz.article.entity.Article">
 		update biz_article set
 		del_flag=1
@@ -130,9 +155,15 @@
 		where id = #{id}
 	</update>
 
-	<select id="isExist" parameterType="com.xiaoyu.modules.biz.article.entity.Article"
+	<select id="isExist" parameterType="java.lang.String"
 		resultType="java.lang.Integer">
 		select count(*) from biz_article where id=#{id} and
 		del_flag=0
+	</select>
+
+	<select id="getForUpdate" parameterType="java.lang.String"
+		resultType="com.xiaoyu.modules.biz.article.entity.Article">
+		select * from biz_article where id = #{id}
+		for update
 	</select>
 </mapper>

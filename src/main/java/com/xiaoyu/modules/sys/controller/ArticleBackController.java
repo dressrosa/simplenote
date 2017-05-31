@@ -93,4 +93,9 @@ public class ArticleBackController {
 		return this.articleService.addArticle(request, content, userId, token);
 	}
 
+	@RequestMapping(value = "api/v1/article/like", method = RequestMethod.POST)
+	public String like(HttpServletRequest request, @RequestParam(required = true) String articleId,
+			@RequestParam(required = true) Integer isLike) {
+		return this.articleService.addLikeNum(request, articleId, isLike);
+	}
 }

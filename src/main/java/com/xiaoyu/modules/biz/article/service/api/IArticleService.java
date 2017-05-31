@@ -21,5 +21,7 @@ public interface IArticleService {
 
 	public String addArticle(HttpServletRequest request, String content, String userId, String token);
 
-	public String addReadNum(HttpServletRequest request,String articleId);
+	public String addReadNum(HttpServletRequest request, String articleId);
+
+	public String addLikeNum(HttpServletRequest request, String articleId, Integer isLike);
 }

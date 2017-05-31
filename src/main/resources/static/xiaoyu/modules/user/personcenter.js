@@ -35,6 +35,14 @@ var $ajaxPromise2 = $
 			data : {
 				userId : userId
 			},
+			beforeSend : function(xhr) {
+				var userInfo = jQuery.parseJSON($.session.get("user"));
+				if (!checkNull(userInfo)) {
+					xhr.setRequestHeader('token', userInfo.token);
+					xhr.setRequestHeader('userId', userInfo.userId);
+				}
+
+			},
 			success : function(data) {
 				var obj = jQuery.parseJSON(data);
 				if (obj.code == '0') {
@@ -44,16 +52,30 @@ var $ajaxPromise2 = $
 								.each(
 										obj.data,
 										function(index, ar) {
-											arHtml += '<li class="list-group-item" style="cursor: pointer;"  id="'
+											arHtml += '<li class="list-group-item"   id="'
 													+ ar.articleId + '">';
 											arHtml += '<label>' + '</label>';
-											arHtml += '<p>' + ar.content
-													+ '...' + '</p>';
+											arHtml += '<p style="cursor: pointer;">'
+													+ ar.content
+													+ '...'
+													+ '</p>';
 
 											arHtml += '<div class="comment_bar"><div class="bar_part">';
-											arHtml += '<i class="icon_like"></i><label style="margin: 2px;">点赞</label></div>';
-											arHtml += '<div class="bar_part"><i class="icon_comment_alt"></i><label style="margin: 2px;">评论</label></div>';
-											arHtml += '<div class="bar_part"><i class="icon_heart_alt"></i><label style="margin: 2px;">收藏</label></div>';
+											if (ar.isLike == "1") {
+												arHtml += '<i class="icon_like" style="color:#ff4949d9;" data-like="1"></i>';
+											} else {
+												arHtml += '<i class="icon_like" data-like="0"></i>';
+											}
+
+											arHtml += '<label style="margin: 2px;">'
+													+ ar.attr.likeNum
+													+ '</label></div>';
+											arHtml += '<div class="bar_part"><i class="icon_comment_alt"></i><label style="margin: 2px;">'
+													+ ar.attr.commentNum
+													+ '</label></div>';
+											arHtml += '<div class="bar_part"><i class="icon_heart_alt"></i><label style="margin: 2px;">'
+													+ ar.attr.collectNum
+													+ '</label></div>';
 											arHtml += '</div>';
 											arHtml += '</li>';
 
@@ -61,10 +83,73 @@ var $ajaxPromise2 = $
 						$(".list-group").html(arHtml);
 					}
 				}
+				var $userInfo = jQuery.parseJSON($.session.get("user"));
+				var $userId = "";
+				var $token = "";
+				if (!checkNull($userInfo)) {
+					$userId = $userInfo.userId;
+					$token = $userInfo.token;
+				}
 				$("p").on("click", function() {
 					var elem = $(this).parent();
 					window.location.href = '/article/' + elem.attr("id");
 				})
+
+				$(".icon_heart_alt").on("click", function() {
+					var elem = $(this).parent().parent().parent();
+					var $icon = $(this);
+
+				});
+				$(".icon_like").on("click", function() {
+					var elem = $(this).parent().parent().parent();
+					var $icon = $(this);
+					var $next = $icon.next();
+					var num = $next.html();
+					var $isLike;
+					if ($icon.attr('data-like') == '0') {
+						$icon.css("color", "#ff4949d9");
+						$icon.attr("data-like", "1");
+						$next.html(num - (-1));
+						$isLike = 0;
+					} else if ($icon.attr('data-like') == '1') {
+						$icon.css("color", "#a7a7a7");
+						$icon.attr("data-like", "0");
+						$next.html(num - 1);
+						$isLike = 1;
+					}
+					$.ajax({
+						type : "post",
+						async : true,
+						url : '/api/v1/article/like',
+						data : {
+							articleId : elem.attr("id"),
+							isLike : $isLike
+						},
+						beforeSend : function(xhr) {
+							var userInfo = jQuery.parseJSON($.session
+									.get("user"));
+							if (!checkNull(userInfo)) {
+								xhr.setRequestHeader('token',
+										userInfo.token);
+								xhr.setRequestHeader('userId',
+										userInfo.userId);
+							}
+
+						},
+						success : function(data) {
+							console.log(data);
+							var obj = jQuery.parseJSON(data);
+							if (obj.code == "20001") {
+								console.log("未登录");
+							}
+							return true;
+						},
+						error : function(data) {
+							console.log(data);
+							return false;
+						}
+					});
+				});
 				addHeadForImg();
 				return true;
 			}

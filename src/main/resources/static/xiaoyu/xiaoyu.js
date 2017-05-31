@@ -15,8 +15,19 @@ function addHeadForImg() {
 	var imgs = document.getElementsByTagName('img');
 	var len = imgs.length;
 	for (var i = 0; i < len; i++) {
-		imgs[i].src = "http://xiaoyu-0719.oss-cn-beijing.aliyuncs.com/"
-				+ imgs[i].getAttribute('src');
+		$img = $(imgs[i]);
+		if (checkNull($img.attr("src"))) {
+			if ($img.attr("img-type") == 'avatar')
+				$img.attr("src","http://xiaoyu1-1253813687.costj.myqcloud.com/common/avatar.png");
+			else {
+
+			}
+
+		} else {
+			$img.attr("src", "http://xiaoyu1-1253813687.costj.myqcloud.com/"
+					+ $img.attr("src"));
+		}
+
 	}
 }
 

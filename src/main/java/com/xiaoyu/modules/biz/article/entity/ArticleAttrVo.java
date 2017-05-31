@@ -3,28 +3,11 @@
  */
 package com.xiaoyu.modules.biz.article.entity;
 
-import com.xiaoyu.common.base.BaseEntity;
-
-/**
- * @author xiaoyu 2016年4月8日
- */
-public class ArticleAttr extends BaseEntity {
-
-	private static final long serialVersionUID = 1L;
-
-	private String articleId;
+public class ArticleAttrVo {
 	private Integer readNum;
 	private Integer commentNum;
 	private Integer collectNum;
 	private Integer likeNum;
-
-	public Integer getCollectNum() {
-		return collectNum;
-	}
-
-	public void setCollectNum(Integer collectNum) {
-		this.collectNum = collectNum;
-	}
 
 	public Integer getLikeNum() {
 		return likeNum;
@@ -32,14 +15,6 @@ public class ArticleAttr extends BaseEntity {
 
 	public void setLikeNum(Integer likeNum) {
 		this.likeNum = likeNum;
-	}
-
-	public String getArticleId() {
-		return articleId;
-	}
-
-	public void setArticleId(String articleId) {
-		this.articleId = articleId;
 	}
 
 	public Integer getReadNum() {
@@ -56,6 +31,14 @@ public class ArticleAttr extends BaseEntity {
 
 	public void setCommentNum(Integer commentNum) {
 		this.commentNum = commentNum;
+	}
+
+	public Integer getCollectNum() {
+		return collectNum;
+	}
+
+	public void setCollectNum(Integer collectNum) {
+		this.collectNum = collectNum;
 	}
 
 }

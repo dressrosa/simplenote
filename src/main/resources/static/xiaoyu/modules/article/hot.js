@@ -19,7 +19,7 @@
 												childHtml+='<div class="g-line" style="width: 25%; margin: 25px auto;"></div></div>';
 												
 												childHtml+='<div class="sponsorData">';
-												childHtml+='<span><img src="'+ar.user.avatar+'" /></span>';
+												childHtml+='<span><img img-type="avatar" src="'+ar.user.avatar+'" /></span>';
 												childHtml+='<dt>'+ar.user.nickname+'</dt>';
 												childHtml+='<p>'+ar.user.description +'</p>';
 												childHtml+='<div class="g-line" style="width: 25%; margin: 25px auto;"></div></div>';
@@ -28,7 +28,7 @@
 											else {
 												childHtml+='<div class="sponsor">';
 												childHtml+= '<div class="sponsorFlip" id="'+ar.user.userId+'" name="'+ar.articleId+'" lang="forUser">';
-												childHtml+='<span><img src="'+ar.user.avatar+'" /></span>';
+												childHtml+='<span><img img-type="avatar" src="'+ar.user.avatar+'" /></span>';
 												childHtml+='<dt>'+ar.user.nickname+'</dt>';
 												childHtml+='<p>'+ar.user.description +'</p>';
 												childHtml+='<div class="g-line" style="width: 25%; margin: 25px auto;"></div></div>';

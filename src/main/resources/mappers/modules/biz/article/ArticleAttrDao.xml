@@ -43,6 +43,12 @@
 			<if test="readNum != null">
 				read_num,
 			</if>
+			<if test="likeNum != null">
+				like_num,
+			</if>
+			<if test="collectNum != null">
+				collect_num,
+			</if>
 			<if test="createDate != null">
 				create_date,
 			</if>
@@ -66,6 +72,12 @@
 			<if test="readNum != null">
 				#{readNum},
 			</if>
+			<if test="likeNum != null">
+				#{likeNum},
+			</if>
+			<if test="collectNum != null">
+				#{collectNum},
+			</if>
 			<if test="createDate != null">
 				#{createDate},
 			</if>
@@ -85,26 +97,20 @@
 	<update id="update" parameterType="com.xiaoyu.modules.biz.article.entity.ArticleAttr">
 		update biz_article_attr
 		<set>
-			<if test="articleId != null">
-				article_id = #{articleId},
-			</if>
 			<if test="readNum != null">
 				read_num = #{readNum},
 			</if>
-			<if test="createDate != null">
-				create_date = #{createDate},
+			<if test="likeNum != null">
+				like_num = #{likeNum},
 			</if>
-			<if test="updateDate != null">
-				update_date = #{updateDate},
-			</if>
-			<if test="delFlag != null">
-				del_flag = #{delFlag},
+			<if test="collectNum != null">
+				collect_num = #{collectNum},
 			</if>
 			<if test="commentNum != null">
 				comment_num = #{commentNum},
 			</if>
 		</set>
-		where id = #{id}
+		where article_id= #{articleId}
 	</update>
 
 	<select id="isExist" parameterType="com.xiaoyu.modules.biz.article.entity.ArticleAttr"
@@ -120,7 +126,7 @@
 
 	</select>
 
-	<select id="getForUpdate" parameterType="com.xiaoyu.modules.biz.article.entity.ArticleAttr"
+	<select id="getForUpdate" parameterType="java.lang.String"
 		resultType="com.xiaoyu.modules.biz.article.entity.ArticleAttr">
 		select * from biz_article_attr
 		where article_id=#{articleId}

@@ -68,14 +68,14 @@ body {
 .content-left {
 	width: 794px;
 	float: left;
-	margin-right: 3px;
+	margin-right: 6px;
 }
 
 .content-right {
 	width: 396px;
 	block: color;
 	border: 1px solid #ddd;
-	margin-left: 3px;
+/* 	margin-left: 3px; */
 	block: color;
 	border-bottom: 0px;
 }
@@ -150,6 +150,7 @@ body {
 	font-size: 5px;
 	padding: 2px;
 	color: #a7a7a7;
+	cursor:pointer;
 }
 
 .hr_line {

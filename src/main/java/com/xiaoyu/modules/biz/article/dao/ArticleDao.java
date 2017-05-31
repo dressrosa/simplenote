@@ -1,17 +1,24 @@
 /**
  * 不要因为走了很远就忘记当初出发的目的:whatever happened,be yourself
- */ 
+ */
 package com.xiaoyu.modules.biz.article.dao;
 
+import org.apache.ibatis.annotations.Param;
 import org.springframework.stereotype.Repository;
+
+import com.github.pagehelper.Page;
 import com.xiaoyu.common.base.BaseDao;
 import com.xiaoyu.modules.biz.article.entity.Article;
+import com.xiaoyu.modules.biz.article.entity.ArticleVo;
 
 /**
- * @author xiaoyu
- *2016年3月29日
+ * @author xiaoyu 2016年3月29日
  */
 @Repository
-public interface ArticleDao extends BaseDao<Article>{
+public interface ArticleDao extends BaseDao<Article> {
+
+	Page<ArticleVo> findByListWithAttr(@Param("userId") String userId);
+
+	Article getForUpdate(@Param("id")String articleId);
 
 }

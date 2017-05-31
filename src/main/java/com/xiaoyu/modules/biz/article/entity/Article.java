@@ -21,6 +21,15 @@ public class Article extends BaseEntity {
 
 	private Integer readNum;
 	private Integer commentNum;
+	private Integer collectNum;
+
+	public Integer getCollectNum() {
+		return collectNum;
+	}
+
+	public void setCollectNum(Integer collectNum) {
+		this.collectNum = collectNum;
+	}
 
 	public Integer getReadNum() {
 		return readNum;

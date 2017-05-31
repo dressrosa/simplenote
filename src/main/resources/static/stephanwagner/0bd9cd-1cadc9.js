@@ -1,15 +1,15 @@
 var images = [ {
 	text : '海贼王1',
-	src : 'http://xiaoyu-0719.oss-cn-beijing.aliyuncs.com/1.jpg'
+	src : 'http://xiaoyu1-1253813687.costj.myqcloud.com/common/1.jpg'
 }, {
 	text : '海贼王2',
-	src : 'http://xiaoyu-0719.oss-cn-beijing.aliyuncs.com/2.jpg'
+	src : 'http://xiaoyu1-1253813687.costj.myqcloud.com/common/2.jpg'
 },  {
 	text : '海贼王3',
-	src : 'http://xiaoyu-0719.oss-cn-beijing.aliyuncs.com/3.png'
+	src : 'http://xiaoyu1-1253813687.costj.myqcloud.com/common/3.png'
 },  {
 	text : '海贼王4',
-	src : 'http://xiaoyu-0719.oss-cn-beijing.aliyuncs.com/4.jpg'
+	src : 'http://xiaoyu1-1253813687.costj.myqcloud.com/common/4.jpg'
 },];
 var interval = 6000;
 var duration_image = 800;

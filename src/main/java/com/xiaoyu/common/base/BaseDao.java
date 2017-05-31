@@ -30,5 +30,7 @@ public interface BaseDao<T extends BaseEntity> {
 
 	public int isExist(T t);
 
+	public int isExist(String id);
+
 	public List<T> findByList(T t);
 }
