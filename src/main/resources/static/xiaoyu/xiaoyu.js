@@ -18,7 +18,9 @@ function addHeadForImg() {
 		$img = $(imgs[i]);
 		if (checkNull($img.attr("src"))) {
 			if ($img.attr("img-type") == 'avatar')
-				$img.attr("src","http://xiaoyu1-1253813687.costj.myqcloud.com/common/avatar.png");
+				$img
+						.attr("src",
+								"http://xiaoyu1-1253813687.costj.myqcloud.com/common/avatar.png");
 			else {
 
 			}

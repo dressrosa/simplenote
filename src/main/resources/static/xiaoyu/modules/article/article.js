@@ -10,17 +10,16 @@ var $ajaxPromise = $.ajax({
 		if (obj.code == '0') {
 			var ar = obj.data;
 			if (ar != null) {
-				$(".img_shadow").find("img").attr('src', ar.user.avatar);
-				$(".quote").find("span").html(ar.user.description);
+				$(".part_up").find("img").attr('src', ar.user.avatar);
+				$(".p_description").find("span").html(ar.user.description);
+				$(".p_username").find(".nickname").html(ar.user.nickname);
+				var $partDown = $(".part_down");
+				$partDown.find(".ar_date").html(ar.createDate);
+				$partDown.find(".ar_time").find("label").html(ar.createTime);
+				$partDown.find("#readNum").html(ar.readNum);
+				$partDown.find(".ar_content").attr("id", ar.articleId);
+				$partDown.find(".ar_content").html(ar.content);
 
-				var $mainRight = $(".main_right");
-				$mainRight.find(".note_date").html(ar.createDate);
-				$mainRight.find(".note_time").html(ar.createTime);
-				$mainRight.find("#readNum").html(ar.readNum);
-				$mainRight.find(".note_content").attr("id", ar.articleId);
-				$mainRight.find(".note_content").html(ar.content);
-				$mainRight.find(".note_username").find(".nickname").html(
-						ar.user.nickname);
 			}
 		} else {
 			// window.location.href = "/common/404";
@@ -107,37 +106,50 @@ function publish() {
 		}
 	});
 }
-$(document).ready(function() {
-	$("#login").bind("click", function() {
-		gotoLogin('/article/' + articleId);
-	});
-	$ajaxPromise.promise().done(function() {
-		var item = $(".note_content").attr("id");
-		$.ajax({
-			type : 'POST',
-			async : true,
-			url : '/api/v1/article/viewNum/' + item,
-			error : function(data) {
-				console.log(data);
-			},
-			success : function(data) {
-				console.log(data);
-			}
-		});
-		if (!isPC()) {
-			$(".main").css("display", "block");
-			$(".siderbar_left").css("display", "flex");
-			var $shadow = $(".img_shadow");
-			var img = $(".img_shadow").find("img")
-			$shadow.find("img").css({
-				"border-radius" : "50%",
-				"width" : "100px",
-				"height" : "100px"
+$(document).ready(
+		function() {
+			$("#login").bind("click", function() {
+				gotoLogin('/article/' + articleId);
 			});
-		}
-	});
-	$("#publish").bind("click", function() {
-		publish();
-	});
+			$ajaxPromise.promise()
+					.done(
+							function() {
+								var item = $(".ar_content").attr("id");
+								$.ajax({
+									type : 'POST',
+									async : true,
+									url : '/api/v1/article/viewNum/' + item,
+									error : function(data) {
+										console.log(data);
+									},
+									success : function(data) {
+										console.log(data);
+									}
+								});
+								$arContent = $(".ar_content");
 
-});
+								console.log($arContent.css("height") + ","
+										+ $arContent.css("max-height"))
+								if ($arContent.css("height") >= $arContent
+										.css("max-height")) {
+									$arContent.find(".ar_more").css("display",
+											"block");
+
+								}
+								if (!isPC()) {
+									$(".main").css("display", "block");
+									$(".siderbar_left").css("display", "flex");
+									var $shadow = $(".img_shadow");
+									var img = $(".img_shadow").find("img")
+									$shadow.find("img").css({
+										"border-radius" : "50%",
+										"width" : "100px",
+										"height" : "100px"
+									});
+								}
+							});
+			$("#publish").bind("click", function() {
+				publish();
+			});
+
+		});

@@ -14,6 +14,7 @@
 <link rel="icon" type="image/ico" href="/xiaoyu/img/favicon.ico" />
 <link href="/bootstrap-3.3.6-dist/css/bootstrap.min.css"
 	rel="stylesheet" />
+<link rel="stylesheet" href="/icon/style.css" />
 <link href="/jBox-0.3.2/jBox.css" rel="stylesheet" />
 <link rel="stylesheet" href="/stephanwagner/97f7f8-00a5dd.css" />
 <link href="/wuzhi/common.css" rel="stylesheet" type="text/css" />
@@ -59,29 +60,59 @@ var articleId = [[${articleId}]];
 		</div>
 	</div>
 	<div class="container main article">
-		<div class="siderbar_left">
-			<div class="img_shadow"
-				style="padding-top: 4px; color: rgba(0, 0, 0, .0001);">
-				<img img-type="avatar" src="" alt="" />
+		<div class="part_up">
+			<div class="side_left">
+				<div style="display: block;">
+					<img class="avatar" img-type="avatar" src="" alt="" />
+					<div class="p_username">
+						<i class="icon_profile"></i><label class="nickname"></label>
+					</div>
+
+				</div>
+				<div class="p_description">
+					<span></span>
+				</div>
+
 			</div>
-			<div class="quote">
-				<span></span>
+			<div class="side_medium">
+				<label style="width: 100%; text-align: center; color: #adabab;">精彩点评</label>
+				<div style="margin-left: 5px;">
+					<div class="p_comment">
+						<label class="nickname"><a>虾米:</a></label>
+						<p>写的很好的案例房间都是发大水了房间说了副驾驶否非法拉盛放假了发发牢骚地方</p>
+					</div>
+				</div>
+
+
 			</div>
+			<div class="side_right">
+				<div class="i_content red">
+					<i class="icon_like"></i> <label>888</label>
+				</div>
+				<div class="i_content green">
+					<i class="icon_comment_alt"></i> <label>888</label>
+				</div>
+				<div class="i_content blue">
+					<i class="icon_heart_alt"></i> <label>888</label>
+				</div>
+			</div>
+
 		</div>
-		<div class="main_right">
-			<div
-				style="color: #909090; margin-bottom: 15px; border-bottom: 2px #d8dad6f7 solid; height: 22px;">
-				<span class="note_date"> </span> <span
-					style="font-size: 16px; line-height: 20px; float: right;">浏览量:<strong
-					id="readNum"></strong></span>
+		<div class="part_down">
+			<div class="ar_title">
+				<label>生气的标题</label> <span class="ar_date"> </span> <span
+					class="ar_view">浏览量:<strong id="readNum"></strong></span>
 			</div>
 			<div class="note_each">
-				<div class="note_time"></div>
-				<div class="note_content"></div>
+				<div class="ar_content"></div>
+				<div class="ar_time">
+					<i class="icon_lightbulb_alt"></i><label></label>
+				</div>
+				<div class="ar_more">
+					<a>查看全文</a>
+				</div>
 			</div>
-			<div class="note_username">
-				<label>--</label><label class="nickname"></label>
-			</div>
+
 		</div>
 	</div>
 
