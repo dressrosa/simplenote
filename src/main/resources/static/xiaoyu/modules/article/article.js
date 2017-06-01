@@ -126,6 +126,11 @@ $(document).ready(
 										console.log(data);
 									}
 								});
+								//comment
+								$(".part_comment").bind("click",function(){
+									window.location.href = "/article/comments";
+								});
+								
 								$arContent = $(".ar_content");
 
 								console.log($arContent.css("height") + ","

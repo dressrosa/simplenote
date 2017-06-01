@@ -51,4 +51,9 @@ public class RouteController {
 		return "common/login";
 	}
 
+	@RequestMapping(value = "article/comments", method = RequestMethod.GET)
+	public String goComments(HttpServletRequest request) {
+		return "article/commentList";
+	}
+
 }
