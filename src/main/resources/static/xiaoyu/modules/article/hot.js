@@ -1,88 +1,88 @@
- 
-	var $ajaxPromise =
-		$.ajax({
-		type : "get",
-		async : true,
-		url : '/api/v1/article/hot',
-		success : function(data) {
-			var obj = jQuery.parseJSON(data);
-			if (obj.code == '0') {
-				if (obj.data != null || obj.data.len >= 0) {
-					$.each(obj.data,function(index1, child) {
-										var arHtml  = '<div class="col-xs-3" style="margin-top: 20px;">';
-										$.each(child, function(index2, ar) {
-											var childHtml ='<dl>';
-											if((index1*3+index2)%2==0) {
-												childHtml+='<div class="sponsor">';
-												childHtml+= '<div class="sponsorFlip" id="'+ar.articleId+'" name="'+ar.user.userId+'" lang="forArticle">';
-												childHtml+='<p>'+ar.content+'</p>';
-												childHtml+='<div class="g-line" style="width: 25%; margin: 25px auto;"></div></div>';
-												
-												childHtml+='<div class="sponsorData">';
-												childHtml+='<span><img img-type="avatar" src="'+ar.user.avatar+'" /></span>';
-												childHtml+='<dt>'+ar.user.nickname+'</dt>';
-												childHtml+='<p>'+ar.user.description +'</p>';
-												childHtml+='<div class="g-line" style="width: 25%; margin: 25px auto;"></div></div>';
-												childHtml+='</div>';
-											}
-											else {
-												childHtml+='<div class="sponsor">';
-												childHtml+= '<div class="sponsorFlip" id="'+ar.user.userId+'" name="'+ar.articleId+'" lang="forUser">';
-												childHtml+='<span><img img-type="avatar" src="'+ar.user.avatar+'" /></span>';
-												childHtml+='<dt>'+ar.user.nickname+'</dt>';
-												childHtml+='<p>'+ar.user.description +'</p>';
-												childHtml+='<div class="g-line" style="width: 25%; margin: 25px auto;"></div></div>';
-												
-												childHtml+='<div class="sponsorData">';
-												childHtml+='<dt>'+ar.title+'</dt>';
-												childHtml+='<p>'+ar.content+'</p>';
-												childHtml+='<div class="g-line" style="width: 25%; margin: 25px auto;"></div></div>';
-												childHtml+='</div>';
-											}
-											childHtml+='</dl>';
-											arHtml+=childHtml;
-										});
-										arHtml+='</div>';
-										$(".hot").append(arHtml);
-									});
-					
-				}
-			}
-			 addHeadForImg();
-			 $('.sponsorFlip').bind('click', function() {
-					var elem = $(this);
-					console.log(elem.attr('lang'));
-					if ('forUser' == elem.attr('lang')) {
-						window.location.href = "/user/" + elem.attr('id');
-						
-					} else {
-						window.location.href = "/article/" + elem.attr('id');
-						
-					}
+var $ajaxPromise = $
+		.ajax({
+			type : "get",
+			async : true,
+			url : '/api/v1/article/hot',
+			success : function(data) {
+				var obj = jQuery.parseJSON(data);
+				if (obj.code == '0') {
+					if (obj.data != null || obj.data.len >= 0) {
+						var arHtml = '<div class="item_list"  >';
+						$
+								.each(
+										obj.data,
+										function(index2, ar) {
+											var childHtml = '<dl>';
 
+											childHtml += '<div class="list_item">';
+											childHtml += '<span class="item_userinfo" id="'
+													+ ar.user.userId
+													+ '"><img class="avatar small" img-type="avatar" src="'
+													+ ar.user.avatar + '" />';
+											childHtml += '<p class="item_desc">'
+													+ ar.user.description
+													+ '</p>';
+											childHtml += '</span>';
+											childHtml += '<dt class="item_username">'
+													+ ar.user.nickname
+													+ '</dt>';
+											childHtml += '<div class="item_ar" id="'
+													+ ar.articleId + '">';
+											childHtml += '<dt class="item_ar_title">'
+													+ ar.title + '</dt>';
+											childHtml += '<p class="item_ar_content">'
+													+ ar.content + '</p>';
+											childHtml += ' </div>';
+											childHtml += ' </div>';
+
+											childHtml += '<div class="comment_bar"><div class="bar_part">';
+											if ('0'== "1") {
+												childHtml += '<i class="icon_like" style="color:#ff4949d9;" data-like="1"></i>';
+											} else {
+												childHtml += '<i class="icon_like" data-like="0"></i>';
+											}
+
+											childHtml += '<label style="margin: 2px;">'
+													+ 0
+													+ '</label></div>';
+											childHtml += '<div class="bar_part"><i class="icon_comment_alt"></i><label style="margin: 2px;">'
+													+ 0
+													+ '</label></div>';
+											childHtml += '<div class="bar_part"><i class="icon_heart_alt"></i><label style="margin: 2px;">'
+													+ 0
+													+ '</label></div>';
+											childHtml += '</div>';
+											childHtml += '</li>';
+											
+											childHtml += '</dl>';
+											arHtml += childHtml;
+										});
+						arHtml += '</div>';
+						$(".list_hot").append(arHtml);
+
+					}
+				}
+				addHeadForImg();
+				$('.item_ar').bind('click', function() {
+					var $elem = $(this);
+					window.location.href = "/article/" + $elem.attr('id');
 				});
-			return true;
-		}
-	});
- 
- 
+				$('.item_userinfo').bind('click', function() {
+					var $elem = $(this);
+					window.location.href = "/user/" + $elem.attr('id');
+				});
+				return true;
+			}
+		});
 
 var userInfo = jQuery.parseJSON($.session.get('user'));
 
 $(document).ready(
 		function() {
-			 
-			$ajaxPromise.promise().done(function(){
-				$(".col-xs-3").sortable({
-					connectWith : '.col-xs-3',// 级联其他
-					containment : "document",// 作用范围
-					delay : 150,// 延迟效果
-					revert : true
-					// 动画
-				});
-				 $(".col-xs-3").disableSelection();
-				 if (!isPC()) {
-					$(".col-xs-3").css("width", "100%");
+
+			$ajaxPromise.promise().done(function() {
+
+				if (!isPC()) {
 					$(".hot").css("display", "block");
 					$(".hot").css("width", "100%");
 					$("#footer").css("display", "none");

@@ -10,13 +10,11 @@
 <link rel="icon" type="image/ico" href="/xiaoyu/img/favicon.ico" />
 <link href="/bootstrap-3.3.6-dist/css/bootstrap.min.css"
 	rel="stylesheet" />
-<link href="/jBox-0.3.2/jBox.css" rel="stylesheet" />
+<link rel="stylesheet" href="/icon/style.css" />
 <link rel="stylesheet" href="/stephanwagner/97f7f8-00a5dd.css" />
 <link href="/wuzhi/common.css" rel="stylesheet" type="text/css" />
 <link href="/xiaoyu/xiaoyu.css" rel="stylesheet" type="text/css" />
-<link rel="stylesheet" type="text/css" href="/jqueryflip/flip.css" />
 <script src="/jquery/jquery-1.12.2.min.js" type="text/javascript"></script>
-<script src="/jqueryflip/jquery-ui.min.js" type="text/javascript"></script>
 <script src="/jBox-0.3.2/jBox.min.js" type="text/javascript"></script>
 <script src="/bootstrap-3.3.6-dist/js/bootstrap.min.js"
 	type="text/javascript"></script>
@@ -24,59 +22,70 @@
 <script type="text/javascript" src="/xiaoyu/common.js"></script>
 <script type="text/javascript" src="/xiaoyu/xiaoyu.js"></script>
 <meta content="唯有读书,不慵不扰" name="description" />
-<title>偶遇</title>
+<title>评论-生气的标题</title>
 </head>
 <body>
 	<div class="header">
 		<div class="container">
-			<span><a class="header_w" href="#">首页</a></span> <span id="userSpan"
-				style="float: right; display: none;"> <a class="header_w"
-				style="padding-right: 15px;" id="nickname" href="#">xxx</a> <a
-				class="header_w" style="padding-right: 0px;" id="logout" href=""
+			<span><a class="header_w" href="/article/hot">首页</a></span> <span
+				id="userSpan" style="float: right; display: none;"> <a
+				class="header_w" style="padding-right: 15px;" id="nickname" href="#">xxx</a>
+				<a class="header_w" style="padding-right: 0px;" id="logout" href=""
 				onclick="logout()">退出</a>
 			</span> <span id="loginSpan" style="float: right; display: none;"> <a
 				class="header_w" style="padding-right: 0px;"
-				onclick="javascript:gotoLogin('/article/hot')" id="login">登录</a>
+				onclick="javascript:gotoLogin('/article/comments')" id="login">登录</a>
 			</span>
 		</div>
 	</div>
-	<div class="main" style="margin-top:20px;">
-		<div class="co_list" style="margin:10px;">
-			<div class="co-item"
-				style="margin:10px;background: white;border-radius: 4px; border: 1px solid #fbf5f5; box-shadow: 0 1px 3px rgba(0, 37, 55, .05); padding: 10px; text-align: left; display: inline-flex;">
-				<div style="margin-top: -30px; margin-left: -10px;">
-					<img img-type="avatar " class="avatar small"
-						src="http://xiaoyu1-1253813687.costj.myqcloud.com/common/1.jpg">
-				</div>
-				<div>
-					<label style="text-align: center; margin: 4px; font-size: 10px;">小雨de欢乐世界</label>
-					<p>评论阿萨德发生的啊发来撒发啦舒服水电费是否快捷方式来得及疯狂减肥 法律是否健康地方爱上发大水了附加费a</p>
-				</div>
+	<div class="main" style="margin-top: 20px;">
+		<div class="co_comment">
+			<div class="co_num">
+				<span>评论</span><span>(9999)</span>
 			</div>
-			<div class="co-item"
-				style="margin:10px;background: white;border-radius: 4px; border: 1px solid #fbf5f5; box-shadow: 0 1px 3px rgba(0, 37, 55, .05); padding: 10px; text-align: left; display: inline-flex;">
-				<div style="margin-top: -30px; margin-left: -10px;">
-					<img img-type="avatar " class="avatar small"
-						src="http://xiaoyu1-1253813687.costj.myqcloud.com/common/1.jpg">
+			<div class="co_list">
+				<div class="co_item">
+					<div class="item_up">
+						<div style="margin-top: -30px; margin-left: -10px;">
+							<img img-type="avatar " class="avatar small"
+								src="http://xiaoyu1-1253813687.costj.myqcloud.com/common/1.jpg">
+						</div>
+						<div class="item_p">
+							<label class="item_p_title">小雨de欢乐世界</label>
+							<p>评论阿萨德发生的啊发来撒发啦舒服水电费是否快捷方式来得及疯狂减肥 法律是否健康地方爱上发大水了附加费a</p>
+						</div>
+						<div class="item_like">
+							<i class="icon_like"></i><label style="margin-left: 2px;">88</label>
+						</div>
+					</div>
+
+					<div class="item_down">
+						<label class="item_p_title_pure"><a>回复</a></label> <label
+							class="item_p_title_pure">2017-05-09 17:52</label>
+					</div>
 				</div>
-				<div>
-					<label style="text-align: center; margin: 4px; font-size: 10px;">小雨de欢乐世界</label>
-					<p>评论阿萨德发生的啊发来撒发啦舒服水电费是否快捷方式来得及疯狂减肥 法律是否健康地方爱上发大水了附加费a</p>
-				</div>
-			</div>
-			<div class="co-item"
-				style="margin:10px;background: white;border-radius: 4px; border: 1px solid #fbf5f5; box-shadow: 0 1px 3px rgba(0, 37, 55, .05); padding: 10px; text-align: left; display: inline-flex;">
-				<div style="margin-top: -30px; margin-left: -10px;">
-					<img img-type="avatar " class="avatar small"
-						src="http://xiaoyu1-1253813687.costj.myqcloud.com/common/1.jpg">
-				</div>
-				<div>
-					<label style="text-align: center; margin: 4px; font-size: 10px;">小雨de欢乐世界</label>
-					<p>评论阿萨德发生的啊发来撒发啦舒服水电费是否快捷方式来得及疯狂减肥 法律是否健康地方爱上发大水了附加费a</p>
+				<div class="co_item">
+					<div class="item_up">
+						<div style="margin-top: -30px; margin-left: -10px;">
+							<img img-type="avatar " class="avatar small"
+								src="http://xiaoyu1-1253813687.costj.myqcloud.com/common/1.jpg">
+						</div>
+						<div class="item_p">
+							<label class="item_p_title">小雨de欢乐世界</label>
+							<p>评论阿萨德发生的啊发来撒发啦舒服水电费是否快捷方式来得及疯狂减肥 法律是否健康地方爱上发大水了附加费a</p>
+						</div>
+						<div class="item_like">
+							<i class="icon_like"></i><label style="margin-left: 2px;">88</label>
+						</div>
+					</div>
+
+					<div class="item_down">
+						<label class="item_p_title_pure"><a>回复</a></label> <label
+							class="item_p_title_pure">2017-05-09 17:52</label>
+					</div>
 				</div>
 			</div>
 		</div>
-		<div class="co_comment"></div>
 	</div>
 
 

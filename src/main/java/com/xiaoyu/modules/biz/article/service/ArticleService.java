@@ -131,40 +131,18 @@ public class ArticleService extends BaseService<ArticleDao, Article> implements 
 		if (EhCacheUtil.IsExist("SystemCache")) {// 从缓存取
 			@SuppressWarnings("unchecked")
 			List<Object> total = (List<Object>) EhCacheUtil.get("SystemCache", "pageList");
-
-			// model.addAttribute("list", total);
 			if (total != null && total.size() > 0) {
 				return mapper.setData(total).getResultJson();
-				// return "article/articleList";
 			}
 		}
 		Page<Article> page = this.findByPage(new Article(), 1, 12);
 		List<Article> list = page.getResult();
 		List<Object> total = new ArrayList<>();
 
-		List<Map<String, Object>> childList1 = Lists.newArrayList();
-		List<Map<String, Object>> childList2 = Lists.newArrayList();
-		List<Map<String, Object>> childList3 = Lists.newArrayList();
-		List<Map<String, Object>> childList4 = Lists.newArrayList();
-
 		for (int i = 0; i < list.size(); i++) {
-			if (i < 3) {
-				childList1.add(this.article2Map2(list.get(i)));
-			} else if (i > 2 && i < 6) {
-				childList2.add(this.article2Map2(list.get(i)));
-			} else if (i > 5 && i < 9) {
-				childList3.add(this.article2Map2(list.get(i)));
-			} else {
-				childList4.add(this.article2Map2(list.get(i)));
-			}
+			total.add(this.article2Map2(list.get(i)));
 		}
-		total.add(childList1);
-		total.add(childList2);
-		total.add(childList3);
-		total.add(childList4);
 		EhCacheUtil.put("SystemCache", "pageList", total);// 存入缓存
-		// model.addAttribute("list", total);
-		// return "article/articleList";
 		return mapper.setData(total).getResultJson();
 	}
 

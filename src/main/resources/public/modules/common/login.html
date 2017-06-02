@@ -8,16 +8,12 @@
 <meta http-equiv="Cache-Control" content="no-cache">
 <meta http-equiv="Cache-Control" content="no-store">
 <link rel="icon" type="image/ico" href="/xiaoyu/img/favicon.ico">
-<link href="/bootstrap-3.3.6-dist/css/bootstrap.min.css"
-	rel="stylesheet">
 <link href="/jBox-0.3.2/jBox.css" rel="stylesheet">
 <link rel="stylesheet" href="/stephanwagner/97f7f8-00a5dd.css">
 <link href="/xiaoyu/xiaoyu.css" rel="stylesheet">
 <link href="/icon1/style.css" rel="stylesheet">
 <script src="/jquery/jquery-1.12.2.min.js" type="text/javascript"></script>
 <script src="/jBox-0.3.2/jBox.min.js" type="text/javascript"></script>
-<script src="/bootstrap-3.3.6-dist/js/bootstrap.min.js"
-	type="text/javascript"></script>
 <script type="text/javascript" src="/xiaoyu/jquerysession.js"></script>
 <script type="text/javascript" src="/xiaoyu/common.js"></script>
 <script type="text/javascript" src="/xiaoyu/modules/user/login.js"></script>
@@ -28,23 +24,27 @@
 <style type="text/css">
 body {
 	background-size: cover;
-	background: url('http://xiaoyu1-1253813687.costj.myqcloud.com/common/4.jpg')
+	background:
+		url('http://xiaoyu1-1253813687.costj.myqcloud.com/common/4.jpg')
 		center no-repeat fixed;
 }
 
 .login_input {
 	margin: 3px;
-	width: 100%;
 	padding: 5px;
-	background: #ffffffe6;
+	height: 35px;
 	border: 1px solid transparent;
 	border-radius: 4px;
+	background: #ffffffe6;
+	height: 35px;
+	width: 304px;
+	max-width: 420px;
 }
 
 .login_panel {
 	position: relative;
 	display: -webkit-box;
-	top: 300px;
+	top: 250px;
 	margin: 0px auto;
 	padding: 10px 10px 10px;
 	margin-bottom: 20px;
@@ -57,31 +57,30 @@ body {
 .addon {
 	text-align: center;
 	border-radius: 4px;
-	width: 45px;
 	margin-bottom: 3px;
 	margin-top: 3px;
-	margin-left: -50px;
-	margin-right: -3px;
+	margin-left: -61px;
 	padding: 14px;
 	color: #c1b6b6;
 }
 
 .xbtn {
-	margin: 3px;
-	width: 100%;
-	/* float: right; */
+	margin: 7px;
+	width: 304px;
+	max-width: 430px;
+	cursor: pointer;
 	font-size: 15px;
-	border: 1px solid transparent;
 	border-radius: 4px;
-	background-color: #ff4949d9;
+	height: 47px;
+	background-color: rgba(239, 68, 68, 0.9);;
 	border: 1px solid transparent;
+	font-size: 15px;
 }
 
 .panel_form {
-	width: 500px;
 	margin: 5px auto;
 	padding: 50px;
-	background: #f0ffff4a;
+	background: rgba(240, 255, 255, 0.29);
 	border-radius: 4px;
 }
 
@@ -92,7 +91,7 @@ body {
 }
 
 a:hover {
-	color: #ff4949d9;
+	color: rgba(239, 68, 68, 0.9);;
 }
 </style>
 </head>
@@ -108,14 +107,16 @@ a:hover {
 				class="panel_form loginform">
 				<input class="login_input" type="text" placeholder="邮箱/手机号"
 					required="required" name="loginName" id="loginName" maxlength="20">
-				<div style="float: left; display: flex; width: 100%;">
+				<div style="display: flex; width: 100%;">
 					<input class="login_input pwd" type="password" placeholder="密码"
 						required="required" name="password" id="password" maxlength="20">
 					<label class="addon icon-eye" onclick="showPwd(this)"></label>
 				</div>
 				<ul class="list-group">
 					<input type="button" value="登录" class="xbtn logining" />
-					<a class="change goregister">注册</a>
+					<div>
+						<a class="change goregister">注册</a>
+					</div>
 					<span class="tooltip"></span>
 				</ul>
 
@@ -124,7 +125,7 @@ a:hover {
 				class="panel_form registerform" style="display: none;">
 				<input class="login_input" type="text" placeholder="邮箱/手机号"
 					required="required" name="loginName" id="loginName1" maxlength="20">
-				<div style="float: left; display: flex; width: 100%;">
+				<div style="display: flex; width: 100%;">
 					<input class="login_input pwd" type="password" placeholder="密码"
 						required="required" name="password" id="password1" maxlength="20">
 					<label class="addon icon-eye" onclick="showPwd(this)"></label>
@@ -134,25 +135,15 @@ a:hover {
 					maxlength="20">
 				<ul class="list-group">
 					<input type="button" value="注册" class="xbtn registering" />
-					<a class="change gologin">登录</a>
+					<div>
+						<a class="change gologin">登录</a>
+					</div>
+
 					<span class="tooltip"></span>
 				</ul>
 			</form>
 		</div>
-		<div class="footer container"
-			style="background: #ffffff66; line-height: 2; position: absolute; bottom: 0; left: 0; width: 100%; text-align: center">
-			<div class="hr1-line" style="margin-bottom: 10px"></div>
-			<div class="copyright " style="float: left; margin-right: 3px;">
-				<font style="margin-right: 3px;">©2016-2017 小雨 </font><a
-					href="/xiaoyu.me.html">xiaoyu.me</a>
-			</div>
-			<div
-				style="width: 35px; float: left; margin-left: 10px; margin-top: -5px;">
-				<a href="https://github.com/dressrosa"
-					style="width: 100%; display: block; background: url(https://assets-cdn.github.com/favicon.ico) no-repeat; text-indent: 40px; height: 33px;">
-				</a>
-			</div>
-		</div>
+
 	</div>
 </body>
 

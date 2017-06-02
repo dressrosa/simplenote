@@ -208,7 +208,7 @@ var showPwd = function(item) {
 };
 $(document).ready(function() {
 	if (!isPC()) {
-		$(".panel_form").css("width", "100%");
+
 	}
 
 	$(".logining").bind("click", login);
