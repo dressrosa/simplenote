@@ -15,7 +15,7 @@ public interface IArticleService {
 
 	public String detail(String articleId);
 
-	public String hotList();
+	public String hotList(HttpServletRequest request);
 
 	public String list(HttpServletRequest request, String userId, Integer pageNum, Integer pageSize);
 
@@ -23,5 +23,7 @@ public interface IArticleService {
 
 	public String addReadNum(HttpServletRequest request, String articleId);
 
-	public String addLikeNum(HttpServletRequest request, String articleId, Integer isLike);
+	public String addLike(HttpServletRequest request, String articleId, Integer isLike);
+
+	public String addCollect(HttpServletRequest request, String articleId, Integer isCollect);
 }

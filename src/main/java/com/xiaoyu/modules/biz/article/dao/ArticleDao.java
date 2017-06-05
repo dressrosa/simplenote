@@ -3,10 +3,11 @@
  */
 package com.xiaoyu.modules.biz.article.dao;
 
+import java.util.List;
+
 import org.apache.ibatis.annotations.Param;
 import org.springframework.stereotype.Repository;
 
-import com.github.pagehelper.Page;
 import com.xiaoyu.common.base.BaseDao;
 import com.xiaoyu.modules.biz.article.entity.Article;
 import com.xiaoyu.modules.biz.article.entity.ArticleVo;
@@ -17,8 +18,12 @@ import com.xiaoyu.modules.biz.article.entity.ArticleVo;
 @Repository
 public interface ArticleDao extends BaseDao<Article> {
 
-	Page<ArticleVo> findByListWithAttr(@Param("userId") String userId);
+	List<ArticleVo> findByListWithAttr(@Param("userId") String userId);
 
-	Article getForUpdate(@Param("id")String articleId);
+	Article getForUpdate(@Param("id") String articleId);
+
+	List<ArticleVo> findHotList();
+
+	ArticleVo getVo(@Param("id")String articleId);
 
 }

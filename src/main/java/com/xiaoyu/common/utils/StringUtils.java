@@ -113,41 +113,6 @@ public class StringUtils extends org.apache.commons.lang3.StringUtils {
 	}
 
 	/**
-	 * 转换为Double类型
-	 */
-	public static Double toDouble(Object val) {
-		if (val == null) {
-			return 0D;
-		}
-		try {
-			return Double.valueOf(trim(val.toString()));
-		} catch (Exception e) {
-			return 0D;
-		}
-	}
-
-	/**
-	 * 转换为Float类型
-	 */
-	public static Float toFloat(Object val) {
-		return toDouble(val).floatValue();
-	}
-
-	/**
-	 * 转换为Long类型
-	 */
-	public static Long toLong(Object val) {
-		return toDouble(val).longValue();
-	}
-
-	/**
-	 * 转换为Integer类型
-	 */
-	public static Integer toInteger(Object val) {
-		return toLong(val).intValue();
-	}
-
-	/**
 	 * 获得用户远程地址
 	 */
 	public static String getRemoteAddr(HttpServletRequest request) {
@@ -247,23 +212,17 @@ public class StringUtils extends org.apache.commons.lang3.StringUtils {
 		return sb.toString();
 	}
 
-	/**
-	 * 转换为JS获取对象值，生成三目运算返回结果
-	 * 
-	 * @param objectString
-	 *            对象串 例如：row.user.id
-	 *            返回：!row?'':!row.user?'':!row.user.id?'':row.user.id
-	 */
-	public static String jsGetVal(String objectString) {
-		StringBuilder result = new StringBuilder();
-		StringBuilder val = new StringBuilder();
-		String[] vals = split(objectString, ".");
-		for (int i = 0; i < vals.length; i++) {
-			val.append("." + vals[i]);
-			result.append("!" + (val.substring(1)) + "?'':");
+	public static boolean isPC(HttpServletRequest request) {
+		String userAgentInfo = request.getHeader("user-agent");
+		String[] agents = { "Android", "iPhone", "SymbianOS", "Windows Phone", "iPad", "iPod" };
+		boolean flag = true;
+		for (int v = 0; v < agents.length; v++) {
+			if (userAgentInfo.indexOf(agents[v]) > 0) {
+				flag = false;
+				break;
+			}
 		}
-		result.append(val.substring(1));
-		return result.toString();
+		return flag;
 	}
 
 	public static boolean isEmail(String str) {

@@ -12,6 +12,7 @@ import javax.servlet.http.HttpSession;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import com.xiaoyu.common.base.BaseService;
 import com.xiaoyu.common.base.ResponseMapper;
@@ -20,14 +21,17 @@ import com.xiaoyu.common.utils.IdGenerator;
 import com.xiaoyu.common.utils.Md5Utils;
 import com.xiaoyu.common.utils.StringUtils;
 import com.xiaoyu.modules.biz.user.dao.LoginRecordDao;
+import com.xiaoyu.modules.biz.user.dao.UserAttrDao;
 import com.xiaoyu.modules.biz.user.dao.UserDao;
 import com.xiaoyu.modules.biz.user.entity.LoginRecord;
 import com.xiaoyu.modules.biz.user.entity.User;
+import com.xiaoyu.modules.biz.user.entity.UserAttr;
 
 /**
  * @author xiaoyu 2016年3月16日
  */
 @Service
+@Transactional
 public class UserService extends BaseService<UserDao, User> implements IUserService {
 
 	@Autowired
@@ -118,18 +122,30 @@ public class UserService extends BaseService<UserDao, User> implements IUserServ
 		return mapper.setData(this.user2Map(u)).getResultJson();
 	}
 
+	@Autowired
+	private UserAttrDao userAttrDao;
+
 	@Override
 	public String register(HttpServletRequest request, String loginName, String password) {
 		ResponseMapper mapper = ResponseMapper.createMapper();
 		User user = new User();
 		user.setLoginName(loginName.trim()).setPassword(Md5Utils.MD5(password.trim())).setNickname(loginName.trim());
+
 		if (this.userDao.isExist(user) > 0) {
 			return mapper.setCode(ResultConstant.EXISTS).setMessage("此账号早已注册").getResultJson();
 		}
 		user.setId(IdGenerator.uuid());
-		if (this.userDao.insert(user) > 0) {
-			return mapper.getResultJson();
+		try {
+			if (this.userDao.insert(user) > 0) {
+				UserAttr attr = new UserAttr();
+				attr.setUserId(user.getId());
+				this.userAttrDao.insert(attr);
+				return mapper.getResultJson();
+			}
+		} catch (Exception e) {
+			throw e;
 		}
+
 		return mapper.setCode(ResultConstant.EXCEPTION).setMessage("抱歉,注册没成功").getResultJson();
 	}
 

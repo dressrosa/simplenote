@@ -57,7 +57,7 @@ public class ArticleBackController {
 	 */
 	@RequestMapping(value = "api/v1/article/hot", method = RequestMethod.GET)
 	public String hotList(HttpServletRequest request) {
-		return this.articleService.hotList();
+		return this.articleService.hotList(request);
 	}
 
 	/**
@@ -96,6 +96,12 @@ public class ArticleBackController {
 	@RequestMapping(value = "api/v1/article/like", method = RequestMethod.POST)
 	public String like(HttpServletRequest request, @RequestParam(required = true) String articleId,
 			@RequestParam(required = true) Integer isLike) {
-		return this.articleService.addLikeNum(request, articleId, isLike);
+		return this.articleService.addLike(request, articleId, isLike);
+	}
+
+	@RequestMapping(value = "api/v1/article/collect", method = RequestMethod.POST)
+	public String collect(HttpServletRequest request, @RequestParam(required = true) String articleId,
+			@RequestParam(required = true) Integer isCollect) {
+		return this.articleService.addCollect(request, articleId, isCollect);
 	}
 }

@@ -2,12 +2,12 @@ $(document).ready(function() {
 	var userInfo = jQuery.parseJSON($.session.get("user"));
 
 	// 点击头像
-	$(".avatar").bind("click", function() {
+	/*$(".avatar").bind("click", function() {
 		$user = $(this);
 		if (!checkNull(userInfo) && userInfo.id == $user.attr("id")) {
 			window.location.href = "/private/user/modify/" + userInfo.id;
 		}
-	});
+	});*/
 
 });
 function addHeadForImg() {

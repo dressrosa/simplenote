@@ -17,25 +17,26 @@ import org.springframework.transaction.annotation.Transactional;
 
 import com.github.pagehelper.Page;
 import com.github.pagehelper.PageHelper;
-import com.google.common.collect.Lists;
 import com.xiaoyu.common.base.BaseService;
 import com.xiaoyu.common.base.ResponseMapper;
 import com.xiaoyu.common.base.ResultConstant;
-import com.xiaoyu.common.utils.EhCacheUtil;
 import com.xiaoyu.common.utils.IdGenerator;
 import com.xiaoyu.common.utils.JedisUtils;
 import com.xiaoyu.common.utils.TimeUtils;
 import com.xiaoyu.modules.biz.article.dao.ArticleAttrDao;
+import com.xiaoyu.modules.biz.article.dao.ArticleCollectDao;
 import com.xiaoyu.modules.biz.article.dao.ArticleDao;
 import com.xiaoyu.modules.biz.article.dao.ArticleLikeDao;
 import com.xiaoyu.modules.biz.article.entity.Article;
 import com.xiaoyu.modules.biz.article.entity.ArticleAttr;
+import com.xiaoyu.modules.biz.article.entity.ArticleCollect;
 import com.xiaoyu.modules.biz.article.entity.ArticleLike;
 import com.xiaoyu.modules.biz.article.entity.ArticleVo;
 import com.xiaoyu.modules.biz.article.service.api.IArticleService;
+import com.xiaoyu.modules.biz.user.dao.UserAttrDao;
 import com.xiaoyu.modules.biz.user.dao.UserDao;
 import com.xiaoyu.modules.biz.user.entity.User;
-import com.xiaoyu.modules.sys.constant.PageUrl;
+import com.xiaoyu.modules.sys.constant.NumCountType;
 
 /**
  * @author xiaoyu 2016年3月29日
@@ -50,16 +51,20 @@ public class ArticleService extends BaseService<ArticleDao, Article> implements 
 	private ArticleDao articleDao;
 	@Autowired
 	private ArticleAttrDao attrDao;
+	@Autowired
+	private ArticleCollectDao collectDao;
+	@Autowired
+	private UserAttrDao userAttrDao;
 
-	private Map<String, Object> article2Map(Article a) {
+	private Map<String, Object> article2Map(ArticleVo a) {
 		Map<String, Object> map = new HashMap<>();
 		map.put("articleId", a.getId());
 		map.put("content", a.getContent());
 		map.put("createDate", TimeUtils.format(a.getCreateDate(), "yyyy-MM-dd"));
 		map.put("createTime", TimeUtils.format(a.getCreateDate(), "HH:mm"));
-		map.put("readNum", a.getReadNum());
 		map.put("title", a.getTitle());
 		map.put("user", this.user2Map(this.userDao.getById(a.getUserId())));
+		map.put("attr", a.getAttr());
 		return map;
 	}
 
@@ -72,15 +77,6 @@ public class ArticleService extends BaseService<ArticleDao, Article> implements 
 		map.put("attr", a.getAttr());
 		map.put("isLike", "0");
 		map.put("isCollect", "0");
-		return map;
-	}
-
-	private Map<String, Object> article2Map2(Article a) {
-		Map<String, Object> map = new HashMap<>();
-		map.put("articleId", a.getId());
-		map.put("content", a.getContent().length() > 100 ? a.getContent().substring(0, 99) : a.getContent());
-		map.put("title", a.getTitle());
-		map.put("user", this.user2Map(this.userDao.getById(a.getUserId())));
 		return map;
 	}
 
@@ -98,9 +94,9 @@ public class ArticleService extends BaseService<ArticleDao, Article> implements 
 	@Override
 	public String detail(String articleId) {
 		ResponseMapper mapper = ResponseMapper.createMapper();
-		Article a = super.get(articleId);
+		ArticleVo a = this.articleDao.getVo(articleId);
 		if (a == null) {
-			return mapper.setCode(ResultConstant.NOT_DATA).setData(PageUrl.Not_Found).getResultJson();
+			return mapper.setCode(ResultConstant.NOT_DATA).getResultJson();
 		}
 		return mapper.setData(this.article2Map(a)).getResultJson();
 	}
@@ -118,6 +114,11 @@ public class ArticleService extends BaseService<ArticleDao, Article> implements 
 			attr.setArticleId(t.getId());
 			attr.setId(IdGenerator.uuid());
 			this.attrDao.insert(attr);
+			try {// 增加发文数
+				this.userAttrDao.addNum(NumCountType.ArticleNum.ordinal(), 1);
+			} catch (Exception e) {
+				// do nothing
+			}
 		} catch (RuntimeException e) {
 			throw e;
 		}
@@ -125,24 +126,42 @@ public class ArticleService extends BaseService<ArticleDao, Article> implements 
 	}
 
 	@Override
-	public String hotList() {
+	public String hotList(HttpServletRequest request) {
 		ResponseMapper mapper = ResponseMapper.createMapper();
-
-		if (EhCacheUtil.IsExist("SystemCache")) {// 从缓存取
-			@SuppressWarnings("unchecked")
-			List<Object> total = (List<Object>) EhCacheUtil.get("SystemCache", "pageList");
-			if (total != null && total.size() > 0) {
-				return mapper.setData(total).getResultJson();
-			}
-		}
-		Page<Article> page = this.findByPage(new Article(), 1, 12);
-		List<Article> list = page.getResult();
+		System.out.println(request.getHeader("userId"));
+		// if (EhCacheUtil.IsExist("SystemCache")) {// 从缓存取
+		// @SuppressWarnings("unchecked")
+		// List<Object> total = (List<Object>) EhCacheUtil.get("SystemCache",
+		// "pageList");
+		// if (total != null && total.size() > 0) {
+		// return mapper.setData(total).getResultJson();
+		// }
+		// }
+		PageHelper.startPage(1, 12);
+		Page<ArticleVo> page = (Page<ArticleVo>) this.articleDao.findHotList();
+		List<ArticleVo> list = page.getResult();
 		List<Object> total = new ArrayList<>();
 
-		for (int i = 0; i < list.size(); i++) {
-			total.add(this.article2Map2(list.get(i)));
+		for (ArticleVo a : list) {
+			Map<String, Object> m = this.article2Map1(a);
+			if (!checkLoginDead(request)) {
+				ArticleLike t = new ArticleLike();
+				t.setArticleId(a.getId()).setUserId(request.getHeader("userId"));
+				ArticleLike al = this.likeDao.get(t);
+				if (al != null) {
+					m.put("isLike", al.getStatus() + "");
+				}
+				ArticleCollect t1 = new ArticleCollect();
+				t1.setArticleId(a.getId()).setUserId(request.getHeader("userId"));
+				ArticleCollect ac = this.collectDao.get(t1);
+				if (ac != null) {
+					m.put("isCollect", ac.getStatus() + "");
+				}
+
+			}
+			total.add(m);
 		}
-		EhCacheUtil.put("SystemCache", "pageList", total);// 存入缓存
+		// EhCacheUtil.put("SystemCache", "pageList", total);// 存入缓存
 		return mapper.setData(total).getResultJson();
 	}
 
@@ -234,7 +253,7 @@ public class ArticleService extends BaseService<ArticleDao, Article> implements 
 	private ArticleLikeDao likeDao;
 
 	@Override
-	public String addLikeNum(HttpServletRequest request, String articleId, Integer isLike) {
+	public String addLike(HttpServletRequest request, String articleId, Integer isLike) {
 		ResponseMapper mapper = ResponseMapper.createMapper();
 		if (this.articleDao.isExist(articleId) < 1) {
 			return mapper.setCode(ResultConstant.ARGS_ERROR).getResultJson();
@@ -277,6 +296,67 @@ public class ArticleService extends BaseService<ArticleDao, Article> implements 
 			attr.setLikeNum(at.getLikeNum() + 1);
 		} else {
 			attr.setLikeNum(at.getLikeNum() - 1);
+		}
+		this.attrDao.update(attr);
+	}
+
+	@Override
+	public String addCollect(HttpServletRequest request, String articleId, Integer isCollect) {
+		ResponseMapper mapper = ResponseMapper.createMapper();
+		if (this.articleDao.isExist(articleId) < 1) {
+			return mapper.setCode(ResultConstant.ARGS_ERROR).getResultJson();
+		}
+		if (checkLoginDead(request)) {// 没登录 或失效
+			if (isCollect == 0)
+				this.addCollectNum(articleId, true);
+			else if (isCollect == 1)
+				this.addCollectNum(articleId, false);
+			return mapper.setCode(ResultConstant.LOGIN_INVALIDATE).getResultJson();
+		} else {
+			ArticleCollect t = new ArticleCollect();
+			t.setUserId(request.getHeader("userId")).setArticleId(articleId);
+			if (this.collectDao.isExist(t) > 0) {// 已经收藏
+				ArticleCollect co = this.collectDao.getForUpdate(t);
+				if (co.getStatus() == 1) {// 取消收藏
+					t.setStatus(0);
+					this.addCollectNum(articleId, false);
+
+				} else {// 进行收藏
+					t.setStatus(1);
+					this.addCollectNum(articleId, true);
+
+				}
+				this.collectDao.update(t);
+			} else {// 没收藏
+				t.setId(IdGenerator.uuid());
+				this.collectDao.insert(t);
+				this.addCollectNum(articleId, true);
+
+			}
+
+		}
+		return mapper.getResultJson();
+
+	}
+
+	private void addCollectNum(String articleId, boolean flag) {
+		ArticleAttr attr = new ArticleAttr();
+		ArticleAttr at = this.attrDao.getForUpdate(articleId);
+		attr.setArticleId(articleId);
+		if (flag) {// 收藏
+			attr.setCollectNum(at.getCollectNum() + 1);
+			try {
+				this.userAttrDao.addNum(NumCountType.CollectNum.ordinal(), 1);
+			} catch (Exception e) {
+				// do nothing
+			}
+		} else {
+			attr.setCollectNum(at.getCollectNum() - 1);
+			try {
+				this.userAttrDao.addNum(NumCountType.CollectNum.ordinal(), -1);
+			} catch (Exception e) {
+				// do nothing
+			}
 		}
 		this.attrDao.update(attr);
 	}
