@@ -1,16 +1,19 @@
 var confirmjBox;
 $(document).ready(
 		function() {
-			confirmjBox = new jBox('Confirm', {
-				confirmButton : '确认',
-				cancelButton : '取消'
-			});
 			getDevice();
 			var userInfo = jQuery.parseJSON($.session.get('user'));
 			if (checkNull(userInfo)) {
 				$("#loginSpan").css("display", "block");
 			} else {
 				$("#userSpan").css("display", "block");
+				$("#userSpan").on("mouseover", function() {
+					$(this).find("ul").css("display", "block");
+				});
+				$("#userSpan").on("mouseout", function() {
+					$(this).find("ul").css("display", "none");
+				});
+
 				$("#userSpan").find("#nickname").attr("href",
 						"/user/" + userInfo.userId);
 				$("#userSpan").find("#nickname").text(userInfo.nickname);

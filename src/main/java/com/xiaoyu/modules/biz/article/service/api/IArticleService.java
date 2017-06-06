@@ -19,7 +19,7 @@ public interface IArticleService {
 
 	public String list(HttpServletRequest request, String userId, Integer pageNum, Integer pageSize);
 
-	public String addArticle(HttpServletRequest request, String content, String userId, String token);
+	public String addArticle(HttpServletRequest request, String title, String content, String userId, String token);
 
 	public String addReadNum(HttpServletRequest request, String articleId);
 

@@ -88,9 +88,10 @@ public class ArticleBackController {
 	}
 
 	@RequestMapping(value = "api/v1/article/add", method = RequestMethod.POST)
-	public String addArticle(HttpServletRequest request, @RequestParam(required = true) String content,
-			@RequestParam(required = true) String userId, @RequestParam(required = true) String token) {
-		return this.articleService.addArticle(request, content, userId, token);
+	public String addArticle(HttpServletRequest request, @RequestParam(required = true) String title,
+			@RequestParam(required = true) String content, @RequestParam(required = true) String userId,
+			@RequestParam(required = true) String token) {
+		return this.articleService.addArticle(request, title, content, userId, token);
 	}
 
 	@RequestMapping(value = "api/v1/article/like", method = RequestMethod.POST)

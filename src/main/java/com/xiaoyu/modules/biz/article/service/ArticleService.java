@@ -102,13 +102,12 @@ public class ArticleService extends BaseService<ArticleDao, Article> implements 
 	}
 
 	@Transactional(readOnly = false)
-	private String publish(String userId, String content) {
+	private String publish(String userId, String title, String content) {
 		ResponseMapper mapper = ResponseMapper.createMapper();
 		Article t = new Article();
 		ArticleAttr attr = new ArticleAttr();
 		t.setId(IdGenerator.uuid());
-		t.setContent(content);
-		t.setUserId(userId);
+		t.setContent(content).setTitle(title).setUserId(userId);
 		try {
 			this.articleDao.insert(t);
 			attr.setArticleId(t.getId());
@@ -203,7 +202,7 @@ public class ArticleService extends BaseService<ArticleDao, Article> implements 
 	}
 
 	@Override
-	public String addArticle(HttpServletRequest request, String content, String userId, String token) {
+	public String addArticle(HttpServletRequest request, String title, String content, String userId, String token) {
 		ResponseMapper mapper = ResponseMapper.createMapper();
 		HttpSession session = request.getSession(false);
 		if (session == null)
@@ -213,7 +212,7 @@ public class ArticleService extends BaseService<ArticleDao, Article> implements 
 			return mapper.setCode(ResultConstant.LOGIN_INVALIDATE).setMessage("登录失效,请刷新登录2").getResultJson();
 		if (!userId.equals(user.getId()))
 			return mapper.setCode(ResultConstant.LOGIN_INVALIDATE).setMessage("登录失效,请刷新登录3").getResultJson();
-		return this.publish(userId, content);
+		return this.publish(userId, title, content);
 	}
 
 	/**

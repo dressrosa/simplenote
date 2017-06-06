@@ -54,8 +54,9 @@ var $ajaxPromise2 = $
 										function(index, ar) {
 											arHtml += '<li class="list-group-item"   id="'
 													+ ar.articleId + '">';
-											arHtml += '<label>' + '</label>';
-											arHtml += '<p style="cursor: pointer;">'
+											arHtml += '<label>' + ar.title
+													+ '</label>';
+											arHtml += '<p class="group_item_p">'
 													+ ar.content
 													+ '...'
 													+ '</p>';
@@ -100,56 +101,58 @@ var $ajaxPromise2 = $
 					var $icon = $(this);
 
 				});
-				$(".icon_like").on("click", function() {
-					var elem = $(this).parent().parent().parent();
-					var $icon = $(this);
-					var $next = $icon.next();
-					var num = $next.html();
-					var $isLike;
-					if ($icon.attr('data-like') == '0') {
-						$icon.css("color", "#ff4949d9");
-						$icon.attr("data-like", "1");
-						$next.html(num - (-1));
-						$isLike = 0;
-					} else if ($icon.attr('data-like') == '1') {
-						$icon.css("color", "#a7a7a7");
-						$icon.attr("data-like", "0");
-						$next.html(num - 1);
-						$isLike = 1;
-					}
-					$.ajax({
-						type : "post",
-						async : true,
-						url : '/api/v1/article/like',
-						data : {
-							articleId : elem.attr("id"),
-							isLike : $isLike
-						},
-						beforeSend : function(xhr) {
-							var userInfo = jQuery.parseJSON($.session
-									.get("user"));
-							if (!checkNull(userInfo)) {
-								xhr.setRequestHeader('token',
-										userInfo.token);
-								xhr.setRequestHeader('userId',
-										userInfo.userId);
+				$(".icon_like").on(
+						"click",
+						function() {
+							var elem = $(this).parent().parent().parent();
+							var $icon = $(this);
+							var $next = $icon.next();
+							var num = $next.html();
+							var $isLike;
+							if ($icon.attr('data-like') == '0') {
+								$icon.css("color", "#ff4949d9");
+								$icon.attr("data-like", "1");
+								$next.html(num - (-1));
+								$isLike = 0;
+							} else if ($icon.attr('data-like') == '1') {
+								$icon.css("color", "#a7a7a7");
+								$icon.attr("data-like", "0");
+								$next.html(num - 1);
+								$isLike = 1;
 							}
+							$.ajax({
+								type : "post",
+								async : true,
+								url : '/api/v1/article/like',
+								data : {
+									articleId : elem.attr("id"),
+									isLike : $isLike
+								},
+								beforeSend : function(xhr) {
+									var userInfo = jQuery.parseJSON($.session
+											.get("user"));
+									if (!checkNull(userInfo)) {
+										xhr.setRequestHeader('token',
+												userInfo.token);
+										xhr.setRequestHeader('userId',
+												userInfo.userId);
+									}
 
-						},
-						success : function(data) {
-							console.log(data);
-							var obj = jQuery.parseJSON(data);
-							if (obj.code == "20001") {
-								console.log("未登录");
-							}
-							return true;
-						},
-						error : function(data) {
-							console.log(data);
-							return false;
-						}
-					});
-				});
+								},
+								success : function(data) {
+									console.log(data);
+									var obj = jQuery.parseJSON(data);
+									if (obj.code == "20001") {
+										console.log("未登录");
+									}
+									return true;
+								},
+								error : function(data) {
+									console.log(data);
+									return false;
+								}
+							});
+						});
 				addHeadForImg();
 				return true;
 			}
