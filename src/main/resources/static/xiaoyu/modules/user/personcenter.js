@@ -63,7 +63,7 @@ var $ajaxPromise2 = $
 
 											arHtml += '<div class="comment_bar"><div class="bar_part">';
 											if (ar.isLike == "1") {
-												arHtml += '<i class="icon_like" style="color:#ff4949d9;" data-like="1"></i>';
+												arHtml += '<i class="icon_like" style="color:#ff4949;" data-like="1"></i>';
 											} else {
 												arHtml += '<i class="icon_like" data-like="0"></i>';
 											}
@@ -110,7 +110,7 @@ var $ajaxPromise2 = $
 							var num = $next.html();
 							var $isLike;
 							if ($icon.attr('data-like') == '0') {
-								$icon.css("color", "#ff4949d9");
+								$icon.css("color", "#ff4949");
 								$icon.attr("data-like", "1");
 								$next.html(num - (-1));
 								$isLike = 0;

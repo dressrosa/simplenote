@@ -3,7 +3,7 @@
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 <meta name="viewport"
-	content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
 <meta http-equiv="Expires" content="0">
 <meta http-equiv="Cache-Control" content="no-cache">
 <meta http-equiv="Cache-Control" content="no-store">
@@ -18,84 +18,84 @@
 <script type="text/javascript" src="/xiaoyu/modules/user/login.js"></script>
 <title>登录</title>
 <script type="text/javascript">
-	
+    
 </script>
 <style type="text/css">
 body {
-	font-family: 'Lato', "PingFang SC", "Microsoft YaHei", sans-serif;
-	font-size: 15px;
-	line-height: 25px;
-	background-size: cover;
-	background:
-		url('http://xiaoyu1-1253813687.costj.myqcloud.com/common/4.jpg')
-		center no-repeat fixed;
+    font-family: 'Lato', "PingFang SC", "Microsoft YaHei", sans-serif;
+    font-size: 15px;
+    line-height: 25px;
+    background-size: cover;
+    background:
+        url('http://xiaoyu1-1253813687.costj.myqcloud.com/common/4.jpg')
+        center no-repeat fixed;
 }
 
 .login_main {
-	
+    
 }
 
 .login_input {
-	margin: 3px;
-	padding: 5px;
-	border: 1px solid transparent;
-	border-radius: 4px;
-	background: rgba(255, 255, 255, 0.9);
-	height: 35px;
-	width: 304px;
-	max-width: 420px;
+    margin: 3px;
+    padding: 5px;
+    border: 1px solid transparent;
+    border-radius: 4px;
+    background: #ffffff;
+    height: 35px;
+    width: 304px;
+    max-width: 420px;
 }
 
 .eye_input {
-	position: relative;
+    position: relative;
 }
 
 .login_panel {
-	margin-top: 330px;
-	display: -webkit-box;
-	text-align: -webkit-center;
+    margin-top: 330px;
+    display: -webkit-box;
+    text-align: -webkit-center;
 }
 
 .addon {
-	margin-bottom: 3px;
-	margin-top: 3px;
-	padding: 14px;
-	color: #c1b6b6;
-	position: absolute;
-	right: 0px;
-	top: 0px
+    margin-bottom: 3px;
+    margin-top: 3px;
+    padding: 14px;
+    color: #c1b6b6;
+    position: absolute;
+    right: 0px;
+    top: 0px
 }
 
 .xbtn {
-	margin: 7px;
-	width: 304px;
-	max-width: 430px;
-	cursor: pointer;
-	font-size: 15px;
-	border-radius: 4px;
-	height: 47px;
-	background-color: rgba(239, 68, 68, 0.9);
-	border: 1px solid transparent;
-	font-size: 15px;
-	color: #fff;
+    margin: 7px;
+    width: 304px;
+    max-width: 430px;
+    cursor: pointer;
+    font-size: 15px;
+    border-radius: 4px;
+    height: 47px;
+    background-color: rgba(239, 68, 68, 0.9);
+    border: 1px solid transparent;
+    font-size: 15px;
+    color: #fff;
 }
 
 .panel_form {
-	padding: 50px;
-	background: rgba(240, 255, 255, 0.29);
-	border-radius: 4px;
+    padding: 50px;
+    background: rgba(240, 255, 255, 0.29);
+    border-radius: 4px;
 }
 
 .change {
-	position: absolute;
-	left: 4px;
-	margin: 3px;
-	color: #f7f3f3;
-	cursor: pointer;
+    position: absolute;
+    left: 4px;
+    margin: 3px;
+    color: #ffffff;
+    cursor: pointer;
 }
 
 .change_a {
-	position: relative;
+    position: relative;
 }
 </style>
 </head>
@@ -103,51 +103,51 @@ body {
 <body>
 
 
-	<div class="login_main">
-		<div class="login_panel">
+    <div class="login_main">
+        <div class="login_panel">
 
-			<form id="xyForm" role="form" action="#" method="post"
-				class="panel_form loginform">
-				<input class="login_input" type="text" placeholder="邮箱/手机号"
-					required="required" name="loginName" id="loginName" maxlength="20">
-				<div class="eye_input">
-					<input class="login_input pwd" type="password" placeholder="密码"
-						required="required" name="password" id="password" maxlength="20">
-					<label class="addon icon-eye" onclick="showPwd(this)"></label>
-				</div>
-				<ul class="list-group">
-					<input type="button" value="登录" class="xbtn logining" />
-					<div class="change_a">
-						<a class="change goregister">注册</a>
-					</div>
-					<span class="tooltip"></span>
-				</ul>
+            <form id="xyForm" role="form" action="#" method="post"
+                class="panel_form loginform">
+                <input class="login_input" type="text" placeholder="邮箱/手机号"
+                    required="required" name="loginName" id="loginName" maxlength="20">
+                <div class="eye_input">
+                    <input class="login_input pwd" type="password" placeholder="密码"
+                        required="required" name="password" id="password" maxlength="20">
+                    <label class="addon icon-eye" onclick="showPwd(this)"></label>
+                </div>
+                <ul class="list-group">
+                    <input type="button" value="登录" class="xbtn logining" />
+                    <div class="change_a">
+                        <a class="change goregister">注册</a>
+                    </div>
+                    <span class="tooltip"></span>
+                </ul>
 
-			</form>
-			<form id="xyForm1" role="form" action="#" method="post"
-				class="panel_form registerform" style="display: none;">
-				<input class="login_input" type="text" placeholder="邮箱/手机号"
-					required="required" name="loginName" id="loginName1" maxlength="20">
-				<div class="eye_input">
-					<input class="login_input pwd" type="password" placeholder="密码"
-						required="required" name="password" id="password1" maxlength="20">
-					<label class="addon icon-eye" onclick="showPwd(this)"></label>
-				</div>
-				<input class="login_input" type="password" placeholder="确认密码"
-					required="required" name="repassword" id="repassword"
-					maxlength="20">
-				<ul class="list-group">
-					<input type="button" value="注册" class="xbtn registering" />
-					<div class="change_a">
-						<a class="change gologin">登录</a>
-					</div>
+            </form>
+            <form id="xyForm1" role="form" action="#" method="post"
+                class="panel_form registerform" style="display: none;">
+                <input class="login_input" type="text" placeholder="邮箱/手机号"
+                    required="required" name="loginName" id="loginName1" maxlength="20">
+                <div class="eye_input">
+                    <input class="login_input pwd" type="password" placeholder="密码"
+                        required="required" name="password" id="password1" maxlength="20">
+                    <label class="addon icon-eye" onclick="showPwd(this)"></label>
+                </div>
+                <input class="login_input" type="password" placeholder="确认密码"
+                    required="required" name="repassword" id="repassword"
+                    maxlength="20">
+                <ul class="list-group">
+                    <input type="button" value="注册" class="xbtn registering" />
+                    <div class="change_a">
+                        <a class="change gologin">登录</a>
+                    </div>
 
-					<span class="tooltip"></span>
-				</ul>
-			</form>
+                    <span class="tooltip"></span>
+                </ul>
+            </form>
 
-		</div>
-		<div class="footer container">
+        </div>
+        <div class="footer container">
         <div class="hr1-line" style="margin-bottom: 10px"></div>
         <div class="copyright " style="float: left; margin-right: 3px;">
             <font style="margin-right: 3px;">©2016-2017 小雨 </font><a
@@ -160,7 +160,7 @@ body {
             </a>
         </div>
     </div>
-	</div>
+    </div>
 </body>
 
 </html>
