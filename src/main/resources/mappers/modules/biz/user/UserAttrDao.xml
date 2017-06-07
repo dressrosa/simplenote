@@ -10,7 +10,7 @@
 		commentNum
 	</sql>
 
-	<select id="get" resultType="com.xiaoyu.modules.biz.article.entity.ArticleAttr"
+	<select id="get" resultType="com.xiaoyu.modules.biz.user.entity.UserAttr"
 		parameterType="java.lang.String">
 		select
 		<include refid="Base_Column_List" />
@@ -18,7 +18,7 @@
 		where a.user_id= #{userId} and a.del_flag=0
 	</select>
 
-	<insert id="insert" parameterType="com.xiaoyu.modules.biz.article.entity.ArticleAttr">
+	<insert id="insert" parameterType="com.xiaoyu.modules.biz.user.entity.UserAttr">
 		insert into biz_user_attr
 		<trim prefix="(" suffix=")" suffixOverrides=",">
 

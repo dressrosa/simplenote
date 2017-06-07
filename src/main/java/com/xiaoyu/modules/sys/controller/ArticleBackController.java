@@ -105,4 +105,10 @@ public class ArticleBackController {
 			@RequestParam(required = true) Integer isCollect) {
 		return this.articleService.addCollect(request, articleId, isCollect);
 	}
+
+	@RequestMapping(value = "api/v1/article/{articleId}/comment", method = RequestMethod.POST)
+	public String comment(HttpServletRequest request, @PathVariable String articleId,
+			@RequestParam(required = true) String content) {
+		return this.articleService.comment(request, articleId, content);
+	}
 }

@@ -4,6 +4,7 @@
 package com.xiaoyu.modules.biz.article.service;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -25,14 +26,16 @@ import com.xiaoyu.common.utils.JedisUtils;
 import com.xiaoyu.common.utils.TimeUtils;
 import com.xiaoyu.modules.biz.article.dao.ArticleAttrDao;
 import com.xiaoyu.modules.biz.article.dao.ArticleCollectDao;
+import com.xiaoyu.modules.biz.article.dao.ArticleCommentDao;
 import com.xiaoyu.modules.biz.article.dao.ArticleDao;
 import com.xiaoyu.modules.biz.article.dao.ArticleLikeDao;
 import com.xiaoyu.modules.biz.article.entity.Article;
 import com.xiaoyu.modules.biz.article.entity.ArticleAttr;
 import com.xiaoyu.modules.biz.article.entity.ArticleCollect;
+import com.xiaoyu.modules.biz.article.entity.ArticleComment;
 import com.xiaoyu.modules.biz.article.entity.ArticleLike;
-import com.xiaoyu.modules.biz.article.entity.ArticleVo;
 import com.xiaoyu.modules.biz.article.service.api.IArticleService;
+import com.xiaoyu.modules.biz.article.vo.ArticleVo;
 import com.xiaoyu.modules.biz.user.dao.UserAttrDao;
 import com.xiaoyu.modules.biz.user.dao.UserDao;
 import com.xiaoyu.modules.biz.user.entity.User;
@@ -55,6 +58,23 @@ public class ArticleService extends BaseService<ArticleDao, Article> implements 
 	private ArticleCollectDao collectDao;
 	@Autowired
 	private UserAttrDao userAttrDao;
+
+	/**
+	 * 检查登录失效
+	 */
+	private User checkLoginDead(HttpServletRequest request) {
+		String userId = request.getHeader("userId");
+		String token = request.getHeader("token");
+		HttpSession session = request.getSession(false);
+		if (session == null)
+			return null;
+		User user = (User) session.getAttribute(token);
+		if (user == null)
+			return null;
+		if (!userId.equals(user.getId()))
+			return null;
+		return user;
+	}
 
 	private Map<String, Object> article2Map(ArticleVo a) {
 		Map<String, Object> map = new HashMap<>();
@@ -143,7 +163,7 @@ public class ArticleService extends BaseService<ArticleDao, Article> implements 
 
 		for (ArticleVo a : list) {
 			Map<String, Object> m = this.article2Map1(a);
-			if (!checkLoginDead(request)) {
+			if (checkLoginDead(request) != null) {
 				ArticleLike t = new ArticleLike();
 				t.setArticleId(a.getId()).setUserId(request.getHeader("userId"));
 				ArticleLike al = this.likeDao.get(t);
@@ -180,7 +200,7 @@ public class ArticleService extends BaseService<ArticleDao, Article> implements 
 		if (list != null && list.size() > 0) {
 			for (ArticleVo a : list) {
 				Map<String, Object> m = this.article2Map1(a);
-				if (!checkLoginDead(request)) {
+				if (checkLoginDead(request) != null) {
 					ArticleLike t = new ArticleLike();
 					t.setArticleId(a.getId()).setUserId(request.getHeader("userId"));
 					ArticleLike al = this.likeDao.get(t);
@@ -215,23 +235,6 @@ public class ArticleService extends BaseService<ArticleDao, Article> implements 
 		return this.publish(userId, title, content);
 	}
 
-	/**
-	 * 检查登录失效
-	 */
-	private boolean checkLoginDead(HttpServletRequest request) {
-		String userId = request.getHeader("userId");
-		String token = request.getHeader("token");
-		HttpSession session = request.getSession(false);
-		if (session == null)
-			return true;
-		User user = (User) session.getAttribute(token);
-		if (user == null)
-			return true;
-		if (!userId.equals(user.getId()))
-			return true;
-		return false;
-	}
-
 	@Override
 	public String addReadNum(HttpServletRequest request, String articleId) {
 		String ip = request.getRemoteHost();
@@ -257,7 +260,7 @@ public class ArticleService extends BaseService<ArticleDao, Article> implements 
 		if (this.articleDao.isExist(articleId) < 1) {
 			return mapper.setCode(ResultConstant.ARGS_ERROR).getResultJson();
 		}
-		if (checkLoginDead(request)) {// 没登录 或失效
+		if (checkLoginDead(request) == null) {// 没登录 或失效
 			if (isLike == 0)
 				this.addLikeNum(articleId, true);
 			else if (isLike == 1)
@@ -305,7 +308,7 @@ public class ArticleService extends BaseService<ArticleDao, Article> implements 
 		if (this.articleDao.isExist(articleId) < 1) {
 			return mapper.setCode(ResultConstant.ARGS_ERROR).getResultJson();
 		}
-		if (checkLoginDead(request)) {// 没登录 或失效
+		if (checkLoginDead(request) == null) {// 没登录 或失效
 			if (isCollect == 0)
 				this.addCollectNum(articleId, true);
 			else if (isCollect == 1)
@@ -358,5 +361,30 @@ public class ArticleService extends BaseService<ArticleDao, Article> implements 
 			}
 		}
 		this.attrDao.update(attr);
+	}
+
+	@Autowired
+	private ArticleCommentDao arCommentDao;
+
+	@Override
+	public String comment(HttpServletRequest request, String articleId, String content) {
+		User user = checkLoginDead(request);
+		ResponseMapper mapper = ResponseMapper.createMapper();
+		if (user == null)
+			return mapper.setCode(ResultConstant.LOGIN_INVALIDATE).getResultJson();
+		ArticleComment co = new ArticleComment();
+		Article ar = this.articleDao.getById(articleId);
+		if (ar == null)
+			return mapper.setCode(ResultConstant.ARGS_ERROR).getResultJson();
+		co.setArticleId(articleId).setReplyerId(user.getId()).setContent(content).setAuthorId(ar.getUserId())
+				.setId(IdGenerator.uuid());
+		this.arCommentDao.insert(co);
+		Map<String, String> map = new HashMap<>();
+		map.put("replyerId", user.getId());
+		map.put("replyerName", user.getNickname());
+		map.put("replyerAvatar", user.getAvatar());
+		map.put("content", content);
+		map.put("createDate", TimeUtils.format(new Date(), "yyyy-MM-dd HH:mm"));
+		return mapper.setData(map).getResultJson();
 	}
 }

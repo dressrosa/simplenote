@@ -12,6 +12,10 @@ html, body, ul, ol, li, h1, h2, h3, h4, h5, h6, form, table, tr, td, div,
 	border: 0;
 }
 
+* {
+	outline: none;
+}
+
 input {
 	font-family: inherit;
 	-webkit-font-smoothing: antialiased;
@@ -31,6 +35,14 @@ label {
 
 a {
 	text-decoration: none;
+}
+
+a, .link {
+	cursor: pointer;
+	color: #487eb3;
+	text-decoration: none;
+	-webkit-transition: color .2s;
+	transition: color .2s;
 }
 
 li {
@@ -115,7 +127,7 @@ li a {
 	padding: 15px;
 	font-weight: 100;
 	background: white;
-	box-shadow: 0 1px 10px rgba(55, 0, 0, 0.48);
+	box-shadow: 0 1px 5px rgba(55, 0, 0, 0.48);
 	position: relative;
 }
 
@@ -296,12 +308,63 @@ li a {
 	margin-right: 10px;
 	border: 1px solid #fbf5f5;
 	background: white;
-	border-radius: 4px;
+	box-shadow: 0 2px 1px rgb(236, 236, 236);
+	border-bottom-right-radius: 5%;
 }
 
 .part_comment {
-	border: 1px solid red;
-	height: 200px;
+	border-top: 1px solid #e4e4e4;
+	height: 150px;
+	padding: 20px;
+	position: relative;
+	text-align: center;
+	margin-top: 50px;
+}
+
+.book_radius {
+	width: 0px;
+	height: 0px;
+	border-top: 80px solid rgba(255, 255, 255, 0);
+	border-right: 38px solid #eaeaea;
+	border-bottom: 65px solid rgba(255, 255, 255, 0);
+	border-top-right-radius: 24%;
+	border-bottom-right-radius: 36%;
+	transform: rotate(25deg);
+	-webkit-transform: rotate(35deg);
+	position: absolute;
+	bottom: -24px;
+	right: 31px;
+}
+
+.co_tt {
+	border: 1px solid #fbf5f5;
+	width: 80%;
+	height: 75%;
+	resize: none;
+	padding: 5px;
+	border-radius: 4px;
+}
+
+.co_tt:focus {
+	border: 1px solid #fbf5f5;
+	border-radius: 4px;
+	box-shadow: 0 14px 43px rgba(51, 140, 55, 0.21);
+}
+
+.co_btn {
+	font-size: 15px;
+	background-color: #fd4d4d;
+	border: 1px solid transparent;
+	border-radius: 4px;
+	cursor: pointer;
+	margin: 5px;
+	padding: 5px;
+	width: 80px;
+	height: 35px;
+	position: absolute;
+	bottom: 3px;
+	right: 11%;
+	color: #fff;
 }
 
 .location_top {
@@ -473,10 +536,10 @@ white-space:nowrap;            涓嶆崲琛� */
 }
 
 .co_comment {
-	border: 1px solid #ececec;
+	border-top: 1px solid #ececec;
 	/* margin: 5px;
 	padding: 5px; */
-	background: #ececec;
+	/* background: #ececec; */
 }
 
 .co_num {
@@ -484,6 +547,13 @@ white-space:nowrap;            涓嶆崲琛� */
 	text-align: left;
 	padding: 10px;
 	max-width: 1100px;
+}
+
+.co_all {
+	text-align: right;
+	max-width: 1100px;
+	font-size: 13px;
+	margin-right: 20px;
 }
 
 .co_list {
@@ -541,7 +611,6 @@ white-space:nowrap;            涓嶆崲琛� */
 	text-align: center;
 	margin: 4px;
 	font-size: 10px;
-	display: flex;
 	color: #adadad;
 }
 

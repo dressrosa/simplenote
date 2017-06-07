@@ -12,8 +12,10 @@
 <meta http-equiv="Pragma" content="no-cache" />
 <link rel="icon" type="image/ico" href="/xiaoyu/img/favicon.ico" />
 <link rel="stylesheet" href="/icon/style.css" />
+<link href="/jBox-0.3.2/jBox.css" rel="stylesheet">
 <link href="/xiaoyu/xiaoyu.css" rel="stylesheet" type="text/css" />
 <script src="/jquery/jquery-1.12.2.min.js" type="text/javascript"></script>
+<script src="/jBox-0.3.2/jBox.min.js" type="text/javascript"></script>
 <script type="text/javascript" src="/xiaoyu/jquerysession.js"></script>
 <script type="text/javascript" src="/xiaoyu/common.js"></script>
 <script type="text/javascript" src="/xiaoyu/xiaoyu.js"></script>
@@ -67,7 +69,7 @@
 				<div>
 					<img class="avatar" img-type="avatar" src="" alt="" />
 					<div class="p_username">
-						<i class="icon_profile"></i><label class="nickname"></label>
+						<!-- <i class="icon_profile"></i> --><label class="nickname"></label>
 					</div>
 
 				</div>
@@ -83,6 +85,7 @@
 						<label class="nickname"><a>虾米:</a></label>
 						<p>写的很好的案例房间都是发大水了房间说了副驾驶否非法拉盛放假了发发牢骚地方</p>
 					</div>
+					<!-- <div class="book_radius"></div> -->
 				</div>
 
 
@@ -102,7 +105,7 @@
 		</div>
 		<div class="part_down">
 			<div class="ar_title">
-				<label>生气的标题</label> <span class="ar_date"> </span> <span
+				<label>标题</label> <span class="ar_date"> </span> <span
 					class="ar_view">浏览量:<strong id="readNum"></strong></span>
 			</div>
 			<div class="note_each">
@@ -116,7 +119,56 @@
 			</div>
 
 		</div>
+		<div class="part_comment">
+			<textarea class="co_tt" placeholder="说说你的见解呗"></textarea>
+			<input class="co_btn" type="button" value="评论">
+		</div>
+		<div class="co_comment">
+			<div class="co_num">
+				<span>最新评论</span>
+			</div>
+			<div class="co_list">
+				<div class="co_item">
+					<div class="item_up">
+						<div style="margin-top: -30px; margin-left: -10px;">
+							<img img-type="avatar " class="avatar small" src="common/1.jpg">
+						</div>
+						<div class="item_p">
+							<label class="item_p_username">小雨de欢乐世界</label>
+							<p>评论阿萨德发生的啊发来撒发啦舒服水电费是否快捷方式来得及疯狂减肥 法律是否健康地方爱上发大水了附加费a</p>
+						</div>
+						<div class="item_like">
+							<i class="icon_like"></i><label class="co_item_label">88</label>
+						</div>
+					</div>
 
+					<div class="item_down">
+						<label class="item_p_title_pure">2017-05-09 17:52</label>
+					</div>
+				</div>
+				<div class="co_item">
+					<div class="item_up">
+						<div style="margin-top: -30px; margin-left: -10px;">
+							<img img-type="avatar " class="avatar small" src="common/1.jpg">
+						</div>
+						<div class="item_p">
+							<label class="item_p_username">小雨de欢乐世界</label><label
+								class="item_p_label">回复</label> <label class="item_p_username">小明</label>
+							<p>评论阿萨德发生的啊发来撒发啦舒服水电费是否快捷方式来得及疯狂减肥 法律是否健康地方爱上发大水了附加费a</p>
+						</div>
+						<div class="item_like">
+							<i class="icon_like"></i><label class="co_item_label">88</label>
+						</div>
+					</div>
+					<div class="item_down">
+						<label class="item_p_title_pure">2017-05-09 17:52</label>
+					</div>
+				</div>
+			</div>
+			<div class="co_all">
+				<span><a href="/article/12/comments">查看全部</a></span>
+			</div>
+		</div>
 	</div>
 </body>
 

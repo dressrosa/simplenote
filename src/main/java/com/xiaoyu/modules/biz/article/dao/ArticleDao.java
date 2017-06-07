@@ -10,7 +10,7 @@ import org.springframework.stereotype.Repository;
 
 import com.xiaoyu.common.base.BaseDao;
 import com.xiaoyu.modules.biz.article.entity.Article;
-import com.xiaoyu.modules.biz.article.entity.ArticleVo;
+import com.xiaoyu.modules.biz.article.vo.ArticleVo;
 
 /**
  * @author xiaoyu 2016年3月29日
