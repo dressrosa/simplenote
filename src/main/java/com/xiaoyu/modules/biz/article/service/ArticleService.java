@@ -23,6 +23,7 @@ import com.xiaoyu.common.base.ResponseMapper;
 import com.xiaoyu.common.base.ResultConstant;
 import com.xiaoyu.common.utils.IdGenerator;
 import com.xiaoyu.common.utils.JedisUtils;
+import com.xiaoyu.common.utils.StringUtils;
 import com.xiaoyu.common.utils.TimeUtils;
 import com.xiaoyu.modules.biz.article.dao.ArticleAttrDao;
 import com.xiaoyu.modules.biz.article.dao.ArticleCollectDao;
@@ -35,6 +36,7 @@ import com.xiaoyu.modules.biz.article.entity.ArticleCollect;
 import com.xiaoyu.modules.biz.article.entity.ArticleComment;
 import com.xiaoyu.modules.biz.article.entity.ArticleLike;
 import com.xiaoyu.modules.biz.article.service.api.IArticleService;
+import com.xiaoyu.modules.biz.article.vo.ArticleCommentVo;
 import com.xiaoyu.modules.biz.article.vo.ArticleVo;
 import com.xiaoyu.modules.biz.user.dao.UserAttrDao;
 import com.xiaoyu.modules.biz.user.dao.UserDao;
@@ -368,8 +370,11 @@ public class ArticleService extends BaseService<ArticleDao, Article> implements 
 
 	@Override
 	public String comment(HttpServletRequest request, String articleId, String content) {
-		User user = checkLoginDead(request);
 		ResponseMapper mapper = ResponseMapper.createMapper();
+		if (StringUtils.isBlank(content)) {
+			return mapper.setCode(ResultConstant.ARGS_ERROR).getResultJson();
+		}
+		User user = checkLoginDead(request);
 		if (user == null)
 			return mapper.setCode(ResultConstant.LOGIN_INVALIDATE).getResultJson();
 		ArticleComment co = new ArticleComment();
@@ -386,5 +391,55 @@ public class ArticleService extends BaseService<ArticleDao, Article> implements 
 		map.put("content", content);
 		map.put("createDate", TimeUtils.format(new Date(), "yyyy-MM-dd HH:mm"));
 		return mapper.setData(map).getResultJson();
+	}
+
+	@Override
+	public String comments(HttpServletRequest request, String articleId, Integer pageNum) {
+		ResponseMapper mapper = ResponseMapper.createMapper();
+		PageHelper.startPage(pageNum, 10);
+		Page<ArticleCommentVo> page = (Page<ArticleCommentVo>) this.arCommentDao.findList(articleId);
+		List<ArticleCommentVo> list = page.getResult();
+		if (list == null || list.size() < 1)
+			return mapper.getResultJson();
+		Map<String, String> map = null;
+		List<Map<String, String>> total = new ArrayList<>();
+		for (ArticleCommentVo a : list) {
+			map = new HashMap<>();
+			map.put("commentId", a.getId());
+			map.put("replyerName", a.getReplyerName());
+			map.put("replyerId", a.getReplyerId());
+			map.put("replyerAvatar", a.getReplyerAvatar());
+			map.put("parentReplyerId", a.getParentReplyerId());
+			map.put("parentReplyerName", a.getParentReplyerName());
+			map.put("content", a.getContent());
+			map.put("createDate", TimeUtils.format(a.getCreateDate(), "yyyy-MM-dd HH:mm"));
+			total.add(map);
+		}
+		return mapper.setCount(page.getTotal()).setData(total).getResultJson();
+	}
+
+	@Override
+	public String newComments(HttpServletRequest request, String articleId) {
+		ResponseMapper mapper = ResponseMapper.createMapper();
+		List<ArticleCommentVo> list = this.arCommentDao.findNewComments(articleId);
+		if (list == null || list.size() < 1) {
+			return mapper.getResultJson();
+		}
+		Map<String, String> map = null;
+		List<Map<String, String>> total = new ArrayList<>();
+		for (ArticleCommentVo a : list) {
+			map = new HashMap<>();
+			map.put("commentId", a.getId());
+			map.put("replyerName", a.getReplyerName());
+			map.put("replyerId", a.getReplyerId());
+			map.put("replyerAvatar", a.getReplyerAvatar());
+			map.put("parentReplyerId", a.getParentReplyerId());
+			map.put("parentReplyerName", a.getParentReplyerName());
+			map.put("content", a.getContent());
+			map.put("createDate", TimeUtils.format(a.getCreateDate(), "yyyy-MM-dd HH:mm"));
+			total.add(map);
+		}
+
+		return mapper.setData(total).getResultJson();
 	}
 }

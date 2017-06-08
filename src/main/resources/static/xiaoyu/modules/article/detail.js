@@ -1,5 +1,5 @@
 var url = document.URL;
-var articleId = url.substring(url.lastIndexOf('/') + 1);
+var articleId = url.split('/')[4];
 var $arPromise = $.ajax({
 	cache : false,
 	type : "get",
@@ -39,42 +39,52 @@ var $arPromise = $.ajax({
 		return true;
 	}
 });
-var $coPromise = $.ajax({
-	cache : false,
-	type : "get",
-	async : true,
-	url : '/api/v1/article/' + articleId + "/newComments",
-	success : function(data) {
-		var obj = jQuery.parseJSON(data);
-		if (obj.code == '0') {
-			var ar = obj.data;
-			if (ar != null) {
-				var $partUp = $(".part_up");
-				$partUp.find("img").attr('src', ar.user.avatar);
-				$partUp.find("img").on("click", function() {
-					window.location.href = "/user/" + ar.user.userId;
-				});
-				$partUp.find(".p_description").find("span").html(
-						ar.user.description);
-				$partUp.find(".p_username").find(".nickname").html(
-						ar.user.nickname);
-				$partUp.find(".red").find("label").html(ar.attr.likeNum);
-				$partUp.find(".blue").find("label").html(ar.attr.collectNum);
-				$partUp.find(".green").find("label").html(ar.attr.commentNum);
-				var $partDown = $(".part_down");
-				$partDown.find(".ar_date").html(ar.createDate);
-				$partDown.find(".ar_title").find("label").html(ar.title);
-				$partDown.find(".ar_time").find("label").html(ar.createTime);
-				$partDown.find("#readNum").html(ar.attr.readNum);
-				$partDown.find(".ar_content").attr("id", ar.articleId);
-				$partDown.find(".ar_content").html(ar.content);
+var $coPromise = $
+		.ajax({
+			cache : false,
+			type : "get",
+			async : true,
+			url : '/api/v1/article/' + articleId + "/newComments",
+			success : function(data) {
+				var obj = jQuery.parseJSON(data);
+				if (obj.code == '0') {
+					var $coList = obj.data;
+					if (!checkNull($coList)) {
+						var $coComment = $(".co_comment");
+						var $html = '<div class="co_num"><span>最新评论</span></div>';
+						$html += '<div class="co_list">';
+						$
+								.each(
+										$coList,
+										function(index, co) {
+											$html += '<div class="co_item"><div class="item_up"><div style="margin-top: -30px; margin-left: -10px;">	<img img-type="avatar " class="avatar small" src="'
+													+ co.replyerAvatar
+													+ '"></div><div class="item_p"><label class="item_p_username">'
+													+ co.replyerName
+													+ '</label>';
+											if (!checkNull(co.parentReplyerName)) {
+												$html += '<label class="item_p_label">回复</label> <label class="item_p_username">'
+														+ co.parentReplyerName
+														+ '</label>';
+											}
+
+											$html += '<p>'
+													+ co.content
+													+ '</p></div><div class="item_like"><i class="icon_like"></i><label class="co_item_label">0</label></div></div><div class="item_down"><label class="item_p_title_pure">'
+													+ co.createDate
+													+ '</label></div></div>';
+										});
+						$html += '</div>';
+						$html += '<div class="co_all"><span><a href="/article/'
+								+ articleId
+								+ '/comments">查看全部</a></span></div>';
+						$coComment.html($html);
+					}
+				}
+
+				return true;
 			}
-		} else {
-			return false;
-		}
-		return true;
-	}
-});
+		});
 
 var comment = function() {
 	var $userInfo = jQuery.parseJSON($.session.get("user"));
@@ -85,7 +95,17 @@ var comment = function() {
 	var $text = $(".co_tt");
 	if (checkNull($text.val())) {
 		new jBox('Tooltip', {
-			content : '评论不能空哦',
+			content : '评论不能空',
+			pointer : false,
+			animation : 'zoomIn',
+			closeOnClick : 'body',
+			target : $(".co_tt")
+		}).open();
+		return false;
+	}
+	if ($text.val().length > 100) {
+		new jBox('Tooltip', {
+			content : '评论字数仅限100以内',
 			pointer : false,
 			animation : 'zoomIn',
 			closeOnClick : 'body',
@@ -149,6 +169,8 @@ var comment = function() {
 								+ '</label>'
 								+ '</div></div>';
 						$(".co_list").prepend($coItem);
+					} else if (jsonObj.code == '20001') {
+						gotoLogin('/article/' + articleId);
 					}
 					$(".co_btn").removeAttr("disabled");
 
@@ -208,6 +230,10 @@ $(document).ready(
 									});
 								}
 							});
+
+			$coPromise.promise().done(function() {
+				addHeadForImg();
+			});
 
 			$(".co_btn").on('click', function() {
 				comment();

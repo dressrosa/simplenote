@@ -111,4 +111,14 @@ public class ArticleBackController {
 			@RequestParam(required = true) String content) {
 		return this.articleService.comment(request, articleId, content);
 	}
+
+	@RequestMapping(value = "api/v1/article/{articleId}/newComments", method = RequestMethod.GET)
+	public String newComments(HttpServletRequest request, @PathVariable String articleId) {
+		return this.articleService.newComments(request, articleId);
+	}
+
+	@RequestMapping(value = "api/v1/article/{articleId}/comments", method = RequestMethod.GET)
+	public String comments(HttpServletRequest request, @PathVariable String articleId, Integer pageNum) {
+		return this.articleService.comments(request, articleId, pageNum);
+	}
 }

@@ -7,6 +7,8 @@
 		a.author_id as
 		authorId,
 		a.parent_id as parentId,
+		a.parent_replyer_id as
+		parentReplyerId,
 		a.content as content,
 		a.replyer_id as
 		replyerId,
@@ -21,6 +23,66 @@
 		select
 		<include refid="Base_Column_List" />
 		from biz_article_comment as a where a.del_flag=0
+	</select>
+	<select id="findNewComments" resultType="com.xiaoyu.modules.biz.article.vo.ArticleCommentVo"
+		parameterType="java.lang.String">
+		SELECT
+		a.id AS id,
+		a.article_id AS articleId,
+		a.author_id
+		AS authorId,
+		a.parent_id AS parentId,
+		u1.nickname AS parentReplyerName,
+		a.parent_replyer_id AS parentReplyerId,
+		a.content AS content,
+		a.replyer_id AS replyerId,
+		u.nickname AS replyerName,
+		u.avatar AS
+		replyerAvatar,
+		a.create_date AS createDate
+		FROM
+		biz_article_comment AS a
+		LEFT JOIN biz_user AS u ON a.replyer_id = u.id
+		LEFT JOIN
+		biz_article_comment AS a1 ON a.parent_id = a.id
+		LEFT JOIN biz_user AS
+		u1 ON a.parent_replyer_id = u1.id
+		WHERE
+		a.del_flag = 0 and a.article_id
+		=
+		#{articleId}
+		order by a.create_date desc
+		LIMIT 5
+
+	</select>
+	<select id="findList" resultType="com.xiaoyu.modules.biz.article.vo.ArticleCommentVo"
+		parameterType="java.lang.String">
+		SELECT
+		a.id AS id,
+		a.article_id AS articleId,
+		a.author_id
+		AS authorId,
+		a.parent_id AS parentId,
+		u1.nickname AS parentReplyerName,
+		a.parent_replyer_id AS parentReplyerId,
+		a.content AS content,
+		a.replyer_id AS replyerId,
+		u.nickname AS replyerName,
+		u.avatar AS
+		replyerAvatar,
+		a.create_date AS createDate
+		FROM
+		biz_article_comment AS a
+		LEFT JOIN biz_user AS u ON a.replyer_id = u.id
+		LEFT JOIN
+		biz_article_comment AS a1 ON a.parent_id = a.id
+		LEFT JOIN biz_user AS
+		u1 ON a.parent_replyer_id = u1.id
+		WHERE
+		a.del_flag = 0 and a.article_id
+		=
+		#{articleId}
+		order by a.create_date desc
 	</select>
 
 	<delete id="delete"
@@ -52,6 +114,9 @@
 			<if test="replyerId != null">
 				replyer_id,
 			</if>
+			<if test="parentReplyerId != null">
+				parent_replyer_id,
+			</if>
 
 		</trim>
 		<trim prefix="values (" suffix=")" suffixOverrides=",">
@@ -72,6 +137,9 @@
 			</if>
 			<if test="replyerId != null">
 				#{replyerId},
+			</if>
+			<if test="parentReplyerId != null">
+				#{parentReplyerId},
 			</if>
 		</trim>
 	</insert>

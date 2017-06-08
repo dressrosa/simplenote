@@ -15,15 +15,9 @@ function addHeadForImg() {
 	var imgs = document.getElementsByTagName('img');
 	var len = imgs.length;
 	for (var i = 0; i < len; i++) {
-		$img = $(imgs[i]);
-
-		if (checkNull($img.attr("src"))) {
-			if ($img.attr("img-type") == 'avatar')
-				$img.attr("src", imgHead+"common/avatar.png");
-			else {
-
-			}
-		} else {
+		var $img = $(imgs[i]);
+		var $src = $img.attr("src");
+		if (checkNull($src) || !$src.startsWith('http')) {
 			$img.attr("src", imgHead + $img.attr("src"));
 		}
 

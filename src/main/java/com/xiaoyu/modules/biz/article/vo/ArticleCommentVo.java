@@ -19,6 +19,40 @@ public class ArticleCommentVo extends BaseEntity {
 	private String parentId;
 	private String content;
 	private String replyerId;
+	private String parentReplyerName;
+	private String parentReplyerId;
+
+	public String getReplyerName() {
+		return replyerName;
+	}
+
+	public void setReplyerName(String replyerName) {
+		this.replyerName = replyerName;
+	}
+
+	public String getReplyerAvatar() {
+		return replyerAvatar;
+	}
+
+	public void setReplyerAvatar(String replyerAvatar) {
+		this.replyerAvatar = replyerAvatar;
+	}
+
+	public String getParentReplyerName() {
+		return parentReplyerName;
+	}
+
+	public void setParentReplyerName(String parentReplyerName) {
+		this.parentReplyerName = parentReplyerName;
+	}
+
+	public String getParentReplyerId() {
+		return parentReplyerId;
+	}
+
+	public void setParentReplyerId(String parentReplyerId) {
+		this.parentReplyerId = parentReplyerId;
+	}
 
 	public String getArticleId() {
 		return articleId;

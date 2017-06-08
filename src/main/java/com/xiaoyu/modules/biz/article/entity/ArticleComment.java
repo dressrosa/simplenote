@@ -15,8 +15,17 @@ public class ArticleComment extends BaseEntity {
 	private String articleId;
 	private String authorId;
 	private String parentId;
+	private String parentReplyerId;
 	private String content;
 	private String replyerId;
+
+	public String getParentReplyerId() {
+		return parentReplyerId;
+	}
+
+	public void setParentReplyerId(String parentReplyerId) {
+		this.parentReplyerId = parentReplyerId;
+	}
 
 	public String getArticleId() {
 		return articleId;
