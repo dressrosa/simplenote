@@ -10,6 +10,7 @@ var $arPromise = $.ajax({
 		if (obj.code == '0') {
 			var ar = obj.data;
 			if (ar != null) {
+				setTitle('详情-' + ar.title);
 				var $partUp = $(".part_up");
 				$partUp.find("img").attr('src', ar.user.avatar);
 				$partUp.find("img").on("click", function() {
@@ -25,9 +26,9 @@ var $arPromise = $.ajax({
 				var $partDown = $(".part_down");
 				$partDown.attr("id", ar.articleId);
 				$partDown.find(".ar_date").html(ar.createDate);
-				$partDown.find(".ar_title").find("label").html(ar.title);
+				$partDown.find(".ar_title").find("h2").html(ar.title);
 				$partDown.find(".ar_time").find("label").html(ar.createTime);
-				$partDown.find("#readNum").html(ar.attr.readNum);
+				$partDown.find(".ar_view").html('浏览量:'+ar.attr.readNum);
 				$partDown.find(".ar_content").attr("id", ar.articleId);
 				$partDown.find(".ar_content").html(ar.content);
 			}
@@ -59,9 +60,9 @@ var $coPromise = $
 										function(index, co) {
 											$html += '<div class="co_item"><div class="item_up"><div style="margin-top: -30px; margin-left: -10px;">	<img img-type="avatar " class="avatar small" src="'
 													+ co.replyerAvatar
-													+ '"></div><div class="item_p"><label class="item_p_username">'
+													+ '"></div><div class="item_p"><label class="item_p_username"><a>'
 													+ co.replyerName
-													+ '</label>';
+													+ '</a></label>';
 											if (!checkNull(co.parentReplyerName)) {
 												$html += '<label class="item_p_label">回复</label> <label class="item_p_username">'
 														+ co.parentReplyerName
@@ -154,9 +155,9 @@ var comment = function() {
 								+ '">'
 								+ '</div>'
 								+ '<div class="item_p">'
-								+ '<label class="item_p_username">'
+								+ '<label class="item_p_username"><a>'
 								+ jsonObj.data.replyerName
-								+ '</label>'
+								+ '</a></label>'
 								+ '<p>'
 								+ jsonObj.data.content
 								+ '</p>'

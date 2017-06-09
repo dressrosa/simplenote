@@ -52,8 +52,12 @@ public class RouteController {
 	}
 
 	@RequestMapping(value = "article/{articleId}/comments", method = RequestMethod.GET)
-	public String goComments(HttpServletRequest request,@PathVariable String articleId) {
+	public String goComments(HttpServletRequest request, @PathVariable String articleId) {
 		return "article/commentList";
 	}
 
+	@RequestMapping(value = "user/{userId}/edit", method = RequestMethod.GET)
+	public String goEditUserInfo(HttpServletRequest request) {
+		return "user/userForm";
+	}
 }

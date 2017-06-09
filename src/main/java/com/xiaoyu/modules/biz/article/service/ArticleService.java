@@ -383,7 +383,9 @@ public class ArticleService extends BaseService<ArticleDao, Article> implements 
 			return mapper.setCode(ResultConstant.ARGS_ERROR).getResultJson();
 		co.setArticleId(articleId).setReplyerId(user.getId()).setContent(content).setAuthorId(ar.getUserId())
 				.setId(IdGenerator.uuid());
-		this.arCommentDao.insert(co);
+		if (this.arCommentDao.insert(co) > 0) {
+			this.addCommentNum(articleId, true);
+		}
 		Map<String, String> map = new HashMap<>();
 		map.put("replyerId", user.getId());
 		map.put("replyerName", user.getNickname());
@@ -391,6 +393,18 @@ public class ArticleService extends BaseService<ArticleDao, Article> implements 
 		map.put("content", content);
 		map.put("createDate", TimeUtils.format(new Date(), "yyyy-MM-dd HH:mm"));
 		return mapper.setData(map).getResultJson();
+	}
+
+	private void addCommentNum(String articleId, boolean flag) {
+		ArticleAttr attr = new ArticleAttr();
+		ArticleAttr at = this.attrDao.getForUpdate(articleId);
+		attr.setArticleId(articleId);
+		if (flag) {// 评论
+			attr.setCommentNum(at.getCommentNum() + 1);
+		} else {// 删除评论
+			attr.setCommentNum(at.getCommentNum() - 1);
+		}
+		this.attrDao.update(attr);
 	}
 
 	@Override

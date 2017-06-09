@@ -63,7 +63,7 @@ var $ajaxPromise2 = $
 
 											arHtml += '<div class="comment_bar"><div class="bar_part">';
 											if (ar.isLike == "1") {
-												arHtml += '<i class="icon_like" style="color:#ff4949;" data-like="1"></i>';
+												arHtml += '<i class="icon_like" style="color:#fd4d4d;" data-like="1"></i>';
 											} else {
 												arHtml += '<i class="icon_like" data-like="0"></i>';
 											}
@@ -110,7 +110,7 @@ var $ajaxPromise2 = $
 							var num = $next.html();
 							var $isLike;
 							if ($icon.attr('data-like') == '0') {
-								$icon.css("color", "#ff4949");
+								$icon.css("color", "#fd4d4d");
 								$icon.attr("data-like", "1");
 								$next.html(num - (-1));
 								$isLike = 0;
@@ -178,8 +178,11 @@ $(document).ready(function() {
 	var $userInfo = jQuery.parseJSON($.session.get("user"));
 	var $thisUserId = userId;
 	if (!checkNull($userInfo)) {
-		if ($userInfo.userId == $thisUserId) {
+		if ($userInfo.userId == userId) {
 			$(".camera").css("display", "block");
+			$(".avatar_wrapper").on("click", function() {
+				window.location.href = "/user/" + userId + "/edit";
+			});
 		}
 	}
 });

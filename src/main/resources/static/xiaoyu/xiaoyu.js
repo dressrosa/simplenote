@@ -1,6 +1,6 @@
 $(document).ready(function() {
 	var userInfo = jQuery.parseJSON($.session.get("user"));
-
+	
 	// 点击头像
 	/*
 	 * $(".avatar").bind("click", function() { $user = $(this); if
