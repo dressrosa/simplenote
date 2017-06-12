@@ -26,4 +26,10 @@ public interface IArticleService {
 	public String addLike(HttpServletRequest request, String articleId, Integer isLike);
 
 	public String addCollect(HttpServletRequest request, String articleId, Integer isCollect);
+
+	public String comment(HttpServletRequest request, String articleId, String content);
+
+	public String comments(HttpServletRequest request, String articleId, Integer pageNum);
+
+	public String newComments(HttpServletRequest request, String articleId);
 }

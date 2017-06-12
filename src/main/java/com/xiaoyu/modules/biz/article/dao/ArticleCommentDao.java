@@ -9,21 +9,17 @@ import org.apache.ibatis.annotations.Param;
 import org.springframework.stereotype.Repository;
 
 import com.xiaoyu.common.base.BaseDao;
-import com.xiaoyu.modules.biz.article.entity.Article;
-import com.xiaoyu.modules.biz.article.vo.ArticleVo;
+import com.xiaoyu.modules.biz.article.entity.ArticleComment;
+import com.xiaoyu.modules.biz.article.vo.ArticleCommentVo;
 
 /**
  * @author xiaoyu 2016年3月29日
  */
 @Repository
-public interface ArticleDao extends BaseDao<Article> {
+public interface ArticleCommentDao extends BaseDao<ArticleComment> {
 
-	List<ArticleVo> findByListWithAttr(@Param("userId") String userId);
+	List<ArticleCommentVo> findNewComments(@Param("articleId") String articleId);
 
-	Article getForUpdate(@Param("id") String articleId);
-
-	List<ArticleVo> findHotList();
-
-	ArticleVo getVo(@Param("id")String articleId);
+	List<ArticleCommentVo> findList(String articleId);
 
 }

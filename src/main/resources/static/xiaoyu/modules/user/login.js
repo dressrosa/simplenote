@@ -64,7 +64,7 @@ var login = function() {
 				});
 				// console.log( JSON.stringify(jsonObj.data));
 				// save the login info
-				$.session.set('user', JSON.stringify(jsonObj.data), false);
+				$.session.set('user', JSON.stringify(jsonObj.data), true);
 				// go to the previous page,or go to the home
 				var nowUrl = $.session.get("nowUrl");
 				console.log("跳转地址:" + nowUrl);

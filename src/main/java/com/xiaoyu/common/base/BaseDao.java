@@ -5,6 +5,8 @@ package com.xiaoyu.common.base;
 
 import java.util.List;
 
+import org.apache.ibatis.annotations.Param;
+
 /**
  * @author xiaoyu 2016年3月22日
  */
@@ -26,7 +28,7 @@ public interface BaseDao<T extends BaseEntity> {
 
 	public T get(T t);
 
-	public T getById(String id);
+	public T getById(@Param("id") String id);
 
 	public int isExist(T t);
 

@@ -129,7 +129,7 @@ function uploadFile() {
 	myModal = new jBox('Modal', {
 		height : 350,
 		width : 350,
-		animation : 'flip',
+		animation : 'tada',
 		closeButton : 'title',
 		closeOnClick : false,
 		draggable : "title",
@@ -241,7 +241,7 @@ function isPC() {
 	return flag;
 }
 function checkNull(item) {
-	if (item == null || item == 'null' || item == undefined || item == '')
+	if (item == null || item == undefined || item == "")
 		return true;
 	return false;
 }

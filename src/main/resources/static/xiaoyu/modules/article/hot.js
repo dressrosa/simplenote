@@ -43,7 +43,7 @@ var $ajaxPromise = $
 
 											childHtml += '<div class="comment_bar"><div class="bar_part">';
 											if (ar.isLike == "1") {
-												childHtml += '<i class="icon_like" style="color:#ff4949;" data-like="1"></i>';
+												childHtml += '<i class="icon_like" style="color:#fd4d4d;" data-like="1"></i>';
 											} else {
 												childHtml += '<i class="icon_like" data-like="0"></i>';
 											}
@@ -56,7 +56,7 @@ var $ajaxPromise = $
 													+ '</label></div>';
 											childHtml += '<div class="bar_part">';
 											if (ar.isCollect == "1") {
-												childHtml += '<i class="icon_heart_alt" style="color:#ff4949;" data-heart="1"></i>';
+												childHtml += '<i class="icon_heart_alt" style="color:#fd4d4d;" data-heart="1"></i>';
 											} else {
 												childHtml += '<i class="icon_heart_alt" data-heart="0"></i>';
 											}
@@ -91,7 +91,7 @@ var $ajaxPromise = $
 							var num = $next.html();
 							var $isCollect;
 							if ($icon.attr('data-heart') == '0') {
-								$icon.css("color", "#ff4949");
+								$icon.css("color", "#fd4d4d");
 								$icon.attr("data-heart", "1");
 								$next.html(num - (-1));
 								$isCollect = 0;
@@ -155,7 +155,7 @@ var $ajaxPromise = $
 							var num = $next.html();
 							var $isLike;
 							if ($icon.attr('data-like') == '0') {
-								$icon.css("color", "#ff4949");
+								$icon.css("color", "#fd4d4d");
 								$icon.attr("data-like", "1");
 								$next.html(num - (-1));
 								$isLike = 0;

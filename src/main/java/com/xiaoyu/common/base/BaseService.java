@@ -156,6 +156,7 @@ public abstract class BaseService<D extends BaseDao<T>, T extends BaseEntity> {
 		}
 		return false;
 	}
+
 	private boolean isExist(String id) {
 		int count = this.tDao.isExist(id);
 		if (count > 0) {
