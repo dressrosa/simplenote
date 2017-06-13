@@ -5,14 +5,6 @@ var $arPromise = $.ajax({
 	type : "get",
 	async : true,
 	url : '/api/v1/article/' + articleId,
-	beforeSend : function(xhr) {
-		var $userInfo = jQuery.parseJSON($.session.get("user"));
-		if (!checkNull($userInfo)) {
-			xhr.setRequestHeader('token', $userInfo.token);
-			xhr.setRequestHeader('userId', $userInfo.userId);
-		}
-
-	},
 	success : function(data) {
 		var obj = jQuery.parseJSON(data);
 		if (obj.code == '0') {
@@ -54,6 +46,14 @@ var $coPromise = $
 			type : "get",
 			async : true,
 			url : '/api/v1/article/' + articleId + "/newComments",
+			beforeSend : function(xhr) {
+				var $userInfo = jQuery.parseJSON($.session.get("user"));
+				if (!checkNull($userInfo)) {
+					xhr.setRequestHeader('token', $userInfo.token);
+					xhr.setRequestHeader('userId', $userInfo.userId);
+				}
+
+			},
 			success : function(data) {
 				var obj = jQuery.parseJSON(data);
 				if (obj.code == '0') {

@@ -200,7 +200,7 @@
 		update
 		biz_article_comment_like
 		set
-		status = #{status},
+		status = #{status}
 		where
 		comment_id=#{commentId} and user_id
 		=#{userId}
