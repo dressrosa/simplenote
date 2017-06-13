@@ -10,6 +10,7 @@ import org.springframework.stereotype.Repository;
 
 import com.xiaoyu.common.base.BaseDao;
 import com.xiaoyu.modules.biz.article.entity.ArticleComment;
+import com.xiaoyu.modules.biz.article.entity.CommentLike;
 import com.xiaoyu.modules.biz.article.vo.ArticleCommentVo;
 
 /**
@@ -21,5 +22,17 @@ public interface ArticleCommentDao extends BaseDao<ArticleComment> {
 	List<ArticleCommentVo> findNewComments(@Param("articleId") String articleId);
 
 	List<ArticleCommentVo> findList(String articleId);
+
+	ArticleComment getForUpdate(@Param("id") String id);
+
+	CommentLike getLikeForUpdate(CommentLike t);
+
+	int updateLike(CommentLike t);
+
+	int insertLike(CommentLike t);
+
+	int isLiked(CommentLike t);
+
+	CommentLike getLike(CommentLike t);
 
 }

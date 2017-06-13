@@ -35,6 +35,7 @@ import com.xiaoyu.modules.biz.article.entity.ArticleAttr;
 import com.xiaoyu.modules.biz.article.entity.ArticleCollect;
 import com.xiaoyu.modules.biz.article.entity.ArticleComment;
 import com.xiaoyu.modules.biz.article.entity.ArticleLike;
+import com.xiaoyu.modules.biz.article.entity.CommentLike;
 import com.xiaoyu.modules.biz.article.service.api.IArticleService;
 import com.xiaoyu.modules.biz.article.vo.ArticleCommentVo;
 import com.xiaoyu.modules.biz.article.vo.ArticleVo;
@@ -163,17 +164,21 @@ public class ArticleService extends BaseService<ArticleDao, Article> implements 
 		List<ArticleVo> list = page.getResult();
 		List<Object> total = new ArrayList<>();
 
+		boolean isLogin = (checkLoginDead(request) != null);// 是否登录
+		ArticleLike t = new ArticleLike();
+		t.setUserId(request.getHeader("userId"));
+		ArticleCollect t1 = new ArticleCollect();
+		t1.setUserId(request.getHeader("userId"));
+
 		for (ArticleVo a : list) {
 			Map<String, Object> m = this.article2Map1(a);
-			if (checkLoginDead(request) != null) {
-				ArticleLike t = new ArticleLike();
-				t.setArticleId(a.getId()).setUserId(request.getHeader("userId"));
+			if (isLogin) {
+				t.setArticleId(a.getId());
 				ArticleLike al = this.likeDao.get(t);
 				if (al != null) {
 					m.put("isLike", al.getStatus() + "");
 				}
-				ArticleCollect t1 = new ArticleCollect();
-				t1.setArticleId(a.getId()).setUserId(request.getHeader("userId"));
+				t1.setArticleId(a.getId());
 				ArticleCollect ac = this.collectDao.get(t1);
 				if (ac != null) {
 					m.put("isCollect", ac.getStatus() + "");
@@ -199,12 +204,16 @@ public class ArticleService extends BaseService<ArticleDao, Article> implements 
 		Page<ArticleVo> page = this.findByPageWithAttr(userId, pageNum, pageSize);
 		List<ArticleVo> list = page.getResult();
 		List<Map<String, Object>> total = new ArrayList<>();
+
+		boolean isLogin = (checkLoginDead(request) != null);// 是否登录
+		ArticleLike t = new ArticleLike();
+		t.setUserId(request.getHeader("userId"));
+
 		if (list != null && list.size() > 0) {
 			for (ArticleVo a : list) {
 				Map<String, Object> m = this.article2Map1(a);
-				if (checkLoginDead(request) != null) {
-					ArticleLike t = new ArticleLike();
-					t.setArticleId(a.getId()).setUserId(request.getHeader("userId"));
+				if (isLogin) {
+					t.setArticleId(a.getId());
 					ArticleLike al = this.likeDao.get(t);
 					if (al != null) {
 						m.put("isLike", al.getStatus() + "");
@@ -420,6 +429,7 @@ public class ArticleService extends BaseService<ArticleDao, Article> implements 
 		for (ArticleCommentVo a : list) {
 			map = new HashMap<>();
 			map.put("commentId", a.getId());
+			map.put("num", a.getNum().toString());
 			map.put("replyerName", a.getReplyerName());
 			map.put("replyerId", a.getReplyerId());
 			map.put("replyerAvatar", a.getReplyerAvatar());
@@ -441,9 +451,15 @@ public class ArticleService extends BaseService<ArticleDao, Article> implements 
 		}
 		Map<String, String> map = null;
 		List<Map<String, String>> total = new ArrayList<>();
+		boolean isLogin = (checkLoginDead(request) != null);// 是否登录
+		CommentLike t = new CommentLike();
+		if (isLogin) {
+			t.setUserId(request.getHeader("userId"));
+		}
 		for (ArticleCommentVo a : list) {
 			map = new HashMap<>();
 			map.put("commentId", a.getId());
+			map.put("num", a.getNum().toString());
 			map.put("replyerName", a.getReplyerName());
 			map.put("replyerId", a.getReplyerId());
 			map.put("replyerAvatar", a.getReplyerAvatar());
@@ -451,9 +467,61 @@ public class ArticleService extends BaseService<ArticleDao, Article> implements 
 			map.put("parentReplyerName", a.getParentReplyerName());
 			map.put("content", a.getContent());
 			map.put("createDate", TimeUtils.format(a.getCreateDate(), "yyyy-MM-dd HH:mm"));
+			map.put("isLike", "0");
+			if (isLogin) {
+				t.setCommentId(a.getId());
+				CommentLike cl = this.arCommentDao.getLike(t);
+				if (cl != null) {
+					map.put("isLike", cl.getStatus() + "");
+				}
+			}
 			total.add(map);
 		}
 
 		return mapper.setData(total).getResultJson();
+	}
+
+	// =============================评论相关===========================//
+	@Override
+	public String addCommentLike(HttpServletRequest request, String commentId, Integer isLike) {
+		ResponseMapper mapper = ResponseMapper.createMapper();
+		if (checkLoginDead(request) == null) {// 没登录 或失效
+			if (isLike == 0)
+				this.addCommentLikeNum(commentId, true);
+			else if (isLike == 1)
+				this.addCommentLikeNum(commentId, false);
+			return mapper.setCode(ResultConstant.LOGIN_INVALIDATE).getResultJson();
+		} else {
+			CommentLike t = new CommentLike();
+			t.setUserId(request.getHeader("userId")).setCommentId(commentId);
+			if (this.arCommentDao.isLiked(t) > 0) {// 已经点过
+				CommentLike like = this.arCommentDao.getLikeForUpdate(t);
+				if (like.getStatus() == 1) {// 取消点赞
+					t.setStatus(0);
+					this.addCommentLikeNum(commentId, false);
+				} else {// 进行点赞
+					t.setStatus(1);
+					this.addCommentLikeNum(commentId, true);
+				}
+				this.arCommentDao.updateLike(t);
+			} else {// 没点过赞
+				this.arCommentDao.insertLike(t);
+				this.addCommentLikeNum(commentId, true);
+			}
+
+		}
+		return mapper.getResultJson();
+	}
+
+	private void addCommentLikeNum(String commentId, boolean flag) {
+		ArticleComment ac = this.arCommentDao.getForUpdate(commentId);
+		ArticleComment temp = new ArticleComment();
+		temp.setId(commentId);
+		if (flag) {// 点赞
+			temp.setNum(ac.getNum() + 1);
+		} else {
+			temp.setNum(ac.getNum() - 1);
+		}
+		this.arCommentDao.update(temp);
 	}
 }

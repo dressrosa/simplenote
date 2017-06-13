@@ -121,4 +121,10 @@ public class ArticleBackController {
 	public String comments(HttpServletRequest request, @PathVariable String articleId, Integer pageNum) {
 		return this.articleService.comments(request, articleId, pageNum);
 	}
+
+	@RequestMapping(value = "api/v1/article/comments/like", method = RequestMethod.POST)
+	public String commentLike(HttpServletRequest request, @RequestParam(required = true) String commentId,
+			@RequestParam(required = true) Integer isLike) {
+		return this.articleService.addCommentLike(request, commentId, isLike);
+	}
 }

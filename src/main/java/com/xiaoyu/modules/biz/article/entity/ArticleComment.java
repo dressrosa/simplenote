@@ -18,6 +18,15 @@ public class ArticleComment extends BaseEntity {
 	private String parentReplyerId;
 	private String content;
 	private String replyerId;
+	private Integer num;// 被赞数
+
+	public Integer getNum() {
+		return num;
+	}
+
+	public void setNum(Integer num) {
+		this.num = num;
+	}
 
 	public String getParentReplyerId() {
 		return parentReplyerId;
