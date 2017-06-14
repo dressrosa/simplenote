@@ -4,6 +4,7 @@
 	<sql id="Base_Column_List">
 		a.id as id,
 		a.article_id as articleId,
+		a.num as num,
 		a.author_id as
 		authorId,
 		a.parent_id as parentId,
@@ -15,7 +16,14 @@
 		a.create_date as createDate
 	</sql>
 
-
+	<select id="getForUpdate"
+		parameterType="com.xiaoyu.modules.biz.article.entity.ArticleComment"
+		resultType="com.xiaoyu.modules.biz.article.entity.ArticleComment">
+		select * from biz_article_comment
+		where
+		id=#{id}
+		for update
+	</select>
 	<!-- 分页查询信息 -->
 	<select id="findByList"
 		resultType="com.xiaoyu.modules.biz.article.entity.ArticleComment"
@@ -29,19 +37,24 @@
 		SELECT
 		a.id AS id,
 		a.article_id AS articleId,
+		a.num as num,
 		a.author_id
 		AS authorId,
 		a.parent_id AS parentId,
-		u1.nickname AS parentReplyerName,
+		u1.nickname AS
+		parentReplyerName,
 		a.parent_replyer_id AS parentReplyerId,
-		a.content AS content,
+		a.content AS
+		content,
 		a.replyer_id AS replyerId,
 		u.nickname AS replyerName,
-		u.avatar AS
+		u.avatar
+		AS
 		replyerAvatar,
 		a.create_date AS createDate
 		FROM
-		biz_article_comment AS a
+		biz_article_comment AS
+		a
 		LEFT JOIN biz_user AS u ON a.replyer_id = u.id
 		LEFT JOIN
 		biz_article_comment AS a1 ON a.parent_id = a.id
@@ -62,17 +75,22 @@
 		a.article_id AS articleId,
 		a.author_id
 		AS authorId,
+		a.num as num,
 		a.parent_id AS parentId,
-		u1.nickname AS parentReplyerName,
+		u1.nickname AS
+		parentReplyerName,
 		a.parent_replyer_id AS parentReplyerId,
-		a.content AS content,
+		a.content AS
+		content,
 		a.replyer_id AS replyerId,
 		u.nickname AS replyerName,
-		u.avatar AS
+		u.avatar
+		AS
 		replyerAvatar,
 		a.create_date AS createDate
 		FROM
-		biz_article_comment AS a
+		biz_article_comment AS
+		a
 		LEFT JOIN biz_user AS u ON a.replyer_id = u.id
 		LEFT JOIN
 		biz_article_comment AS a1 ON a.parent_id = a.id
@@ -140,6 +158,76 @@
 			</if>
 			<if test="parentReplyerId != null">
 				#{parentReplyerId},
+			</if>
+		</trim>
+	</insert>
+	<update id="update"
+		parameterType="com.xiaoyu.modules.biz.article.entity.ArticleComment">
+		update biz_article_comment
+		set
+		num = #{num}
+		where
+		id = #{id}
+	</update>
+	<!--评论点赞相关 -->
+
+	<select id="getLike" parameterType="com.xiaoyu.modules.biz.article.entity.CommentLike"
+		resultType="com.xiaoyu.modules.biz.article.entity.CommentLike">
+		select * from biz_article_comment_like
+		where
+		comment_id=#{commentId}
+		and user_id = #{userId}
+	</select>
+	<select id="getLikeForUpdate" parameterType="com.xiaoyu.modules.biz.article.entity.CommentLike"
+		resultType="com.xiaoyu.modules.biz.article.entity.CommentLike">
+		select * from biz_article_comment_like
+		where
+		comment_id=#{commentId}
+		and user_id = #{userId}
+		for update
+	</select>
+	<select id="isLiked" parameterType="com.xiaoyu.modules.biz.article.entity.CommentLike"
+		resultType="java.lang.Integer">
+		select count(*) from
+		biz_article_comment_like
+		where
+		comment_id=#{commentId}
+		and user_id
+		=
+		#{userId}
+	</select>
+	<update id="updateLike" parameterType="com.xiaoyu.modules.biz.article.entity.CommentLike">
+		update
+		biz_article_comment_like
+		set
+		status = #{status}
+		where
+		comment_id=#{commentId} and user_id
+		=#{userId}
+	</update>
+
+	<insert id="insertLike" parameterType="com.xiaoyu.modules.biz.article.entity.CommentLike">
+		insert into biz_article_comment_like
+		<trim prefix="(" suffix=")" suffixOverrides=",">
+			<if test="commentId != null">
+				comment_id,
+			</if>
+			<if test="userId != null">
+				user_id,
+			</if>
+			<if test="status!= null">
+				status,
+			</if>
+		</trim>
+		<trim prefix="values (" suffix=")" suffixOverrides=",">
+			<if test="commentId != null">
+				#{commentId},
+			</if>
+			<if test="userId != null">
+				#{userId},
+			</if>
+			<if test="status!= null">
+				#{status},
 			</if>
 		</trim>
 	</insert>

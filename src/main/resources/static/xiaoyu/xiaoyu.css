@@ -499,7 +499,15 @@ li a {
 	background-color: #fd4d4d;
 	border: 1px solid transparent;
 	border-radius: 4px;
+	padding: 6px 12px;
 	cursor: pointer;
+	text-align: center;
+}
+
+.btn.focus, .btn:focus, .btn:hover, .co_btn.focus, .co_btn:focus,
+	.co_btn:hover {
+	color: black;
+	text-decoration: none;
 }
 
 .location_top {

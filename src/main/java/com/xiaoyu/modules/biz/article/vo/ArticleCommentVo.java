@@ -21,6 +21,15 @@ public class ArticleCommentVo extends BaseEntity {
 	private String replyerId;
 	private String parentReplyerName;
 	private String parentReplyerId;
+	private Integer num;
+
+	public Integer getNum() {
+		return num;
+	}
+
+	public void setNum(Integer num) {
+		this.num = num;
+	}
 
 	public String getReplyerName() {
 		return replyerName;

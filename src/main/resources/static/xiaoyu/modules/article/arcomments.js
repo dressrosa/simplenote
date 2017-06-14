@@ -45,7 +45,6 @@ var $coPromise = $
 						$coComment.html($html);
 					}
 				}
-
 				return true;
 			}
 		});

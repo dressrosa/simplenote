@@ -18,6 +18,7 @@ import com.alibaba.fastjson.JSON;
 //@Configuration
 //@EnableAutoConfiguration
 //@Aspect
+@Deprecated
 public class ReturnJsonAop {
 
 	/**对返回类型为Object类型的进行aop转化
