@@ -208,6 +208,8 @@ public class ArticleService extends BaseService<ArticleDao, Article> implements 
 		boolean isLogin = (checkLoginDead(request) != null);// 是否登录
 		ArticleLike t = new ArticleLike();
 		t.setUserId(request.getHeader("userId"));
+		ArticleCollect t1 = new ArticleCollect();
+		t1.setUserId(request.getHeader("userId"));
 
 		if (list != null && list.size() > 0) {
 			for (ArticleVo a : list) {
@@ -218,6 +220,12 @@ public class ArticleService extends BaseService<ArticleDao, Article> implements 
 					if (al != null) {
 						m.put("isLike", al.getStatus() + "");
 					}
+					t1.setArticleId(a.getId());
+					ArticleCollect ac = this.collectDao.get(t1);
+					if (ac != null) {
+						m.put("isCollect", ac.getStatus() + "");
+					}
+
 				}
 				total.add(m);
 			}
@@ -424,6 +432,12 @@ public class ArticleService extends BaseService<ArticleDao, Article> implements 
 		List<ArticleCommentVo> list = page.getResult();
 		if (list == null || list.size() < 1)
 			return mapper.getResultJson();
+		boolean isLogin = (checkLoginDead(request) != null);// 是否登录
+		CommentLike t = new CommentLike();
+		if (isLogin) {
+			t.setUserId(request.getHeader("userId"));
+		}
+		
 		Map<String, String> map = null;
 		List<Map<String, String>> total = new ArrayList<>();
 		for (ArticleCommentVo a : list) {
@@ -437,6 +451,14 @@ public class ArticleService extends BaseService<ArticleDao, Article> implements 
 			map.put("parentReplyerName", a.getParentReplyerName());
 			map.put("content", a.getContent());
 			map.put("createDate", TimeUtils.format(a.getCreateDate(), "yyyy-MM-dd HH:mm"));
+			map.put("isLike", "0");
+			if (isLogin) {
+				t.setCommentId(a.getId());
+				CommentLike cl = this.arCommentDao.getLike(t);
+				if (cl != null) {
+					map.put("isLike", cl.getStatus() + "");
+				}
+			}
 			total.add(map);
 		}
 		return mapper.setCount(page.getTotal()).setData(total).getResultJson();
