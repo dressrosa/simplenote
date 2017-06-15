@@ -71,10 +71,18 @@ var $ajaxPromise2 = $
 											arHtml += '<label style="margin: 2px;">'
 													+ ar.attr.likeNum
 													+ '</label></div>';
-											arHtml += '<div class="bar_part"><i class="icon_comment_alt"></i><label style="margin: 2px;">'
+											arHtml += '<div class="bar_part">';
+											arHtml += '<i class="icon_comment_alt"></i>';
+											arHtml += '<label style="margin: 2px;">'
 													+ ar.attr.commentNum
 													+ '</label></div>';
-											arHtml += '<div class="bar_part"><i class="icon_heart_alt"></i><label style="margin: 2px;">'
+											arHtml += '<div class="bar_part">';
+											if (ar.isCollect == "1") {
+												arHtml += '<i class="icon_heart_alt" style="color:#fd4d4d;" data-heart="1"></i>';
+											} else {
+												arHtml += '<i class="icon_heart_alt" data-heart="0"></i>';
+											}
+											arHtml += '<label style="margin: 2px;">'
 													+ ar.attr.collectNum
 													+ '</label></div>';
 											arHtml += '</div>';
@@ -92,15 +100,81 @@ var $ajaxPromise2 = $
 					$token = $userInfo.token;
 				}
 				$("p").on("click", function() {
-					var elem = $(this).parent();
+					var $icon = $(this);
+					var elem = $icon.parent();
 					window.location.href = '/article/' + elem.attr("id");
 				})
 
-				$(".icon_heart_alt").on("click", function() {
-					var elem = $(this).parent().parent().parent();
-					var $icon = $(this);
+				$(".icon_heart_alt").on(
+						"click",
+						function() {
 
-				});
+							var $userInfo = jQuery.parseJSON($.session
+									.get("user"));
+							if (checkNull($userInfo)) {
+								window.location.href = "/login";
+								return false;
+							}
+							var $icon = $(this);
+							var elem = $icon.parent().parent().parent();
+							var $next = $icon.next();
+							var num = $next.html();
+							var $isCollect;
+							if ($icon.attr('data-heart') == '0') {
+								$icon.css("color", "#fd4d4d");
+								$icon.attr("data-heart", "1");
+								$next.html(num - (-1));
+								$isCollect = 0;
+							} else if ($icon.attr('data-heart') == '1') {
+								$icon.css("color", "#a7a7a7");
+								$icon.attr("data-heart", "0");
+								$next.html(num - 1);
+								$isCollect = 1;
+							}
+							$.ajax({
+								type : "post",
+								async : true,
+								url : '/api/v1/article/collect',
+								data : {
+									articleId :elem.attr("id"),
+									isCollect : $isCollect
+								},
+								beforeSend : function(xhr) {
+
+									if (!checkNull($userInfo)) {
+										xhr.setRequestHeader('token',
+												$userInfo.token);
+										xhr.setRequestHeader('userId',
+												$userInfo.userId);
+									}
+
+								},
+								success : function(data) {
+									console.log(data);
+									var obj = jQuery.parseJSON(data);
+									if (obj.code == "20001") {
+										console.log("未登录");
+										window.location.href = "/login";
+										return false;
+									}
+									return true;
+								},
+								error : function(data) {
+									console.log(data);
+									return false;
+								}
+							});
+
+						});
+				$(".icon_comment_alt").on(
+						"click",
+						function() {
+							var $icon = $(this);
+							var elem = $icon.parent().parent().parent();
+							window.location.href = "/article/" + elem.attr("id")
+									+ "/comments"
+
+						});
 				$(".icon_like").on(
 						"click",
 						function() {

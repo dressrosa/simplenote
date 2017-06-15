@@ -68,7 +68,7 @@ var login = function() {
 				// go to the previous page,or go to the home
 				var nowUrl = $.session.get("nowUrl");
 				console.log("跳转地址:" + nowUrl);
-				if (checkNull(nowUrl)) {
+				if (checkNull(nowUrl)||nowUrl=='null') {
 					window.location.href = "/xiaoyu.me.html";
 				} else {
 					$.session.remove("nowUrl");
