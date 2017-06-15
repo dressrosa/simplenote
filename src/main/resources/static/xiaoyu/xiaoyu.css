@@ -287,7 +287,6 @@ li a {
 	top: 45px;
 }
 
-}
 .top_n1 {
 	max-width: 1100px;
 	margin-top: -11px;
@@ -513,7 +512,7 @@ li a {
 .location_top {
 	/*border: 1px solid rgba(255, 255, 255, 0.9); */
 	color: rgba(239, 68, 68, 0.9);
-	font-size: 15;
+	font-size: 15px;
 	float: right;
 	text-align: center;
 	margin: 0px;
