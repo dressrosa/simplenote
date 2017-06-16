@@ -233,4 +233,32 @@ $(document).ready(
 						"/user/" + userInfo.userId);
 				$("#userSpan").find("#nickname").text(userInfo.nickname);
 			}
+			// 搜索框隐藏
+			$(window).scroll(
+					function() {
+						var $top = document.body.scrollTop;
+						$(".top_n1_banner").css("background-position",
+								"center " + $top);
+						console.log("top:" + $top);
+						if ($top > 300) {
+							$(".top_n1_info").css("opacity", 1);
+							$(".header").find(".search_span1").css("display",
+									"initial");
+							$(".header").find(".user_dropdown").css(
+									"background", "#d64444");
+							$(".header").removeClass("transparent_header");
+							$(".top_n1").find(".search_span").css("display",
+									"none");
+						} else {
+							$(".top_n1_info").css("opacity", 1 - $top / 300.0);
+							$(".header").find(".search_span1").css("display",
+									"none");
+							$(".top_n1").find(".search_span").css("display",
+									"table");
+							$(".header").addClass("transparent_header");
+							$(".header").find(".user_dropdown").css(
+									"background", "rgba(214, 68, 68, 0)");
+						}
+
+					});
 		});
