@@ -102,7 +102,7 @@ var $coPromise = $
 						$coComment.html($html);
 					}
 				}
-				$(".icon_like").on(
+				$(".co_comment .icon_like").on(
 						"click",
 						function() {
 							var $icon = $(this);

@@ -422,8 +422,7 @@ li a {
 	margin-right: 30px;
 	background: white;
 	display: flex;
-	/* position:fixed;
-	height:170px; */
+	position: relative;
 }
 
 .part_down {
@@ -634,7 +633,17 @@ li a {
 }
 
 .i_content {
+	display: inline-table;
+	line-height: 3;
 	text-align: center;
+	font-size: 16px;
+	position: relative;
+	width: 100%;
+	vertical-align: middle;
+}
+
+.i_content i {
+	margin-right: 5px;
 }
 
 .red {
