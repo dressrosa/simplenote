@@ -103,6 +103,27 @@
 			and a.user_id=#{userId}
 		</if>
 	</select>
+	<select id="findCollectList" resultType="com.xiaoyu.modules.biz.article.vo.ArticleVo"
+		parameterType="java.lang.String">
+		select
+		<include refid="Base_Column_List" />
+		,t.read_num as 'attr.readNum',
+		t.collect_num as 'attr.collectNum',
+		t.like_num as 'attr.likeNum',
+		t.comment_num as
+		'attr.commentNum'
+		from
+		biz_article as a
+		left join
+		biz_article_attr as t on
+		t.article_id=a.id
+		left join biz_article_collect as ac on
+		ac.article_id=a.id
+		where
+		a.del_flag=0
+		and ac.user_id=#{userId}
+		and ac.status=1
+	</select>
 	<delete id="delete" parameterType="com.xiaoyu.modules.biz.article.entity.Article">
 		update biz_article set
 		del_flag=1

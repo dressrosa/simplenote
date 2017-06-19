@@ -233,6 +233,58 @@ public class ArticleService extends BaseService<ArticleDao, Article> implements 
 		return mapper.setData(total).getResultJson();
 	}
 
+	@Override
+	public String collectList(HttpServletRequest request, String userId, Integer pageNum, Integer pageSize) {
+		ResponseMapper mapper = ResponseMapper.createMapper();
+		boolean isLogin = (checkLoginDead(request) != null);// 是否登录
+		if (!isLogin) {
+			return mapper.setCode(ResultConstant.LOGIN_INVALIDATE).setMessage(ResultConstant.LOGIN_INVALIDATE_MESSAGE)
+					.getResultJson();
+		}
+		if (!userId.equals(request.getHeader("userId"))) {
+			return mapper.setCode(ResultConstant.REQ_NOACCESS).setMessage(ResultConstant.REQ_NOACCESS_MESSAGE)
+					.getResultJson();
+		}
+		Article article = new Article();
+		article.setUserId(userId);
+		if (pageNum == null || pageSize == null || pageNum < 0 || pageSize < 0) {
+			pageNum = 0;
+			pageSize = 10;
+		}
+
+		Page<ArticleVo> page = new Page<ArticleVo>();
+		PageHelper.startPage(pageNum, pageSize);
+		page = (Page<ArticleVo>) this.articleDao.findCollectList(userId);
+		List<ArticleVo> list = page.getResult();
+		List<Map<String, Object>> total = new ArrayList<>();
+
+		ArticleLike t = new ArticleLike();
+		t.setUserId(request.getHeader("userId"));
+		ArticleCollect t1 = new ArticleCollect();
+		t1.setUserId(request.getHeader("userId"));
+
+		if (list != null && list.size() > 0) {
+			for (ArticleVo a : list) {
+				Map<String, Object> m = this.article2Map1(a);
+				if (isLogin) {
+					t.setArticleId(a.getId());
+					ArticleLike al = this.likeDao.get(t);
+					if (al != null) {
+						m.put("isLike", al.getStatus() + "");
+					}
+					t1.setArticleId(a.getId());
+					ArticleCollect ac = this.collectDao.get(t1);
+					if (ac != null) {
+						m.put("isCollect", ac.getStatus() + "");
+					}
+
+				}
+				total.add(m);
+			}
+		}
+		return mapper.setData(total).getResultJson();
+	}
+
 	private Page<ArticleVo> findByPageWithAttr(String userId, int pageNum, int pageSize) {
 		Page<ArticleVo> page = new Page<ArticleVo>();
 		PageHelper.startPage(pageNum, pageSize);
@@ -437,7 +489,7 @@ public class ArticleService extends BaseService<ArticleDao, Article> implements 
 		if (isLogin) {
 			t.setUserId(request.getHeader("userId"));
 		}
-		
+
 		Map<String, String> map = null;
 		List<Map<String, String>> total = new ArrayList<>();
 		for (ArticleCommentVo a : list) {
@@ -546,4 +598,5 @@ public class ArticleService extends BaseService<ArticleDao, Article> implements 
 		}
 		this.arCommentDao.update(temp);
 	}
+
 }

@@ -8,6 +8,7 @@ import java.util.List;
 import org.apache.ibatis.annotations.Param;
 import org.springframework.stereotype.Repository;
 
+import com.github.pagehelper.Page;
 import com.xiaoyu.common.base.BaseDao;
 import com.xiaoyu.modules.biz.article.entity.Article;
 import com.xiaoyu.modules.biz.article.vo.ArticleVo;
@@ -24,6 +25,8 @@ public interface ArticleDao extends BaseDao<Article> {
 
 	List<ArticleVo> findHotList();
 
-	ArticleVo getVo(@Param("id")String articleId);
+	ArticleVo getVo(@Param("id") String articleId);
+
+	Page<ArticleVo> findCollectList(@Param("userId") String userId);
 
 }
