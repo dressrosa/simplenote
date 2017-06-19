@@ -345,7 +345,7 @@ li a {
 	margin-top: -11px;
 	height: 500px;
 	border-radius: 4px;
-	border: 1px solid rgba(0, 0, 0, 0);
+/* 	border: 1px solid rgba(0, 0, 0, 0); */
 	margin-top: -11px;
 }
 
@@ -372,7 +372,7 @@ li a {
 	position: absolute;
 	margin: 0 auto;
 	top: 50%;
-	left: 30%;
+	left: 34%;
 	display: block;
 }
 
