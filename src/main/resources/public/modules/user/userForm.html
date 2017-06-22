@@ -1,4 +1,5 @@
 <html>
+
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
 <meta name="viewport"
@@ -19,12 +20,14 @@
 
 <title>编辑资料</title>
 </head>
+
 <body>
 	<div class="header">
 		<div class="container">
-			<span><a class="header_w" href="/article/hot">首页</a></span> <span
-				id="userSpan" style="float: right; display: none;"> <a
-				class="header_w" style="padding-right: 15px;" id="nickname" href="#">xiao</a>
+			<span style="float: left;"><a class="header_w"
+				href="/article/hot">首页</a></span> <span id="userSpan"
+				style="float: right; display: none;"> <a class="header_w"
+				style="padding-right: 15px;" id="nickname" href="#">xiao</a>
 				<ul class="user_dropdown" aria-labelledby=":0" aria-hidden="true">
 					<li><a href="/inbox"> <i
 							class="icon_mail_alt margin_r_short"></i>消息 <span
@@ -49,20 +52,71 @@
 		</div>
 	</div>
 	<div class="main">
+		<div class="panel panel-default"
+			style="background: url(http://xiaoyu1-1253813687.costj.myqcloud.com/common/4.jpg) repeat;">
+			<button class="camera" type="button" style="cursor: pointer">
+				<svg viewBox="0 0 20 16" class="Icon Icon--camera Icon--left"
+					width="14" height="16" aria-hidden="true"
+					style="height: 16px; width: 34px;">
+                     <g> <path
+						d="M18.094 2H15s-1-2-2-2H7C6 0 5 2 5 2H2C0 2 0 3.967 0 3.967V14c0 2 2.036 2 2.036 2H17c3 0 3-1.983 3-1.983V4c0-2-1.906-2-1.906-2zM10 12c-1.933 0-3.5-1.567-3.5-3.5S8.067 5 10 5s3.5 1.567 3.5 3.5S11.933 12 10 12zm0 1.5c-2.76 0-5-2.24-5-5s2.24-5 5-5 5 2.24 5 5-2.24 5-5 5zm7.5-8c-.552 0-1-.448-1-1s.448-1 1-1 1 .448 1 1-.448 1-1 1z"
+						fill-rule="evenodd"></path>
+                   </g></svg>
+			</button>
 
+			<div class="panel-body">
+				<div class="avatar_wrapper">
+					<img alt="" class="avatar" />
+				</div>
+			</div>
+
+			<div class="panel-body nickname_panel"></div>
+			<div class="panel-body des_panel"></div>
+
+		</div>
 		<div class="info">
 			<div class="info_left">
-				<form>
-					<label>昵称</label><input value="小明" /> <label>简介</label><input
-						value="撒发当时发生的" />
+				<form class="panel-item" id="item_name">
+					<div class="panel_title">
+						<label>昵称</label>
+					</div>
+					<div class="panel_info">
+						<input class="info_input" value="小明" />
+					</div>
 				</form>
+
+				<form class="panel-item" id="item_sign">
+					<div class="panel_title">
+						<label>签名</label>
+					</div>
+					<div class="panel_info">
+						<input class="info_input" value="见字如面" />
+					</div>
+				</form>
+
 			</div>
-			<div class="info_right">sdfsadfa sf</div>
+			<div class="info_right">
+				<div class="panel_card_wrapper">
+					<div class="panel_card">
+						<div class="card_up">
+							<div class="card_mask"></div>
+							<label>小于</label>
+
+						</div>
+						<div class="card_down">
+							<div class="card_down_l">撒旦法</div>
+							<div class="card_down_l">根深蒂固</div>
+							<div class="card_down_l">烦死的</div>
+						</div>
+					</div>
+				</div>
+
+
+			</div>
 		</div>
-
-
 
 	</div>
 
 </body>
+
 </html>

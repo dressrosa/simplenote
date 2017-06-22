@@ -190,7 +190,7 @@ $(document).ready(function() {
 		switch ($selected.attr('data-select')) {
 		case '0':
 			var $ck_al = $.session.get("pr-al-0");
-			if (!checkNull($ck_al)&&$ck_al !='null') {
+			if (!checkNull($ck_al) && $ck_al != 'null') {
 				$(".list-group").html($ck_al);
 			} else {
 				$.ajax({
@@ -213,7 +213,7 @@ $(document).ready(function() {
 			break;
 		case '1':
 			var $pr_cd = $.session.get("pr-cd-1");
-			if (!checkNull($pr_cd)&& $pr_cd !='null') {
+			if (!checkNull($pr_cd) && $pr_cd != 'null') {
 				$(".list-group").html($pr_cd);
 			} else {
 				$.ajax({
@@ -237,7 +237,7 @@ $(document).ready(function() {
 			$(".list-group").attr("id", "list-collected");
 			break;
 		case '2':
-			$(".list-group").html("2");
+			$(".list-group").html(blankPage);
 			break;
 		}
 	});

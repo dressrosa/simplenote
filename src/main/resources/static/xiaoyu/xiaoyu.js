@@ -1,6 +1,6 @@
 $(document).ready(function() {
 	var userInfo = jQuery.parseJSON($.session.get("user"));
-	
+
 	// 点击头像
 	/*
 	 * $(".avatar").bind("click", function() { $user = $(this); if
@@ -10,6 +10,7 @@ $(document).ready(function() {
 
 });
 var imgHead = "http://xiaoyu1-1253813687.costj.myqcloud.com/";
+var blankPage = '<div class="blank_mug"><span><i class="icon_mug" style="cursor:default;"></i></span></div>';
 function addHeadForImg() {
 	// 给所有图片加上前缀
 	var imgs = document.getElementsByTagName('img');
