@@ -138,7 +138,6 @@ li {
 
 .tab_ul li:hover {
 	border-bottom: 2px solid rgba(239, 68, 68, 0.9);
-	;
 }
 
 .li_active {
@@ -155,6 +154,7 @@ li a {
 }
 
 .avatar_wrapper {
+	position: relative;
 	height: 100px;
 	width: 100px;
 	background: rgba(255, 255, 255, 0.51);
@@ -512,7 +512,7 @@ li a {
 	text-align: center;
 	width: 50px;
 	height: 30px;
-	display:none;
+	display: none;
 }
 
 .longer {
@@ -521,6 +521,16 @@ li a {
 
 .info_input:focus {
 	border: 1px solid #bbbbbb;
+}
+
+.span_title {
+	width: 380px;
+	box-shadow: 0 1px 1px rgba(170, 170, 170, 0.5);
+	border-radius: 4px;
+	padding: 4px;
+	margin: 0 auto;
+	margin-bottom: 5px;
+	font-size: 17px;
 }
 
 .panel_card_wrapper {
@@ -542,19 +552,26 @@ li a {
 	color: #fff;
 }
 
+.panel_card label {
+	position: relative;
+	width: 100%;
+}
+
 .card_up {
 	position: relative;
 	height: 60%;
 }
 
 .card_u {
-	margin-left: 5px;
-	display: inline-grid;
+	margin-left: 10px;
 	max-width: 100%;
 	position: absolute;
 	bottom: 10px;
 	font-size: 16px;
-	display: inline-grid;
+}
+
+.card_u label:FIRST-CHILD {
+	font-size: 1.5em;
 }
 
 .card_u label:LAST-CHILD {
@@ -566,12 +583,11 @@ li a {
 	font-size: 14px;
 	height: 40%;
 	display: flex;
-	background: rgba(214, 68, 68, 0.7);
+	background: rgba(233, 119, 92, 0.8);
 }
 
 .card_down_l {
-	display: inline-grid;
-	padding: 5px;
+	padding-top: 10px;
 	text-align: center;
 	width: 25%;
 	border-right: 1px solid rgba(138, 138, 138, 0.5);
@@ -642,6 +658,7 @@ li a {
 }
 
 .info_right {
+	border-left: 1px solid #e2e2e2;
 	width: 38.2%;
 	height: 700px;
 	/* background:
