@@ -109,7 +109,9 @@ public class ArticleService extends BaseService<ArticleDao, Article> implements 
 			map.put("userId", a.getId());
 			map.put("nickname", a.getNickname());
 			map.put("avatar", a.getAvatar());
+			map.put("signature", a.getSignature());
 			map.put("description", a.getDescription());
+			map.put("attr", a.getAttr());
 		}
 		return map;
 	}

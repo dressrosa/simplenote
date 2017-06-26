@@ -46,6 +46,8 @@ public class UserService extends BaseService<UserDao, User> implements IUserServ
 		map.put("description", u.getDescription());
 		map.put("avatar", u.getAvatar());
 		map.put("nickname", u.getNickname());
+		map.put("signature", u.getSignature());
+		map.put("attr", u.getAttr());
 		return map;
 	}
 
@@ -55,6 +57,23 @@ public class UserService extends BaseService<UserDao, User> implements IUserServ
 			return user;
 		}
 		return u;
+	}
+
+	/**
+	 * 检查登录失效
+	 */
+	private User checkLoginDead(HttpServletRequest request) {
+		String userId = request.getHeader("userId");
+		String token = request.getHeader("token");
+		HttpSession session = request.getSession(false);
+		if (session == null)
+			return null;
+		User user = (User) session.getAttribute(token);
+		if (user == null)
+			return null;
+		if (!userId.equals(user.getId()))
+			return null;
+		return user;
 	}
 
 	@Override
@@ -147,6 +166,51 @@ public class UserService extends BaseService<UserDao, User> implements IUserServ
 		}
 
 		return mapper.setCode(ResultConstant.EXCEPTION).setMessage("抱歉,注册没成功").getResultJson();
+	}
+
+	@Override
+	public String editUser(HttpServletRequest request, String userId, String content, Integer flag) {
+		ResponseMapper mapper = ResponseMapper.createMapper();
+		User u = this.checkLoginDead(request);
+		if (u == null) {
+			return mapper.setCode(ResultConstant.LOGIN_INVALIDATE).setMessage("未登录或登录失效,请重新登录").getResultJson();
+		}
+		User temp = new User();
+		temp.setId(userId);
+		switch (flag) {
+		case 0:// 修改头像
+			if (StringUtils.isBlank(content)) {
+				return mapper.setCode(ResultConstant.ARGS_ERROR).setMessage("请上传头像").getResultJson();
+			}
+			break;
+		case 1:// 修改签名
+			if (StringUtils.isNotBlank(content) && content.length() > 15) {
+				return mapper.setCode(ResultConstant.ARGS_ERROR).setMessage("签名最多15个字").getResultJson();
+			}
+			temp.setSignature(content);
+			break;
+		case 2:// 修改简介
+			if (StringUtils.isNotBlank(content) && content.length() > 100) {
+				return mapper.setCode(ResultConstant.ARGS_ERROR).setMessage("简介最多100个字").getResultJson();
+			}
+			temp.setDescription(content);
+			break;
+		case 3:// 修改昵称
+			if (StringUtils.isBlank(content)) {
+				return mapper.setCode(ResultConstant.ARGS_ERROR).setMessage("昵称不能为空").getResultJson();
+			}
+			if (content.length() > 10) {
+				return mapper.setCode(ResultConstant.ARGS_ERROR).setMessage("昵称最多10个字").getResultJson();
+			}
+			temp.setNickname(content);
+			break;
+
+		}
+		if (this.userDao.update(temp) > 0) {
+			return mapper.setCode(ResultConstant.SUCCESS).setMessage("资料修改成功").getResultJson();
+		}
+		return mapper.setCode(ResultConstant.EXCEPTION).setMessage("资料修改失败").getResultJson();
+
 	}
 
 }

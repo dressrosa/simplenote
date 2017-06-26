@@ -14,4 +14,6 @@ public interface IUserService {
 	public String userDetail(HttpServletRequest request, String userId);
 
 	public String register(HttpServletRequest request, String loginName, String password);
+
+	public String editUser(HttpServletRequest request, String userId, String content, Integer flag);
 }

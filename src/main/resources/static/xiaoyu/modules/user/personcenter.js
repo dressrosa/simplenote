@@ -11,14 +11,14 @@ var $ajaxPromise1 = $.ajax({
 			var $user = obj.data;
 			if (!checkNull($user)) {
 				setTitle($user.nickname + '-个人中心');
-				var $userPanel = $(".panel-default");
+				var $userPanel = $(".panel");
 				if (checkNull($user.avatar)) {
 					$user.avatar = 'common/avatar.png';
 				}
 				$userPanel.find("img").attr("src", $user.avatar);
 				$userPanel.find("img").attr("id", $user.userId);
 				$userPanel.find(".nickname_panel").html($user.nickname);
-				$userPanel.find(".des_panel").html($user.description);
+				$userPanel.find(".des_panel").html($user.signature);
 
 			}
 		} else {
@@ -363,10 +363,22 @@ $(document).ready(function() {
 	var $thisUserId = userId;
 	if (!checkNull($userInfo)) {
 		if ($userInfo.userId == userId) {
-			$(".camera").css("display", "block");
-			$(".avatar_wrapper").on("click", function() {
-				window.location.href = "/user/" + userId + "/edit";
+			$(".panel").hover(function(){
+				var $edit = $(".panel").find('label')[0];
+				if(!checkNull($edit)) {
+					$($edit).css("display","initial");
+					return;
+				}
+				var $html = '<label style="cursor:pointer;float:left;padding:5px;color:#fff;">编辑资料</label>';
+				$(".panel").prepend($html);
+				$(".panel").find('label').on("click", function() {
+					window.location.href = "/user/edit";
+				});
+			},function(){
+				var $edit = $(".panel").find('label')[0];
+				$($edit).css("display","none");
 			});
+			
 		}
 	}
 });

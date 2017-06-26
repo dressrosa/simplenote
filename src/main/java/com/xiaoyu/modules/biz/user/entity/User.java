@@ -18,6 +18,24 @@ public class User extends BaseEntity {
 	private Integer sex;
 	private String description;
 	private String password;
+	private String signature;
+	private UserAttr attr;
+
+	public UserAttr getAttr() {
+		return attr;
+	}
+
+	public void setAttr(UserAttr attr) {
+		this.attr = attr;
+	}
+
+	public String getSignature() {
+		return signature;
+	}
+
+	public void setSignature(String signature) {
+		this.signature = signature;
+	}
 
 	public Integer getSex() {
 		return sex;

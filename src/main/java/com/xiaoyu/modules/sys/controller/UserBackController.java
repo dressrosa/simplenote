@@ -33,19 +33,6 @@ public class UserBackController {
 	private IUserService userService;
 
 	/**
-	 * 查看详情
-	 * 
-	 * @author xiaoyu
-	 */
-	@RequestMapping(value = "api/v1/user/{userId}", method = RequestMethod.GET)
-	public String userDetail(@PathVariable String userId, HttpServletRequest request) {
-		if (StringUtils.isBlank(userId)) {
-			return ResponseMapper.createMapper().setCode(ResultConstant.ARGS_ERROR).getResultJson();
-		}
-		return this.userService.userDetail(request, userId);
-	}
-
-	/**
 	 * 正常登录
 	 * 
 	 * @author xiaoyu
@@ -118,5 +105,32 @@ public class UserBackController {
 			}
 			// session.invalidate();
 		}
+	}
+
+	/**
+	 * 查看详情
+	 * 
+	 * @author xiaoyu
+	 */
+	@RequestMapping(value = "api/v1/user/{userId}", method = RequestMethod.GET)
+	public String userDetail(@PathVariable String userId, HttpServletRequest request) {
+		if (StringUtils.isBlank(userId)) {
+			return ResponseMapper.createMapper().setCode(ResultConstant.ARGS_ERROR).getResultJson();
+		}
+		return this.userService.userDetail(request, userId);
+	}
+
+	/**
+	 * 编辑信息 flag 0 头像 1 签名 2 简介 content 3 昵称 修改后的内容
+	 * 
+	 * @return
+	 */
+	@RequestMapping(value = "api/v1/user/{userId}/edit", method = RequestMethod.POST)
+	public String editInfo(HttpServletRequest request, @PathVariable String userId, String content,
+			@RequestParam(required = true) Integer flag) {
+		if (StringUtils.isBlank(userId)) {
+			return ResponseMapper.createMapper().setCode(ResultConstant.ARGS_ERROR).getResultJson();
+		}
+		return this.userService.editUser(request, userId, content, flag);
 	}
 }

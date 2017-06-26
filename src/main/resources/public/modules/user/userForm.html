@@ -66,8 +66,11 @@
 
 			<div class="panel-body">
 				<div class="avatar_wrapper">
-					<img alt="" class="avatar" /> <i class="icon_camera_alt"
-						style="font-size: 1.5em; position: absolute; text-align: center; top: 40px; left: 40px;"></i>
+					<img alt="" class="avatar" />
+					<div class="mask" style="display: none;">
+						<i class="icon_camera"
+							style="color: #e2e2e2; font-size: 1.5em; position: absolute; text-align: center; top: 40px; left: 40px;"></i>
+					</div>
 				</div>
 			</div>
 
@@ -82,21 +85,31 @@
 						<label>昵称:</label>
 					</div>
 					<div class="panel_info">
-						<input class="info_input" value="小明" /> <input class="sub_btn"
-							type="submit" value="保存" />
+						<input class="info_input" value="" /> <input class="sub_btn"
+							type="button" value="保存" /><input class="sub_btn_cancel"
+							type="button" value="取消" />
 					</div>
 				</form>
-
 				<form class="panel-item" id="item_sign">
 					<div class="panel_title">
 						<label>签名:</label>
 					</div>
 					<div class="panel_info">
-						<input class="info_input longer" value="见字如面" /> <input
-							class="sub_btn" type="submit" value="保存" />
+						<input class="info_input longer" value="" /> <input
+							class="sub_btn" type="button" value="保存" /><input
+							class="sub_btn_cancel" type="button" value="取消" />
 					</div>
 				</form>
-
+				<form class="panel-item" id="item_desc">
+					<div class="panel_title">
+						<label>简介:</label>
+					</div>
+					<div class="panel_info">
+						<textarea class="info_input longer" style="resize: none;" rows="4"></textarea>
+						<input class="sub_btn" type="button" value="保存" /><input
+							class="sub_btn_cancel" type="button" value="取消" />
+					</div>
+				</form>
 			</div>
 			<div class="info_right">
 				<div class="span_title">
@@ -107,7 +120,7 @@
 						<div class="card_up">
 							<div class="card_mask"></div>
 							<div class="card_u">
-								<label>小于</label> <label>见字如面圣诞节发生浪费</label>
+								<label></label> <label></label>
 							</div>
 						</div>
 						<div class="card_down">
@@ -121,8 +134,6 @@
 						</div>
 					</div>
 				</div>
-
-
 			</div>
 		</div>
 

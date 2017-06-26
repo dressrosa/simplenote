@@ -10,7 +10,8 @@
 		loginName,
 		a.avatar as avatar,
 		a.description as
-		description
+		description,
+		a.signature as signature
 	</sql>
 
 	<sql id="userJoins">
@@ -36,7 +37,12 @@
 		parameterType="java.lang.String">
 		select
 		<include refid="columns" />
+		,ua.article_num as "attr.articleNum",
+		ua.viewed_num as
+		"attr.viewedNum"
 		from biz_user as a
+		left join biz_user_attr as ua
+		on ua.user_id = a.id
 		where
 		a.del_flag=0
 		and a.id=#{id}
@@ -51,14 +57,24 @@
 		a.description
 		as
 		description,
+		a.signature as signature,
 		date_format(a.create_date,'%Y-%m-%d') as
 		createDate,
-		a.update_date as updateDate,
+		a.update_date as
+		updateDate,
 		a.del_flag as delFlag,
 		a.login_name as
 		name,
-		a.avatar as avatar
-		from biz_user as a where
+		a.avatar as
+		avatar
+		,ua.article_num as "attr.articleNum",
+		ua.viewed_num as
+		"attr.viewedNum"
+		from biz_user as a
+		left join biz_user_attr as ua
+		on
+		ua.user_id = a.id
+		where
 		a.del_flag=0
 	</select>
 
@@ -98,22 +114,27 @@
 	<!-- 更新用户 -->
 	<update id="update">
 		update biz_user
-		set
-		<if test="nickname != null">
-			nickname=#{nickname},
-		</if>
-		<if test="description != null">
-			description=#{description},
-		</if>
-		<if test="avatar != null">
-			avatar=#{avatar},
-		</if>
-		<if test="sex != null">
-			sex = #{sex}
-		</if>
-		<if test="updateDate != null">
-			update_date=#{updateDate}
-		</if>
+		<set>
+			<if test="nickname != null">
+				nickname=#{nickname},
+			</if>
+			<if test="description != null">
+				description=#{description},
+			</if>
+			<if test="signature != null">
+				signature=#{signature},
+			</if>
+			<if test="avatar != null">
+				avatar=#{avatar},
+			</if>
+			<if test="sex != null">
+				sex = #{sex},
+			</if>
+			<if test="updateDate != null">
+				update_date=#{updateDate},
+			</if>
+		</set>
+
 		where id=#{id} and del_flag=0
 	</update>
 

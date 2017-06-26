@@ -6,14 +6,11 @@
 <meta charset="UTF-8" />
 <meta name="author" content="xiaoyu" />
 <script src="/jquery/jquery-1.12.2.min.js" type="text/javascript"></script>
-<link href="/bootstrap-3.3.6-dist/css/bootstrap.min.css"
-	rel="stylesheet" />
-<link rel="stylesheet" href="/stephanwagner/97f7f8-00a5dd.css" />
 <link rel="icon" type="image/ico" href="/xiaoyu/img/favicon.ico" />
-
 <title>404</title>
 <style type="text/css">
 .font_big {
+	color: #4c4c4c;
 	font-size: 300px;
 	font-family: cursive;
 	font-weight: bolder;
@@ -42,14 +39,19 @@
 				"width" : "140"
 			});
 		}
+		$(".font_big").find("img").css({
+			"height" : "190px",
+			"-webkit-transition" : "height 2s",
+			"transition" : "height 2s"
+		});
 
 	});
 </script>
 <body>
-	 
+
 	<div style="padding: 50px; margin-top: 100px; text-align: center;">
 		<span class="font_big">4<img src="/xiaoyu/img/404.jpg"
-			style="width: 250px; height: 300px; border-radius: 50%;" />4
+			style="width: 150px; height: 0px; border-radius: 50%;" />4
 		</span>
 	</div>
 </body>

@@ -19,7 +19,7 @@ html, body, ul, ol, li, h1, h2, h3, h4, h5, h6, form, table, tr, td, div,
 	outline: none;
 }
 
-input {
+input, textarea {
 	font-family: inherit;
 	-webkit-font-smoothing: antialiased;
 	-moz-osx-font-smoothing: grayscale
@@ -83,6 +83,8 @@ li {
 }
 
 .header span {
+	text-align: center;
+    width: 120px;
 	position: relative;
 }
 
@@ -167,9 +169,22 @@ li a {
 	outline-color: black;
 }
 
+.mask {
+	width: 100%;
+	height: 100%;
+	border-radius: 50%;
+	position: absolute;
+	left: 0px;
+	top: 0px;
+	background-image: linear-gradient(-180deg, rgba(255, 255, 255, 0) 0,
+		rgba(245, 103, 103, 0.5) 75%);
+	z-index: 1;
+	top: 0;
+}
+
 .mask_header {
 	position: absolute;
-	top: 0;
+	top: 0px;
 	left: -4px;
 	right: -4px;
 	height: 500px;
@@ -455,7 +470,7 @@ li a {
 	/* box-shadow: 0 1px 1px rgba(204, 75, 75, 0.83); */
 	text-align: center;
 	position: relative;
-	height: 200px;
+	height: 220px;
 }
 
 .panel-body {
@@ -489,7 +504,7 @@ li a {
 }
 
 .panel_info {
-	padding: 20px;
+	padding: 20 0 20 0;
 }
 
 .info_input {
@@ -508,15 +523,33 @@ li a {
 	background-color: #fd4d4d;
 	border: 1px solid transparent;
 	border-radius: 4px;
+	margin-right: 10px;
 	cursor: pointer;
 	text-align: center;
 	width: 50px;
 	height: 30px;
 	display: none;
+	cursor: pointer;
+}
+
+.sub_btn_cancel {
+	color: #fff;
+	font-size: 14px;
+	background-color: #fd4d4d;
+	border: 1px solid transparent;
+	border-radius: 4px;
+	margin-right: 10px;
+	cursor: pointer;
+	text-align: center;
+	width: 50px;
+	height: 30px;
+	display: none;
+	cursor: pointer;
+	background-color: #616161;
 }
 
 .longer {
-	min-width: 400px;
+	min-width: 350px;
 }
 
 .info_input:focus {
@@ -531,6 +564,7 @@ li a {
 	margin: 0 auto;
 	margin-bottom: 5px;
 	font-size: 17px;
+	color: rgba(0, 0, 0, 0.6);
 }
 
 .panel_card_wrapper {
@@ -542,14 +576,22 @@ li a {
 	margin: 0 auto;
 }
 
+.panel_card_wrapper_smaller {
+    height: 200px;
+    width: 350px;
+    background: rgba(215, 215, 215, 0.5);
+    border-radius: 4px;
+    padding: 4px;
+    margin: 0 auto;
+}
 .panel_card {
 	width: 100%;
 	height: 100%;
-	background:
-		url(http://xiaoyu1-1253813687.costj.myqcloud.com/common/4.jpg) repeat;
+	background-color:#000;
 	border-radius: 4px;
 	margin: 0 auto;
 	color: #fff;
+	background-size: contain;
 }
 
 .panel_card label {
@@ -576,7 +618,7 @@ li a {
 
 .card_u label:LAST-CHILD {
 	font-size: 14px;
-	color: #a2a2a2;
+	color: #dedede;
 }
 
 .card_down {

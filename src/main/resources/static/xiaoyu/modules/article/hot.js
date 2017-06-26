@@ -25,9 +25,9 @@ var $ajaxPromise = $
 											childHtml += '<span class="item_userinfo" ><img class="avatar small" img-type="avatar" src="'
 													+ ar.user.avatar
 													+ '" id="'
-													+ ar.user.userId + '"/>';
+													+ ar.user.userId + '" />';
 											childHtml += '<p class="item_desc">'
-													+ ar.user.description
+													+ ar.user.signature
 													+ '</p>';
 											childHtml += '</span>';
 											childHtml += '<dt class="item_username">'
@@ -212,17 +212,62 @@ var $ajaxPromise = $
 		});
 
 var userInfo = jQuery.parseJSON($.session.get('user'));
-
+var fillInfo = function(item1, item2) {
+	var $avatar = item1;
+	var $user = jQuery.parseJSON(item2).data;
+	var $userCard = $(".panel_card_wrapper_smaller");
+	$userCard.find(".panel_card").css("background",
+			'url(' + imgHead + $user.avatar + ')');
+	$userCard.find(".panel_card").css("background-size", 'contain');
+	$userCard.find(".card_u").find("label")[0].innerHTML = $user.nickname;
+	$userCard.find(".card_u").find("label")[1].innerHTML = $user.signature;
+	var $top = $avatar.parent().parent().position().top;
+	$userCard.css({
+		"position" : "absolute",
+		"top" : $top - 190,
+		"left" : "65px",
+		"display" : "initial"
+	});
+}
 $(document).ready(
 		function() {
-
 			$ajaxPromise.promise().done(function() {
-
 				if (!isPC()) {
 					$(".hot").css("display", "block");
 					$(".hot").css("width", "100%");
 					$("#footer").css("display", "none");
 				}
+				$(".item_list").find("img").hover(function() {
+					var $avatar = $(this);
+					var $info = $.session.get('$u_'+$avatar.attr("id"));
+					if(!checkNull($info)&&$info!='null') {
+						fillInfo($avatar, $info);
+						return true;
+					}
+					$.ajax({
+						type : "get",
+						async : true,
+						url : '/api/v1/user/' + $avatar.attr("id"),
+						success : function(data) {
+							var obj = jQuery.parseJSON(data);
+							if (obj.code == 0) {
+								$.session.set('$u_'+obj.data.userId,data,30*60);
+								fillInfo($avatar, data);
+							}
+
+							return true;
+						}
+					});
+
+				}, function() {
+					var $userCard = $(".panel_card_wrapper_smaller");
+					$userCard.find(".panel_card").css("background",
+							'rgba(215, 215, 215, 0.5)');
+					$userCard.find(".panel_card").css("background-size", 'contain');
+					$userCard.css({
+						"display" : "none"
+					});
+				});
 			});
 
 			if (checkNull(userInfo)) {
@@ -239,7 +284,7 @@ $(document).ready(
 						var $top = document.body.scrollTop;
 						$(".top_n1_banner").css("background-position",
 								"center " + $top);
-						console.log("top:" + $top);
+						// console.log("top:" + $top);
 						if ($top > 300) {
 							$(".top_n1_info").css("opacity", 1);
 							$(".header").find(".search_span1").css("display",

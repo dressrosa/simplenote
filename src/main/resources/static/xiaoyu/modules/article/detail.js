@@ -23,6 +23,10 @@ var $arPromise = $.ajax({
 				$partUp.find(".red").find("label").html(ar.attr.likeNum);
 				$partUp.find(".blue").find("label").html(ar.attr.collectNum);
 				$partUp.find(".green").find("label").html(ar.attr.commentNum);
+				var $co = $partUp.find(".p_comment");
+				$co.find("label").html('<a>'+ar.user.nickname+':'+'</a>');
+				$co.find("p").html(ar.user.description);
+				$("#co_title").html('作者简介');
 				var $partDown = $(".part_down");
 				$partDown.attr("id", ar.articleId);
 				$partDown.find(".ar_date").html(ar.createDate);
@@ -31,6 +35,8 @@ var $arPromise = $.ajax({
 				$partDown.find(".ar_view").html('浏览量:' + ar.attr.readNum);
 				$partDown.find(".ar_content").attr("id", ar.articleId);
 				$partDown.find(".ar_content").html(ar.content);
+				
+				
 			}
 		} else {
 			// window.location.href = "/common/404";
