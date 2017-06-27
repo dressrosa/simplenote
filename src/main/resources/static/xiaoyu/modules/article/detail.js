@@ -19,7 +19,7 @@ if (!checkNull(userInfo)) {
 		beforedSend:function(xhr) {
 			xhr.setRequestHeader('token', userInfo.token);
 			xhr.setRequestHeader('userId', userInfo.userId);
-		};
+		},
 		success : function(data) {
 			console.log(data);
 			var obj =  jQuery.parseJSON(data);
@@ -27,7 +27,7 @@ if (!checkNull(userInfo)) {
 				if(obj.data.isLove='1') {
 					$(".p_love").text("取消关注");
 					$(".p_love").css({
-						"background","#e2e2e2"
+						"background":"#e2e2e2"
 					});
 				}
 					 
