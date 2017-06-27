@@ -1,5 +1,46 @@
 var url = document.URL;
 var articleId = url.split('/')[4];
+
+var before = function(xhr) {
+	var userInfo = jQuery.parseJSON($.session.get("user"));
+	if (!checkNull(userInfo)) {
+		xhr.setRequestHeader('token', userInfo.token);
+		xhr.setRequestHeader('userId', userInfo.userId);
+	}
+};
+// is loved
+var userInfo = jQuery.parseJSON($.session.get("user"));
+if (!checkNull(userInfo)) {
+	$.ajax({
+		cache : false,
+		type : "get",
+		async : true,
+		url : '/api/v1/article/isLoved' + articleId,
+		beforedSend:function(xhr) {
+			xhr.setRequestHeader('token', userInfo.token);
+			xhr.setRequestHeader('userId', userInfo.userId);
+		};
+		success : function(data) {
+			console.log(data);
+			var obj =  jQuery.parseJSON(data);
+			if(obj.code == 0) {
+				if(obj.data.isLove='1') {
+					$(".p_love").text("取消关注");
+					$(".p_love").css({
+						"background","#e2e2e2"
+					});
+				}
+					 
+				
+			}
+			else if(obj.code='20001') {
+				
+			}
+		}
+		
+	});
+}
+
 var $arPromise = $.ajax({
 	cache : false,
 	type : "get",
@@ -20,6 +61,7 @@ var $arPromise = $.ajax({
 						ar.user.description);
 				$partUp.find(".p_username").find(".nickname").html(
 						ar.user.nickname);
+				
 				$partUp.find(".red").find("label").html(ar.attr.likeNum);
 				$partUp.find(".blue").find("label").html(ar.attr.collectNum);
 				$partUp.find(".green").find("label").html(ar.attr.commentNum);

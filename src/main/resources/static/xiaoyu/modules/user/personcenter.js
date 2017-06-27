@@ -10,7 +10,7 @@ var $ajaxPromise1 = $.ajax({
 		if (obj.code == "0") {
 			var $user = obj.data;
 			if (!checkNull($user)) {
-				setTitle($user.nickname + '-个人中心');
+				setTitle($user.nickname + '-个人主页');
 				var $userPanel = $(".panel");
 				if (checkNull($user.avatar)) {
 					$user.avatar = 'common/avatar.png';

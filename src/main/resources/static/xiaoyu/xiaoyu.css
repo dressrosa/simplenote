@@ -84,7 +84,7 @@ li {
 
 .header span {
 	text-align: center;
-    width: 120px;
+	width: 120px;
 	position: relative;
 }
 
@@ -577,17 +577,18 @@ li a {
 }
 
 .panel_card_wrapper_smaller {
-    height: 200px;
-    width: 350px;
-    background: rgba(215, 215, 215, 0.5);
-    border-radius: 4px;
-    padding: 4px;
-    margin: 0 auto;
+	height: 200px;
+	width: 350px;
+	background: rgba(215, 215, 215, 0.5);
+	border-radius: 4px;
+	padding: 4px;
+	margin: 0 auto;
 }
+
 .panel_card {
 	width: 100%;
 	height: 100%;
-	background-color:#000;
+	background-color: #000;
 	border-radius: 4px;
 	margin: 0 auto;
 	color: #fff;
@@ -924,6 +925,10 @@ li a {
 	/* display: flex; */
 }
 
+.side_right i {
+	cursor: default;
+}
+
 .i_content {
 	display: inline-table;
 	line-height: 3;
@@ -955,6 +960,19 @@ li a {
 	color: #909090;
 	text-align: center;
 	padding: 9px;
+}
+
+.p_love {
+	border-radius: 4px;
+	border: 1px solid #e2e2e2;
+	height: 30px;
+	text-align: center;
+	background: #fff9f9;
+	-webkit-box-shadow: 2px 2px 3px #DDDDDD;
+	box-shadow: 0px 0px 5px #DDDDDD;
+	font-weight: 500;
+	font-size: 13px;
+	cursor:pointer;
 }
 
 .nickname {

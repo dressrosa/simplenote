@@ -121,6 +121,9 @@ var editNickname = function() {
 				$.session.set("user", JSON.stringify(userInfo), true);
 				hideBtn("item_name");
 			}
+			else if(obj.code == '20001') {
+				window.location.href='/login';
+			}
 			return true;
 		}
 	});
@@ -178,6 +181,8 @@ var editSignature = function() {
 				$(".card_u").find("label")[1].innerHTML = $("#item_sign").find(
 						".info_input").val();
 				hideBtn("item_sign");
+			}else if(obj.code == '20001') {
+				window.location.href='/login';
 			}
 
 			return true;
@@ -236,7 +241,9 @@ var editDesc = function() {
 			if (obj.code == 0) {
 				hideBtn('item_desc');
 			}
-
+			else if(obj.code == '20001') {
+				window.location.href='/login';
+			}
 			return true;
 		}
 	});
