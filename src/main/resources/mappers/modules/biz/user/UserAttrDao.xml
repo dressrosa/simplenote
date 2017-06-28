@@ -58,7 +58,7 @@
 		</trim>
 	</insert>
 
-	<update id="addNum" parameterType="java.lang.Integer">
+	<update id="addNum" >
 		update biz_user_attr set
 		<choose>
 			<when test="type == 0">

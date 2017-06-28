@@ -22,7 +22,10 @@ public interface IUserService {
 
 	public String cancelFollow(HttpServletRequest request, String userId, String followTo);
 
+	public String isFollowed(HttpServletRequest request, String userId, String followTo);
+
 	public String follower(HttpServletRequest request, String userId);
+	
 
 	public String following(HttpServletRequest request, String userId);
 }

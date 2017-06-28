@@ -8,40 +8,6 @@ var before = function(xhr) {
 		xhr.setRequestHeader('userId', userInfo.userId);
 	}
 };
-// is loved
-var userInfo = jQuery.parseJSON($.session.get("user"));
-if (!checkNull(userInfo)) {
-	$.ajax({
-		cache : false,
-		type : "post",
-		async : true,
-		url : '/api/v1/user/follow',
-		data : {
-			userId : userInfo.userId,
-			followerId : $(".part_up").find("img").attr('id')
-		},
-		beforedSend : function(xhr) {
-			xhr.setRequestHeader('token', userInfo.token);
-			xhr.setRequestHeader('userId', userInfo.userId);
-		},
-		success : function(data) {
-			console.log(data);
-			var obj = jQuery.parseJSON(data);
-			if (obj.code == 0) {
-				if (obj.data.isFollow = '1') {
-					$(".p_love").text("取消关注");
-					$(".p_love").css({
-						"background" : "#e2e2e2"
-					});
-					$(".p_love").attr("data-love", '1');
-				}
-			} else if (obj.code = '20001') {
-
-			}
-		}
-
-	});
-}
 
 var $arPromise = $
 		.ajax({
@@ -309,43 +275,76 @@ var comment = function() {
 			});
 
 };
+var isFollow = function() {
+	// is loved
+	var userInfo = jQuery.parseJSON($.session.get("user"));
+	if (!checkNull(userInfo)) {
+		console.log("id:" + $(".avatar").attr('id'))
+		$.ajax({
+			cache : false,
+			type : "post",
+			async : true,
+			url : '/api/v1/user/isFollowed',
+			data : {
+				userId : userInfo.userId,
+				followTo : $(".avatar").attr('id')
+			},
+			beforeSend : function(xhr) {
+				return before(xhr);
+			},
+			success : function(data) {
+				console.log(data);
+				var obj = jQuery.parseJSON(data);
+				if (obj.code == 0) {
+					if (obj.data.isFollow == '1') {
+						$(".p_love").text("取消关注");
+						$(".p_love").css({
+							"background" : "#e2e2e2"
+						});
+						$(".p_love").attr("data-love", '1');
+					}
+				} else if (obj.code = '20001') {
+
+				}
+			}
+
+		});
+	}
+}
 
 var follow = function() {
-	var $userInfo = jQuery.parseJSON($.session.get("user"));
+	var userInfo = jQuery.parseJSON($.session.get("user"));
 
-	var $url = '/api/v1/user/follow';
+	var url = '/api/v1/user/follow';
 	if ($(".p_love").attr("data-love") == '1') {
-		$url = '/api/v1/user/unfollow';
+		url = '/api/v1/user/unfollow';
 	} else {
-		$url = '/api/v1/user/follow';
+		url = '/api/v1/user/follow';
 	}
 	$.ajax({
 		cache : false,
-		type : "get",
+		type : "post",
 		async : true,
-		url : $url,
+		url : url,
 		data : {
-			userId : $userInfo.userId,
-			followTo : $(".part_up").find("img").attr("id")
+			userId : userInfo.userId,
+			followTo : $(".avatar").attr("id")
 		},
 		beforeSend : function(xhr) {
-			if (!checkNull($userInfo)) {
-				xhr.setRequestHeader('token', $userInfo.token);
-				xhr.setRequestHeader('userId', $userInfo.userId);
-			}
+			return before(xhr);
 
 		},
 		success : function(data) {
 			console.log(data);
 			var obj = jQuery.parseJSON(data);
 			if (obj.code == 0) {
-				if (obj.data.isFollow = '1') {
+				if (obj.data.isFollow == '1') {
 					$(".p_love").text("取消关注");
 					$(".p_love").css({
 						"background" : "#e2e2e2"
 					});
 					$(".p_love").attr("data-love", '1');
-				} else if (obj.data.isFollow = '0') {
+				} else if (obj.data.isFollow == '0') {
 					$(".p_love").text("关注");
 					$(".p_love").css({
 						"background" : "#fff9f9"
@@ -366,6 +365,8 @@ $(document).ready(
 			$arPromise.promise()
 					.done(
 							function() {
+								isFollow();
+
 								var item = $(".ar_content").attr("id");
 								$.ajax({
 									type : 'POST',

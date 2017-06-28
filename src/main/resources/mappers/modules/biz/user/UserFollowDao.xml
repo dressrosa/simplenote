@@ -17,7 +17,8 @@
 		u2.avatar as followerAvatar
 		from biz_user_follow as a
 		left join
-		biz_user as u1
+		biz_user
+		as u1
 		on u1.id = user_id
 		left join biz_user as u2 on u2.id
 		=
@@ -31,15 +32,29 @@
 			and a.follower_id= #{followerId}
 		</if>
 	</select>
-	<select id="isFollow">
+	<select id="isFollow" resultType="java.lang.Integer">
 		select
 		count(*)
-		from biz_user_follow as a
+		from
+		biz_user_follow as a
 		where
 		a.del_flag=0
 		and a.user_id= #{userId}
-		and a.follower_id= #{followerId}
+		and
+		a.follower_id= #{followerId}
 	</select>
+
+	<select id="isExist" resultType="java.lang.Integer">
+		select
+		count(*)
+		from
+		biz_user_follow as a
+		where
+		a.user_id= #{userId}
+		and a.follower_id=
+		#{followerId}
+	</select>
+
 	<insert id="insert" parameterType="com.xiaoyu.modules.biz.user.entity.Follow">
 		insert into biz_user_follow
 		<trim prefix="(" suffix=")" suffixOverrides=",">
@@ -55,7 +70,7 @@
 		</trim>
 		<trim prefix="values (" suffix=")" suffixOverrides=",">
 			<if test="id != null">
-				#,
+				#{id},
 			</if>
 			<if test="userId != null">
 				#{userId},
@@ -65,7 +80,15 @@
 			</if>
 		</trim>
 	</insert>
-
+	<update id="update">
+		update biz_user_follow
+		set
+		del_flag=0
+		where user_id =
+		#{userId}
+		and follower_id =
+		#{followerId}
+	</update>
 	<update id="cancelLove">
 		update biz_user_follow
 		set

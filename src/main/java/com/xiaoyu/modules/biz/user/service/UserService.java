@@ -234,7 +234,12 @@ public class UserService extends BaseService<UserDao, User> implements IUserServ
 		if (!u.getId().equals(userId)) {
 			return mapper.setCode(ResultConstant.ARGS_ERROR).getResultJson();
 		}
-		if (this.userDao.isExist(followTo) < 1) {
+		if (userId.equals(followTo)) {
+			return mapper.setCode(ResultConstant.ARGS_ERROR).setMessage("无法关注自己").getResultJson();
+		}
+		User t = new User();
+		t.setId(followTo);
+		if (this.userDao.isExist(t) < 1) {
 			return mapper.setCode(ResultConstant.ARGS_ERROR).setMessage("所关注用户不存在").getResultJson();
 		}
 		if (this.followDao.isFollow(userId, followTo) == 1) {
@@ -246,8 +251,13 @@ public class UserService extends BaseService<UserDao, User> implements IUserServ
 		f.setFollowerId(userId);
 
 		try {
-			this.followDao.insert(f);
-			this.userAttrDao.addNum(NumCountType.FollowerNum.ordinal(), 1);
+			if(this.followDao.isExist(f)>0) {
+				this.followDao.update(f);
+			}
+			else{
+				this.followDao.insert(f);				
+			}
+			this.userAttrDao.addNum(NumCountType.FollowerNum.ordinal(), 1, f.getUserId());
 		} catch (RuntimeException e) {
 			throw e;
 		}
@@ -266,12 +276,14 @@ public class UserService extends BaseService<UserDao, User> implements IUserServ
 		if (!u.getId().equals(userId)) {
 			return mapper.setCode(ResultConstant.ARGS_ERROR).getResultJson();
 		}
-		if (this.userDao.isExist(followTo) < 1) {
+		User t = new User();
+		t.setId(followTo);
+		if (this.userDao.isExist(t) < 1) {
 			return mapper.setCode(ResultConstant.ARGS_ERROR).setMessage("所关注用户不存在").getResultJson();
 		}
 		try {
 			this.followDao.cancelLove(followTo, userId);
-			this.userAttrDao.addNum(NumCountType.FollowerNum.ordinal(), -1);
+			this.userAttrDao.addNum(NumCountType.FollowerNum.ordinal(), -1, followTo);
 		} catch (RuntimeException e) {
 			throw e;
 		}
@@ -315,6 +327,15 @@ public class UserService extends BaseService<UserDao, User> implements IUserServ
 			}
 		}
 		return mapper.setData(result).getResultJson();
+	}
+
+	@Override
+	public String isFollowed(HttpServletRequest request, String userId, String followTo) {
+		ResponseMapper mapper = ResponseMapper.createMapper();
+		int num = this.followDao.isFollow(userId, followTo);
+		Map<String, String> map = new HashMap<>();
+		map.put("isFollow", "" + num);
+		return mapper.setData(map).getResultJson();
 	}
 
 }

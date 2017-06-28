@@ -144,6 +144,11 @@ public class UserBackController {
 		return this.userService.cancelFollow(request, userId, followTo);
 	}
 
+	@RequestMapping(value = "api/v1/user/isFollowed", method = RequestMethod.POST)
+	public String isFollowed(HttpServletRequest request, String userId, String followTo) {
+		return this.userService.isFollowed(request, userId, followTo);
+	}
+
 	// 追随者
 	@RequestMapping(value = "api/v1/user/follower", method = RequestMethod.GET)
 	public String follower(HttpServletRequest request, String userId) {
@@ -155,4 +160,5 @@ public class UserBackController {
 	public String following(HttpServletRequest request, String userId) {
 		return this.userService.following(request, userId);
 	}
+
 }

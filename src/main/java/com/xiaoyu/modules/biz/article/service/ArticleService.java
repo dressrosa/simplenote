@@ -139,7 +139,7 @@ public class ArticleService extends BaseService<ArticleDao, Article> implements 
 			attr.setId(IdGenerator.uuid());
 			this.attrDao.insert(attr);
 			try {// 增加发文数
-				this.userAttrDao.addNum(NumCountType.ArticleNum.ordinal(), 1);
+				this.userAttrDao.addNum(NumCountType.ArticleNum.ordinal(), 1,userId);
 			} catch (Exception e) {
 				// do nothing
 			}
@@ -383,9 +383,9 @@ public class ArticleService extends BaseService<ArticleDao, Article> implements 
 		}
 		if (checkLoginDead(request) == null) {// 没登录 或失效
 			if (isCollect == 0)
-				this.addCollectNum(articleId, true);
+				this.addCollectNum(articleId,request.getHeader("userId"), true);
 			else if (isCollect == 1)
-				this.addCollectNum(articleId, false);
+				this.addCollectNum(articleId,request.getHeader("userId"), false);
 			return mapper.setCode(ResultConstant.LOGIN_INVALIDATE).getResultJson();
 		} else {
 			ArticleCollect t = new ArticleCollect();
@@ -394,18 +394,18 @@ public class ArticleService extends BaseService<ArticleDao, Article> implements 
 				ArticleCollect co = this.collectDao.getForUpdate(t);
 				if (co.getStatus() == 1) {// 取消收藏
 					t.setStatus(0);
-					this.addCollectNum(articleId, false);
+					this.addCollectNum(articleId,request.getHeader("userId"), false);
 
 				} else {// 进行收藏
 					t.setStatus(1);
-					this.addCollectNum(articleId, true);
+					this.addCollectNum(articleId,request.getHeader("userId"), true);
 
 				}
 				this.collectDao.update(t);
 			} else {// 没收藏
 				t.setId(IdGenerator.uuid());
 				this.collectDao.insert(t);
-				this.addCollectNum(articleId, true);
+				this.addCollectNum(articleId,request.getHeader("userId"), true);
 
 			}
 
@@ -414,21 +414,21 @@ public class ArticleService extends BaseService<ArticleDao, Article> implements 
 
 	}
 
-	private void addCollectNum(String articleId, boolean flag) {
+	private void addCollectNum(String articleId,String userId, boolean flag) {
 		ArticleAttr attr = new ArticleAttr();
 		ArticleAttr at = this.attrDao.getForUpdate(articleId);
 		attr.setArticleId(articleId);
 		if (flag) {// 收藏
 			attr.setCollectNum(at.getCollectNum() + 1);
 			try {
-				this.userAttrDao.addNum(NumCountType.CollectNum.ordinal(), 1);
+				this.userAttrDao.addNum(NumCountType.CollectNum.ordinal(), 1,userId);
 			} catch (Exception e) {
 				// do nothing
 			}
 		} else {
 			attr.setCollectNum(at.getCollectNum() - 1);
 			try {
-				this.userAttrDao.addNum(NumCountType.CollectNum.ordinal(), -1);
+				this.userAttrDao.addNum(NumCountType.CollectNum.ordinal(), -1,userId);
 			} catch (Exception e) {
 				// do nothing
 			}
