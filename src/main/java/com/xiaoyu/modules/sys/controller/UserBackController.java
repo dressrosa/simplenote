@@ -133,4 +133,26 @@ public class UserBackController {
 		}
 		return this.userService.editUser(request, userId, content, flag);
 	}
+
+	@RequestMapping(value = "api/v1/user/follow", method = RequestMethod.POST)
+	public String followUser(HttpServletRequest request, String userId, String followTo) {
+		return this.userService.followUser(request, userId, followTo);
+	}
+
+	@RequestMapping(value = "api/v1/user/unfollow", method = RequestMethod.POST)
+	public String cancelFollow(HttpServletRequest request, String userId, String followTo) {
+		return this.userService.cancelFollow(request, userId, followTo);
+	}
+
+	// 追随者
+	@RequestMapping(value = "api/v1/user/follower", method = RequestMethod.GET)
+	public String follower(HttpServletRequest request, String userId) {
+		return this.userService.follower(request, userId);
+	}
+
+	// 关注的人
+	@RequestMapping(value = "api/v1/user/following", method = RequestMethod.GET)
+	public String following(HttpServletRequest request, String userId) {
+		return this.userService.following(request, userId);
+	}
 }

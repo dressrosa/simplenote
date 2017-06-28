@@ -13,81 +13,90 @@ var userInfo = jQuery.parseJSON($.session.get("user"));
 if (!checkNull(userInfo)) {
 	$.ajax({
 		cache : false,
-		type : "get",
+		type : "post",
 		async : true,
-		url : '/api/v1/article/isLoved' + articleId,
-		beforedSend:function(xhr) {
+		url : '/api/v1/user/follow',
+		data : {
+			userId : userInfo.userId,
+			followerId : $(".part_up").find("img").attr('id')
+		},
+		beforedSend : function(xhr) {
 			xhr.setRequestHeader('token', userInfo.token);
 			xhr.setRequestHeader('userId', userInfo.userId);
 		},
 		success : function(data) {
 			console.log(data);
-			var obj =  jQuery.parseJSON(data);
-			if(obj.code == 0) {
-				if(obj.data.isLove='1') {
+			var obj = jQuery.parseJSON(data);
+			if (obj.code == 0) {
+				if (obj.data.isFollow = '1') {
 					$(".p_love").text("取消关注");
 					$(".p_love").css({
-						"background":"#e2e2e2"
+						"background" : "#e2e2e2"
 					});
+					$(".p_love").attr("data-love", '1');
 				}
-					 
-				
-			}
-			else if(obj.code='20001') {
-				
+			} else if (obj.code = '20001') {
+
 			}
 		}
-		
+
 	});
 }
 
-var $arPromise = $.ajax({
-	cache : false,
-	type : "get",
-	async : true,
-	url : '/api/v1/article/' + articleId,
-	success : function(data) {
-		var obj = jQuery.parseJSON(data);
-		if (obj.code == '0') {
-			var ar = obj.data;
-			if (ar != null) {
-				setTitle('详情-' + ar.title);
-				var $partUp = $(".part_up");
-				$partUp.find("img").attr('src', ar.user.avatar);
-				$partUp.find("img").on("click", function() {
-					window.location.href = "/user/" + ar.user.userId;
-				});
-				$partUp.find(".p_description").find("span").html(
-						ar.user.description);
-				$partUp.find(".p_username").find(".nickname").html(
-						ar.user.nickname);
-				
-				$partUp.find(".red").find("label").html(ar.attr.likeNum);
-				$partUp.find(".blue").find("label").html(ar.attr.collectNum);
-				$partUp.find(".green").find("label").html(ar.attr.commentNum);
-				var $co = $partUp.find(".p_comment");
-				$co.find("label").html('<a>'+ar.user.nickname+':'+'</a>');
-				$co.find("p").html(ar.user.description);
-				$("#co_title").html('作者简介');
-				var $partDown = $(".part_down");
-				$partDown.attr("id", ar.articleId);
-				$partDown.find(".ar_date").html(ar.createDate);
-				$partDown.find(".ar_title").find("h2").html(ar.title);
-				$partDown.find(".ar_time").find("label").html(ar.createTime);
-				$partDown.find(".ar_view").html('浏览量:' + ar.attr.readNum);
-				$partDown.find(".ar_content").attr("id", ar.articleId);
-				$partDown.find(".ar_content").html(ar.content);
-				
-				
+var $arPromise = $
+		.ajax({
+			cache : false,
+			type : "get",
+			async : true,
+			url : '/api/v1/article/' + articleId,
+			success : function(data) {
+				var obj = jQuery.parseJSON(data);
+				if (obj.code == '0') {
+					var ar = obj.data;
+					if (ar != null) {
+						setTitle('详情-' + ar.title);
+						var $partUp = $(".part_up");
+						$partUp.find("img").attr('src', ar.user.avatar);
+						$partUp.find("img").attr('id', ar.user.userId);
+						$partUp.find("img").on("click", function() {
+							window.location.href = "/user/" + ar.user.userId;
+						});
+						$partUp.find(".p_description").find("span").html(
+								ar.user.description);
+						$partUp.find(".p_username").find(".nickname").html(
+								ar.user.nickname);
+
+						$partUp.find(".red").find("label")
+								.html(ar.attr.likeNum);
+						$partUp.find(".blue").find("label").html(
+								ar.attr.collectNum);
+						$partUp.find(".green").find("label").html(
+								ar.attr.commentNum);
+						var $co = $partUp.find(".p_comment");
+						$co.find("label").html(
+								'<a>' + ar.user.nickname + ':' + '</a>');
+						$co.find("p").html(ar.user.description);
+						$("#co_title").html('作者简介');
+						var $partDown = $(".part_down");
+						$partDown.attr("id", ar.articleId);
+						$partDown.find(".ar_date").html(ar.createDate);
+						$partDown.find(".ar_title").find("h2").html(ar.title);
+						$partDown.find(".ar_time").find("label").html(
+								ar.createTime);
+						$partDown.find(".ar_view").html(
+								'浏览量:' + ar.attr.readNum);
+						$partDown.find(".ar_content").attr("id", ar.articleId);
+						$partDown.find(".ar_content").html(ar.content);
+
+					}
+				} else {
+					// window.location.href = "/common/404";
+					return false;
+				}
+				addHeadForImg();
+				return true;
 			}
-		} else {
-			// window.location.href = "/common/404";
-			return false;
-		}
-		addHeadForImg();
-		return true;
-	}
-});
+		});
 var $coPromise = $
 		.ajax({
 			cache : false,
@@ -300,6 +309,55 @@ var comment = function() {
 			});
 
 };
+
+var follow = function() {
+	var $userInfo = jQuery.parseJSON($.session.get("user"));
+
+	var $url = '/api/v1/user/follow';
+	if ($(".p_love").attr("data-love") == '1') {
+		$url = '/api/v1/user/unfollow';
+	} else {
+		$url = '/api/v1/user/follow';
+	}
+	$.ajax({
+		cache : false,
+		type : "get",
+		async : true,
+		url : $url,
+		data : {
+			userId : $userInfo.userId,
+			followTo : $(".part_up").find("img").attr("id")
+		},
+		beforeSend : function(xhr) {
+			if (!checkNull($userInfo)) {
+				xhr.setRequestHeader('token', $userInfo.token);
+				xhr.setRequestHeader('userId', $userInfo.userId);
+			}
+
+		},
+		success : function(data) {
+			console.log(data);
+			var obj = jQuery.parseJSON(data);
+			if (obj.code == 0) {
+				if (obj.data.isFollow = '1') {
+					$(".p_love").text("取消关注");
+					$(".p_love").css({
+						"background" : "#e2e2e2"
+					});
+					$(".p_love").attr("data-love", '1');
+				} else if (obj.data.isFollow = '0') {
+					$(".p_love").text("关注");
+					$(".p_love").css({
+						"background" : "#fff9f9"
+					});
+					$(".p_love").attr("data-love", '0');
+				}
+			} else if (obj.code = '20001') {
+
+			}
+		}
+	});
+};
 $(document).ready(
 		function() {
 			$("#login").bind("click", function() {
@@ -357,6 +415,10 @@ $(document).ready(
 
 			$(".co_btn").on('click', function() {
 				comment();
+			});
+
+			$(".p_love").on('click', function() {
+				follow();
 			});
 
 		});

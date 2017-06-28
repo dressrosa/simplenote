@@ -9,5 +9,6 @@ public enum NumCountType {
 	ArticleNum,
 	CollectNum,
 	CommentNum,
-	ViewedNum;
+	ViewedNum,
+	FollowerNum;
 }

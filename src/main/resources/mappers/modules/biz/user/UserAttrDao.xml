@@ -7,7 +7,8 @@
 		a.collect_num as collectNum,
 		a.viewed_num as viewedNum,
 		a.commentNum as
-		commentNum
+		commentNum,
+		a.follower_num as followerNum
 	</sql>
 
 	<select id="get" resultType="com.xiaoyu.modules.biz.user.entity.UserAttr"
@@ -71,6 +72,9 @@
 			</when>
 			<when test="type == 3">
 				viewed_num = viewed_num+${num}
+			</when>
+			<when test="type == 4">
+				follower_num = follower_num+${num}
 			</when>
 		</choose>
 		where user_id= #{userId}

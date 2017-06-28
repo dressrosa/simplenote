@@ -16,4 +16,13 @@ public interface IUserService {
 	public String register(HttpServletRequest request, String loginName, String password);
 
 	public String editUser(HttpServletRequest request, String userId, String content, Integer flag);
+
+	/* 关注相关 */
+	public String followUser(HttpServletRequest request, String userId, String followTo);
+
+	public String cancelFollow(HttpServletRequest request, String userId, String followTo);
+
+	public String follower(HttpServletRequest request, String userId);
+
+	public String following(HttpServletRequest request, String userId);
 }

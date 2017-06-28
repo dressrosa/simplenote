@@ -3,8 +3,10 @@
  */
 package com.xiaoyu.modules.biz.user.service;
 
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
@@ -14,18 +16,24 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import com.github.pagehelper.Page;
+import com.github.pagehelper.PageHelper;
 import com.xiaoyu.common.base.BaseService;
 import com.xiaoyu.common.base.ResponseMapper;
 import com.xiaoyu.common.base.ResultConstant;
 import com.xiaoyu.common.utils.IdGenerator;
 import com.xiaoyu.common.utils.Md5Utils;
 import com.xiaoyu.common.utils.StringUtils;
+import com.xiaoyu.modules.biz.user.dao.FollowDao;
 import com.xiaoyu.modules.biz.user.dao.LoginRecordDao;
 import com.xiaoyu.modules.biz.user.dao.UserAttrDao;
 import com.xiaoyu.modules.biz.user.dao.UserDao;
+import com.xiaoyu.modules.biz.user.entity.Follow;
 import com.xiaoyu.modules.biz.user.entity.LoginRecord;
 import com.xiaoyu.modules.biz.user.entity.User;
 import com.xiaoyu.modules.biz.user.entity.UserAttr;
+import com.xiaoyu.modules.biz.user.vo.FollowVo;
+import com.xiaoyu.modules.sys.constant.NumCountType;
 
 /**
  * @author xiaoyu 2016年3月16日
@@ -211,6 +219,102 @@ public class UserService extends BaseService<UserDao, User> implements IUserServ
 		}
 		return mapper.setCode(ResultConstant.EXCEPTION).setMessage("资料修改失败").getResultJson();
 
+	}
+
+	@Autowired
+	private FollowDao followDao;
+
+	@Override
+	public String followUser(HttpServletRequest request, String userId, String followTo) {
+		ResponseMapper mapper = ResponseMapper.createMapper();
+		User u = this.checkLoginDead(request);
+		if (u == null) {
+			return mapper.setCode(ResultConstant.LOGIN_INVALIDATE).setMessage("未登录或登录失效,请重新登录").getResultJson();
+		}
+		if (!u.getId().equals(userId)) {
+			return mapper.setCode(ResultConstant.ARGS_ERROR).getResultJson();
+		}
+		if (this.userDao.isExist(followTo) < 1) {
+			return mapper.setCode(ResultConstant.ARGS_ERROR).setMessage("所关注用户不存在").getResultJson();
+		}
+		if (this.followDao.isFollow(userId, followTo) == 1) {
+			return mapper.setCode(ResultConstant.EXISTS).setMessage("您已关注过该用户").getResultJson();
+		}
+		Follow f = new Follow();
+		f.setId(IdGenerator.uuid());
+		f.setUserId(followTo);
+		f.setFollowerId(userId);
+
+		try {
+			this.followDao.insert(f);
+			this.userAttrDao.addNum(NumCountType.FollowerNum.ordinal(), 1);
+		} catch (RuntimeException e) {
+			throw e;
+		}
+		Map<String, String> map = new HashMap<>();
+		map.put("isFollow", "1");
+		return mapper.setData(map).getResultJson();
+	}
+
+	@Override
+	public String cancelFollow(HttpServletRequest request, String userId, String followTo) {
+		ResponseMapper mapper = ResponseMapper.createMapper();
+		User u = this.checkLoginDead(request);
+		if (u == null) {
+			return mapper.setCode(ResultConstant.LOGIN_INVALIDATE).setMessage("未登录或登录失效,请重新登录").getResultJson();
+		}
+		if (!u.getId().equals(userId)) {
+			return mapper.setCode(ResultConstant.ARGS_ERROR).getResultJson();
+		}
+		if (this.userDao.isExist(followTo) < 1) {
+			return mapper.setCode(ResultConstant.ARGS_ERROR).setMessage("所关注用户不存在").getResultJson();
+		}
+		try {
+			this.followDao.cancelLove(followTo, userId);
+			this.userAttrDao.addNum(NumCountType.FollowerNum.ordinal(), -1);
+		} catch (RuntimeException e) {
+			throw e;
+		}
+
+		Map<String, String> map = new HashMap<>();
+		map.put("isFollow", "0");
+		return mapper.setData(map).getResultJson();
+	}
+
+	@Override
+	public String follower(HttpServletRequest request, String userId) {
+		ResponseMapper mapper = ResponseMapper.createMapper();
+		String pageNum = request.getHeader("pageNum");
+		Follow f = new Follow();
+		f.setUserId(userId);
+		List<FollowVo> result = new ArrayList<>();
+		PageHelper.startPage(Integer.valueOf(pageNum), 10);
+		Page<FollowVo> page = (Page<FollowVo>) this.followDao.findList(f);
+		if (page != null) {
+			result = page.getResult();
+			if (result != null && result.size() > 0) {
+				mapper.setData(result);
+			}
+		}
+		return mapper.setData(result).getResultJson();
+	}
+
+	@Override
+	public String following(HttpServletRequest request, String userId) {
+		ResponseMapper mapper = ResponseMapper.createMapper();
+		String pageNum = request.getHeader("pageNum");
+		Follow f = new Follow();
+		f.setFollowerId(userId);
+		List<FollowVo> result = new ArrayList<>();
+		PageHelper.startPage(Integer.valueOf(pageNum), 10);
+		Page<FollowVo> page = (Page<FollowVo>) this.followDao.findList(f);
+		if (page != null) {
+			result = page.getResult();
+			if (result != null && result.size() > 0) {
+				mapper.setData(result);
+			}
+		}
+		return mapper.setData(result).getResultJson();
 	}
 
 }

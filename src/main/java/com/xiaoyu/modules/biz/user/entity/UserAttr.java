@@ -16,6 +16,15 @@ public class UserAttr extends BaseEntity {
 	private Integer commentNum;// 评论文章数
 	private Integer collectNum;// 收藏文章数
 	private Integer viewedNum;// 主页浏览数
+	private Integer followerNum;// 追随者数
+
+	public Integer getFollowerNum() {
+		return followerNum;
+	}
+
+	public void setFollowerNum(Integer followerNum) {
+		this.followerNum = followerNum;
+	}
 
 	public String getUserId() {
 		return userId;

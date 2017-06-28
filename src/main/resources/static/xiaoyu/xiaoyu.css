@@ -66,6 +66,10 @@ li {
 	margin-right: auto;
 }
 
+.font_center {
+	text-align: center;
+}
+
 .header {
 	position: fixed;
 	top: 0px;
@@ -167,6 +171,17 @@ li a {
 
 .avatar_wrapper:focus {
 	outline-color: black;
+}
+
+.compact {
+	margin-right: -20px;
+}
+
+.compact:hover {
+	margin-right: 3px;
+	-webkit-transition: color 2s;
+	transition: color 2s;
+	border: 1px inset #ff4a4a;
 }
 
 .mask {
@@ -322,7 +337,7 @@ li a {
 
 .item_desc {
 	margin-left: 10px;
-	margin-top: 5px;
+	padding-top: 15px;
 }
 
 .list-group-item {
@@ -344,6 +359,41 @@ li a {
 	cursor: pointer;
 	position: relative;
 	margin-bottom: 25px;
+}
+
+.love_list {
+	position:relative;
+	margin-top: 5px;
+	display: flex;
+	border: 1px solid #ddd;
+}
+
+.love_model {
+	width: 40%;
+	padding-top: 15px;
+	text-align: center;
+}
+
+.love_ar_list {
+	border: 1px solid #ddd;
+	border-top-color:transparent;
+	border-bottom:0px;
+}
+
+.love_ar_model {
+	padding: 0 0 0 10;
+	min-height: 110px;
+	border-bottom: 1px solid #b9b9b9;
+}
+
+.page_arrow {
+	font-size: 5em;
+	color: rgba(187, 187, 187, 0.5);
+}
+
+.page_arrow:hover {
+	font-size: 5em;
+	color: rgba(187, 187, 187, 1);
 }
 
 .main {
@@ -972,7 +1022,7 @@ li a {
 	box-shadow: 0px 0px 5px #DDDDDD;
 	font-weight: 500;
 	font-size: 13px;
-	cursor:pointer;
+	cursor: pointer;
 }
 
 .nickname {
