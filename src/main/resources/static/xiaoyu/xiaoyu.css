@@ -181,7 +181,7 @@ li a {
 	margin-right: 3px;
 	-webkit-transition: color 2s;
 	transition: color 2s;
-	border: 1px inset #ff4a4a;
+	/* border: 1px inset #ff4a4a; */
 }
 
 .mask {
@@ -362,7 +362,7 @@ li a {
 }
 
 .love_list {
-	position:relative;
+	position: relative;
 	margin-top: 5px;
 	display: flex;
 	border: 1px solid #ddd;
@@ -376,8 +376,8 @@ li a {
 
 .love_ar_list {
 	border: 1px solid #ddd;
-	border-top-color:transparent;
-	border-bottom:0px;
+	border-top-color: transparent;
+	border-bottom: 0px;
 }
 
 .love_ar_model {
@@ -1080,7 +1080,7 @@ white-space:nowrap;            娑撳秵宕茬悰锟� */
 	margin-top: 20px;
 	background: white;
 	border-radius: 4px;
-	border: 1px solid #ffc4c48f;
+	border: 1px solid #ffc4c4;
 	border-top: 0px;
 	box-shadow: 0 1px 3px rgba(0, 37, 55, .05);
 	padding: 10px;
@@ -1092,6 +1092,42 @@ white-space:nowrap;            娑撳秵宕茬悰锟� */
 	line-height: 1.5;
 }
 
+.collect_list_item {
+	margin: 0;
+	min-height: 80px;
+    font-size: 14px;
+	position: relative;
+	padding: 10px 15px;
+    background-color: #fff;
+    border: 1px solid #ddd;
+    border-bottom: 0px;
+    box-shadow: 0 1px 3px rgba(0, 37, 55, .05);
+}
+
+.collect_ar_title {
+	font-size: 18px;
+	cursor: pointer
+}
+
+.collect_ar_info {
+	display: flex;
+	position: relative;
+}
+
+.collect_ar_author {
+	color: #487eb3;
+	cursor: pointer;
+}
+
+.collect_ar_unlove {
+	cursor: pointer;
+	color: #487eb3;
+	position: absolute;
+	right: 0px;
+}
+.collect_ar_unlove:hover{
+	color:#054788;
+}
 .item_p {
 	margin: 5px;
 	width: 100%;

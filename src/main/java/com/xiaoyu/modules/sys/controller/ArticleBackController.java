@@ -78,6 +78,12 @@ public class ArticleBackController {
 		}
 		return this.articleService.list(request, userId, pageNum, pageSize);
 	}
+
+	@RequestMapping(value = "api/v1/article/latest", method = RequestMethod.POST)
+	public String latestOfUsers(HttpServletRequest request, @RequestParam("userId[]") String[] userId) {
+		return this.articleService.latestOfUsers(request, userId);
+	}
+
 	@RequestMapping(value = "api/v1/article/list/collect", method = RequestMethod.GET)
 	public String collectList(HttpServletRequest request, String userId, Integer pageNum, Integer pageSize) {
 		if (StringUtils.isBlank(userId)) {
@@ -85,6 +91,7 @@ public class ArticleBackController {
 		}
 		return this.articleService.collectList(request, userId, pageNum, pageSize);
 	}
+
 	@RequestMapping(value = "api/v1/article/viewNum/{articleId}")
 	public String changeViewNum(HttpServletRequest request, @PathVariable String articleId) {
 		if (StringUtils.isBlank(articleId)) {

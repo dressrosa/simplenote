@@ -68,6 +68,43 @@
 			and a.user_id=#{userId}
 		</if>
 	</select>
+
+	<select id="findLatestOfUsers" resultType="com.xiaoyu.modules.biz.article.vo.ArticleVo">
+		SELECT
+		a.id as id,
+		a.user_id as userId,
+		a.title as title,
+		a.create_date as
+		createDate
+		,u.avatar as 'user.avatar'
+		,u.signature as
+		'user.signature'
+		,u.nickname as 'user.nickname'
+		,t.read_num as
+		'attr.readNum',
+		t.collect_num as 'attr.collectNum',
+		t.like_num as
+		'attr.likeNum',
+		t.comment_num as
+		'attr.commentNum'
+		from
+		biz_article as a
+		left join
+		biz_user as u on u.id = a.user_id
+		left join
+		biz_article_attr as t on
+		t.article_id=a.id
+		WHERE
+		a.del_flag = 0 and
+		<foreach item="item" index="index" collection="array" open="("
+			separator="or" close=")">
+			a.user_id =#{item}
+		</foreach>
+		group by a.user_id
+		order by
+		a.create_date
+	</select>
+
 	<select id="findHotList" resultType="com.xiaoyu.modules.biz.article.vo.ArticleVo">
 		select
 		<include refid="Base_Column_List" />

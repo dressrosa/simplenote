@@ -310,11 +310,14 @@ var isFollow = function() {
 
 		});
 	}
-}
+};
 
 var follow = function() {
 	var userInfo = jQuery.parseJSON($.session.get("user"));
-
+	var $id = '';
+	if (!checkNull(userInfo)) {
+		$id = userInfo.userId;
+	}
 	var url = '/api/v1/user/follow';
 	if ($(".p_love").attr("data-love") == '1') {
 		url = '/api/v1/user/unfollow';
@@ -327,7 +330,7 @@ var follow = function() {
 		async : true,
 		url : url,
 		data : {
-			userId : userInfo.userId,
+			userId : $id,
 			followTo : $(".avatar").attr("id")
 		},
 		beforeSend : function(xhr) {

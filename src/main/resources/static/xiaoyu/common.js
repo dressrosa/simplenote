@@ -241,7 +241,7 @@ function isPC() {
 	return flag;
 }
 function checkNull(item) {
-	if (item == null || item == undefined || item == "")
+	if (item == null || item == undefined || item == 'undefined' || item == "")
 		return true;
 	return false;
 }

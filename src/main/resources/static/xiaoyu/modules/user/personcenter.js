@@ -38,7 +38,7 @@ var handleAll = function(data) {
 	var obj = jQuery.parseJSON(data);
 	if (obj.code == '0') {
 		var arHtml = "";
-		if (obj.data != null || obj.data.length() >= 0) {
+		if (obj.data != null && obj.data.length > 0) {
 			$
 					.each(
 							obj.data,
@@ -80,6 +80,8 @@ var handleAll = function(data) {
 		} else {
 			$(".list-group").html(blankPage);
 		}
+	}else {
+		$(".list-group").html(blankPage);
 	}
 
 	addHeadForImg();
@@ -88,44 +90,34 @@ var handleAll = function(data) {
 };
 
 var handleCollected = function(data) {
-
+	var $userInfo = jQuery.parseJSON($.session.get("user"));
+	var isSelf = false;
+	if(!checkNull($userInfo)&&$userInfo.userId==userId) {
+		  isSelf= true; 
+	}
+	
 	var obj = jQuery.parseJSON(data);
 	if (obj.code == '0') {
 		var arHtml = "";
-		if (obj.data != null || obj.data.length() >= 0) {
+		if (obj.data != null && obj.data.length > 0) {
 			$
 					.each(
 							obj.data,
 							function(index, ar) {
-								arHtml += '<li class="list-group-item"   id="'
-										+ ar.articleId + '">';
-								arHtml += '<label>' + ar.title + '</label>';
-								arHtml += '<p class="group_item_p">'
-										+ ar.content + '...' + '</p>';
-
-								arHtml += '<div class="comment_bar"><div class="bar_part">';
-								if (ar.isLike == "1") {
-									arHtml += '<i class="icon_like" style="color:#fd4d4d;" data-like="1"></i>';
-								} else {
-									arHtml += '<i class="icon_like" data-like="0"></i>';
-								}
-
-								arHtml += '<label style="margin: 2px;">'
-										+ ar.attr.likeNum + '</label></div>';
-								arHtml += '<div class="bar_part">';
-								arHtml += '<i class="icon_comment_alt"></i>';
-								arHtml += '<label style="margin: 2px;">'
-										+ ar.attr.commentNum + '</label></div>';
-								arHtml += '<div class="bar_part">';
-								if (ar.isCollect == "1") {
-									arHtml += '<i class="icon_heart_alt" style="color:#fd4d4d;" data-heart="1"></i>';
-								} else {
-									arHtml += '<i class="icon_heart_alt" data-heart="0"></i>';
-								}
-								arHtml += '<label style="margin: 2px;">'
-										+ ar.attr.collectNum + '</label></div>';
-								arHtml += '</div>';
-								arHtml += '</li>';
+								arHtml += '<div class="collect_list_item">'
+										+ '<div class="collect_ar_info">'
+										+ '<dt>来自:</dt>'
+										+ '<dt id="'+ar.user.userId+'" class="collect_ar_author">'+ar.user.nickname+'</dt>';
+										if(isSelf)
+											arHtml += '<dt id="'+ar.articleId+'" class="collect_ar_unlove">取消收藏</dt>';
+										arHtml += 	 '</div>'
+										+ '<div style="text-align: center;">'
+										+ '	<label class="collect_ar_title" ar-id="'+ar.articleId+'">'+ar.title+'</label>'
+										+ '<div style="color: #9e9e9e;">'
+										+ '	<label id="collect_ar_like">'+ar.attr.likeNum+'个赞</label> '
+										+ '<label id="collect_ar_com">'+ar.attr.commentNum+'个评论&nbsp;</label>'
+										+ '<label id="collect_ar_col">'+ar.attr.collectNum+'个收藏</label>'
+										+ '</div>' + '</div>' + '</div>';
 
 							});
 			if ($(".list-group").attr("id") == "list-collected") {
@@ -136,6 +128,8 @@ var handleCollected = function(data) {
 		} else {
 			$(".list-group").html(blankPage);
 		}
+	}else {
+		$(".list-group").html(blankPage);
 	}
 	addHeadForImg();
 	return true;
@@ -147,30 +141,31 @@ var handleFollowing = function(data) {
 	console.log(data);
 	if (obj.code == '0') {
 		var arHtml = "";
-		if (obj.data != null || obj.data.length() >= 0) {
+		if (obj.data != null && obj.data.length > 0) {
 			var $ht = '<div class="love_list">';
 			$ht += '<div class="page_arrow">';
 			$ht += '<i class="arrow_carrot-left" data-page="1"></i>';
 			$ht += '</div>';
 			var $l = '<div class="love_model">';
 			var $r = '<div class="love_model">';
-			$
-					.each(
-							obj.data,
-							function(index, u) {
-
-								if (index < 5) {
-									$l += '<img id="1" src="http://xiaoyu1-1253813687.costj.myqcloud.com/common/4.jpg" class="avatar small compact" />';
-									$l += '<img id="1" src="http://xiaoyu1-1253813687.costj.myqcloud.com/common/4.jpg" class="avatar small compact" />';
-								}
-								if (index == 4) {
-									$l += '</div>';
-								}
-								if (index > 4 && index < 10) {
-									$r += '<img id="1" src="http://xiaoyu1-1253813687.costj.myqcloud.com/common/4.jpg" class="avatar small compact" />';
-									$r += '<img id="1" src="http://xiaoyu1-1253813687.costj.myqcloud.com/common/4.jpg" class="avatar small compact" />';
-								}
-							});
+			var ids = new Array();
+			$.each(obj.data, function(index, u) {
+				ids[index] = u.userId;
+				if (index < 5) {
+					$l += '<img id="' + u.userId + '" src="' + imgHead
+							+ u.userAvatar
+							+ '" class="avatar small compact" />';
+				}
+				if (index == 4) {
+					$l += '</div>';
+				}
+				if (index > 4 && index < 10) {
+					$r += '<img id="' + u.userId + '" src="' + imgHead
+							+ u.userAvatar
+							+ '" class="avatar small compact" />';
+				}
+			});
+			
 			$r += '</div>';
 			$r += '</div>';
 			$r += '<div class="page_arrow" style="position: absolute;right: 0"><i class="arrow_carrot-right" data-page="2"></i></div>';
@@ -178,24 +173,49 @@ var handleFollowing = function(data) {
 			$ht += $r;
 			$ht += '</div>';
 			$ht += '<div class="love_ar_list">';
-			$ht += '<dl>';
-			$ht += '<div class="love_ar_model">';
-			$ht += '	<span class="item_userinfo">';
-			$ht += '<img class="avatar small" img-type="avatar" src="http://xiaoyu1-1253813687.costj.myqcloud.com/common/4.jpg" id="">';
-			$ht += '<p class="item_desc">为了更美好的明天</p></span>';
-			$ht += '<dt class="item_username">xiaoyu</dt>';
-			$ht += '<label style="font-size: 13px;">最近发表:</label>';
-			$ht += '<div class="font_center" id="">';
-			$ht += '	<label style="font-weight: 600;">"如何自立"</label>';
-			$ht += '	<time style="font-size: 12px;">1997-10-10 08:09</time>';
+			console.log(ids);
+			$.ajax({
+				type : "post",
+				async : false,
+				url : '/api/v1/article/latest',
+				data : {
+					userId : ids
+				},
+				beforeSend : function(xhr) {
+					return before(xhr);
+				},
+				success : function(data) {
+					var obj = jQuery.parseJSON(data);
+					console.log(data);
+					if (obj.code == '0'&& obj.data.length > 0) {
+						$.each(obj.data, function(index, ar) {
+							$ht += '<dl>';
+							$ht += '<div class="love_ar_model">';
+							$ht += '	<span class="item_userinfo">';
+							$ht += '<img class="avatar small" img-type="avatar" src="'+imgHead+ar.user.avatar+'" id="'+ar.userId+'">';
+							$ht += '<label class="item_desc">'+ar.user.signature+'</label></span>';
+							$ht += '<dt class="item_username">'+ar.user.nickname+'</dt>';
+							$ht += '<label style="font-size: 13px;">最近发表:</label>';
+							$ht += '<div class="font_center" >';
+							$ht += '	<label style="cursor:pointer;" id="'+ar.id+'">"'+ar.title+'"</label>';
+							$ht += '	<time style="font-size: 12px;">'+ar.createDate+'</time>';
+							$ht += '</div>';
+							$ht += '</div>';
+							$ht += '</dl>';
+						});
+						
+					}
+				}
+			});
 			$ht += '</div>';
-			$ht += '</div>';
-			$ht += '</dl>';
 			
+
 			$(".list-group").html($ht);
 		} else {
 			$(".list-group").html(blankPage);
 		}
+	}else {
+		$(".list-group").html(blankPage);
 	}
 	addHeadForImg();
 	return true;
@@ -265,86 +285,117 @@ $(document)
 
 					});
 					// tab page
-					$(".tab_ul").on('click', 'li', function() {
-						var $selected = $(this);
-						$.each($selected.siblings(), function(i, v) {
-							$(v).removeClass('li_active');
-						});
-						$selected.addClass('li_active');
-						switch ($selected.attr('data-select')) {
-						case '0':
-							var $ck_al = $.session.get("pr-al-0");
-							if (!checkNull($ck_al) && $ck_al != 'null') {
-								$(".list-group").html($ck_al);
-							} else {
-								$.ajax({
-									type : "get",
-									async : true,
-									url : '/api/v1/article/list',
-									data : {
-										userId : userId
-									},
-									beforeSend : function(xhr) {
-										return before(xhr);
-									},
-									success : function(data) {
-										return handleAll(data);
-									}
-								});
+					$(".tab_ul")
+							.on(
+									'click',
+									'li',
+									function() {
+										var $selected = $(this);
+										$.each($selected.siblings(), function(
+												i, v) {
+											$(v).removeClass('li_active');
+										});
+										$selected.addClass('li_active');
+										switch ($selected.attr('data-select')) {
+										case '0':
+											var $ck_al = $.session
+													.get("pr-al-0");
+											if (!checkNull($ck_al)
+													&& $ck_al != 'null') {
+												$(".list-group").html($ck_al);
+											} else {
+												$
+														.ajax({
+															type : "get",
+															async : true,
+															url : '/api/v1/article/list',
+															data : {
+																userId : userId
+															},
+															beforeSend : function(
+																	xhr) {
+																return before(xhr);
+															},
+															success : function(
+																	data) {
+																return handleAll(data);
+															}
+														});
 
-							}
-							$(".list-group").attr("id", "list-all");
-							break;
-						case '1':
-							var $pr_cd = $.session.get("pr-cd-1");
-							if (!checkNull($pr_cd) && $pr_cd != 'null') {
-								$(".list-group").html($pr_cd);
-							} else {
-								$.ajax({
-									type : "get",
-									async : true,
-									url : '/api/v1/article/list/collect',
-									data : {
-										userId : userId
-									},
-									beforeSend : function(xhr) {
-										return before(xhr);
+											}
+											$(".list-group").attr("id",
+													"list-all");
+											break;
+										case '1':
+											var $pr_cd = $.session
+													.get("pr-cd-1");
+											if (!checkNull($pr_cd)
+													&& $pr_cd != 'null') {
+												$(".list-group").html($pr_cd);
+											} else {
+												$
+														.ajax({
+															type : "get",
+															async : true,
+															url : '/api/v1/article/list/collect',
+															data : {
+																userId : userId
+															},
+															beforeSend : function(
+																	xhr) {
+																return before(xhr);
 
-									},
-									success : function(data) {
-										return handleCollected(data);
-									}
+															},
+															success : function(
+																	data) {
+																return handleCollected(data);
+															}
 
-								});
+														});
 
-							}
-							$(".list-group").attr("id", "list-collected");
-							break;
-						case '2':
-							$.ajax({
-								type : "get",
-								async : true,
-								url : '/api/v1/user/following',
-								data : {
-									userId : userId
-								},
-								beforeSend : function(xhr) {
-									var $userInfo = jQuery.parseJSON($.session.get("user"));
-									if (!checkNull($userInfo)) {
-										xhr.setRequestHeader('pageNum', 1);
-										xhr.setRequestHeader('token', $userInfo.token);
-										xhr.setRequestHeader('userId', $userInfo.userId);
-									}
-								},
-								success : function(data) {
-									return handleFollowing(data);
-								}
+											}
+											$(".list-group").attr("id",
+													"list-collected");
+											break;
+										case '2':
+											$
+													.ajax({
+														type : "get",
+														async : true,
+														url : '/api/v1/user/following',
+														data : {
+															userId : userId
+														},
+														beforeSend : function(
+																xhr) {
+															var $userInfo = jQuery
+																	.parseJSON($.session
+																			.get("user"));
+															if (!checkNull($userInfo)) {
+																xhr
+																		.setRequestHeader(
+																				'pageNum',
+																				1);
+																xhr
+																		.setRequestHeader(
+																				'token',
+																				$userInfo.token);
+																xhr
+																		.setRequestHeader(
+																				'userId',
+																				$userInfo.userId);
+															}
+														},
+														success : function(data) {
+															return handleFollowing(data);
+														}
 
-							});
-							$(".list-group").attr("id", "list-following");
-							break;
-						}
-					});
+													});
+											$(".list-group").attr("id",
+													"list-following");
+											break;
+										}
+									});
 
 					$(".list-group").delegate(
 							".icon_comment_alt",
@@ -356,6 +407,10 @@ $(document)
 										+ elem.attr("id") + "/comments"
 
 							});
+					$(".list-group").delegate(".font_center label","click",function(){
+						var elem = $(this);
+						window.location.href = '/article/' + elem.attr("id");
+					});
 					$(".list-group").delegate(".icon_like", "click",
 							function() {
 								var elem = $(this).parent().parent().parent();
@@ -407,7 +462,73 @@ $(document)
 						var elem = $icon.parent();
 						window.location.href = '/article/' + elem.attr("id");
 					})
-
+					$(".list-group").delegate(".collect_ar_title","click",function(){
+						var $icon = $(this);
+						window.location.href = '/article/' + $icon.attr("ar-id");
+					});
+					$(".list-group").delegate(
+							".collect_ar_unlove",
+							"click",
+							function() {
+								var $userInfo = jQuery.parseJSON($.session
+										.get("user"));
+								if (checkNull($userInfo)) {
+									window.location.href = "/login";
+									return false;
+								}
+								var elem =  $(this);
+								var item = elem.parent().parent();
+								item.css({
+									"opacity":"0",
+									"transition":"opacity 2s",
+								});
+								
+								$.ajax({
+									type : "post",
+									async : true,
+									url : '/api/v1/article/collect',
+									data : {
+										articleId : elem.attr("id"),
+										isCollect : 0
+									},
+									beforeSend : function(xhr) {
+										return before(xhr);
+									},
+									success : function(data) {
+										console.log(data);
+										var obj = jQuery.parseJSON(data);
+										if (obj.code == "20001") {
+											console.log("未登录");
+											window.location.href = "/login";
+											return false;
+										}
+										else if(obj.code =='0') {
+											setTimeout(function(){
+												item.css({
+													"display":"none"
+												});
+											},1000);
+										}
+										
+										return true;
+									},
+									error : function(data) {
+										console.log(data);
+										item.css({
+											"opacity":"1"
+										});
+										return false;
+									}
+								});
+								removeAllCache();
+							});
+					$(".list-group").delegate(
+							".compact",
+							"click",
+							function() {
+								var $elem = $(this);
+								window.location.href = "/user/" + $elem.attr('id');
+							});
 					$(".list-group").delegate(
 							".icon_heart_alt",
 							"click",

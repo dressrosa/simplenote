@@ -27,7 +27,7 @@ public class ExecutionTimeAop {
 
 	private static Logger logger = Logger.getLogger(ExecutionTimeAop.class);
 
-	@Pointcut("execution(* com.xiaoyu.modules.biz.sys.controller..*(..))")
+	@Pointcut("execution(* com.xiaoyu.modules.sys.controller..*(..))")
 	public void pointcut() {
 
 	}

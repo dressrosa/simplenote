@@ -68,11 +68,13 @@ public class ResponseMapper {
 
 	// 返回json数据
 	public String getResultJson() {
-		System.out.println(this.toString());
 		String result = JSON.toJSONString(getLocalMap(), filter, SerializerFeature.WriteNullStringAsEmpty);
 		System.out.println("code:" + getLocalMap().get("code"));
-		getLocalMap().clear();
+		//getLocalMap().clear();
 		getLocalMap().put(CODE, ResultConstant.SUCCESS);
+		getLocalMap().put(MESSAGE, "");
+		getLocalMap().put(COUNT, "");
+		getLocalMap().put(DATA, "");
 		return result;
 	}
 

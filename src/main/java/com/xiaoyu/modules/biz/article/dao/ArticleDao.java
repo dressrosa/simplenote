@@ -29,4 +29,6 @@ public interface ArticleDao extends BaseDao<Article> {
 
 	Page<ArticleVo> findCollectList(@Param("userId") String userId);
 
+	List<ArticleVo> findLatestOfUsers(String[] userIds);
+
 }

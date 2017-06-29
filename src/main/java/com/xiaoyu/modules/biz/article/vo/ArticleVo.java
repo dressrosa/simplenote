@@ -4,6 +4,7 @@
 package com.xiaoyu.modules.biz.article.vo;
 
 import com.xiaoyu.common.base.BaseEntity;
+import com.xiaoyu.modules.biz.user.vo.UserVo;
 
 /**
  * @author xiaoyu 2016年3月29日
@@ -15,10 +16,20 @@ public class ArticleVo extends BaseEntity {
 	private String userId;
 	private String title;
 	private String content;
+	private UserVo user;
 	private ArticleAttrVo attr;
 
 	public ArticleAttrVo getAttr() {
 		return attr;
+	}
+
+	public UserVo getUser() {
+		return user;
+	}
+
+	public ArticleVo setUser(UserVo user) {
+		this.user = user;
+		return this;
 	}
 
 	public ArticleVo setAttr(ArticleAttrVo attr) {

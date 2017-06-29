@@ -36,4 +36,6 @@ public interface IArticleService {
 	public String comments(HttpServletRequest request, String articleId, Integer pageNum);
 
 	public String newComments(HttpServletRequest request, String articleId);
+
+	public String latestOfUsers(HttpServletRequest request, String[] userIds);
 }
