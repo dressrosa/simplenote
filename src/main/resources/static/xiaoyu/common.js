@@ -127,15 +127,15 @@ function uploadFile() {
 		myModal.destroy();
 	}
 	myModal = new jBox('Modal', {
-		height : 350,
-		width : 350,
-		animation : 'tada',
+		height : 360,
+		width : 360,
+		animation : 'slide',
 		closeButton : 'title',
 		closeOnClick : false,
 		draggable : "title",
 		title : "上传图片",
 		ajax : {
-			url : "/back/uploadFile.html",
+			url : "/goUpload",
 			reload : true
 		},
 		onCloseComplete : function(e) {

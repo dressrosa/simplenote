@@ -175,7 +175,7 @@ public class UserService extends BaseService<UserDao, User> implements IUserServ
 
 		return mapper.setCode(ResultConstant.EXCEPTION).setMessage("抱歉,注册没成功").getResultJson();
 	}
-
+ 
 	@Override
 	public String editUser(HttpServletRequest request, String userId, String content, Integer flag) {
 		ResponseMapper mapper = ResponseMapper.createMapper();
@@ -190,6 +190,7 @@ public class UserService extends BaseService<UserDao, User> implements IUserServ
 			if (StringUtils.isBlank(content)) {
 				return mapper.setCode(ResultConstant.ARGS_ERROR).setMessage("请上传头像").getResultJson();
 			}
+			temp.setAvatar(content.substring(content.lastIndexOf("/")));
 			break;
 		case 1:// 修改签名
 			if (StringUtils.isNotBlank(content) && content.length() > 15) {
@@ -251,11 +252,10 @@ public class UserService extends BaseService<UserDao, User> implements IUserServ
 		f.setFollowerId(userId);
 
 		try {
-			if(this.followDao.isExist(f)>0) {
+			if (this.followDao.isExist(f) > 0) {
 				this.followDao.update(f);
-			}
-			else{
-				this.followDao.insert(f);				
+			} else {
+				this.followDao.insert(f);
 			}
 			this.userAttrDao.addNum(NumCountType.FollowerNum.ordinal(), 1, f.getUserId());
 		} catch (RuntimeException e) {

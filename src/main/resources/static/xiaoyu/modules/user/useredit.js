@@ -309,5 +309,7 @@ $(document).ready(
 			}, function() {
 				$(".mask").css("display", "none");
 			});
-
+			$(".avatar_wrapper").on("click",function(){
+				uploadFile();
+			});
 		});

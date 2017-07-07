@@ -60,4 +60,18 @@ public class RouteController {
 	public String goEditUserInfo(HttpServletRequest request) {
 		return "user/userForm";
 	}
+
+	/**
+	 * 跳转上传页面
+	 * 
+	 * @author xiaoyu
+	 * @param request
+	 * @param response
+	 * @return
+	 * @time 2016年3月29日下午4:02:17
+	 */
+	@RequestMapping("goUpload")
+	public String goUpload(HttpServletRequest request, HttpServletResponse response) {
+		return "common/uploadFile";
+	}
 }

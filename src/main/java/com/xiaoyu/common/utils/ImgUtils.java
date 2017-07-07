@@ -7,13 +7,20 @@ import java.io.BufferedOutputStream;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.InputStream;
 import java.util.Random;
 import java.util.ResourceBundle;
 
+import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.Part;
 
 import org.springframework.util.FileCopyUtils;
 import org.springframework.web.multipart.MultipartFile;
+
+import com.qcloud.cos.COSClient;
+import com.qcloud.cos.ClientConfig;
+import com.qcloud.cos.request.UploadFileRequest;
+import com.qcloud.cos.sign.Credentials;
 
 import net.coobird.thumbnailator.Thumbnails;
 
@@ -142,5 +149,38 @@ public class ImgUtils {
 			e.printStackTrace();
 		}
 		return getPath(imagesDir + newImgName);
+	}
+
+	public static String saveImgToTencentOss(Part part) {
+		// 限制只要图片
+		String suffix = part.getSubmittedFileName().substring(part.getSubmittedFileName().lastIndexOf("."));
+		if (!suffix.matches("[.](jpg|jpeg|png)$")) {
+			return null;
+		}
+		long appId = 1;
+		String secretId = "1";
+		String secretKey = "1";
+		// 设置要操作的bucket
+		String bucketName = "1";
+		// 初始化秘钥信息
+		Credentials cred = new Credentials(appId, secretId, secretKey);
+
+		// 初始化客户端配置
+		ClientConfig clientConfig = new ClientConfig();
+		// 设置bucket所在的区域，比如华南园区：gz； 华北园区：tj；华东园区：sh ；
+		clientConfig.setRegion("tj");
+		// 初始化cosClient
+		COSClient client = new COSClient(clientConfig, cred);
+		String newImgName = Long.toString(System.currentTimeMillis()) + new Random().nextInt(1000000) + suffix;
+		byte[] contentBuffer = null;
+		try {
+			InputStream stream = part.getInputStream();
+			contentBuffer = new byte[stream.available()];
+			stream.read(contentBuffer);
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+		UploadFileRequest f = new UploadFileRequest(bucketName, "/" + newImgName, contentBuffer);
+		return client.uploadSingleFile(f);
 	}
 }
