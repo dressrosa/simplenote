@@ -240,8 +240,15 @@ $(document).ready(
 				$(".item_list").find("img").hover(function() {
 					var $avatar = $(this);
 					var $info = $.session.get('$u_'+$avatar.attr("id"));
+					var $u = jQuery.parseJSON($.session.get("user"));
+					
+					
 					if(!checkNull($info)&&$info!='null') {
-						fillInfo($avatar, $info);
+						var $uinfo = jQuery.parseJSON($info);
+						if(!checkNull($u)&& $u.userId ==$avatar.attr("id")) {
+							$uinfo.data=jQuery.parseJSON($.session.get("user"));
+						}
+						fillInfo($avatar, JSON.stringify($uinfo) );
 						return true;
 					}
 					$.ajax({

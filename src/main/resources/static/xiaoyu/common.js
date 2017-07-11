@@ -127,15 +127,15 @@ function uploadFile() {
 		myModal.destroy();
 	}
 	myModal = new jBox('Modal', {
-		height : 360,
-		width : 360,
+		height : 450,
+		width : 450,
 		animation : 'slide',
 		closeButton : 'title',
 		closeOnClick : false,
 		draggable : "title",
 		title : "上传图片",
 		ajax : {
-			url : "/goUpload",
+			url : "/user/upload",
 			reload : true
 		},
 		onCloseComplete : function(e) {
@@ -143,6 +143,24 @@ function uploadFile() {
 		},
 	});
 	myModal.open();
+}
+
+var tip;// 定义全局变量,用作弹出窗口上传后,关闭弹出框
+function showTip(msg) {
+	if (tip != null) {// 判断是否前一次的没有清除
+	 	tip.destroy();
+	}
+	tip = new jBox('Notice', {
+		content : msg,
+		animation : 'zoomIn',
+		position : {
+			x : 'center',
+			y : 'center'
+		},
+		autoClose : 1000,
+		closeOnClick : true
+	});
+	tip.open();
 }
 /*
  * 转向登陆页面,并记录当前页面的地址

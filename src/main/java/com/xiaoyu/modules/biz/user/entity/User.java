@@ -19,6 +19,7 @@ public class User extends BaseEntity {
 	private String description;
 	private String password;
 	private String signature;
+	private String background;
 	private UserAttr attr;
 
 	public UserAttr getAttr() {
@@ -27,6 +28,14 @@ public class User extends BaseEntity {
 
 	public void setAttr(UserAttr attr) {
 		this.attr = attr;
+	}
+
+	public String getBackground() {
+		return background;
+	}
+
+	public void setBackground(String background) {
+		this.background = background;
 	}
 
 	public String getSignature() {

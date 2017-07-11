@@ -52,7 +52,9 @@ var $arPromise = $
 						$partDown.find(".ar_view").html(
 								'浏览量:' + ar.attr.readNum);
 						$partDown.find(".ar_content").attr("id", ar.articleId);
-						$partDown.find(".ar_content").html(ar.content);
+						var converter = new showdown.Converter();
+						$partDown.find(".ar_content").html(
+								converter.makeHtml(ar.content));
 
 					}
 				} else {
@@ -347,15 +349,17 @@ var follow = function() {
 						"background" : "#e2e2e2"
 					});
 					$(".p_love").attr("data-love", '1');
+					showTip("关注成功");
 				} else if (obj.data.isFollow == '0') {
 					$(".p_love").text("关注");
 					$(".p_love").css({
 						"background" : "#fff9f9"
 					});
 					$(".p_love").attr("data-love", '0');
+					showTip("取消成功");
 				}
 			} else if (obj.code = '20001') {
-
+				showTip(obj.message);
 			}
 		}
 	});

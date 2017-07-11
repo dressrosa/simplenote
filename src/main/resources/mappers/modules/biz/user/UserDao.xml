@@ -9,6 +9,7 @@
 		a.login_name as
 		loginName,
 		a.avatar as avatar,
+		a.background as background,
 		a.description as
 		description,
 		a.signature as signature
@@ -129,6 +130,9 @@
 			</if>
 			<if test="sex != null">
 				sex = #{sex},
+			</if>
+			<if test="background != null">
+                background = #{background},			
 			</if>
 			<if test="updateDate != null">
 				update_date=#{updateDate},

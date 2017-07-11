@@ -15,6 +15,8 @@ var $ajaxPromise1 = $.ajax({
 				if (checkNull($user.avatar)) {
 					$user.avatar = 'common/avatar.png';
 				}
+				$(".panel").css("background",
+						'url(' + imgHead + $user.background + ') no-repeat 0% 70%/cover');
 				$userPanel.find("img").attr("src", $user.avatar);
 				$userPanel.find("img").attr("id", $user.userId);
 				$userPanel.find(".nickname_panel").html($user.nickname);
@@ -80,7 +82,7 @@ var handleAll = function(data) {
 		} else {
 			$(".list-group").html(blankPage);
 		}
-	}else {
+	} else {
 		$(".list-group").html(blankPage);
 	}
 
@@ -92,34 +94,34 @@ var handleAll = function(data) {
 var handleCollected = function(data) {
 	var $userInfo = jQuery.parseJSON($.session.get("user"));
 	var isSelf = false;
-	if(!checkNull($userInfo)&&$userInfo.userId==userId) {
-		  isSelf= true; 
+	if (!checkNull($userInfo) && $userInfo.userId == userId) {
+		isSelf = true;
 	}
-	
+
 	var obj = jQuery.parseJSON(data);
 	if (obj.code == '0') {
 		var arHtml = "";
 		if (obj.data != null && obj.data.length > 0) {
-			$
-					.each(
-							obj.data,
-							function(index, ar) {
-								arHtml += '<div class="collect_list_item">'
-										+ '<div class="collect_ar_info">'
-										+ '<dt>来自:</dt>'
-										+ '<dt id="'+ar.user.userId+'" class="collect_ar_author">'+ar.user.nickname+'</dt>';
-										if(isSelf)
-											arHtml += '<dt id="'+ar.articleId+'" class="collect_ar_unlove">取消收藏</dt>';
-										arHtml += 	 '</div>'
-										+ '<div style="text-align: center;">'
-										+ '	<label class="collect_ar_title" ar-id="'+ar.articleId+'">'+ar.title+'</label>'
-										+ '<div style="color: #9e9e9e;">'
-										+ '	<label id="collect_ar_like">'+ar.attr.likeNum+'个赞</label> '
-										+ '<label id="collect_ar_com">'+ar.attr.commentNum+'个评论&nbsp;</label>'
-										+ '<label id="collect_ar_col">'+ar.attr.collectNum+'个收藏</label>'
-										+ '</div>' + '</div>' + '</div>';
+			$.each(obj.data, function(index, ar) {
+				arHtml += '<div class="collect_list_item">'
+						+ '<div class="collect_ar_info">' + '<dt>来自:</dt>'
+						+ '<dt id="' + ar.user.userId
+						+ '" class="collect_ar_author">' + ar.user.nickname
+						+ '</dt>';
+				if (isSelf)
+					arHtml += '<dt id="' + ar.articleId
+							+ '" class="collect_ar_unlove">取消收藏</dt>';
+				arHtml += '</div>' + '<div style="text-align: center;">'
+						+ '	<label class="collect_ar_title" ar-id="'
+						+ ar.articleId + '">' + ar.title + '</label>'
+						+ '<div style="color: #9e9e9e;">'
+						+ '	<label id="collect_ar_like">' + ar.attr.likeNum
+						+ '个赞</label> ' + '<label id="collect_ar_com">'
+						+ ar.attr.commentNum + '个评论&nbsp;</label>'
+						+ '<label id="collect_ar_col">' + ar.attr.collectNum
+						+ '个收藏</label>' + '</div>' + '</div>' + '</div>';
 
-							});
+			});
 			if ($(".list-group").attr("id") == "list-collected") {
 				$(".list-group").html(arHtml);
 			}
@@ -128,7 +130,7 @@ var handleCollected = function(data) {
 		} else {
 			$(".list-group").html(blankPage);
 		}
-	}else {
+	} else {
 		$(".list-group").html(blankPage);
 	}
 	addHeadForImg();
@@ -165,7 +167,7 @@ var handleFollowing = function(data) {
 							+ '" class="avatar small compact" />';
 				}
 			});
-			
+
 			$r += '</div>';
 			$r += '</div>';
 			$r += '<div class="page_arrow" style="position: absolute;right: 0"><i class="arrow_carrot-right" data-page="2"></i></div>';
@@ -174,47 +176,64 @@ var handleFollowing = function(data) {
 			$ht += '</div>';
 			$ht += '<div class="love_ar_list">';
 			console.log(ids);
-			$.ajax({
-				type : "post",
-				async : false,
-				url : '/api/v1/article/latest',
-				data : {
-					userId : ids
-				},
-				beforeSend : function(xhr) {
-					return before(xhr);
-				},
-				success : function(data) {
-					var obj = jQuery.parseJSON(data);
-					console.log(data);
-					if (obj.code == '0'&& obj.data.length > 0) {
-						$.each(obj.data, function(index, ar) {
-							$ht += '<dl>';
-							$ht += '<div class="love_ar_model">';
-							$ht += '	<span class="item_userinfo">';
-							$ht += '<img class="avatar small" img-type="avatar" src="'+imgHead+ar.user.avatar+'" id="'+ar.userId+'">';
-							$ht += '<label class="item_desc">'+ar.user.signature+'</label></span>';
-							$ht += '<dt class="item_username">'+ar.user.nickname+'</dt>';
-							$ht += '<label style="font-size: 13px;">最近发表:</label>';
-							$ht += '<div class="font_center" >';
-							$ht += '	<label style="cursor:pointer;" id="'+ar.id+'">"'+ar.title+'"</label>';
-							$ht += '	<time style="font-size: 12px;">'+ar.createDate+'</time>';
-							$ht += '</div>';
-							$ht += '</div>';
-							$ht += '</dl>';
-						});
-						
-					}
-				}
-			});
+			$
+					.ajax({
+						type : "post",
+						async : false,
+						url : '/api/v1/article/latest',
+						data : {
+							userId : ids
+						},
+						beforeSend : function(xhr) {
+							return before(xhr);
+						},
+						success : function(data) {
+							var obj = jQuery.parseJSON(data);
+							console.log(data);
+							if (obj.code == '0' && obj.data.length > 0) {
+								$
+										.each(
+												obj.data,
+												function(index, ar) {
+													$ht += '<dl>';
+													$ht += '<div class="love_ar_model">';
+													$ht += '	<span class="item_userinfo">';
+													$ht += '<img class="avatar small" img-type="avatar" src="'
+															+ imgHead
+															+ ar.user.avatar
+															+ '" id="'
+															+ ar.userId + '">';
+													$ht += '<label class="item_desc">'
+															+ ar.user.signature
+															+ '</label></span>';
+													$ht += '<dt class="item_username">'
+															+ ar.user.nickname
+															+ '</dt>';
+													$ht += '<label style="font-size: 13px;">最近发表:</label>';
+													$ht += '<div class="font_center" >';
+													$ht += '	<label style="cursor:pointer;" id="'
+															+ ar.id
+															+ '">"'
+															+ ar.title
+															+ '"</label>';
+													$ht += '	<time style="font-size: 12px;">'
+															+ ar.createDate
+															+ '</time>';
+													$ht += '</div>';
+													$ht += '</div>';
+													$ht += '</dl>';
+												});
+
+							}
+						}
+					});
 			$ht += '</div>';
-			
 
 			$(".list-group").html($ht);
 		} else {
 			$(".list-group").html(blankPage);
 		}
-	}else {
+	} else {
 		$(".list-group").html(blankPage);
 	}
 	addHeadForImg();
@@ -407,10 +426,14 @@ $(document)
 										+ elem.attr("id") + "/comments"
 
 							});
-					$(".list-group").delegate(".font_center label","click",function(){
-						var elem = $(this);
-						window.location.href = '/article/' + elem.attr("id");
-					});
+					$(".list-group").delegate(
+							".font_center label",
+							"click",
+							function() {
+								var elem = $(this);
+								window.location.href = '/article/'
+										+ elem.attr("id");
+							});
 					$(".list-group").delegate(".icon_like", "click",
 							function() {
 								var elem = $(this).parent().parent().parent();
@@ -462,10 +485,14 @@ $(document)
 						var elem = $icon.parent();
 						window.location.href = '/article/' + elem.attr("id");
 					})
-					$(".list-group").delegate(".collect_ar_title","click",function(){
-						var $icon = $(this);
-						window.location.href = '/article/' + $icon.attr("ar-id");
-					});
+					$(".list-group").delegate(
+							".collect_ar_title",
+							"click",
+							function() {
+								var $icon = $(this);
+								window.location.href = '/article/'
+										+ $icon.attr("ar-id");
+							});
 					$(".list-group").delegate(
 							".collect_ar_unlove",
 							"click",
@@ -476,13 +503,13 @@ $(document)
 									window.location.href = "/login";
 									return false;
 								}
-								var elem =  $(this);
+								var elem = $(this);
 								var item = elem.parent().parent();
 								item.css({
-									"opacity":"0",
-									"transition":"opacity 2s",
+									"opacity" : "0",
+									"transition" : "opacity 2s",
 								});
-								
+
 								$.ajax({
 									type : "post",
 									async : true,
@@ -501,34 +528,30 @@ $(document)
 											console.log("未登录");
 											window.location.href = "/login";
 											return false;
-										}
-										else if(obj.code =='0') {
-											setTimeout(function(){
+										} else if (obj.code == '0') {
+											setTimeout(function() {
 												item.css({
-													"display":"none"
+													"display" : "none"
 												});
-											},1000);
+											}, 1000);
 										}
-										
+
 										return true;
 									},
 									error : function(data) {
 										console.log(data);
 										item.css({
-											"opacity":"1"
+											"opacity" : "1"
 										});
 										return false;
 									}
 								});
 								removeAllCache();
 							});
-					$(".list-group").delegate(
-							".compact",
-							"click",
-							function() {
-								var $elem = $(this);
-								window.location.href = "/user/" + $elem.attr('id');
-							});
+					$(".list-group").delegate(".compact", "click", function() {
+						var $elem = $(this);
+						window.location.href = "/user/" + $elem.attr('id');
+					});
 					$(".list-group").delegate(
 							".icon_heart_alt",
 							"click",
@@ -607,7 +630,7 @@ $(document)
 															"initial");
 													return;
 												}
-												var $html = '<label style="cursor:pointer;float:left;padding:5px;color:#fff;">编辑资料</label>';
+												var $html = '<label style="cursor:pointer;float:left;padding:5px;color:#d64444;">编辑资料</label>';
 												$(".panel").prepend($html);
 												$(".panel")
 														.find('label')

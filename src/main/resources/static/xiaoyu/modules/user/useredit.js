@@ -30,7 +30,8 @@ var $ajaxPromise1 = $.ajax({
 				$("#item_name").find(".info_input").val($user.nickname);
 				$("#item_sign").find(".info_input").val($user.signature);
 				$("#item_desc").find(".info_input").val($user.description);
-
+				$(".panel").css("background",
+						'url(' + imgHead + $user.background + ') no-repeat 0% 70%/cover');
 				$(".panel_card").css("background",
 						'url(' + imgHead + $user.avatar + ')');
 				$(".panel_card").css("background-size", 'contain');
@@ -178,9 +179,13 @@ var editSignature = function() {
 			console.log(data);
 			var obj = jQuery.parseJSON(data);
 			if (obj.code == 0) {
-				$(".card_u").find("label")[1].innerHTML = $("#item_sign").find(
-						".info_input").val();
+				var $sign =  $("#item_sign").find(
+				".info_input").val()
+				$(".card_u").find("label")[1].innerHTML =$sign;
 				hideBtn("item_sign");
+				userInfo = jQuery.parseJSON($.session.get("user"));
+				userInfo.signature = $sign;
+				$.session.set("user", JSON.stringify(userInfo), true);
 			}else if(obj.code == '20001') {
 				window.location.href='/login';
 			}
@@ -240,6 +245,9 @@ var editDesc = function() {
 			var obj = jQuery.parseJSON(data);
 			if (obj.code == 0) {
 				hideBtn('item_desc');
+				userInfo = jQuery.parseJSON($.session.get("user"));
+				userInfo.description = con;
+				$.session.set("user", JSON.stringify(userInfo), true);
 			}
 			else if(obj.code == '20001') {
 				window.location.href='/login';
@@ -311,5 +319,23 @@ $(document).ready(
 			});
 			$(".avatar_wrapper").on("click",function(){
 				uploadFile();
+			});
+			
+			$("#bgupload").fileupload({
+				url : '/api/v1/upload/background',
+				dataType : 'json',
+				autoUpload : true,
+				maxNumberOfFiles : 1,// single
+				acceptFileTypes : /(\.|\/)(jpe?g|png)$/i,
+				maxFileSize : 999000
+			}).on('fileuploaddone', function(e, data) {
+				var r = data.result;
+				if (r.code == '0') {
+					var d = r.data;
+					$(".panel").css('background', 'url(' + d + ') no-repeat 0% 70%/cover' );
+				} else {
+					var error = $('<span class="text-danger"/>').text(r.message);
+					$(data.context).append('<br>').append(error);
+				}
 			});
 		});

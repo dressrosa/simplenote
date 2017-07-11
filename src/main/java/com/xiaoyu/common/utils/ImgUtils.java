@@ -10,13 +10,9 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.util.Random;
 import java.util.ResourceBundle;
-
-import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.Part;
-
 import org.springframework.util.FileCopyUtils;
 import org.springframework.web.multipart.MultipartFile;
-
 import com.qcloud.cos.COSClient;
 import com.qcloud.cos.ClientConfig;
 import com.qcloud.cos.request.UploadFileRequest;
@@ -157,11 +153,11 @@ public class ImgUtils {
 		if (!suffix.matches("[.](jpg|jpeg|png)$")) {
 			return null;
 		}
-		long appId = 1;
-		String secretId = "1";
-		String secretKey = "1";
+		long appId = 1253813687;
+		String secretId = "AKIDMdrzwiXi6KSVYtD86wd9UdlkW6Ui2aFD";
+		String secretKey = "2ta5QZXJuJXZb2bkmdPNI1d3GI8mHahh";
 		// 设置要操作的bucket
-		String bucketName = "1";
+		String bucketName = "xiaoyu1";
 		// 初始化秘钥信息
 		Credentials cred = new Credentials(appId, secretId, secretKey);
 
@@ -171,7 +167,7 @@ public class ImgUtils {
 		clientConfig.setRegion("tj");
 		// 初始化cosClient
 		COSClient client = new COSClient(clientConfig, cred);
-		String newImgName = Long.toString(System.currentTimeMillis()) + new Random().nextInt(1000000) + suffix;
+		String newImgName =  new Random().nextInt(1_000)+Long.toString(System.currentTimeMillis()) + new Random().nextInt(1_000) + suffix;
 		byte[] contentBuffer = null;
 		try {
 			InputStream stream = part.getInputStream();

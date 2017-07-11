@@ -70,7 +70,7 @@ public class RouteController {
 	 * @return
 	 * @time 2016年3月29日下午4:02:17
 	 */
-	@RequestMapping("goUpload")
+	@RequestMapping("user/upload")
 	public String goUpload(HttpServletRequest request, HttpServletResponse response) {
 		return "common/uploadFile";
 	}

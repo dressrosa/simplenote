@@ -52,6 +52,7 @@ public class UserService extends BaseService<UserDao, User> implements IUserServ
 		Map<String, Object> map = new HashMap<>();
 		map.put("userId", u.getId());
 		map.put("description", u.getDescription());
+		map.put("background", u.getBackground());
 		map.put("avatar", u.getAvatar());
 		map.put("nickname", u.getNickname());
 		map.put("signature", u.getSignature());
@@ -175,7 +176,7 @@ public class UserService extends BaseService<UserDao, User> implements IUserServ
 
 		return mapper.setCode(ResultConstant.EXCEPTION).setMessage("抱歉,注册没成功").getResultJson();
 	}
- 
+
 	@Override
 	public String editUser(HttpServletRequest request, String userId, String content, Integer flag) {
 		ResponseMapper mapper = ResponseMapper.createMapper();
@@ -212,6 +213,12 @@ public class UserService extends BaseService<UserDao, User> implements IUserServ
 				return mapper.setCode(ResultConstant.ARGS_ERROR).setMessage("昵称最多10个字").getResultJson();
 			}
 			temp.setNickname(content);
+			break;
+		case 4:// 修改背景图片
+			if (StringUtils.isBlank(content)) {
+				return mapper.setCode(ResultConstant.ARGS_ERROR).setMessage("请上传背景图片").getResultJson();
+			}
+			temp.setBackground(content.substring(content.lastIndexOf("/")));
 			break;
 
 		}
