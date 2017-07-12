@@ -16,11 +16,13 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import com.alibaba.fastjson.JSON;
 import com.github.pagehelper.Page;
 import com.github.pagehelper.PageHelper;
 import com.xiaoyu.common.base.BaseService;
 import com.xiaoyu.common.base.ResponseMapper;
 import com.xiaoyu.common.base.ResultConstant;
+import com.xiaoyu.common.utils.ElasticUtils;
 import com.xiaoyu.common.utils.IdGenerator;
 import com.xiaoyu.common.utils.JedisUtils;
 import com.xiaoyu.common.utils.StringUtils;
@@ -622,6 +624,39 @@ public class ArticleService extends BaseService<ArticleDao, Article> implements 
 			mapper.setData(list);
 		}
 		return mapper.getResultJson();
+	}
+
+
+	@Override
+	public String search(HttpServletRequest request, String keyword) {
+		ResponseMapper mapper = ResponseMapper.createMapper();
+		Map<String, Object> map = ElasticUtils.searchWithCount(new String[] { "website" }, new String[] { "article" }, 0, 10,
+				keyword, new String[] { "title", "content" });
+		return mapper.setData(map).getResultJson();
+	}
+
+	@Override
+	public String synElastic(HttpServletRequest request, String password) {
+		ResponseMapper mapper = ResponseMapper.createMapper();
+		Page<Article> page = new Page<>();
+		if ("xiaoyu".equals(password)) {
+			int count = this.articleDao.count();
+
+			// 分页同步 防止一次性取出量过大
+			for (int i = 1; i <= (count + 50 - 1) / 50; i++) {
+				PageHelper.startPage(i, 50, true);
+				page = (Page<Article>) this.articleDao.findByList(new Article());
+				if (page != null && page.getResult() != null && page.getResult().size() > 0) {
+					List<Article> list = page.getResult();
+					for (Article a : list) {
+						ElasticUtils.insert("website", "article", a.getId(), JSON.toJSONString(a));
+					}
+				}
+			}
+			return mapper.setMessage("同步成功").getResultJson();
+		}
+
+		return mapper.setMessage("同步失败").getResultJson();
 	}
 
 }

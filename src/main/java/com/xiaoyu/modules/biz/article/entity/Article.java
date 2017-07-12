@@ -19,36 +19,6 @@ public class Article extends BaseEntity {
 	private String title;
 	private String content;
 
-	private Integer readNum;
-	private Integer commentNum;
-	private Integer collectNum;
-
-	public Integer getCollectNum() {
-		return collectNum;
-	}
-
-	public void setCollectNum(Integer collectNum) {
-		this.collectNum = collectNum;
-	}
-
-	public Integer getReadNum() {
-		return readNum;
-	}
-
-	public Article setReadNum(Integer readNum) {
-		this.readNum = readNum;
-		return this;
-	}
-
-	public Integer getCommentNum() {
-		return commentNum;
-	}
-
-	public Article setCommentNum(Integer commentNum) {
-		this.commentNum = commentNum;
-		return this;
-	}
-
 	public String getUserId() {
 		return userId;
 	}

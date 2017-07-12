@@ -229,88 +229,157 @@ var fillInfo = function(item1, item2) {
 		"display" : "initial"
 	});
 }
-$(document).ready(
-		function() {
-			$ajaxPromise.promise().done(function() {
-				if (!isPC()) {
-					$(".hot").css("display", "block");
-					$(".hot").css("width", "100%");
-					$("#footer").css("display", "none");
-				}
-				$(".item_list").find("img").hover(function() {
-					var $avatar = $(this);
-					var $info = $.session.get('$u_'+$avatar.attr("id"));
-					var $u = jQuery.parseJSON($.session.get("user"));
-					
-					
-					if(!checkNull($info)&&$info!='null') {
-						var $uinfo = jQuery.parseJSON($info);
-						if(!checkNull($u)&& $u.userId ==$avatar.attr("id")) {
-							$uinfo.data=jQuery.parseJSON($.session.get("user"));
-						}
-						fillInfo($avatar, JSON.stringify($uinfo) );
-						return true;
+$(document)
+		.ready(
+				function() {
+					$ajaxPromise
+							.promise()
+							.done(
+									function() {
+										if (!isPC()) {
+											$(".hot").css("display", "block");
+											$(".hot").css("width", "100%");
+											$("#footer").css("display", "none");
+										}
+										$(".item_list")
+												.find("img")
+												.hover(
+														function() {
+															var $avatar = $(this);
+															var $info = $.session
+																	.get('$u_'
+																			+ $avatar
+																					.attr("id"));
+															var $u = jQuery
+																	.parseJSON($.session
+																			.get("user"));
+
+															if (!checkNull($info)
+																	&& $info != 'null') {
+																var $uinfo = jQuery
+																		.parseJSON($info);
+																if (!checkNull($u)
+																		&& $u.userId == $avatar
+																				.attr("id")) {
+																	$uinfo.data = jQuery
+																			.parseJSON($.session
+																					.get("user"));
+																}
+																fillInfo(
+																		$avatar,
+																		JSON
+																				.stringify($uinfo));
+																return true;
+															}
+															$
+																	.ajax({
+																		type : "get",
+																		async : true,
+																		url : '/api/v1/user/'
+																				+ $avatar
+																						.attr("id"),
+																		success : function(
+																				data) {
+																			var obj = jQuery
+																					.parseJSON(data);
+																			if (obj.code == 0) {
+																				$.session
+																						.set(
+																								'$u_'
+																										+ obj.data.userId,
+																								data,
+																								30 * 60);
+																				fillInfo(
+																						$avatar,
+																						data);
+																			}
+
+																			return true;
+																		}
+																	});
+
+														},
+														function() {
+															var $userCard = $(".panel_card_wrapper_smaller");
+															$userCard
+																	.find(
+																			".panel_card")
+																	.css(
+																			"background",
+																			'rgba(215, 215, 215, 0.5)');
+															$userCard
+																	.find(
+																			".panel_card")
+																	.css(
+																			"background-size",
+																			'contain');
+															$userCard
+																	.css({
+																		"display" : "none"
+																	});
+														});
+									});
+
+					if (checkNull(userInfo)) {
+						$("#loginSpan").css("display", "block");
+					} else {
+						$("#userSpan").css("display", "block");
+						$("#userSpan").find("#nickname").attr("href",
+								"/user/" + userInfo.userId);
+						$("#userSpan").find("#nickname")
+								.text(userInfo.nickname);
 					}
-					$.ajax({
-						type : "get",
-						async : true,
-						url : '/api/v1/user/' + $avatar.attr("id"),
-						success : function(data) {
-							var obj = jQuery.parseJSON(data);
-							if (obj.code == 0) {
-								$.session.set('$u_'+obj.data.userId,data,30*60);
-								fillInfo($avatar, data);
-							}
+					// 搜索框隐藏
+					$(window)
+							.scroll(
+									function() {
+										var $top = document.body.scrollTop;
+										$(".top_n1_banner").css(
+												"background-position",
+												"center " + $top);
+										// console.log("top:" + $top);
+										if ($top > 300) {
+											$(".top_n1_info").css("opacity", 1);
+											$(".header").find(".search_span1")
+													.css("display", "initial");
+											$(".header").find(".user_dropdown")
+													.css("background",
+															"#d64444");
+											$(".header").removeClass(
+													"transparent_header");
+											$(".top_n1").find(".search_span")
+													.css("display", "none");
+										} else {
+											$(".top_n1_info").css("opacity",
+													1 - $top / 300.0);
+											$(".header").find(".search_span1")
+													.css("display", "none");
+											$(".top_n1").find(".search_span")
+													.css("display", "table");
+											$(".header").addClass(
+													"transparent_header");
+											$(".header")
+													.find(".user_dropdown")
+													.css("background",
+															"rgba(214, 68, 68, 0)");
+										}
 
-							return true;
-						}
+									});
+
+					$(".icon_search").on('click', function() {
+						var $search = $(this);
+						var word = $search.parent().find("input").val();
+						if (!checkNull(word))
+							window.location.href = "/search?keyword=" + word;
 					});
-
-				}, function() {
-					var $userCard = $(".panel_card_wrapper_smaller");
-					$userCard.find(".panel_card").css("background",
-							'rgba(215, 215, 215, 0.5)');
-					$userCard.find(".panel_card").css("background-size", 'contain');
-					$userCard.css({
-						"display" : "none"
+					$(".input_search").keyup(function(e) {
+						var curKey = e.which;
+						if (curKey == 13)
+							$(".icon_search").click();
+					});
+					$(".bigger").keyup(function(e) {
+						var curKey = e.which;
+						if (curKey == 13)
+							$(".icon_search").click();
 					});
 				});
-			});
-
-			if (checkNull(userInfo)) {
-				$("#loginSpan").css("display", "block");
-			} else {
-				$("#userSpan").css("display", "block");
-				$("#userSpan").find("#nickname").attr("href",
-						"/user/" + userInfo.userId);
-				$("#userSpan").find("#nickname").text(userInfo.nickname);
-			}
-			// 搜索框隐藏
-			$(window).scroll(
-					function() {
-						var $top = document.body.scrollTop;
-						$(".top_n1_banner").css("background-position",
-								"center " + $top);
-						// console.log("top:" + $top);
-						if ($top > 300) {
-							$(".top_n1_info").css("opacity", 1);
-							$(".header").find(".search_span1").css("display",
-									"initial");
-							$(".header").find(".user_dropdown").css(
-									"background", "#d64444");
-							$(".header").removeClass("transparent_header");
-							$(".top_n1").find(".search_span").css("display",
-									"none");
-						} else {
-							$(".top_n1_info").css("opacity", 1 - $top / 300.0);
-							$(".header").find(".search_span1").css("display",
-									"none");
-							$(".top_n1").find(".search_span").css("display",
-									"table");
-							$(".header").addClass("transparent_header");
-							$(".header").find(".user_dropdown").css(
-									"background", "rgba(214, 68, 68, 0)");
-						}
-
-					});
-		});

@@ -74,4 +74,9 @@ public class RouteController {
 	public String goUpload(HttpServletRequest request, HttpServletResponse response) {
 		return "common/uploadFile";
 	}
+
+	@RequestMapping(value = "search", method = RequestMethod.GET)
+	public String goSearch(HttpServletRequest request, String keyword) {
+		return "article/searchList";
+	}
 }

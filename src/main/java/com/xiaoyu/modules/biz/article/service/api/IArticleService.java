@@ -38,4 +38,8 @@ public interface IArticleService {
 	public String newComments(HttpServletRequest request, String articleId);
 
 	public String latestOfUsers(HttpServletRequest request, String[] userIds);
+
+	public String search(HttpServletRequest request, String keyword);
+
+	public String synElastic(HttpServletRequest request, String password);
 }

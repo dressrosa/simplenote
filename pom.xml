@@ -111,6 +111,11 @@
 			<groupId>org.aspectj</groupId>
 			<artifactId>aspectjtools</artifactId>
 		</dependency>
+		<!--elasticsearch  -->
+		<dependency>
+			<groupId>org.elasticsearch</groupId>
+			<artifactId>elasticsearch</artifactId>
+		</dependency>
 		<!-- 图片生成缩略图 -->
 		<dependency>
 			<groupId>net.coobird</groupId>

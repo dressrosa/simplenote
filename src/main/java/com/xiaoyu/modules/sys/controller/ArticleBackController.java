@@ -140,4 +140,14 @@ public class ArticleBackController {
 			@RequestParam(required = true) Integer isLike) {
 		return this.articleService.addCommentLike(request, commentId, isLike);
 	}
+
+	@RequestMapping(value = "api/v1/article/search", method = RequestMethod.GET)
+	public String search(HttpServletRequest request, @RequestParam(required = true) String keyword) {
+		return this.articleService.search(request,keyword);
+	}
+	
+	@RequestMapping(value = "api/v1/article/synElastic", method = RequestMethod.GET)
+	public String synElastic(HttpServletRequest request,String password) {
+		return this.articleService.synElastic(request,password);
+	}
 }

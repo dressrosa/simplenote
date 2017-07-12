@@ -31,4 +31,6 @@ public interface ArticleDao extends BaseDao<Article> {
 
 	List<ArticleVo> findLatestOfUsers(String[] userIds);
 
+	Integer count();
+
 }
