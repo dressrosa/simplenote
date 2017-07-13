@@ -6,6 +6,7 @@ package com.xiaoyu.common.utils;
 import java.net.InetSocketAddress;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
@@ -176,6 +177,25 @@ public class ElasticUtils {
 		}
 	}
 
+	public static void upsertList(String index, String type, Map<String, String> jsonMap) {
+		try {
+			init();
+			Iterator<Entry<String, String>> iter = jsonMap.entrySet().iterator();
+			UpdateRequestBuilder builder = null;
+
+			while (iter.hasNext()) {
+				Entry<String, String> e = iter.next();
+				builder = client.prepareUpdate(index, type, e.getKey());
+				builder.setDoc(e.getValue()).setUpsert(e.getKey()).get();
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+		} finally {
+			if (client != null)
+				client.close();
+		}
+	}
+
 	private static void checkNull(String id) {
 		if ("".equals(id) || id == null)
 			throw new IllegalArgumentException("id should given a valid value");
@@ -246,10 +266,11 @@ public class ElasticUtils {
 		}
 		return highLightHandler(hits);
 	}
-	public static Map<String,Object> searchWithCount(String[] indexs, String[] types, Integer pageNum, Integer pageSize, String query,
-			String... fields) {
+
+	public static Map<String, Object> searchWithCount(String[] indexs, String[] types, Integer pageNum,
+			Integer pageSize, String query, String... fields) {
 		SearchHits hits = null;
-		Map<String,Object> map = new HashMap<>();
+		Map<String, Object> map = new HashMap<>();
 		try {
 			init();
 			SearchRequestBuilder builder = client.prepareSearch(indexs);
@@ -271,8 +292,8 @@ public class ElasticUtils {
 			SearchResponse resp = builder.addFields(fields).setQuery(qb).setFrom(pageNum * pageSize).setSize(pageSize)
 					.get();
 			hits = resp.getHits();
-			map.put("count",hits.getTotalHits());
-			map.put("result",highLightHandler(hits));
+			map.put("count", hits.getTotalHits());
+			map.put("result", highLightHandler(hits));
 			logger.info("search docs with '" + query + "' hits " + hits.getTotalHits() + " ; " + "took  "
 					+ resp.getTookInMillis() + " ms;status=" + resp.status());
 		} catch (Exception e) {
@@ -282,8 +303,9 @@ public class ElasticUtils {
 				client.close();
 		}
 		return map;
-		
+
 	}
+
 	public static <T> List<T> highLightHandler(SearchHits hits) {
 		List<T> total = new ArrayList<>();
 		Map<String, Object> map = null;
@@ -304,7 +326,7 @@ public class ElasticUtils {
 					e.setValue(sb.toString());
 				}
 			}
-			total.add((T)map);
+			total.add((T) map);
 		}
 		return total;
 	}

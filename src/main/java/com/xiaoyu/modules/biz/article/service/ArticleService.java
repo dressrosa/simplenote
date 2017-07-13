@@ -626,12 +626,11 @@ public class ArticleService extends BaseService<ArticleDao, Article> implements 
 		return mapper.getResultJson();
 	}
 
-
 	@Override
 	public String search(HttpServletRequest request, String keyword) {
 		ResponseMapper mapper = ResponseMapper.createMapper();
-		Map<String, Object> map = ElasticUtils.searchWithCount(new String[] { "website" }, new String[] { "article" }, 0, 10,
-				keyword, new String[] { "title", "content" });
+		Map<String, Object> map = ElasticUtils.searchWithCount(new String[] { "website" }, new String[] { "article" },
+				0, 10, keyword, new String[] { "title", "content" });
 		return mapper.setData(map).getResultJson();
 	}
 
@@ -641,15 +640,16 @@ public class ArticleService extends BaseService<ArticleDao, Article> implements 
 		Page<Article> page = new Page<>();
 		if ("xiaoyu".equals(password)) {
 			int count = this.articleDao.count();
-
 			// 分页同步 防止一次性取出量过大
 			for (int i = 1; i <= (count + 50 - 1) / 50; i++) {
 				PageHelper.startPage(i, 50, true);
 				page = (Page<Article>) this.articleDao.findByList(new Article());
 				if (page != null && page.getResult() != null && page.getResult().size() > 0) {
 					List<Article> list = page.getResult();
+					Map<String,String> jsonMap = new HashMap<>();
 					for (Article a : list) {
-						ElasticUtils.insert("website", "article", a.getId(), JSON.toJSONString(a));
+						jsonMap.put(a.getId(), JSON.toJSONString(a));
+						ElasticUtils.upsertList("website", "article", jsonMap);
 					}
 				}
 			}
