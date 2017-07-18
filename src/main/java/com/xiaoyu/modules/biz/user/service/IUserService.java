@@ -28,4 +28,6 @@ public interface IUserService {
 	
 
 	public String following(HttpServletRequest request, String userId);
+
+	public String commonNums(HttpServletRequest request, String userId);
 }

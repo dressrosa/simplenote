@@ -33,6 +33,7 @@ import com.xiaoyu.modules.biz.user.entity.LoginRecord;
 import com.xiaoyu.modules.biz.user.entity.User;
 import com.xiaoyu.modules.biz.user.entity.UserAttr;
 import com.xiaoyu.modules.biz.user.vo.FollowVo;
+import com.xiaoyu.modules.biz.user.vo.UserVo;
 import com.xiaoyu.modules.sys.constant.NumCountType;
 
 /**
@@ -51,6 +52,17 @@ public class UserService extends BaseService<UserDao, User> implements IUserServ
 	private Map<String, Object> user2Map(User u) {
 		Map<String, Object> map = new HashMap<>();
 		map.put("userId", u.getId());
+		map.put("description", u.getDescription());
+		map.put("background", u.getBackground());
+		map.put("avatar", u.getAvatar());
+		map.put("nickname", u.getNickname());
+		map.put("signature", u.getSignature());
+		return map;
+	}
+
+	private Map<String, Object> user2Map(UserVo u) {
+		Map<String, Object> map = new HashMap<>();
+		map.put("userId", u.getUserId());
 		map.put("description", u.getDescription());
 		map.put("background", u.getBackground());
 		map.put("avatar", u.getAvatar());
@@ -142,7 +154,7 @@ public class UserService extends BaseService<UserDao, User> implements IUserServ
 		ResponseMapper mapper = ResponseMapper.createMapper();
 		User user = new User();
 		user.setId(userId);
-		User u = this.userDao.get(user);
+		UserVo u = this.userDao.getVo(user);
 		if (u == null) {
 			return mapper.setCode(ResultConstant.NOT_DATA).getResultJson();
 		}
@@ -343,6 +355,22 @@ public class UserService extends BaseService<UserDao, User> implements IUserServ
 		Map<String, String> map = new HashMap<>();
 		map.put("isFollow", "" + num);
 		return mapper.setData(map).getResultJson();
+	}
+
+	@Override
+	public String commonNums(HttpServletRequest request, String userId) {
+		ResponseMapper mapper = ResponseMapper.createMapper();
+		UserAttr t = new UserAttr();
+		t.setUserId(userId);
+		UserAttr attr = this.userAttrDao.get(t);
+		Map<String, Object> map = new HashMap<>();
+		if (attr != null) {
+			map.put("articleNum", attr.getArticleNum());
+			map.put("collectNum", attr.getCollectNum());
+			map.put("followerNum", attr.getFollowerNum());
+			return mapper.setData(map).getResultJson();
+		}
+		return mapper.setCode(ResultConstant.NOT_DATA).getResultJson();
 	}
 
 }

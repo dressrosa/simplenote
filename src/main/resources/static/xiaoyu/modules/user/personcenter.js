@@ -15,8 +15,10 @@ var $ajaxPromise1 = $.ajax({
 				if (checkNull($user.avatar)) {
 					$user.avatar = 'common/avatar.png';
 				}
-				$(".panel").css("background",
-						'url(' + imgHead + $user.background + ') no-repeat 0% 70%/cover');
+				$(".panel").css(
+						"background",
+						'url(' + imgHead + $user.background
+								+ ') no-repeat 0% 70%/cover');
 				$userPanel.find("img").attr("src", $user.avatar);
 				$userPanel.find("img").attr("id", $user.userId);
 				$userPanel.find(".nickname_panel").html($user.nickname);
@@ -278,14 +280,31 @@ var $following = $.ajax({
 	},
 	beforeSend : function(xhr) {
 		var userInfo = jQuery.parseJSON($.session.get("user"));
+		xhr.setRequestHeader('pageNum', 1);
 		if (!checkNull(userInfo)) {
-			xhr.setRequestHeader('pageNum', 1);
 			xhr.setRequestHeader('token', userInfo.token);
 			xhr.setRequestHeader('userId', userInfo.userId);
 		}
 	},
 	success : function(data) {
 		return handleFollowing(data);
+	}
+});
+$.ajax({
+	type : "get",
+	async : true,
+	url : '/api/v1/user/commonNums',
+	data : {
+		userId : userId
+	},
+	success : function(data) {
+		var obj = jQuery.parseJSON(data);
+		if(obj != null&&obj.code =='0'&&obj.data !=null) {
+			var $data = obj.data;
+			$(".ar_number").html($data.articleNum);
+			$(".co_number").html($data.collectNum);
+			$(".fo_number").html($data.followerNum);
+		}
 	}
 });
 var removeAllCache = function() {
@@ -390,11 +409,11 @@ $(document)
 															var $userInfo = jQuery
 																	.parseJSON($.session
 																			.get("user"));
+															xhr
+																	.setRequestHeader(
+																			'pageNum',
+																			1);
 															if (!checkNull($userInfo)) {
-																xhr
-																		.setRequestHeader(
-																				'pageNum',
-																				1);
 																xhr
 																		.setRequestHeader(
 																				'token',

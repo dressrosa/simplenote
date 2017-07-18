@@ -44,6 +44,7 @@ import com.xiaoyu.modules.biz.article.vo.ArticleVo;
 import com.xiaoyu.modules.biz.user.dao.UserAttrDao;
 import com.xiaoyu.modules.biz.user.dao.UserDao;
 import com.xiaoyu.modules.biz.user.entity.User;
+import com.xiaoyu.modules.biz.user.vo.UserVo;
 import com.xiaoyu.modules.sys.constant.NumCountType;
 
 /**
@@ -88,7 +89,7 @@ public class ArticleService extends BaseService<ArticleDao, Article> implements 
 		map.put("createDate", TimeUtils.format(a.getCreateDate(), "yyyy-MM-dd"));
 		map.put("createTime", TimeUtils.format(a.getCreateDate(), "HH:mm"));
 		map.put("title", a.getTitle());
-		map.put("user", this.user2Map(this.userDao.getById(a.getUserId())));
+		map.put("user", this.user2Map(this.userDao.getVoById(a.getUserId())));
 		map.put("attr", a.getAttr());
 		return map;
 	}
@@ -98,17 +99,17 @@ public class ArticleService extends BaseService<ArticleDao, Article> implements 
 		map.put("articleId", a.getId());
 		map.put("content", a.getContent().length() > 200 ? a.getContent().substring(0, 199) : a.getContent());
 		map.put("title", a.getTitle());
-		map.put("user", this.user2Map(this.userDao.getById(a.getUserId())));
+		map.put("user", this.user2Map(this.userDao.getVoById(a.getUserId())));
 		map.put("attr", a.getAttr());
 		map.put("isLike", "0");
 		map.put("isCollect", "0");
 		return map;
 	}
 
-	private Map<String, Object> user2Map(User a) {
+	private Map<String, Object> user2Map(UserVo a) {
 		Map<String, Object> map = new HashMap<>();
 		if (a != null) {
-			map.put("userId", a.getId());
+			map.put("userId", a.getUserId());
 			map.put("nickname", a.getNickname());
 			map.put("avatar", a.getAvatar());
 			map.put("signature", a.getSignature());
@@ -275,7 +276,7 @@ public class ArticleService extends BaseService<ArticleDao, Article> implements 
 				Map<String, Object> map = new HashMap<>();
 				map.put("articleId", a.getId());
 				map.put("title", a.getTitle());
-				map.put("user", this.user2Map(this.userDao.getById(a.getUserId())));
+				map.put("user", this.user2Map(this.userDao.getVoById(a.getUserId())));
 				map.put("attr", a.getAttr());
 				map.put("isLike", "0");
 				map.put("isCollect", "0");

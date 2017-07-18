@@ -9,22 +9,38 @@
 		a.login_name as
 		loginName,
 		a.avatar as avatar,
-		a.background as background,
+		a.background as
+		background,
 		a.description as
 		description,
 		a.signature as signature
 	</sql>
-
+	<sql id="vocolumns">
+		a.id as userId,
+		a.nickname as nickname,
+		a.sex as sex,
+		a.login_name as
+		loginName,
+		a.avatar as avatar,
+		a.background as
+		background,
+		a.description as
+		description,
+		a.signature as signature
+	</sql>
 	<sql id="userJoins">
 	</sql>
 
 
 	<!-- 根据登录名查询用户 -->
-	<select id="get" resultType="com.xiaoyu.modules.biz.user.entity.User"
+	<select id="getVo" resultType="com.xiaoyu.modules.biz.user.vo.UserVo"
 		parameterType="com.xiaoyu.modules.biz.user.entity.User">
 		select
-		<include refid="columns" />
+		<include refid="vocolumns" />
+		,r.article_num as 'attr.articleNum',
+		r.follower_num as 'attr.followerNum'
 		from biz_user as a
+		left join biz_user_attr as r on r.user_id=a.id
 		where
 		a.del_flag=0
 		<if test="id != null">
@@ -34,10 +50,11 @@
 			and a.login_name=#{loginName}
 		</if>
 	</select>
-	<select id="getById" resultType="com.xiaoyu.modules.biz.user.entity.User"
+
+	<select id="getVoById" resultType="com.xiaoyu.modules.biz.user.vo.UserVo"
 		parameterType="java.lang.String">
 		select
-		<include refid="columns" />
+		<include refid="vocolumns" />
 		,ua.article_num as "attr.articleNum",
 		ua.viewed_num as
 		"attr.viewedNum"
@@ -132,7 +149,7 @@
 				sex = #{sex},
 			</if>
 			<if test="background != null">
-                background = #{background},			
+				background = #{background},
 			</if>
 			<if test="updateDate != null">
 				update_date=#{updateDate},

@@ -37,6 +37,8 @@ var $ajaxPromise1 = $.ajax({
 				$(".panel_card").css("background-size", 'contain');
 				$(".card_u").find("label")[0].innerHTML = $user.nickname;
 				$(".card_u").find("label")[1].innerHTML = $user.signature;
+				$(".card_down").find("#ar_number").html($user.attr.articleNum);
+				$(".card_down").find("#fo_number").html($user.attr.followerNum);
 			}
 		}
 		addHeadForImg();

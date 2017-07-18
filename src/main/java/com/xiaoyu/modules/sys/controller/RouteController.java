@@ -79,4 +79,10 @@ public class RouteController {
 	public String goSearch(HttpServletRequest request, String keyword) {
 		return "article/searchList";
 	}
+
+	// 消息
+	@RequestMapping(value = "message", method = RequestMethod.GET)
+	public String goMsg(HttpServletRequest request) {
+		return "user/messageList";
+	}
 }

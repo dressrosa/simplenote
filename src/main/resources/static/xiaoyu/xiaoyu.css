@@ -1015,13 +1015,13 @@ li a {
 }
 
 .p_love {
-    border-radius: 4px;
-    height: 30px;
-    text-align: center;
-    background: #ff7171;
-    font-weight: 500;
-    font-size: 13px;
-    cursor: pointer;
+	border-radius: 4px;
+	height: 30px;
+	text-align: center;
+	background: #ff7171;
+	font-weight: 500;
+	font-size: 13px;
+	cursor: pointer;
 }
 
 .nickname {
@@ -1292,4 +1292,13 @@ white-space:nowrap;            娑撳秵宕茬悰锟� */
 
 .label_small {
 	font-size: 10px;
+}
+
+.msg_body {
+	min-height: 80px;
+	margin-bottom: 10px;
+	position: relative;
+	border: 1px solid red;
+	text-align: -webkit-left;
+	padding-left: 5px;
 }

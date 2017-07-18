@@ -221,6 +221,8 @@ var fillInfo = function(item1, item2) {
 	$userCard.find(".panel_card").css("background-size", 'contain');
 	$userCard.find(".card_u").find("label")[0].innerHTML = $user.nickname;
 	$userCard.find(".card_u").find("label")[1].innerHTML = $user.signature;
+	$userCard.find("#ar_number").html($user.attr.articleNum);
+	$userCard.find("#fo_number").html($user.attr.followerNum);
 	var $top = $avatar.parent().parent().position().top;
 	$userCard.css({
 		"position" : "absolute",

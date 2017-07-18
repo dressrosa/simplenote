@@ -3,6 +3,8 @@
  */
 package com.xiaoyu.modules.biz.user.vo;
 
+import com.xiaoyu.modules.biz.user.entity.UserAttr;
+
 /**
  * @author xiaoyu 2016年3月16日
  */
@@ -12,8 +14,26 @@ public class UserVo {
 	private String nickname;
 	private String avatar;
 	private Integer sex;
+	private String background;
 	private String description;
 	private String signature;
+	private UserAttr attr;
+
+	public String getBackground() {
+		return background;
+	}
+
+	public void setBackground(String background) {
+		this.background = background;
+	}
+
+	public UserAttr getAttr() {
+		return attr;
+	}
+
+	public void setAttr(UserAttr attr) {
+		this.attr = attr;
+	}
 
 	public String getUserId() {
 		return userId;

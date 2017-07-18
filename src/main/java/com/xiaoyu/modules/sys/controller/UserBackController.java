@@ -161,4 +161,10 @@ public class UserBackController {
 		return this.userService.following(request, userId);
 	}
 
+	// 获取常用的统计数
+	@RequestMapping(value = "api/v1/user/commonNums", method = RequestMethod.GET)
+	public String commonNums(HttpServletRequest request, String userId) {
+		return this.userService.commonNums(request, userId);
+	}
+
 }

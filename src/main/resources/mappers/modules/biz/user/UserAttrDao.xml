@@ -6,7 +6,7 @@
 		a.article_num as articleNum,
 		a.collect_num as collectNum,
 		a.viewed_num as viewedNum,
-		a.commentNum as
+		a.comment_num as
 		commentNum,
 		a.follower_num as followerNum
 	</sql>
@@ -16,7 +16,7 @@
 		select
 		<include refid="Base_Column_List" />
 		from biz_user_attr as a
-		where a.user_id= #{userId} and a.del_flag=0
+		where a.user_id= #{userId}
 	</select>
 
 	<insert id="insert" parameterType="com.xiaoyu.modules.biz.user.entity.UserAttr">
@@ -58,7 +58,7 @@
 		</trim>
 	</insert>
 
-	<update id="addNum" >
+	<update id="addNum">
 		update biz_user_attr set
 		<choose>
 			<when test="type == 0">
