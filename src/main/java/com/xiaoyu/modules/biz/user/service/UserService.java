@@ -32,6 +32,7 @@ import com.xiaoyu.modules.biz.user.entity.Follow;
 import com.xiaoyu.modules.biz.user.entity.LoginRecord;
 import com.xiaoyu.modules.biz.user.entity.User;
 import com.xiaoyu.modules.biz.user.entity.UserAttr;
+import com.xiaoyu.modules.biz.user.service.api.IUserService;
 import com.xiaoyu.modules.biz.user.vo.FollowVo;
 import com.xiaoyu.modules.biz.user.vo.UserVo;
 import com.xiaoyu.modules.sys.constant.NumCountType;

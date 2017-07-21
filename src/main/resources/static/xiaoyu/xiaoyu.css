@@ -1298,6 +1298,12 @@ white-space:nowrap;            娑撳秵宕茬悰锟� */
 	font-size: 10px;
 }
 
+.msg_list {
+	border-bottom: 1px solid #f7f7f7;
+	max-width: 800px;
+	min-height: 500px;
+}
+
 .msg_body {
 	min-height: 80px;
 	margin-bottom: 10px;

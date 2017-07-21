@@ -19,7 +19,7 @@ import org.springframework.web.bind.annotation.RestController;
 import com.xiaoyu.common.base.ResponseMapper;
 import com.xiaoyu.common.base.ResultConstant;
 import com.xiaoyu.common.utils.StringUtils;
-import com.xiaoyu.modules.biz.user.service.IUserService;
+import com.xiaoyu.modules.biz.user.service.api.IUserService;
 
 /**
  * 用于后台页面

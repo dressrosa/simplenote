@@ -1,7 +1,7 @@
 /**
  * 不要因为走了很远就忘记当初出发的目的:whatever happened,be yourself
  */
-package com.xiaoyu.modules.biz.user.service;
+package com.xiaoyu.modules.biz.user.service.api;
 
 import javax.servlet.http.HttpServletRequest;
 

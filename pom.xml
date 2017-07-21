@@ -136,6 +136,16 @@
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-starter-data-redis</artifactId>
 		</dependency>
+		<!--activemq -->
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId> spring-boot-starter-activemq</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.apache.activemq</groupId>
+            <artifactId>activemq-broker</artifactId>
+        </dependency>
+		
 		<!--腾讯云oss -->
 		<dependency>
 			<groupId>com.qcloud</groupId>

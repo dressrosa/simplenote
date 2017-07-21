@@ -25,7 +25,7 @@ import com.xiaoyu.common.base.ResponseMapper;
 import com.xiaoyu.common.base.ResultConstant;
 import com.xiaoyu.common.utils.ImgUtils;
 import com.xiaoyu.modules.biz.user.entity.User;
-import com.xiaoyu.modules.biz.user.service.IUserService;
+import com.xiaoyu.modules.biz.user.service.api.IUserService;
 
 /**
  * @author xiaoyu 2016年3月28日

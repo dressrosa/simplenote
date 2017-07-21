@@ -41,6 +41,8 @@ import com.xiaoyu.modules.biz.article.entity.CommentLike;
 import com.xiaoyu.modules.biz.article.service.api.IArticleService;
 import com.xiaoyu.modules.biz.article.vo.ArticleCommentVo;
 import com.xiaoyu.modules.biz.article.vo.ArticleVo;
+import com.xiaoyu.modules.biz.message.entity.Message;
+import com.xiaoyu.modules.biz.message.service.MessageHandler;
 import com.xiaoyu.modules.biz.user.dao.UserAttrDao;
 import com.xiaoyu.modules.biz.user.dao.UserDao;
 import com.xiaoyu.modules.biz.user.entity.User;
@@ -64,6 +66,8 @@ public class ArticleService extends BaseService<ArticleDao, Article> implements 
 	private ArticleCollectDao collectDao;
 	@Autowired
 	private UserAttrDao userAttrDao;
+	@Autowired
+	private MessageHandler msgHandler;
 
 	/**
 	 * 检查登录失效
@@ -355,6 +359,7 @@ public class ArticleService extends BaseService<ArticleDao, Article> implements 
 		} else {
 			ArticleLike t = new ArticleLike();
 			t.setUserId(request.getHeader("userId")).setArticleId(articleId);
+
 			if (this.likeDao.isExist(t) > 0) {// 已经点过
 				ArticleLike like = this.likeDao.getForUpdate(t);
 				if (like.getStatus() == 1) {// 取消点赞
@@ -364,10 +369,18 @@ public class ArticleService extends BaseService<ArticleDao, Article> implements 
 					t.setNum(like.getNum() + 1).setStatus(1);
 					this.addLikeNum(articleId, true);
 				}
-				this.likeDao.update(t);
+				if (this.likeDao.update(t) > 0) {
+					Message msg = new Message();
+					msg.setBizType(0).setReply(t.getUserId()).setBizType(0).setBizAction(2);
+					this.msgHandler.produce(JSON.toJSONString(msg));
+				}
 			} else {// 没点过赞
 				t.setNum(1);
-				this.likeDao.insert(t);
+				if (this.likeDao.insert(t) > 0) {
+					Message msg = new Message();
+					msg.setBizType(0).setReply(t.getUserId()).setBizType(0).setBizAction(2);
+					this.msgHandler.produce(JSON.toJSONString(msg));
+				}
 				this.addLikeNum(articleId, true);
 			}
 
@@ -647,7 +660,7 @@ public class ArticleService extends BaseService<ArticleDao, Article> implements 
 				page = (Page<Article>) this.articleDao.findByList(new Article());
 				if (page != null && page.getResult() != null && page.getResult().size() > 0) {
 					List<Article> list = page.getResult();
-					Map<String,String> jsonMap = new HashMap<>();
+					Map<String, String> jsonMap = new HashMap<>();
 					for (Article a : list) {
 						jsonMap.put(a.getId(), JSON.toJSONString(a));
 						ElasticUtils.upsertList("website", "article", jsonMap);
