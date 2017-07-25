@@ -16,6 +16,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import com.alibaba.fastjson.JSON;
 import com.github.pagehelper.Page;
 import com.github.pagehelper.PageHelper;
 import com.xiaoyu.common.base.BaseService;
@@ -24,6 +25,8 @@ import com.xiaoyu.common.base.ResultConstant;
 import com.xiaoyu.common.utils.IdGenerator;
 import com.xiaoyu.common.utils.Md5Utils;
 import com.xiaoyu.common.utils.StringUtils;
+import com.xiaoyu.modules.biz.message.entity.Message;
+import com.xiaoyu.modules.biz.message.service.MessageHandler;
 import com.xiaoyu.modules.biz.user.dao.FollowDao;
 import com.xiaoyu.modules.biz.user.dao.LoginRecordDao;
 import com.xiaoyu.modules.biz.user.dao.UserAttrDao;
@@ -96,6 +99,27 @@ public class UserService extends BaseService<UserDao, User> implements IUserServ
 		if (!userId.equals(user.getId()))
 			return null;
 		return user;
+	}
+
+	@Autowired
+	private MessageHandler msgHandler;
+
+	// 发送消息
+	private void sendMsg(String userId, int type, String bizId, int bizType, int bizAction, String content,
+			String reply) {
+		Message msg = new Message();
+		msg.setSenderId(userId).setType(0).setBizId(bizId).setBizType(0).setBizAction(6);
+		if (content != null)
+			msg.setContent(content);
+		if (reply != null)
+			msg.setReply(reply);
+		try {
+			this.msgHandler.produce(JSON.toJSONString(msg));
+		} catch (Exception e) {
+			e.printStackTrace();
+			// do nothing
+		}
+
 	}
 
 	@Override
@@ -181,6 +205,8 @@ public class UserService extends BaseService<UserDao, User> implements IUserServ
 				UserAttr attr = new UserAttr();
 				attr.setUserId(user.getId());
 				this.userAttrDao.insert(attr);
+				// 消息推送
+				this.sendMsg(user.getId(), 2, user.getId(), 1, 0, "很高兴与您相识,希望以后的日子见字如面", null);
 				return mapper.getResultJson();
 			}
 		} catch (Exception e) {
@@ -278,6 +304,7 @@ public class UserService extends BaseService<UserDao, User> implements IUserServ
 				this.followDao.insert(f);
 			}
 			this.userAttrDao.addNum(NumCountType.FollowerNum.ordinal(), 1, f.getUserId());
+			this.sendMsg(userId, 0, f.getId(), 1, 8, null, null);
 		} catch (RuntimeException e) {
 			throw e;
 		}

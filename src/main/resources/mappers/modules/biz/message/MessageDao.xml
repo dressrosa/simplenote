@@ -13,9 +13,29 @@
 		a.reply as reply,
 		a.is_read as isRead,
 		a.create_date as createDate
-
 	</sql>
 
+	<select id="isDoAgain" parameterType="com.xiaoyu.modules.biz.message.entity.Message"
+		resultType="java.lang.Integer">
+		select count(*)
+		from biz_message as a
+		where
+		a.sender_id=#{senderId}
+		and a.biz_id = #{bizId}
+	</select>
+
+	<select id="findVoByList" parameterType="com.xiaoyu.modules.biz.message.entity.Message"
+		resultType="com.xiaoyu.modules.biz.message.vo.MessageVo">
+		select
+		<include refid="Base_Column_List" />
+		from biz_message as a
+		where a.del_flag =0
+		and a.receiver_id =
+		#{receiverId}
+		<if test="type != null">
+			and a.type=#{type}
+		</if>
+	</select>
 	<insert id="insert" parameterType="com.xiaoyu.modules.biz.message.entity.Message">
 		insert into biz_message
 		<trim prefix="(" suffix=")" suffixOverrides=",">
@@ -33,6 +53,9 @@
 			</if>
 			<if test="bizType != null">
 				biz_type,
+			</if>
+			<if test="bizId != null">
+				biz_id,
 			</if>
 			<if test="bizAction != null">
 				biz_action,
@@ -63,6 +86,9 @@
 			<if test="bizType != null">
 				#{bizType},
 			</if>
+			<if test="bizId != null">
+				#{bizId},
+			</if>
 			<if test="bizAction != null">
 				#{bizAction},
 			</if>
@@ -90,6 +116,5 @@
 		set
 		del_flag=1
 		where id=#{id}
-
 	</update>
 </mapper>

@@ -123,6 +123,24 @@ public class ArticleService extends BaseService<ArticleDao, Article> implements 
 		return map;
 	}
 
+	// 发送消息
+	private void sendMsg(String userId, int type, String bizId, int bizType, int bizAction, String content,
+			String reply) {
+		Message msg = new Message();
+		msg.setSenderId(userId).setType(0).setBizId(bizId).setBizType(0).setBizAction(6);
+		if (content != null)
+			msg.setContent(content);
+		if (reply != null)
+			msg.setReply(reply);
+		try {
+			this.msgHandler.produce(JSON.toJSONString(msg));
+		} catch (Exception e) {
+			e.printStackTrace();
+			// do nothing
+		}
+
+	}
+
 	@Override
 	public String detail(String articleId) {
 		ResponseMapper mapper = ResponseMapper.createMapper();
@@ -370,16 +388,16 @@ public class ArticleService extends BaseService<ArticleDao, Article> implements 
 					this.addLikeNum(articleId, true);
 				}
 				if (this.likeDao.update(t) > 0) {
-					Message msg = new Message();
-					msg.setBizType(0).setReply(t.getUserId()).setBizType(0).setBizAction(2);
-					this.msgHandler.produce(JSON.toJSONString(msg));
+					if (like.getStatus() == 0) {// 点赞的
+						// 消息推送
+						this.sendMsg(request.getHeader("userId"), 0, articleId, 0, 2, null, null);
+					}
 				}
 			} else {// 没点过赞
 				t.setNum(1);
 				if (this.likeDao.insert(t) > 0) {
-					Message msg = new Message();
-					msg.setBizType(0).setReply(t.getUserId()).setBizType(0).setBizAction(2);
-					this.msgHandler.produce(JSON.toJSONString(msg));
+					// 消息推送
+					this.sendMsg(request.getHeader("userId"), 0, articleId, 0, 2, null, null);
 				}
 				this.addLikeNum(articleId, true);
 			}
@@ -410,32 +428,36 @@ public class ArticleService extends BaseService<ArticleDao, Article> implements 
 		if (this.articleDao.isExist(articleId) < 1) {
 			return mapper.setCode(ResultConstant.ARGS_ERROR).getResultJson();
 		}
+		String userId = request.getHeader("userId");
 		if (checkLoginDead(request) == null) {// 没登录 或失效
 			if (isCollect == 0)
-				this.addCollectNum(articleId, request.getHeader("userId"), true);
+				this.addCollectNum(articleId, userId, true);
 			else if (isCollect == 1)
-				this.addCollectNum(articleId, request.getHeader("userId"), false);
+				this.addCollectNum(articleId, userId, false);
 			return mapper.setCode(ResultConstant.LOGIN_INVALIDATE).getResultJson();
 		} else {
 			ArticleCollect t = new ArticleCollect();
-			t.setUserId(request.getHeader("userId")).setArticleId(articleId);
+			t.setUserId(userId).setArticleId(articleId);
 			if (this.collectDao.isExist(t) > 0) {// 已经收藏
 				ArticleCollect co = this.collectDao.getForUpdate(t);
 				if (co.getStatus() == 1) {// 取消收藏
 					t.setStatus(0);
-					this.addCollectNum(articleId, request.getHeader("userId"), false);
-
+					this.addCollectNum(articleId, userId, false);
 				} else {// 进行收藏
 					t.setStatus(1);
-					this.addCollectNum(articleId, request.getHeader("userId"), true);
-
+					if (this.addCollectNum(articleId, userId, true) > 0) {
+						// 消息推送
+						this.sendMsg(userId, 0, articleId, 0, 3, null, null);
+					}
 				}
 				this.collectDao.update(t);
 			} else {// 没收藏
 				t.setId(IdGenerator.uuid());
 				this.collectDao.insert(t);
-				this.addCollectNum(articleId, request.getHeader("userId"), true);
-
+				if (this.addCollectNum(articleId, userId, true) > 0) {
+					// 消息推送
+					this.sendMsg(userId, 0, articleId, 0, 3, null, null);
+				}
 			}
 
 		}
@@ -443,7 +465,7 @@ public class ArticleService extends BaseService<ArticleDao, Article> implements 
 
 	}
 
-	private void addCollectNum(String articleId, String userId, boolean flag) {
+	private int addCollectNum(String articleId, String userId, boolean flag) {
 		ArticleAttr attr = new ArticleAttr();
 		ArticleAttr at = this.attrDao.getForUpdate(articleId);
 		attr.setArticleId(articleId);
@@ -462,7 +484,7 @@ public class ArticleService extends BaseService<ArticleDao, Article> implements 
 				// do nothing
 			}
 		}
-		this.attrDao.update(attr);
+		return this.attrDao.update(attr);
 	}
 
 	@Autowired
@@ -485,6 +507,8 @@ public class ArticleService extends BaseService<ArticleDao, Article> implements 
 				.setId(IdGenerator.uuid());
 		if (this.arCommentDao.insert(co) > 0) {
 			this.addCommentNum(articleId, true);
+			// 消息推送
+			this.sendMsg(user.getId(), 0, articleId, 0, 1, content, null);
 		}
 		Map<String, String> map = new HashMap<>();
 		map.put("replyerId", user.getId());
@@ -606,11 +630,17 @@ public class ArticleService extends BaseService<ArticleDao, Article> implements 
 					this.addCommentLikeNum(commentId, false);
 				} else {// 进行点赞
 					t.setStatus(1);
-					this.addCommentLikeNum(commentId, true);
+					if (this.addCommentLikeNum(commentId, true) > 0) {
+						// 消息推送
+						this.sendMsg(request.getHeader("userId"), 0, commentId, 0, 6, null, null);
+					}
 				}
 				this.arCommentDao.updateLike(t);
 			} else {// 没点过赞
-				this.arCommentDao.insertLike(t);
+				if (this.arCommentDao.insertLike(t) > 0) {
+					// 消息推送
+					this.sendMsg(request.getHeader("userId"), 0, commentId, 0, 6, null, null);
+				}
 				this.addCommentLikeNum(commentId, true);
 			}
 
@@ -618,7 +648,7 @@ public class ArticleService extends BaseService<ArticleDao, Article> implements 
 		return mapper.getResultJson();
 	}
 
-	private void addCommentLikeNum(String commentId, boolean flag) {
+	private int addCommentLikeNum(String commentId, boolean flag) {
 		ArticleComment ac = this.arCommentDao.getForUpdate(commentId);
 		ArticleComment temp = new ArticleComment();
 		temp.setId(commentId);
@@ -627,7 +657,7 @@ public class ArticleService extends BaseService<ArticleDao, Article> implements 
 		} else {
 			temp.setNum(ac.getNum() - 1);
 		}
-		this.arCommentDao.update(temp);
+		return this.arCommentDao.update(temp);
 	}
 
 	@Override

@@ -3,10 +3,13 @@
  */
 package com.xiaoyu.modules.biz.message.dao;
 
+import java.util.List;
+
 import org.springframework.stereotype.Repository;
 
 import com.xiaoyu.common.base.BaseDao;
 import com.xiaoyu.modules.biz.message.entity.Message;
+import com.xiaoyu.modules.biz.message.vo.MessageVo;
 
 /**
  * 2017年7月21日下午4:04:17
@@ -17,4 +20,7 @@ import com.xiaoyu.modules.biz.message.entity.Message;
 @Repository
 public interface MessageDao extends BaseDao<Message> {
 
+	int isDoAgain(Message t);
+
+	List<MessageVo> findVoByList(Message msg);
 }
