@@ -3,6 +3,8 @@
  */
 package com.xiaoyu.modules.biz.message.vo;
 
+import java.util.Date;
+
 /**
  * 2017年7月21日下午4:04:26
  * 
@@ -11,6 +13,7 @@ package com.xiaoyu.modules.biz.message.vo;
  */
 public class MessageVo {
 
+	private String messageId;
 	private int type;// '消息类型 0消息 1留言 2通知'
 	private String senderId;
 	private String senderName;
@@ -21,8 +24,25 @@ public class MessageVo {
 	private String content;// 消息内容
 	private String reply;// 回复内容
 	private int isRead;
+	private Date createDate;
 
 	private String bizName;// 业务名称
+
+	public Date getCreateDate() {
+		return createDate;
+	}
+
+	public void setCreateDate(Date createDate) {
+		this.createDate = createDate;
+	}
+
+	public String getMessageId() {
+		return messageId;
+	}
+
+	public void setMessageId(String messageId) {
+		this.messageId = messageId;
+	}
 
 	public int getType() {
 		return type;

@@ -1,14 +1,3 @@
-$(document).ready(function() {
-	var userInfo = jQuery.parseJSON($.session.get("user"));
-
-	// 点击头像
-	/*
-	 * $(".avatar").bind("click", function() { $user = $(this); if
-	 * (!checkNull(userInfo) && userInfo.id == $user.attr("id")) {
-	 * window.location.href = "/private/user/modify/" + userInfo.id; } });
-	 */
-
-});
 var imgHead = "http://xiaoyu1-1253813687.costj.myqcloud.com/";
 var blankPage = '<div class="blank_mug"><span><i class="icon_mug" style="cursor:default;"></i></span></div>';
 function addHeadForImg() {
@@ -32,34 +21,45 @@ function addHeadForOneImg(item) {
 function writeBox() {
 	var jBoxId;
 	var writeButton = new jBox('Notice', {
-		/* content : "＋", */
+		content : '您有未读新消息☺',
 		position : {
-			x : '3',
-			y : '30'
+			x : '0',
+			y : '50'
 		},
+		autoClose : 5000,
 		closeOnEsc : false, //  
 		closeOnClick : 'box', //   
-		closeOnMouseleave : false, //   
+		closeOnMouseleave : false,//   
 		closeButton : false,
-		color : '#292421',
-		addClass : 'jBoxOpacity',
+		color : 'crimson',
 		onInit : function() {
 			jBoxId = this.id;
 		},
 		onClose : function() {
-			window.location.href = "/article/write";
+			window.location.href = "/message";
 		}
 	})
 	writeButton.open();
-	setTimeout(function() {
-		$("#" + jBoxId).css("opacity", 0.7);
-		$("#" + jBoxId).find(".jBox-container").css({
-			"background" : "url(/xiaoyu/img/publish.jpg) center center",
-			"cursor" : "pointer",
-			"height" : "39px"
-		});
-
-	}, 200);
-
 	return jBoxId;
 }
+$(document).ready(function() {
+	var userInfo = jQuery.parseJSON($.session.get("user"));
+	$.ajax({
+		type : "get",
+		async : true,
+		url : '/api/v1/message/unreadNum',
+		beforeSend : function(xhr) {
+			var $u = jQuery.parseJSON($.session.get("user"));
+			if (!checkNull(userInfo)) {
+				xhr.setRequestHeader('token', $u.token);
+				xhr.setRequestHeader('userId', $u.userId);
+			}
+		},
+		success : function(data) {
+			var obj = jQuery.parseJSON(data);
+			if (obj.code == '0') {
+				writeBox();				
+			}
+		}
+	});
+});

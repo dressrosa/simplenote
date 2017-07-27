@@ -5,6 +5,7 @@ package com.xiaoyu.modules.biz.message.dao;
 
 import java.util.List;
 
+import org.apache.ibatis.annotations.Param;
 import org.springframework.stereotype.Repository;
 
 import com.xiaoyu.common.base.BaseDao;
@@ -23,4 +24,8 @@ public interface MessageDao extends BaseDao<Message> {
 	int isDoAgain(Message t);
 
 	List<MessageVo> findVoByList(Message msg);
+
+	int read(List<String> idsList);
+
+	int getUnreadNumBefore1Hour(@Param("receiverId")String userId);
 }

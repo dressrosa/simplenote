@@ -50,8 +50,8 @@ var handleAll = function(data) {
 								arHtml += '<li class="list-group-item"   id="'
 										+ ar.articleId + '">';
 								arHtml += '<label>' + ar.title + '</label>';
-								arHtml += '<p class="group_item_p">'
-										+ ar.content + '...' + '</p>';
+								/*arHtml += '<p class="group_item_p">'
+										+ ar.content + '...' + '</p>';*/
 
 								arHtml += '<div class="comment_bar"><div class="bar_part">';
 								if (ar.isLike == "1") {
@@ -142,7 +142,6 @@ var handleCollected = function(data) {
 var handleFollowing = function(data) {
 
 	var obj = jQuery.parseJSON(data);
-	console.log(data);
 	if (obj.code == '0') {
 		var arHtml = "";
 		if (obj.data != null && obj.data.length > 0) {
@@ -177,7 +176,6 @@ var handleFollowing = function(data) {
 			$ht += $r;
 			$ht += '</div>';
 			$ht += '<div class="love_ar_list">';
-			console.log(ids);
 			$
 					.ajax({
 						type : "post",
@@ -191,7 +189,6 @@ var handleFollowing = function(data) {
 						},
 						success : function(data) {
 							var obj = jQuery.parseJSON(data);
-							console.log(data);
 							if (obj.code == '0' && obj.data.length > 0) {
 								$
 										.each(
@@ -484,7 +481,6 @@ $(document)
 
 									},
 									success : function(data) {
-										console.log(data);
 										var obj = jQuery.parseJSON(data);
 										if (obj.code == "20001") {
 											console.log("未登录");
@@ -541,7 +537,6 @@ $(document)
 										return before(xhr);
 									},
 									success : function(data) {
-										console.log(data);
 										var obj = jQuery.parseJSON(data);
 										if (obj.code == "20001") {
 											console.log("未登录");
@@ -558,7 +553,6 @@ $(document)
 										return true;
 									},
 									error : function(data) {
-										console.log(data);
 										item.css({
 											"opacity" : "1"
 										});
@@ -609,7 +603,6 @@ $(document)
 										return before(xhr);
 									},
 									success : function(data) {
-										console.log(data);
 										var obj = jQuery.parseJSON(data);
 										if (obj.code == "20001") {
 											console.log("未登录");

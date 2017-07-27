@@ -3,6 +3,8 @@
  */
 package com.xiaoyu.modules.biz.message.service.api;
 
+import java.util.Date;
+
 import javax.servlet.http.HttpServletRequest;
 
 public interface IMessageService {
@@ -13,4 +15,7 @@ public interface IMessageService {
 
 	public String replyMsg(HttpServletRequest request, String msgId, String reply);
 
+	public String read(HttpServletRequest request, String msgIds);
+
+	public String unreadNum(HttpServletRequest request);
 }

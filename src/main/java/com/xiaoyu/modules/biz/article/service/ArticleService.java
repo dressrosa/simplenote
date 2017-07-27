@@ -127,7 +127,7 @@ public class ArticleService extends BaseService<ArticleDao, Article> implements 
 	private void sendMsg(String userId, int type, String bizId, int bizType, int bizAction, String content,
 			String reply) {
 		Message msg = new Message();
-		msg.setSenderId(userId).setType(0).setBizId(bizId).setBizType(0).setBizAction(6);
+		msg.setSenderId(userId).setType(type).setBizId(bizId).setBizType(bizType).setBizAction(bizAction);
 		if (content != null)
 			msg.setContent(content);
 		if (reply != null)

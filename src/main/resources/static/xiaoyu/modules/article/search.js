@@ -12,7 +12,8 @@ var $searchPromise = $.ajax({
 		var $sp1 = $(".co_num").find("span")[0];
 		var $sp2 = $(".co_num").find("span")[1];
 		$sp1.innerText = '搜索' + '"' + decodeURI(word) + '"' + '相关结果';
-		$sp2.innerText = '(' + obj.data.count + ')';
+		$sp2.innerText = (checkNull(obj.data.count) ? 0 : obj.data.count)
+				+ "篇";
 		if (obj.code == '0') {
 			var arHtml = "";
 			if (obj.data != null && result != null && result.length > 0) {

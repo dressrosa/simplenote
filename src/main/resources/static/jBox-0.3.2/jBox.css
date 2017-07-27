@@ -240,7 +240,10 @@
 	background: #b02222;
 	background-image: linear-gradient(to bottom, #ee2222, #b02222);
 }
-
+.jBox-Notice-crimson .jBox-container {
+    background: #d64444;
+    cursor:pointer;
+}
 .jBox-Notice-green .jBox-container {
 	background: #70a800;
 	background-image: linear-gradient(to bottom, #95cc2a, #70a800);

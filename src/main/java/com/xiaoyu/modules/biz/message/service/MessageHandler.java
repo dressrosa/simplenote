@@ -47,26 +47,26 @@ public class MessageHandler extends DefaultAbstractQueueTemplate {
 				msg.setReceiverId(ar.getUserId());
 				if (msg.getBizAction() == 1) {// 评论
 					msg.setContent(
-							"用户" + u.getNickname() + "在文章\"" + ar.getTitle() + "\"中评论\"" + msg.getContent() + "\"");
+							"用户" + u.getNickname() + "在文章“" + ar.getTitle() + "”中评论“" + msg.getContent() + "”");
 				} else if (msg.getBizAction() == 2) {// 点赞
 					Message t = new Message();
 					t.setSenderId(msg.getSenderId()).setBizId(msg.getBizId());
 					if (this.msgDao.isDoAgain(t) > 0)// 对于点赞后取消,然后又点赞的
 						return;
-					msg.setContent("用户" + u.getNickname() + "赞了你的文章\"" + ar.getTitle() + "\"");
+					msg.setContent("用户" + u.getNickname() + "赞了你的文章“" + ar.getTitle() + "”");
 				} else if (msg.getBizAction() == 3) {// 收藏
 					Message t = new Message();
 					t.setSenderId(msg.getSenderId()).setBizId(msg.getBizId());
 					if (this.msgDao.isDoAgain(t) > 0)// 对于收藏后取消,然后又收藏的
 						return;
-					msg.setContent("用户" + u.getNickname() + "收藏了你的文章\"" + ar.getTitle() + "\"");
+					msg.setContent("用户" + u.getNickname() + "收藏了你的文章“" + ar.getTitle() + "”");
 				} else if (msg.getBizAction() == 4) {// 回复评论
-					msg.setContent("用户" + u.getNickname() + "对你的评论进行了回复\"" + msg.getContent() + "\"");
+					msg.setContent("用户" + u.getNickname() + "对你的评论进行了回复“" + msg.getContent() + "”");
 				} else if (msg.getBizAction() == 5) {// 评论@
 
 				} else if (msg.getBizAction() == 6) {// 赞评论
-					msg.setContent("用户" + u.getNickname() + "在文章\"" + ar.getTitle() + "\"" + "中赞了你的评论\""
-							+ msg.getContent() + "\"");
+					msg.setContent("用户" + u.getNickname() + "在文章“" + ar.getTitle() + "”" + "中赞了你的评论“"
+							+ msg.getContent() + "”");
 				}
 			} else if (msg.getBizType() == 1) {// 人
 				if (msg.getBizAction() == 8) {// 关注人
@@ -79,14 +79,14 @@ public class MessageHandler extends DefaultAbstractQueueTemplate {
 			}
 			break;
 		case 1:// 留言
-			msg.setContent("用户" + u.getNickname() + "给您留言\"" + msg.getContent() + "\"");
+			msg.setContent("用户" + u.getNickname() + "给您留言“" + msg.getContent() + "”");
 			break;
 		case 2:// 通知
 			if (msg.getBizType() == 0) {// 文章
 				Article ar = this.articleDao.getById(msg.getBizId());
 				if (ar == null)
 					return;
-				msg.setContent("大家都在读这篇文章\"" + ar.getTitle() + "\"" + "快来围观吧");
+				msg.setContent("大家都在读这篇文章“" + ar.getTitle() + "”" + "快来围观吧");
 			} else if (msg.getBizType() == 1) {// 人
 
 			} else {
