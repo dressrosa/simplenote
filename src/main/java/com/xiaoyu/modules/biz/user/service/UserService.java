@@ -276,7 +276,7 @@ public class UserService extends BaseService<UserDao, User> implements IUserServ
 		ResponseMapper mapper = ResponseMapper.createMapper();
 		User u = this.checkLoginDead(request);
 		if (u == null) {
-			return mapper.setCode(ResultConstant.LOGIN_INVALIDATE).setMessage("未登录或登录失效,请重新登录").getResultJson();
+			return mapper.setCode(ResultConstant.LOGIN_INVALIDATE).setMessage("您未登录或登录失效,请重新登录").getResultJson();
 		}
 		if (!u.getId().equals(userId)) {
 			return mapper.setCode(ResultConstant.ARGS_ERROR).getResultJson();

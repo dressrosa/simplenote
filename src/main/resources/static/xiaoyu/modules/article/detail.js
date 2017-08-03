@@ -8,7 +8,6 @@ var before = function(xhr) {
 		xhr.setRequestHeader('userId', userInfo.userId);
 	}
 };
-
 var $arPromise = $
 		.ajax({
 			cache : false,
@@ -19,7 +18,7 @@ var $arPromise = $
 				var obj = jQuery.parseJSON(data);
 				if (obj.code == '0') {
 					var ar = obj.data;
-					if (ar != null) {
+					if (!checkNull(ar)) {
 						setTitle('详情-' + ar.title);
 						var $partUp = $(".part_up");
 						$partUp.find("img").attr('src', ar.user.avatar);
@@ -55,10 +54,15 @@ var $arPromise = $
 						var converter = new showdown.Converter();
 						$partDown.find(".ar_content").html(
 								converter.makeHtml(ar.content));
-
+						$('pre code').each(function(i, block) {
+							hljs.highlightBlock(block);
+						});
 					}
-				} else {
-					// window.location.href = "/common/404";
+					else{
+						window.location.href = "/common/404";
+					}
+				} else if(obj.code == '2') {
+					window.location.href = "/common/404";
 					return false;
 				}
 				addHeadForImg();
@@ -267,13 +271,11 @@ var comment = function() {
 								+ '</div></div>';
 						$(".co_list").prepend($coItem);
 					} else if (jsonObj.code == '20001') {
-						gotoLogin('/article/' + articleId);
+						showTip('您未登录或登录失效,请重新登录');
 					}
 					$(".co_btn").removeAttr("disabled");
-
 					return true;
 				}
-
 			});
 
 };
@@ -306,7 +308,7 @@ var isFollow = function() {
 						$(".p_love").attr("data-love", '1');
 					}
 				} else if (obj.code = '20001') {
-
+					
 				}
 			}
 
@@ -428,5 +430,7 @@ $(document).ready(
 			$(".p_love").on('click', function() {
 				follow();
 			});
+
+			 
 
 		});

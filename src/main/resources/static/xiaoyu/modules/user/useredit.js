@@ -45,16 +45,6 @@ var $ajaxPromise1 = $.ajax({
 	}
 });
 
-var handleCollected = function(data) {
-
-	var obj = jQuery.parseJSON(data);
-	if (obj.code == '0') {
-	}
-
-	addHeadForImg();
-	return true;
-
-};
 var hideBtn = function(id) {
 	$("#" + id).find(".sub_btn").css("display", "none");
 	$("#" + id).find(".sub_btn_cancel").css("display", "none");

@@ -80,7 +80,7 @@ var $ajaxPromise = $
 							var $userInfo = jQuery.parseJSON($.session
 									.get("user"));
 							if (checkNull($userInfo)) {
-								window.location.href = "/login";
+								showTip('您未登录或登录失效,请重新登录');
 								return false;
 							}
 
@@ -110,7 +110,6 @@ var $ajaxPromise = $
 									isCollect : $isCollect
 								},
 								beforeSend : function(xhr) {
-
 									if (!checkNull($userInfo)) {
 										xhr.setRequestHeader('token',
 												$userInfo.token);
@@ -123,8 +122,7 @@ var $ajaxPromise = $
 									console.log(data);
 									var obj = jQuery.parseJSON(data);
 									if (obj.code == "20001") {
-										console.log("未登录");
-										window.location.href = "/login";
+										showTip('您未登录或登录失效,请重新登录');
 										return false;
 									}
 									return true;
@@ -321,7 +319,6 @@ $(document)
 																	});
 														});
 									});
-
 					if (checkNull(userInfo)) {
 						$("#loginSpan").css("display", "block");
 					} else {

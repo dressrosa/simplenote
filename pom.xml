@@ -17,6 +17,7 @@
 		<mybatis.version>3.3.1</mybatis.version>
 		<mybatisspring.version>1.2.4</mybatisspring.version>
 		<HikariCP.version>2.4.4</HikariCP.version>
+		<celery.version>E:\celery-1.0.0.jar</celery.version>
 	</properties>
 	<dependencies>
 		<dependency>
@@ -111,7 +112,7 @@
 			<groupId>org.aspectj</groupId>
 			<artifactId>aspectjtools</artifactId>
 		</dependency>
-		<!--elasticsearch  -->
+		<!--elasticsearch -->
 		<dependency>
 			<groupId>org.elasticsearch</groupId>
 			<artifactId>elasticsearch</artifactId>
@@ -137,15 +138,15 @@
 			<artifactId>spring-boot-starter-data-redis</artifactId>
 		</dependency>
 		<!--activemq -->
-        <dependency>
-            <groupId>org.springframework.boot</groupId>
-            <artifactId> spring-boot-starter-activemq</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>org.apache.activemq</groupId>
-            <artifactId>activemq-broker</artifactId>
-        </dependency>
-		
+		<dependency>
+			<groupId>org.springframework.boot</groupId>
+			<artifactId> spring-boot-starter-activemq</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>org.apache.activemq</groupId>
+			<artifactId>activemq-broker</artifactId>
+		</dependency>
+
 		<!--腾讯云oss -->
 		<dependency>
 			<groupId>com.qcloud</groupId>
@@ -167,6 +168,14 @@
 		<!--极光推送 -->
 		<!-- <dependency> <groupId>cn.jpush.api</groupId> <artifactId>jpush-client</artifactId> 
 			<version>3.2.9</version> </dependency> -->
+
+		<dependency>
+			<groupId>com.xiaoyu</groupId>
+			<artifactId>celery</artifactId>
+			<version>1.0.0</version>
+			<scope>system</scope>
+			<systemPath>${celery.version}</systemPath>
+		</dependency>
 	</dependencies>
 
 	<!--创建可执行的jar -->
