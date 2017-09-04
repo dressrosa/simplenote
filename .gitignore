@@ -2,3 +2,5 @@
 xiaoyuSite.iml
 .idea
 .settings
+/.gitignore
+/target/
