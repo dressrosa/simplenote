@@ -1,106 +1,106 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
 <mapper namespace="com.xiaoyu.modules.biz.user.dao.FollowDao">
-	<sql id="Base_Column_List">
-		a.user_id as userId,
-		a.follower_id as followerId
-	</sql>
-	<select id="getById" resultType="com.xiaoyu.modules.biz.user.entity.Follow">
-		select
-		<include refid="Base_Column_List" />
-		from biz_user_follow
-		where id = #{id} and del_flag =0
-	</select>
-	<select id="findList" resultType="com.xiaoyu.modules.biz.user.vo.FollowVo">
-		select
-		a.user_id as userId,
-		a.follower_id as followerId,
-		u1.nickname as
-		userName,
-		u1.avatar as userAvatar,
-		u2.nickname as followerName,
-		u2.avatar as followerAvatar
-		from biz_user_follow as a
-		left join
-		biz_user
-		as u1
-		on u1.id = user_id
-		left join biz_user as u2 on u2.id
-		=
-		a.follower_id
-		where
-		a.del_flag=0
-		<if test="userId != null">
-			and a.user_id= #{userId}
-		</if>
-		<if test="followerId != null">
-			and a.follower_id= #{followerId}
-		</if>
-	</select>
-	<select id="isFollow" resultType="java.lang.Integer">
-		select
-		count(*)
-		from
-		biz_user_follow as a
-		where
-		a.del_flag=0
-		and a.user_id= #{userId}
-		and
-		a.follower_id= #{followerId}
-	</select>
+    <sql id="Base_Column_List">
+        a.user_id as userId,
+        a.follower_id as followerId
+    </sql>
+    <select id="getById" resultType="com.xiaoyu.modules.biz.user.entity.Follow">
+        select
+        <include refid="Base_Column_List" />
+        from biz_user_follow
+        where id = #{id} and del_flag =0
+    </select>
+    <select id="findList" resultType="com.xiaoyu.modules.biz.user.vo.FollowVo">
+        select
+        a.user_id as userId,
+        a.follower_id as followerId,
+        u1.nickname as
+        userName,
+        u1.avatar as userAvatar,
+        u2.nickname as followerName,
+        u2.avatar as followerAvatar
+        from biz_user_follow as a
+        left join
+        biz_user
+        as u1
+        on u1.id = user_id
+        left join biz_user as u2 on u2.id
+        =
+        a.follower_id
+        where
+        a.del_flag=0
+        <if test="userId != null">
+            and a.user_id= #{userId}
+        </if>
+        <if test="followerId != null">
+            and a.follower_id= #{followerId}
+        </if>
+    </select>
+    <select id="isFollow" resultType="java.lang.Integer">
+        select
+        count(*)
+        from
+        biz_user_follow as a
+        where
+        a.del_flag=0
+        and a.user_id= #{userId}
+        and
+        a.follower_id= #{followerId}
+    </select>
 
-	<select id="isExist" resultType="java.lang.Integer">
-		select
-		count(*)
-		from
-		biz_user_follow as a
-		where
-		a.user_id= #{userId}
-		and a.follower_id=
-		#{followerId}
-	</select>
+    <select id="isExist" resultType="java.lang.Integer">
+        select
+        count(*)
+        from
+        biz_user_follow as a
+        where
+        a.user_id= #{userId}
+        and a.follower_id=
+        #{followerId}
+    </select>
 
-	<insert id="insert" parameterType="com.xiaoyu.modules.biz.user.entity.Follow">
-		insert into biz_user_follow
-		<trim prefix="(" suffix=")" suffixOverrides=",">
-			<if test="id != null">
-				id,
-			</if>
-			<if test="userId != null">
-				user_id,
-			</if>
-			<if test="followerId != null">
-				follower_id,
-			</if>
-		</trim>
-		<trim prefix="values (" suffix=")" suffixOverrides=",">
-			<if test="id != null">
-				#{id},
-			</if>
-			<if test="userId != null">
-				#{userId},
-			</if>
-			<if test="followerId != null">
-				#{followerId},
-			</if>
-		</trim>
-	</insert>
-	<update id="update">
-		update biz_user_follow
-		set
-		del_flag=0
-		where user_id =
-		#{userId}
-		and follower_id =
-		#{followerId}
-	</update>
-	<update id="cancelLove">
-		update biz_user_follow
-		set
-		del_flag=1
-		where user_id =
-		#{userId}
-		and follower_id = #{followerId}
-	</update>
+    <insert id="insert" parameterType="com.xiaoyu.modules.biz.user.entity.Follow">
+        insert into biz_user_follow
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="id != null">
+                id,
+            </if>
+            <if test="userId != null">
+                user_id,
+            </if>
+            <if test="followerId != null">
+                follower_id,
+            </if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="id != null">
+                #{id},
+            </if>
+            <if test="userId != null">
+                #{userId},
+            </if>
+            <if test="followerId != null">
+                #{followerId},
+            </if>
+        </trim>
+    </insert>
+    <update id="update">
+        update biz_user_follow
+        set
+        del_flag=0
+        where user_id =
+        #{userId}
+        and follower_id =
+        #{followerId}
+    </update>
+    <update id="cancelLove">
+        update biz_user_follow
+        set
+        del_flag=1
+        where user_id =
+        #{userId}
+        and follower_id = #{followerId}
+    </update>
 
 </mapper>

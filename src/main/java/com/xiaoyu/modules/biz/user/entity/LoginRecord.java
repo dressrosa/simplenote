@@ -10,37 +10,37 @@ import com.xiaoyu.common.base.BaseEntity;
  */
 public class LoginRecord extends BaseEntity {
 
-	private static final long serialVersionUID = 1L;
+    private static final long serialVersionUID = 1L;
 
-	private String userId;
-	private String loginIp;
-	private String device;
+    private String userId;
+    private String loginIp;
+    private String device;
 
-	public String getDevice() {
-		return device;
-	}
+    public String getDevice() {
+        return this.device;
+    }
 
-	public LoginRecord setDevice(String device) {
-		this.device = device;
-		return this;
-	}
+    public LoginRecord setDevice(String device) {
+        this.device = device;
+        return this;
+    }
 
-	public String getUserId() {
-		return userId;
-	}
+    public String getUserId() {
+        return this.userId;
+    }
 
-	public LoginRecord setUserId(String userId) {
-		this.userId = userId;
-		return this;
-	}
+    public LoginRecord setUserId(String userId) {
+        this.userId = userId;
+        return this;
+    }
 
-	public String getLoginIp() {
-		return loginIp;
-	}
+    public String getLoginIp() {
+        return this.loginIp;
+    }
 
-	public LoginRecord setLoginIp(String loginIp) {
-		this.loginIp = loginIp;
-		return this;
-	}
+    public LoginRecord setLoginIp(String loginIp) {
+        this.loginIp = loginIp;
+        return this;
+    }
 
 }

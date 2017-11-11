@@ -1,0 +1,82 @@
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+<meta name="viewport"
+	content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=yes" />
+<meta http-equiv="Expires" content="0" />
+<meta http-equiv="Cache-Control" content="no-cache" />
+<meta http-equiv="Cache-Control" content="no-store" />
+<link rel="icon" type="image/ico" href="/xiaoyu/img/favicon.ico"
+	class="img-circle" />
+<link href="/bootstrap-3.3.6-dist/css/bootstrap.min.css"
+	rel="stylesheet" />
+<link href="/jBox-0.3.2/jBox.css" rel="stylesheet" />
+<link rel="stylesheet" href="/stephanwagner/97f7f8-00a5dd.css" />
+<script src="/jquery/jquery-1.12.2.min.js" type="text/javascript"></script>
+<script src="/jBox-0.3.2/jBox.min.js" type="text/javascript"></script>
+<script src="/bootstrap-3.3.6-dist/js/bootstrap.min.js"
+	type="text/javascript"></script>
+<script type="text/javascript" src="/xiaoyu/jquerysession.js"></script>
+<script type="text/javascript" src="/xiaoyu/common.js"></script>
+
+<title>用户信息</title>
+</head>
+<body>
+	<div id="header" style="top: 0;">
+		<h1>
+			<a href="/xiaoyu.me.html" class="xiaoyu_a">xiao yu</a> <img
+				src="/xiaoyu/img/xiaoyu.png" class="img-circle" height="50px"
+				width="50px" />
+		</h1>
+		<a href="/back/user/get?id=719" class="header-icon"><span
+			class="label">xiaoyu</span></a>
+	</div>
+	<div class="content">
+
+		<div class="table-responsive">
+			<table class="table">
+				<caption>响应式表格布局</caption>
+				<span><a href="/back/userEcharts.html">Echarts-用户统计分析</a></span>
+				<thead>
+					<tr>
+						<th>姓名</th>
+						<th>头像</th>
+						<th>操作</th>
+					</tr>
+				</thead>
+				<tbody>
+					<tr th:each="user:${list}">
+						<td><a onclick="getDetail('get','${user.id}')"> <label
+								th:text="${user.nickName}"></label></a></td>
+
+						<td><a th:href="${user.img}" th:title="${user.nickName}"
+							data-jbox-image="gallery1"> <img th:src="${user.img}"
+								id="img" name="img" class="img-circle" width="50px;"
+								height="50px" />
+						</a></td>
+						<td><a href="goUpdate?id=${user.id}">修改</a></td>
+					</tr>
+				</tbody>
+			</table>
+		</div>
+	</div>
+
+	<div class="footer container">
+		<div class="hr1-line" style="margin-bottom: 10px"></div>
+		<div class="copyright " style="float: left; margin-right: 3px;">
+			<font style="margin-right: 3px;">©2016-2017 小雨 </font><a
+				href="/xiaoyu.me.html">xiaoyu.me</a>
+		</div>
+		<div
+			style="width: 35px; float: left; margin-left: 10px; margin-top: -5px;">
+			<a href="https://github.com/dressrosa"
+				style="width: 100%; display: block; background: url(https://assets-cdn.github.com/favicon.ico) no-repeat; text-indent: 40px; height: 33px;">
+			</a>
+		</div>
+	</div>
+</body>
+
+</html>
+<script type="text/javascript">
+	new jBox('Image');
+</script>

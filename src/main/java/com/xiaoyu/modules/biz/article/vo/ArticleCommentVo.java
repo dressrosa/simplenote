@@ -10,102 +10,102 @@ import com.xiaoyu.common.base.BaseEntity;
  */
 public class ArticleCommentVo extends BaseEntity {
 
-	private static final long serialVersionUID = 1L;
+    private static final long serialVersionUID = 1L;
 
-	private String articleId;
-	private String replyerName;
-	private String replyerAvatar;
-	private String authorId;
-	private String parentId;
-	private String content;
-	private String replyerId;
-	private String parentReplyerName;
-	private String parentReplyerId;
-	private Integer num;
+    private String articleId;
+    private String replyerName;
+    private String replyerAvatar;
+    private String authorId;
+    private String parentId;
+    private String content;
+    private String replyerId;
+    private String parentReplyerName;
+    private String parentReplyerId;
+    private Integer num;
 
-	public Integer getNum() {
-		return num;
-	}
+    public Integer getNum() {
+        return this.num;
+    }
 
-	public void setNum(Integer num) {
-		this.num = num;
-	}
+    public void setNum(Integer num) {
+        this.num = num;
+    }
 
-	public String getReplyerName() {
-		return replyerName;
-	}
+    public String getReplyerName() {
+        return this.replyerName;
+    }
 
-	public void setReplyerName(String replyerName) {
-		this.replyerName = replyerName;
-	}
+    public void setReplyerName(String replyerName) {
+        this.replyerName = replyerName;
+    }
 
-	public String getReplyerAvatar() {
-		return replyerAvatar;
-	}
+    public String getReplyerAvatar() {
+        return this.replyerAvatar;
+    }
 
-	public void setReplyerAvatar(String replyerAvatar) {
-		this.replyerAvatar = replyerAvatar;
-	}
+    public void setReplyerAvatar(String replyerAvatar) {
+        this.replyerAvatar = replyerAvatar;
+    }
 
-	public String getParentReplyerName() {
-		return parentReplyerName;
-	}
+    public String getParentReplyerName() {
+        return this.parentReplyerName;
+    }
 
-	public void setParentReplyerName(String parentReplyerName) {
-		this.parentReplyerName = parentReplyerName;
-	}
+    public void setParentReplyerName(String parentReplyerName) {
+        this.parentReplyerName = parentReplyerName;
+    }
 
-	public String getParentReplyerId() {
-		return parentReplyerId;
-	}
+    public String getParentReplyerId() {
+        return this.parentReplyerId;
+    }
 
-	public void setParentReplyerId(String parentReplyerId) {
-		this.parentReplyerId = parentReplyerId;
-	}
+    public void setParentReplyerId(String parentReplyerId) {
+        this.parentReplyerId = parentReplyerId;
+    }
 
-	public String getArticleId() {
-		return articleId;
-	}
+    public String getArticleId() {
+        return this.articleId;
+    }
 
-	public ArticleCommentVo setArticleId(String articleId) {
-		this.articleId = articleId;
-		return this;
-	}
+    public ArticleCommentVo setArticleId(String articleId) {
+        this.articleId = articleId;
+        return this;
+    }
 
-	public String getAuthorId() {
-		return authorId;
-	}
+    public String getAuthorId() {
+        return this.authorId;
+    }
 
-	public ArticleCommentVo setAuthorId(String authorId) {
-		this.authorId = authorId;
-		return this;
-	}
+    public ArticleCommentVo setAuthorId(String authorId) {
+        this.authorId = authorId;
+        return this;
+    }
 
-	public String getParentId() {
-		return parentId;
-	}
+    public String getParentId() {
+        return this.parentId;
+    }
 
-	public ArticleCommentVo setParentId(String parentId) {
-		this.parentId = parentId;
-		return this;
-	}
+    public ArticleCommentVo setParentId(String parentId) {
+        this.parentId = parentId;
+        return this;
+    }
 
-	public String getContent() {
-		return content;
-	}
+    public String getContent() {
+        return this.content;
+    }
 
-	public ArticleCommentVo setContent(String content) {
-		this.content = content;
-		return this;
-	}
+    public ArticleCommentVo setContent(String content) {
+        this.content = content;
+        return this;
+    }
 
-	public String getReplyerId() {
-		return replyerId;
-	}
+    public String getReplyerId() {
+        return this.replyerId;
+    }
 
-	public ArticleCommentVo setReplyerId(String replyerId) {
-		this.replyerId = replyerId;
-		return this;
-	}
+    public ArticleCommentVo setReplyerId(String replyerId) {
+        this.replyerId = replyerId;
+        return this;
+    }
 
 }

@@ -10,65 +10,65 @@ import com.xiaoyu.common.base.BaseEntity;
  */
 public class UserAttr extends BaseEntity {
 
-	private static final long serialVersionUID = 1L;
-	private String userId;
-	private Integer articleNum;// 发表文章数
-	private Integer commentNum;// 评论文章数
-	private Integer collectNum;// 收藏文章数
-	private Integer viewedNum;// 主页浏览数
-	private Integer followerNum;// 追随者数
+    private static final long serialVersionUID = 1L;
+    private String userId;
+    private Integer articleNum;// 发表文章数
+    private Integer commentNum;// 评论文章数
+    private Integer collectNum;// 收藏文章数
+    private Integer viewedNum;// 主页浏览数
+    private Integer followerNum;// 追随者数
 
-	public Integer getFollowerNum() {
-		return followerNum;
-	}
+    public Integer getFollowerNum() {
+        return this.followerNum;
+    }
 
-	public void setFollowerNum(Integer followerNum) {
-		this.followerNum = followerNum;
-	}
+    public void setFollowerNum(Integer followerNum) {
+        this.followerNum = followerNum;
+    }
 
-	public String getUserId() {
-		return userId;
-	}
+    public String getUserId() {
+        return this.userId;
+    }
 
-	public UserAttr setUserId(String userId) {
-		this.userId = userId;
-		return this;
-	}
+    public UserAttr setUserId(String userId) {
+        this.userId = userId;
+        return this;
+    }
 
-	public Integer getArticleNum() {
-		return articleNum;
-	}
+    public Integer getArticleNum() {
+        return this.articleNum;
+    }
 
-	public UserAttr setArticleNum(Integer articleNum) {
-		this.articleNum = articleNum;
-		return this;
-	}
+    public UserAttr setArticleNum(Integer articleNum) {
+        this.articleNum = articleNum;
+        return this;
+    }
 
-	public Integer getCommentNum() {
-		return commentNum;
-	}
+    public Integer getCommentNum() {
+        return this.commentNum;
+    }
 
-	public UserAttr setCommentNum(Integer commentNum) {
-		this.commentNum = commentNum;
-		return this;
-	}
+    public UserAttr setCommentNum(Integer commentNum) {
+        this.commentNum = commentNum;
+        return this;
+    }
 
-	public Integer getViewedNum() {
-		return viewedNum;
-	}
+    public Integer getViewedNum() {
+        return this.viewedNum;
+    }
 
-	public UserAttr setViewedNum(Integer viewedNum) {
-		this.viewedNum = viewedNum;
-		return this;
-	}
+    public UserAttr setViewedNum(Integer viewedNum) {
+        this.viewedNum = viewedNum;
+        return this;
+    }
 
-	public Integer getCollectNum() {
-		return collectNum;
-	}
+    public Integer getCollectNum() {
+        return this.collectNum;
+    }
 
-	public UserAttr setCollectNum(Integer collectNum) {
-		this.collectNum = collectNum;
-		return this;
-	}
+    public UserAttr setCollectNum(Integer collectNum) {
+        this.collectNum = collectNum;
+        return this;
+    }
 
 }

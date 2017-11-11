@@ -10,59 +10,59 @@ package com.xiaoyu.modules.biz.user.vo;
  */
 public class FollowVo {
 
-	private String userId;
-	private String followerId;
-	private String userName;
-	private String followerName;
-	private String userAvatar;
-	private String followerAvatar;
+    private String userId;
+    private String followerId;
+    private String userName;
+    private String followerName;
+    private String userAvatar;
+    private String followerAvatar;
 
-	public String getUserId() {
-		return userId;
-	}
+    public String getUserId() {
+        return this.userId;
+    }
 
-	public void setUserId(String userId) {
-		this.userId = userId;
-	}
+    public void setUserId(String userId) {
+        this.userId = userId;
+    }
 
-	public String getFollowerId() {
-		return followerId;
-	}
+    public String getFollowerId() {
+        return this.followerId;
+    }
 
-	public void setFollowerId(String followerId) {
-		this.followerId = followerId;
-	}
+    public void setFollowerId(String followerId) {
+        this.followerId = followerId;
+    }
 
-	public String getUserName() {
-		return userName;
-	}
+    public String getUserName() {
+        return this.userName;
+    }
 
-	public void setUserName(String userName) {
-		this.userName = userName;
-	}
+    public void setUserName(String userName) {
+        this.userName = userName;
+    }
 
-	public String getFollowerName() {
-		return followerName;
-	}
+    public String getFollowerName() {
+        return this.followerName;
+    }
 
-	public void setFollowerName(String followerName) {
-		this.followerName = followerName;
-	}
+    public void setFollowerName(String followerName) {
+        this.followerName = followerName;
+    }
 
-	public String getUserAvatar() {
-		return userAvatar;
-	}
+    public String getUserAvatar() {
+        return this.userAvatar;
+    }
 
-	public void setUserAvatar(String userAvatar) {
-		this.userAvatar = userAvatar;
-	}
+    public void setUserAvatar(String userAvatar) {
+        this.userAvatar = userAvatar;
+    }
 
-	public String getFollowerAvatar() {
-		return followerAvatar;
-	}
+    public String getFollowerAvatar() {
+        return this.followerAvatar;
+    }
 
-	public void setFollowerAvatar(String followerAvatar) {
-		this.followerAvatar = followerAvatar;
-	}
+    public void setFollowerAvatar(String followerAvatar) {
+        this.followerAvatar = followerAvatar;
+    }
 
 }

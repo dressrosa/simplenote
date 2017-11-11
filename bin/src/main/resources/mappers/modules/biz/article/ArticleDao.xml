@@ -1,0 +1,259 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.xiaoyu.modules.biz.article.dao.ArticleDao">
+	<sql id="Base_Column_List">
+		a.id as id,
+		a.user_id as userId,
+		a.title as title,
+		a.content
+		as content,
+		a.create_date as createDate
+	</sql>
+
+	<select id="count" resultType="java.lang.Integer">
+		select count(*)
+		from biz_article
+		where del_flag=0
+	</select>
+	<select id="get" resultType="com.xiaoyu.modules.biz.article.entity.Article"
+		parameterType="com.xiaoyu.modules.biz.article.entity.Article">
+		select
+		<include refid="Base_Column_List" />
+		from biz_article as
+		a
+		where a.id =
+		#{id} and a.del_flag=0
+	</select>
+
+	<select id="getForUpdate" parameterType="java.lang.String"
+		resultType="com.xiaoyu.modules.biz.article.entity.Article">
+		select * from biz_article where id = #{id}
+		for update
+	</select>
+
+	<select id="getById" resultType="com.xiaoyu.modules.biz.article.entity.Article"
+		parameterType="java.lang.String">
+		select
+		<include refid="Base_Column_List" />
+		from biz_article as
+		a
+		where a.id =
+		#{id} and a.del_flag=0
+	</select>
+
+	<select id="getVo" resultType="com.xiaoyu.modules.biz.article.vo.ArticleVo"
+		parameterType="java.lang.String">
+		select
+		<include refid="Base_Column_List" />
+		,t.read_num as 'attr.readNum',
+		t.collect_num as 'attr.collectNum',
+		t.like_num as 'attr.likeNum',
+		t.comment_num as
+		'attr.commentNum'
+		from
+		biz_article as
+		a
+		left join
+		biz_article_attr as t on
+		t.article_id=a.id
+		where a.id =
+		#{id} and
+		a.del_flag=0
+	</select>
+
+	<!-- 分页查询用户信息 -->
+
+	<select id="findByList" resultType="com.xiaoyu.modules.biz.article.entity.Article"
+		parameterType="java.lang.String">
+		select
+		<include refid="Base_Column_List" />
+		from biz_article as a
+		where a.del_flag=0
+		<if test="userId != null">
+			and a.user_id=#{userId}
+		</if>
+	</select>
+
+	<select id="findLatestOfUsers" resultType="com.xiaoyu.modules.biz.article.vo.ArticleVo">
+		SELECT
+		a.id as id,
+		a.user_id as userId,
+		a.title as title,
+		a.create_date as
+		createDate
+		,u.avatar as 'user.avatar'
+		,u.signature as
+		'user.signature'
+		,u.nickname as 'user.nickname'
+		,t.read_num as
+		'attr.readNum',
+		t.collect_num as 'attr.collectNum',
+		t.like_num as
+		'attr.likeNum',
+		t.comment_num as
+		'attr.commentNum'
+		from
+		biz_article as a
+		left join
+		biz_user as u on u.id = a.user_id
+		left join
+		biz_article_attr as t on
+		t.article_id=a.id
+		WHERE
+		a.del_flag = 0 and
+		<foreach item="item" index="index" collection="array" open="("
+			separator="or" close=")">
+			a.user_id =#{item}
+		</foreach>
+		group by a.user_id
+		order by
+		a.create_date
+	</select>
+
+	<select id="findHotList" resultType="com.xiaoyu.modules.biz.article.vo.ArticleVo">
+		select
+		<include refid="Base_Column_List" />
+		,t.read_num as 'attr.readNum',
+		t.collect_num as 'attr.collectNum',
+		t.like_num as 'attr.likeNum',
+		t.comment_num as
+		'attr.commentNum'
+		from
+		biz_article as a
+		left join
+		biz_article_attr as t on
+		t.article_id=a.id
+		where a.del_flag=0
+		order by a.create_date desc
+	</select>
+	<select id="findByListWithAttr" resultType="com.xiaoyu.modules.biz.article.vo.ArticleVo"
+		parameterType="java.lang.String">
+		select
+		<include refid="Base_Column_List" />
+		,t.read_num as 'attr.readNum',
+		t.collect_num as 'attr.collectNum',
+		t.like_num as 'attr.likeNum',
+		t.comment_num as
+		'attr.commentNum'
+		from
+		biz_article as a
+		left join
+		biz_article_attr as t on
+		t.article_id=a.id
+		where a.del_flag=0
+		<if test="userId != null">
+			and a.user_id=#{userId}
+		</if>
+	</select>
+	<select id="findCollectList" resultType="com.xiaoyu.modules.biz.article.vo.ArticleVo"
+		parameterType="java.lang.String">
+		select
+		<include refid="Base_Column_List" />
+		,t.read_num as 'attr.readNum',
+		t.collect_num as 'attr.collectNum',
+		t.like_num as 'attr.likeNum',
+		t.comment_num as
+		'attr.commentNum'
+		from
+		biz_article as a
+		left join
+		biz_article_attr as t on
+		t.article_id=a.id
+		left join biz_article_collect as ac on
+		ac.article_id=a.id
+		where
+		a.del_flag=0
+		and ac.user_id=#{userId}
+		and ac.status=1
+	</select>
+	<delete id="delete" parameterType="com.xiaoyu.modules.biz.article.entity.Article">
+		update biz_article set
+		del_flag=1
+		where id = #{id}
+	</delete>
+
+
+	<insert id="insert" parameterType="com.xiaoyu.modules.biz.article.entity.Article">
+		insert into biz_article
+		<trim prefix="(" suffix=")" suffixOverrides=",">
+			<if test="id != null">
+				id,
+			</if>
+			<if test="userId != null">
+				user_id,
+			</if>
+			<if test="title != null">
+				title,
+			</if>
+			<if test="createDate != null">
+				create_date,
+			</if>
+			<if test="updateDate != null">
+				update_date,
+			</if>
+			<if test="delFlag != null">
+				del_flag,
+			</if>
+			<if test="content != null">
+				content,
+			</if>
+		</trim>
+		<trim prefix="values (" suffix=")" suffixOverrides=",">
+			<if test="id != null">
+				#{id},
+			</if>
+			<if test="userId != null">
+				#{userId},
+			</if>
+			<if test="title != null">
+				#{title},
+			</if>
+			<if test="createDate != null">
+				#{createDate},
+			</if>
+			<if test="updateDate != null">
+				#{updateDate},
+			</if>
+			<if test="delFlag != null">
+				#{delFlag},
+			</if>
+			<if test="content != null">
+				#{content},
+			</if>
+		</trim>
+	</insert>
+
+
+	<update id="update" parameterType="com.xiaoyu.modules.biz.article.entity.Article">
+		update biz_article
+		<set>
+			<if test="userId != null">
+				user_id = #{userId},
+			</if>
+			<if test="title != null">
+				title = #{title},
+			</if>
+			<if test="createDate != null">
+				create_date = #{createDate},
+			</if>
+			<if test="updateDate != null">
+				update_date = #{updateDate},
+			</if>
+			<if test="delFlag != null">
+				del_flag = #{delFlag},
+			</if>
+			<if test="content != null">
+				content = #{content},
+			</if>
+		</set>
+		where id = #{id}
+	</update>
+
+	<select id="isExist" parameterType="java.lang.String"
+		resultType="java.lang.Integer">
+		select count(*) from biz_article where id=#{id} and
+		del_flag=0
+	</select>
+
+
+</mapper>

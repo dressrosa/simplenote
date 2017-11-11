@@ -3,6 +3,9 @@ package com.xiaoyu.common.base;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.serializer.SerializerFeature;
 import com.alibaba.fastjson.serializer.ValueFilter;
@@ -16,118 +19,116 @@ import com.alibaba.fastjson.serializer.ValueFilter;
  */
 public class ResponseMapper {
 
-	/**
-	 * 默认为成功
-	 */
-	private static final String COUNT = "count";
-	private static final String CODE = "code";
-	private static final String MESSAGE = "message";
-	private static final String DATA = "data";
+    private final static Logger logger = LoggerFactory.getLogger(ResponseMapper.class);
+    /**
+     * 默认为成功
+     */
+    private static final String COUNT = "count";
+    private static final String CODE = "code";
+    private static final String MESSAGE = "message";
+    private static final String DATA = "data";
 
-	private static final ValueFilter filter = new ValueFilter() {
-		@Override
-		public Object process(Object object, String name, Object value) {
-			return value == null ? "" : value;
-		}
-	};
+    private static final ValueFilter filter = new ValueFilter() {
+        @Override
+        public Object process(Object object, String name, Object value) {
+            return value == null ? "" : value;
+        }
+    };
 
-	/**
-	 * 封装响应的数据,避免单例导致的多线程问题
-	 */
-	private final static ThreadLocal<ConcurrentHashMap<String, Object>> local = new ThreadLocal<ConcurrentHashMap<String, Object>>() {
-		@Override
-		protected ConcurrentHashMap<String, Object> initialValue() {
-			final ConcurrentHashMap<String, Object> dataMap = new ConcurrentHashMap<>(8);
-			dataMap.put(CODE, ResultConstant.SUCCESS);
-			dataMap.put(MESSAGE, "");
-			dataMap.put(COUNT, "");
-			dataMap.put(DATA, "");
-			return dataMap;
-		}
+    /**
+     * 封装响应的数据,避免单例导致的多线程问题
+     */
+    private final static ThreadLocal<ConcurrentHashMap<String, Object>> local = new ThreadLocal<ConcurrentHashMap<String, Object>>() {
+        @Override
+        protected ConcurrentHashMap<String, Object> initialValue() {
+            final ConcurrentHashMap<String, Object> dataMap = new ConcurrentHashMap<>(8);
+            dataMap.put(ResponseMapper.CODE, ResponseCode.SUCCESS);
+            dataMap.put(ResponseMapper.MESSAGE, "");
+            dataMap.put(ResponseMapper.COUNT, "");
+            dataMap.put(ResponseMapper.DATA, "");
+            return dataMap;
+        }
 
-	};
+    };
 
-	private ResponseMapper() {
-	};
+    private ResponseMapper() {
+    };
 
-	/**
-	 * 内部类
-	 */
-	private static final class MapperInstance {
-		public static final ResponseMapper mapper = new ResponseMapper();
-	}
+    /**
+     * 内部类
+     */
+    private static final class MapperInstance {
+        public static final ResponseMapper mapper = new ResponseMapper();
+    }
 
-	// 返回单例
-	public static final ResponseMapper createMapper() {
-		return MapperInstance.mapper;
-	}
+    // 返回单例
+    public static final ResponseMapper createMapper() {
+        return MapperInstance.mapper;
+    }
 
-	// public static ResponseMapper createMapper() {
-	// return new ResponseMapper();
-	// }
+    // public static ResponseMapper createMapper() {
+    // return new ResponseMapper();
+    // }
 
-	// 返回json数据
-	public String getResultJson() {
-		String result = JSON.toJSONString(getLocalMap(), filter, SerializerFeature.WriteNullStringAsEmpty);
-		System.out.println("code:" + getLocalMap().get("code"));
-		//getLocalMap().clear();
-		getLocalMap().put(CODE, ResultConstant.SUCCESS);
-		getLocalMap().put(MESSAGE, "");
-		getLocalMap().put(COUNT, "");
-		getLocalMap().put(DATA, "");
-		return result;
-	}
+    // 返回json数据
+    public String resultJson() {
+        final String result = JSON.toJSONString(this.getLocalMap(), ResponseMapper.filter,
+                SerializerFeature.WriteNullStringAsEmpty);
+        logger.info("code:" + this.getLocalMap().get("code"));
+        // getLocalMap().clear();
+        this.getLocalMap().put(ResponseMapper.CODE, ResponseCode.SUCCESS);
+        this.getLocalMap().put(ResponseMapper.MESSAGE, "");
+        this.getLocalMap().put(ResponseMapper.COUNT, "");
+        this.getLocalMap().put(ResponseMapper.DATA, "");
+        return result;
+    }
 
-	private final Map<String, Object> getLocalMap() {
-		return local.get();
-	}
+    private final Map<String, Object> getLocalMap() {
+        return ResponseMapper.local.get();
+    }
 
-	public ResponseMapper setCode(String code) {
-		final String code1 = code;
-		final Map<String, Object> dataMap = getLocalMap();
-		dataMap.put(CODE, code1);
-		switch (code1) {// 通用返回信息
-		case ResultConstant.SUCCESS:
-			dataMap.put(MESSAGE, ResultConstant.SUCCESS_MESSAGE);
-			break;
-		case ResultConstant.ARGS_ERROR:
-			dataMap.put(MESSAGE, ResultConstant.ARGS_ERROR_MESSAGE);
-			break;
-		case ResultConstant.EXCEPTION:
-			dataMap.put(MESSAGE, ResultConstant.EXCEPTION_MESSAGE);
-			break;
-		case ResultConstant.EXISTS:
-			dataMap.put(MESSAGE, ResultConstant.EXISTS_MESSAGE);
-			break;
-		case ResultConstant.NOT_DATA:
-			dataMap.put(MESSAGE, ResultConstant.NOT_DATA_MESSAGE);
-			break;
-		}
-		return this;
+    public ResponseMapper code(int code) {
+        final int code1 = code;
+        final Map<String, Object> dataMap = this.getLocalMap();
+        dataMap.put(ResponseMapper.CODE, code1);
+        // 通用返回信息
+        if (ResponseCode.SUCCESS.statusCode() == code1)
+            dataMap.put(ResponseMapper.MESSAGE, ResponseCode.SUCCESS.statusMsg());
+        else if (ResponseCode.ARGS_ERROR.statusCode() == code1)
+            dataMap.put(ResponseMapper.MESSAGE, ResponseCode.ARGS_ERROR.statusMsg());
+        else if (ResponseCode.FAILED.statusCode() == code1)
+            dataMap.put(ResponseMapper.MESSAGE, ResponseCode.FAILED.statusMsg());
+        else if (ResponseCode.EXIST.statusCode() == code1)
+            dataMap.put(ResponseMapper.MESSAGE, ResponseCode.EXIST.statusMsg());
+        else if (ResponseCode.NO_DATA.statusCode() == code1)
+            dataMap.put(ResponseMapper.MESSAGE, ResponseCode.NO_DATA.statusMsg());
+        return this;
+    }
 
-	}
+    public ResponseMapper message(String message) {
+        if (message == null) {
+            return this;
+        }
+        final Map<String, Object> dataMap = this.getLocalMap();
+        dataMap.put(ResponseMapper.MESSAGE, message);
+        return this;
+    }
 
-	public ResponseMapper setMessage(String message) {
-		if (message == null)
-			return this;
-		final Map<String, Object> dataMap = getLocalMap();
-		dataMap.put(MESSAGE, message);
-		return this;
-	}
+    public ResponseMapper count(Long count) {
+        if (count == null) {
+            return this;
+        }
+        final Map<String, Object> dataMap = this.getLocalMap();
+        dataMap.put(ResponseMapper.COUNT, count);
+        return this;
+    }
 
-	public ResponseMapper setCount(Long count) {
-		if (count == null)
-			return this;
-		final Map<String, Object> dataMap = getLocalMap();
-		dataMap.put(COUNT, count);
-		return this;
-	}
-
-	public ResponseMapper setData(Object data) {
-		if (data == null)
-			return this;
-		final Map<String, Object> dataMap = getLocalMap();
-		dataMap.put(DATA, data);
-		return this;
-	}
+    public ResponseMapper data(Object data) {
+        if (data == null) {
+            return this;
+        }
+        final Map<String, Object> dataMap = this.getLocalMap();
+        dataMap.put(ResponseMapper.DATA, data);
+        return this;
+    }
 }

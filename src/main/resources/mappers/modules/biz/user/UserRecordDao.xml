@@ -2,28 +2,28 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.xiaoyu.modules.biz.user.dao.LoginRecordDao">
 
-	<sql id="columns">
-		a.id as id,
-		a.user_id as userId,
-		a.login_ip as loginIp,
-		a.create_date as createDate
-	</sql>
+    <sql id="columns">
+        a.id as id,
+        a.user_id as userId,
+        a.login_ip as loginIp,
+        a.create_date as createDate
+    </sql>
 
-	<sql id="userRecordJoins">
-	</sql>
+    <sql id="userRecordJoins">
+    </sql>
 
-	<select id="findByList" resultType="com.xiaoyu.modules.biz.user.entity.LoginRecord"
-		parameterType="com.xiaoyu.modules.biz.user.entity.LoginRecord">
-		select
-		<include refid="columns" />
-		from biz_user_login_record as a
-		where a.del_flag=0
-	</select>
+    <select id="findByList" resultType="com.xiaoyu.modules.biz.user.entity.LoginRecord"
+        parameterType="com.xiaoyu.modules.biz.user.entity.LoginRecord">
+        select
+        <include refid="columns" />
+        from biz_user_login_record as a
+        where a.del_flag=0
+    </select>
 
-	<insert id="insert" parameterType="com.xiaoyu.modules.biz.user.entity.LoginRecord">
-		insert into biz_user_login_record
-		(id,user_id,login_ip,device)
-		values(#{id},#{userId},#{loginIp},#{device})
-	</insert>
+    <insert id="insert" parameterType="com.xiaoyu.modules.biz.user.entity.LoginRecord">
+        insert into biz_user_login_record
+        (id,user_id,login_ip,device)
+        values(#{id},#{userId},#{loginIp},#{device})
+    </insert>
 
 </mapper>

@@ -21,11 +21,11 @@ import com.xiaoyu.modules.biz.message.vo.MessageVo;
 @Repository
 public interface MessageDao extends BaseDao<Message> {
 
-	int isDoAgain(Message t);
+    int isDoAgain(Message t);
 
-	List<MessageVo> findVoByList(Message msg);
+    List<MessageVo> findVoByList(Message msg);
 
-	int read(List<String> idsList);
+    int read(List<String> idsList);
 
-	int getUnreadNumBefore1Hour(@Param("receiverId")String userId);
+    int getUnreadNumBefore1Hour(@Param("receiverId") String userId);
 }

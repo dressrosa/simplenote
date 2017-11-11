@@ -10,84 +10,84 @@ import com.xiaoyu.common.base.BaseEntity;
  */
 public class User extends BaseEntity {
 
-	private static final long serialVersionUID = 1L;
+    private static final long serialVersionUID = 1L;
 
-	private String nickname;
-	private String loginName;
-	private String avatar;
-	private Integer sex;
-	private String description;
-	private String password;
-	private String signature;
-	private String background;
+    private String nickname;
+    private String loginName;
+    private String avatar;
+    private Integer sex;
+    private String description;
+    private String password;
+    private String signature;
+    private String background;
 
-	public String getBackground() {
-		return background;
-	}
+    public String getBackground() {
+        return this.background;
+    }
 
-	public void setBackground(String background) {
-		this.background = background;
-	}
+    public void setBackground(String background) {
+        this.background = background;
+    }
 
-	public String getSignature() {
-		return signature;
-	}
+    public String getSignature() {
+        return this.signature;
+    }
 
-	public void setSignature(String signature) {
-		this.signature = signature;
-	}
+    public void setSignature(String signature) {
+        this.signature = signature;
+    }
 
-	public Integer getSex() {
-		return sex;
-	}
+    public Integer getSex() {
+        return this.sex;
+    }
 
-	public User setSex(Integer sex) {
-		this.sex = sex;
-		return this;
-	}
+    public User setSex(Integer sex) {
+        this.sex = sex;
+        return this;
+    }
 
-	public String getPassword() {
-		return password;
-	}
+    public String getPassword() {
+        return this.password;
+    }
 
-	public User setPassword(String password) {
-		this.password = password;
-		return this;
-	}
+    public User setPassword(String password) {
+        this.password = password;
+        return this;
+    }
 
-	public String getDescription() {
-		return description;
-	}
+    public String getDescription() {
+        return this.description;
+    }
 
-	public void setDescription(String description) {
-		this.description = description;
-	}
+    public void setDescription(String description) {
+        this.description = description;
+    }
 
-	public String getAvatar() {
-		return avatar;
-	}
+    public String getAvatar() {
+        return this.avatar;
+    }
 
-	public User setAvatar(String avatar) {
-		this.avatar = avatar;
-		return this;
-	}
+    public User setAvatar(String avatar) {
+        this.avatar = avatar;
+        return this;
+    }
 
-	public String getNickname() {
-		return nickname;
-	}
+    public String getNickname() {
+        return this.nickname;
+    }
 
-	public User setNickname(String nickname) {
-		this.nickname = nickname;
-		return this;
-	}
+    public User setNickname(String nickname) {
+        this.nickname = nickname;
+        return this;
+    }
 
-	public String getLoginName() {
-		return loginName;
-	}
+    public String getLoginName() {
+        return this.loginName;
+    }
 
-	public User setLoginName(String loginName) {
-		this.loginName = loginName;
-		return this;
-	}
+    public User setLoginName(String loginName) {
+        this.loginName = loginName;
+        return this;
+    }
 
 }

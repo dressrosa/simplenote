@@ -7,46 +7,46 @@ import com.xiaoyu.common.base.BaseEntity;
 
 public class ArticleLike extends BaseEntity {
 
-	private static final long serialVersionUID = 1L;
+    private static final long serialVersionUID = 1L;
 
-	private String articleId;
-	private String userId;
-	private Integer num;// 点了几次
-	private Integer status;
+    private String articleId;
+    private String userId;
+    private Integer num;// 点了几次
+    private Integer status;
 
-	public Integer getStatus() {
-		return status;
-	}
+    public Integer getStatus() {
+        return this.status;
+    }
 
-	public void setStatus(Integer status) {
-		this.status = status;
-	}
+    public void setStatus(Integer status) {
+        this.status = status;
+    }
 
-	public String getArticleId() {
-		return articleId;
-	}
+    public String getArticleId() {
+        return this.articleId;
+    }
 
-	public ArticleLike setArticleId(String articleId) {
-		this.articleId = articleId;
-		return this;
-	}
+    public ArticleLike setArticleId(String articleId) {
+        this.articleId = articleId;
+        return this;
+    }
 
-	public String getUserId() {
-		return userId;
-	}
+    public String getUserId() {
+        return this.userId;
+    }
 
-	public ArticleLike setUserId(String userId) {
-		this.userId = userId;
-		return this;
-	}
+    public ArticleLike setUserId(String userId) {
+        this.userId = userId;
+        return this;
+    }
 
-	public Integer getNum() {
-		return num;
-	}
+    public Integer getNum() {
+        return this.num;
+    }
 
-	public ArticleLike setNum(Integer num) {
-		this.num = num;
-		return this;
-	}
+    public ArticleLike setNum(Integer num) {
+        this.num = num;
+        return this;
+    }
 
 }

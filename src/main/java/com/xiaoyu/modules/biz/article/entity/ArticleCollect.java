@@ -7,36 +7,36 @@ import com.xiaoyu.common.base.BaseEntity;
 
 public class ArticleCollect extends BaseEntity {
 
-	private static final long serialVersionUID = 1L;
+    private static final long serialVersionUID = 1L;
 
-	private String articleId;
-	private String userId;
-	private Integer status;
+    private String articleId;
+    private String userId;
+    private Integer status;
 
-	public Integer getStatus() {
-		return status;
-	}
+    public Integer getStatus() {
+        return this.status;
+    }
 
-	public void setStatus(Integer status) {
-		this.status = status;
-	}
+    public void setStatus(Integer status) {
+        this.status = status;
+    }
 
-	public String getArticleId() {
-		return articleId;
-	}
+    public String getArticleId() {
+        return this.articleId;
+    }
 
-	public ArticleCollect setArticleId(String articleId) {
-		this.articleId = articleId;
-		return this;
-	}
+    public ArticleCollect setArticleId(String articleId) {
+        this.articleId = articleId;
+        return this;
+    }
 
-	public String getUserId() {
-		return userId;
-	}
+    public String getUserId() {
+        return this.userId;
+    }
 
-	public ArticleCollect setUserId(String userId) {
-		this.userId = userId;
-		return this;
-	}
+    public ArticleCollect setUserId(String userId) {
+        this.userId = userId;
+        return this;
+    }
 
 }

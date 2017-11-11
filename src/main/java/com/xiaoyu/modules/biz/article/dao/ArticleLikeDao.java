@@ -14,6 +14,6 @@ import com.xiaoyu.modules.biz.article.entity.ArticleLike;
 @Repository
 public interface ArticleLikeDao extends BaseDao<ArticleLike> {
 
-	ArticleLike  getForUpdate(ArticleLike t);
+    ArticleLike getForUpdate(ArticleLike t);
 
 }

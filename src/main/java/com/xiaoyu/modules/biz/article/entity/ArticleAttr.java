@@ -10,52 +10,57 @@ import com.xiaoyu.common.base.BaseEntity;
  */
 public class ArticleAttr extends BaseEntity {
 
-	private static final long serialVersionUID = 1L;
+    private static final long serialVersionUID = 1L;
 
-	private String articleId;
-	private Integer readNum;
-	private Integer commentNum;
-	private Integer collectNum;
-	private Integer likeNum;
+    private String articleId;
+    private Integer readNum;
+    private Integer commentNum;
+    private Integer collectNum;
+    private Integer likeNum;
 
-	public Integer getCollectNum() {
-		return collectNum;
-	}
+    public String getArticleId() {
+        return this.articleId;
+    }
 
-	public void setCollectNum(Integer collectNum) {
-		this.collectNum = collectNum;
-	}
+    public ArticleAttr setArticleId(String articleId) {
+        this.articleId = articleId;
+        return this;
+    }
 
-	public Integer getLikeNum() {
-		return likeNum;
-	}
+    public Integer getReadNum() {
+        return this.readNum;
+    }
 
-	public void setLikeNum(Integer likeNum) {
-		this.likeNum = likeNum;
-	}
+    public ArticleAttr setReadNum(Integer readNum) {
+        this.readNum = readNum;
+        return this;
+    }
 
-	public String getArticleId() {
-		return articleId;
-	}
+    public Integer getCommentNum() {
+        return this.commentNum;
+    }
 
-	public void setArticleId(String articleId) {
-		this.articleId = articleId;
-	}
+    public ArticleAttr setCommentNum(Integer commentNum) {
+        this.commentNum = commentNum;
+        return this;
+    }
 
-	public Integer getReadNum() {
-		return readNum;
-	}
+    public Integer getCollectNum() {
+        return this.collectNum;
+    }
 
-	public void setReadNum(Integer readNum) {
-		this.readNum = readNum;
-	}
+    public ArticleAttr setCollectNum(Integer collectNum) {
+        this.collectNum = collectNum;
+        return this;
+    }
 
-	public Integer getCommentNum() {
-		return commentNum;
-	}
+    public Integer getLikeNum() {
+        return this.likeNum;
+    }
 
-	public void setCommentNum(Integer commentNum) {
-		this.commentNum = commentNum;
-	}
+    public ArticleAttr setLikeNum(Integer likeNum) {
+        this.likeNum = likeNum;
+        return this;
+    }
 
 }

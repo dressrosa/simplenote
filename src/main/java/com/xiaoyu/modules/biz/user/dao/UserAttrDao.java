@@ -15,6 +15,6 @@ import com.xiaoyu.modules.biz.user.entity.UserAttr;
 @Repository
 public interface UserAttrDao extends BaseDao<UserAttr> {
 
-	void addNum(@Param("type") int type,@Param("num")int num,@Param("userId")String userId);
+    void addNum(@Param("type") int type, @Param("num") int num, @Param("userId") String userId);
 
 }

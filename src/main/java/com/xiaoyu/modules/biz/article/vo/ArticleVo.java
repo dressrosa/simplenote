@@ -11,57 +11,57 @@ import com.xiaoyu.modules.biz.user.vo.UserVo;
  */
 public class ArticleVo extends BaseEntity {
 
-	private static final long serialVersionUID = 1L;
+    private static final long serialVersionUID = 1L;
 
-	private String userId;
-	private String title;
-	private String content;
-	private UserVo user;
-	private ArticleAttrVo attr;
+    private String userId;
+    private String title;
+    private String content;
+    private UserVo user;
+    private ArticleAttrVo attr;
 
-	public ArticleAttrVo getAttr() {
-		return attr;
-	}
+    public ArticleAttrVo getAttr() {
+        return this.attr;
+    }
 
-	public UserVo getUser() {
-		return user;
-	}
+    public UserVo getUser() {
+        return this.user;
+    }
 
-	public ArticleVo setUser(UserVo user) {
-		this.user = user;
-		return this;
-	}
+    public ArticleVo setUser(UserVo user) {
+        this.user = user;
+        return this;
+    }
 
-	public ArticleVo setAttr(ArticleAttrVo attr) {
-		this.attr = attr;
-		return this;
-	}
+    public ArticleVo setAttr(ArticleAttrVo attr) {
+        this.attr = attr;
+        return this;
+    }
 
-	public String getUserId() {
-		return userId;
-	}
+    public String getUserId() {
+        return this.userId;
+    }
 
-	public ArticleVo setUserId(String userId) {
-		this.userId = userId;
-		return this;
-	}
+    public ArticleVo setUserId(String userId) {
+        this.userId = userId;
+        return this;
+    }
 
-	public String getTitle() {
-		return title;
-	}
+    public String getTitle() {
+        return this.title;
+    }
 
-	public ArticleVo setTitle(String title) {
-		this.title = title;
-		return this;
-	}
+    public ArticleVo setTitle(String title) {
+        this.title = title;
+        return this;
+    }
 
-	public String getContent() {
-		return content;
-	}
+    public String getContent() {
+        return this.content;
+    }
 
-	public ArticleVo setContent(String content) {
-		this.content = content;
-		return this;
-	}
+    public ArticleVo setContent(String content) {
+        this.content = content;
+        return this;
+    }
 
 }

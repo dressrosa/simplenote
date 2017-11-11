@@ -19,9 +19,9 @@ import com.xiaoyu.modules.biz.user.vo.FollowVo;
  */
 public interface FollowDao extends BaseDao<Follow> {
 
-	int cancelLove(@Param("userId") String userId, @Param("followerId") String followerId);
+    int cancelLove(@Param("userId") String userId, @Param("followerId") String followerId);
 
-	List<FollowVo> findList(Follow f);
+    List<FollowVo> findList(Follow f);
 
-	int isFollow(@Param("followerId") String userId, @Param("userId") String followTo);
+    int isFollow(@Param("followerId") String userId, @Param("userId") String followTo);
 }

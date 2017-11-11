@@ -13,38 +13,38 @@ import com.xiaoyu.common.base.BaseEntity;
  */
 public class CommentLike extends BaseEntity {
 
-	private static final long serialVersionUID = 1L;
+    private static final long serialVersionUID = 1L;
 
-	private String commentId;
-	private String userId;
+    private String commentId;
+    private String userId;
 
-	private Integer status;
+    private Integer status;
 
-	public String getCommentId() {
-		return commentId;
-	}
+    public String getCommentId() {
+        return this.commentId;
+    }
 
-	public CommentLike setCommentId(String commentId) {
-		this.commentId = commentId;
-		return this;
-	}
+    public CommentLike setCommentId(String commentId) {
+        this.commentId = commentId;
+        return this;
+    }
 
-	public Integer getStatus() {
-		return status;
-	}
+    public Integer getStatus() {
+        return this.status;
+    }
 
-	public CommentLike setStatus(Integer status) {
-		this.status = status;
-		return this;
-	}
+    public CommentLike setStatus(Integer status) {
+        this.status = status;
+        return this;
+    }
 
-	public String getUserId() {
-		return userId;
-	}
+    public String getUserId() {
+        return this.userId;
+    }
 
-	public CommentLike setUserId(String userId) {
-		this.userId = userId;
-		return this;
-	}
+    public CommentLike setUserId(String userId) {
+        this.userId = userId;
+        return this;
+    }
 
 }

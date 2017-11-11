@@ -12,27 +12,27 @@ import com.xiaoyu.common.base.BaseEntity;
  */
 public class Follow extends BaseEntity {
 
-	private static final long serialVersionUID = 1L;
+    private static final long serialVersionUID = 1L;
 
-	private String userId;
-	private String followerId;
+    private String userId;
+    private String followerId;
 
-	public String getUserId() {
-		return userId;
-	}
+    public String getUserId() {
+        return this.userId;
+    }
 
-	public Follow setUserId(String userId) {
-		this.userId = userId;
-		return this;
-	}
+    public Follow setUserId(String userId) {
+        this.userId = userId;
+        return this;
+    }
 
-	public String getFollowerId() {
-		return followerId;
-	}
+    public String getFollowerId() {
+        return this.followerId;
+    }
 
-	public Follow setFollowerId(String followerId) {
-		this.followerId = followerId;
-		return this;
-	}
+    public Follow setFollowerId(String followerId) {
+        this.followerId = followerId;
+        return this;
+    }
 
 }

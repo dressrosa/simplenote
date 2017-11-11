@@ -19,18 +19,18 @@ import com.xiaoyu.modules.biz.article.vo.ArticleVo;
 @Repository
 public interface ArticleDao extends BaseDao<Article> {
 
-	List<ArticleVo> findByListWithAttr(@Param("userId") String userId);
+    List<ArticleVo> findByListWithAttr(@Param("userId") String userId);
 
-	Article getForUpdate(@Param("id") String articleId);
+    Article getForUpdate(@Param("id") String articleId);
 
-	List<ArticleVo> findHotList();
+    List<ArticleVo> findHotList();
 
-	ArticleVo getVo(@Param("id") String articleId);
+    ArticleVo getVo(@Param("id") String articleId);
 
-	Page<ArticleVo> findCollectList(@Param("userId") String userId);
+    Page<ArticleVo> findCollectList(@Param("userId") String userId);
 
-	List<ArticleVo> findLatestOfUsers(String[] userIds);
+    List<ArticleVo> findLatestOfUsers(String[] userIds);
 
-	Integer count();
+    Integer count();
 
 }

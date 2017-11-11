@@ -13,33 +13,33 @@ import javax.servlet.http.HttpServletRequest;
  */
 public interface IArticleService {
 
-	public String detail(String articleId);
+    public String detail(String articleId);
 
-	public String hotList(HttpServletRequest request);
+    public String hotList(HttpServletRequest request);
 
-	public String list(HttpServletRequest request, String userId, Integer pageNum, Integer pageSize);
+    public String list(HttpServletRequest request, String userId, Integer pageNum, Integer pageSize);
 
-	public String collectList(HttpServletRequest request, String userId, Integer pageNum, Integer pageSize);
+    public String collectList(HttpServletRequest request, String userId, Integer pageNum, Integer pageSize);
 
-	public String addArticle(HttpServletRequest request, String title, String content, String userId, String token);
+    public String addArticle(HttpServletRequest request, String title, String content, String userId, String token);
 
-	public String addReadNum(HttpServletRequest request, String articleId);
+    public String addReadNum(HttpServletRequest request, String articleId);
 
-	public String addLike(HttpServletRequest request, String articleId, Integer isLike);
+    public String addLike(HttpServletRequest request, String articleId, Integer isLike);
 
-	public String addCommentLike(HttpServletRequest request, String commentId, Integer isLike);
+    public String addCommentLike(HttpServletRequest request, String commentId, Integer isLike);
 
-	public String addCollect(HttpServletRequest request, String articleId, Integer isCollect);
+    public String addCollect(HttpServletRequest request, String articleId, Integer isCollect);
 
-	public String comment(HttpServletRequest request, String articleId, String content);
+    public String comment(HttpServletRequest request, String articleId, String content);
 
-	public String comments(HttpServletRequest request, String articleId, Integer pageNum);
+    public String comments(HttpServletRequest request, String articleId, Integer pageNum);
 
-	public String newComments(HttpServletRequest request, String articleId);
+    public String newComments(HttpServletRequest request, String articleId);
 
-	public String latestOfUsers(HttpServletRequest request, String[] userIds);
+    public String latestOfUsers(HttpServletRequest request, String[] userIds);
 
-	public String search(HttpServletRequest request, String keyword);
+    public String search(HttpServletRequest request, String keyword);
 
-	public String synElastic(HttpServletRequest request, String password);
+    public String synElastic(HttpServletRequest request, String password);
 }

@@ -1,82 +1,82 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
 <mapper namespace="com.xiaoyu.modules.biz.user.dao.UserAttrDao">
-	<sql id="Base_Column_List">
-		a.user_id as userId,
-		a.article_num as articleNum,
-		a.collect_num as collectNum,
-		a.viewed_num as viewedNum,
-		a.comment_num as
-		commentNum,
-		a.follower_num as followerNum
-	</sql>
+    <sql id="Base_Column_List">
+        a.user_id as userId,
+        a.article_num as articleNum,
+        a.collect_num as collectNum,
+        a.viewed_num as viewedNum,
+        a.comment_num as
+        commentNum,
+        a.follower_num as followerNum
+    </sql>
 
-	<select id="get" resultType="com.xiaoyu.modules.biz.user.entity.UserAttr"
-		parameterType="java.lang.String">
-		select
-		<include refid="Base_Column_List" />
-		from biz_user_attr as a
-		where a.user_id= #{userId}
-	</select>
+    <select id="get" resultType="com.xiaoyu.modules.biz.user.entity.UserAttr"
+        parameterType="java.lang.String">
+        select
+        <include refid="Base_Column_List" />
+        from biz_user_attr as a
+        where a.user_id= #{userId}
+    </select>
 
-	<insert id="insert" parameterType="com.xiaoyu.modules.biz.user.entity.UserAttr">
-		insert into biz_user_attr
-		<trim prefix="(" suffix=")" suffixOverrides=",">
+    <insert id="insert" parameterType="com.xiaoyu.modules.biz.user.entity.UserAttr">
+        insert into biz_user_attr
+        <trim prefix="(" suffix=")" suffixOverrides=",">
 
-			<if test="userId != null">
-				user_id,
-			</if>
-			<if test="articleNum != null">
-				article_num,
-			</if>
-			<if test="collectNum != null">
-				collect_num,
-			</if>
-			<if test="viewedNum != null">
-				viewed_num,
-			</if>
-			<if test="commentNum != null">
-				comment_num,
-			</if>
-		</trim>
-		<trim prefix="values (" suffix=")" suffixOverrides=",">
-			<if test="userId != null">
-				#{userId},
-			</if>
-			<if test="articleNum != null">
-				#{articleNum},
-			</if>
-			<if test="collectNum != null">
-				#{collectNum},
-			</if>
-			<if test="viewedNum != null">
-				#{viewedNum},
-			</if>
-			<if test="commentNum != null">
-				#{commentNum},
-			</if>
-		</trim>
-	</insert>
+            <if test="userId != null">
+                user_id,
+            </if>
+            <if test="articleNum != null">
+                article_num,
+            </if>
+            <if test="collectNum != null">
+                collect_num,
+            </if>
+            <if test="viewedNum != null">
+                viewed_num,
+            </if>
+            <if test="commentNum != null">
+                comment_num,
+            </if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="userId != null">
+                #{userId},
+            </if>
+            <if test="articleNum != null">
+                #{articleNum},
+            </if>
+            <if test="collectNum != null">
+                #{collectNum},
+            </if>
+            <if test="viewedNum != null">
+                #{viewedNum},
+            </if>
+            <if test="commentNum != null">
+                #{commentNum},
+            </if>
+        </trim>
+    </insert>
 
-	<update id="addNum">
-		update biz_user_attr set
-		<choose>
-			<when test="type == 0">
-				article_num = article_num+${num}
-			</when>
-			<when test="type == 1">
-				collect_num = collect_num+${num}
-			</when>
-			<when test="type == 2">
-				comment_num = comment_num+${num}
-			</when>
-			<when test="type == 3">
-				viewed_num = viewed_num+${num}
-			</when>
-			<when test="type == 4">
-				follower_num = follower_num+${num}
-			</when>
-		</choose>
-		where user_id= #{userId}
-	</update>
+    <update id="addNum">
+        update biz_user_attr set
+        <choose>
+            <when test="type == 0">
+                article_num = article_num+${num}
+            </when>
+            <when test="type == 1">
+                collect_num = collect_num+${num}
+            </when>
+            <when test="type == 2">
+                comment_num = comment_num+${num}
+            </when>
+            <when test="type == 3">
+                viewed_num = viewed_num+${num}
+            </when>
+            <when test="type == 4">
+                follower_num = follower_num+${num}
+            </when>
+        </choose>
+        where user_id= #{userId}
+    </update>
 </mapper>

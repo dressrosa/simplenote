@@ -18,20 +18,21 @@ import org.springframework.http.HttpStatus;
 @Configuration
 public class ErrorPageConfiguration {
 
-	@Bean
-	public EmbeddedServletContainerCustomizer containerCustomizer() {
+    @Bean
+    public EmbeddedServletContainerCustomizer containerCustomizer() {
 
-		return new EmbeddedServletContainerCustomizer() {
-			@Override
-			public void customize(ConfigurableEmbeddedServletContainer container) {
+        return new EmbeddedServletContainerCustomizer() {
+            @Override
+            public void customize(ConfigurableEmbeddedServletContainer container) {
 
-				ErrorPage error404Page = new ErrorPage(HttpStatus.NOT_FOUND, "/modules/common/404.html");
-				ErrorPage error500Page = new ErrorPage(HttpStatus.INTERNAL_SERVER_ERROR, "/modules/common/500.html");
-				container.addErrorPages(error500Page);
-				container.addErrorPages(error404Page);
-			}
+                final ErrorPage error404Page = new ErrorPage(HttpStatus.NOT_FOUND, "/modules/common/404.html");
+                final ErrorPage error500Page = new ErrorPage(HttpStatus.INTERNAL_SERVER_ERROR,
+                        "/modules/common/500.html");
+                container.addErrorPages(error500Page);
+                container.addErrorPages(error404Page);
+            }
 
-		};
-	}
+        };
+    }
 
 }

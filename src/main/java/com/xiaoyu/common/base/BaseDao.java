@@ -12,27 +12,27 @@ import org.apache.ibatis.annotations.Param;
  */
 public interface BaseDao<T extends BaseEntity> {
 
-	/**
-	 * 基本CRUD
-	 * 
-	 * @author xiaoyu
-	 * @param t
-	 * @return
-	 * @time 2016年3月22日下午2:41:14
-	 */
-	public int insert(T t);
+    /**
+     * 基本CRUD
+     * 
+     * @author xiaoyu
+     * @param t
+     * @return
+     * @time 2016年3月22日下午2:41:14
+     */
+    public int insert(T t);
 
-	public int update(T t);
+    public int update(T t);
 
-	public int delete(T t);
+    public int delete(T t);
 
-	public T get(T t);
+    public T get(T t);
 
-	public T getById(@Param("id") String id);
+    public T getById(@Param("id") String id);
 
-	public int isExist(T t);
+    public int isExist(T t);
 
-	public int isExist(@Param("id") String id);
+    public int isExist(@Param("id") String id);
 
-	public List<T> findByList(T t);
+    public List<T> findByList(T t);
 }

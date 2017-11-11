@@ -5,7 +5,8 @@ package com.xiaoyu.common.configuration;
 
 import javax.annotation.Resource;
 
-import org.apache.log4j.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.cache.annotation.EnableCaching;
 import org.springframework.cache.ehcache.EhCacheManagerFactoryBean;
 import org.springframework.context.annotation.Bean;
@@ -23,40 +24,40 @@ import net.sf.ehcache.CacheManager;
 @EnableCaching // 启用缓存
 public class CacheManagerConfiguration {
 
-	private static Logger logger = Logger.getLogger(CacheManagerConfiguration.class);
+    private final static Logger logger = LoggerFactory.getLogger(CacheManagerConfiguration.class);
 
-	@Resource(name = "ecacheManager")
-	private CacheManager cacheManager;
+    @Resource(name = "ecacheManager")
+    private CacheManager cacheManager;
 
-	/**
-	 * 注册cachebean
-	 * 
-	 * @author xiaoyu
-	 * @param factory
-	 * @return
-	 * @time 2016年3月18日下午8:40:12
-	 */
-	@Bean(name = "ecacheManager")
-	public CacheManager cacheManager(EhCacheManagerFactoryBean factory) {
-		cacheManager = factory.getObject();
-		logger.info("缓存管理器配置:" + cacheManager.getName());
-		return cacheManager;
-	}
+    /**
+     * 注册cachebean
+     * 
+     * @author xiaoyu
+     * @param factory
+     * @return
+     * @time 2016年3月18日下午8:40:12
+     */
+    @Bean(name = "ecacheManager")
+    public CacheManager cacheManager(EhCacheManagerFactoryBean factory) {
+        this.cacheManager = factory.getObject();
+        CacheManagerConfiguration.logger.info("缓存管理器配置:" + this.cacheManager.getName());
+        return this.cacheManager;
+    }
 
-	/**
-	 * ecache bean工厂
-	 * 
-	 * @author xiaoyu
-	 * @return
-	 * @time 2016年3月18日下午8:38:22
-	 */
-	@Bean
-	public EhCacheManagerFactoryBean ehCacheManagerFactoryBean() {
-		EhCacheManagerFactoryBean factory = new EhCacheManagerFactoryBean();
-		factory.setCacheManagerName("EHCACHE");
-		factory.setConfigLocation(new ClassPathResource("ehcache-config.xml"));
-		factory.setShared(true);
-		return factory;
-	}
+    /**
+     * ecache bean工厂
+     * 
+     * @author xiaoyu
+     * @return
+     * @time 2016年3月18日下午8:38:22
+     */
+    @Bean
+    public EhCacheManagerFactoryBean ehCacheManagerFactoryBean() {
+        final EhCacheManagerFactoryBean factory = new EhCacheManagerFactoryBean();
+        factory.setCacheManagerName("EHCACHE");
+        factory.setConfigLocation(new ClassPathResource("ehcache-config.xml"));
+        factory.setShared(true);
+        return factory;
+    }
 
 }

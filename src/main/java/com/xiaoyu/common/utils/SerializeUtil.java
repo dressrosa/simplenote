@@ -15,51 +15,51 @@ import org.apache.log4j.Logger;
  */
 public class SerializeUtil {
 
-	private static Logger logger = Logger.getLogger(SerializeUtil.class);
+    private final static Logger logger = Logger.getLogger(SerializeUtil.class);
 
-	/**
-	 * 序列化对象
-	 * 
-	 * @author xiaoyu
-	 * @param object
-	 * @return
-	 * @time 2016年3月19日下午8:41:24
-	 */
-	public static byte[] serialize(Object object) {
-		ObjectOutputStream oos = null;
-		ByteArrayOutputStream baos = null;
-		try {
-			if (object != null) {
-				baos = new ByteArrayOutputStream();
-				oos = new ObjectOutputStream(baos);
-				oos.writeObject(object);
-				return baos.toByteArray();
-			}
-		} catch (Exception e) {
-			logger.debug("序列化失败", e);
-		}
-		return null;
-	}
+    /**
+     * 序列化对象
+     * 
+     * @author xiaoyu
+     * @param object
+     * @return
+     * @time 2016年3月19日下午8:41:24
+     */
+    public static byte[] serialize(Object object) {
+        ObjectOutputStream oos = null;
+        ByteArrayOutputStream baos = null;
+        try {
+            if (object != null) {
+                baos = new ByteArrayOutputStream();
+                oos = new ObjectOutputStream(baos);
+                oos.writeObject(object);
+                return baos.toByteArray();
+            }
+        } catch (final Exception e) {
+            SerializeUtil.logger.debug("序列化失败", e);
+        }
+        return null;
+    }
 
-	/**
-	 * 反序列化
-	 * 
-	 * @author xiaoyu
-	 * @param bytes
-	 * @return
-	 * @time 2016年3月19日下午8:43:26
-	 */
-	public static Object unserialize(byte[] bytes) {
-		ByteArrayInputStream bais = null;
-		try {
-			if (bytes != null && bytes.length > 0) {
-				bais = new ByteArrayInputStream(bytes);
-				ObjectInputStream ois = new ObjectInputStream(bais);
-				return ois.readObject();
-			}
-		} catch (Exception e) {
-			logger.debug("反序列化失败", e);
-		}
-		return null;
-	}
+    /**
+     * 反序列化
+     * 
+     * @author xiaoyu
+     * @param bytes
+     * @return
+     * @time 2016年3月19日下午8:43:26
+     */
+    public static Object unserialize(byte[] bytes) {
+        ByteArrayInputStream bais = null;
+        try {
+            if (bytes != null && bytes.length > 0) {
+                bais = new ByteArrayInputStream(bytes);
+                final ObjectInputStream ois = new ObjectInputStream(bais);
+                return ois.readObject();
+            }
+        } catch (final Exception e) {
+            SerializeUtil.logger.debug("反序列化失败", e);
+        }
+        return null;
+    }
 }

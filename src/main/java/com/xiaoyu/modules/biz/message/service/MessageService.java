@@ -15,7 +15,7 @@ import org.springframework.stereotype.Service;
 import com.github.pagehelper.Page;
 import com.github.pagehelper.PageHelper;
 import com.xiaoyu.common.base.ResponseMapper;
-import com.xiaoyu.common.base.ResultConstant;
+import com.xiaoyu.common.base.ResponseCode;
 import com.xiaoyu.modules.biz.article.dao.ArticleDao;
 import com.xiaoyu.modules.biz.article.entity.Article;
 import com.xiaoyu.modules.biz.message.dao.MessageDao;
@@ -28,100 +28,109 @@ import com.xiaoyu.modules.biz.user.entity.User;
 @Service
 public class MessageService implements IMessageService {
 
-	@Autowired
-	private MessageDao msgDao;
+    @Autowired
+    private MessageDao msgDao;
 
-	@Autowired
-	private ArticleDao articleDao;
-	@Autowired
-	private UserDao userDao;
+    @Autowired
+    private ArticleDao articleDao;
+    @Autowired
+    private UserDao userDao;
 
-	/**
-	 * 检查登录失效
-	 */
-	private User checkLoginDead(HttpServletRequest request) {
-		String userId = request.getHeader("userId");
-		String token = request.getHeader("token");
-		HttpSession session = request.getSession(false);
-		if (session == null)
-			return null;
-		User user = (User) session.getAttribute(token);
-		if (user == null)
-			return null;
-		if (!userId.equals(user.getId()))
-			return null;
-		return user;
-	}
+    /**
+     * 检查登录失效
+     */
+    private User checkLoginDead(HttpServletRequest request) {
+        final String userId = request.getHeader("userId");
+        final String token = request.getHeader("token");
+        final HttpSession session = request.getSession(false);
+        if (session == null) {
+            return null;
+        }
+        final User user = (User) session.getAttribute(token);
+        if (user == null) {
+            return null;
+        }
+        if (!userId.equals(user.getId())) {
+            return null;
+        }
+        return user;
+    }
 
-	@Override
-	public String getMsgByType(HttpServletRequest request, String userId, int type) {
-		ResponseMapper mapper = ResponseMapper.createMapper();
-		if (!userId.equals(request.getHeader("userId")))
-			return mapper.setCode(ResultConstant.ARGS_ERROR).getResultJson();
-		if (checkLoginDead(request) == null)
-			return mapper.setCode(ResultConstant.LOGIN_INVALIDATE).getResultJson();
-		Message t = new Message();
-		t.setReceiverId(userId).setType(type);
-		PageHelper.startPage(0, 10);
-		Page<MessageVo> page = (Page<MessageVo>) this.msgDao.findVoByList(t);
-		List<MessageVo> list = page.getResult();
-		if (page != null && list != null && list.size() > 0) {
-			for (MessageVo m : list) {
-				User sender = this.userDao.getById(m.getSenderId());
-				if (sender != null)
-					m.setSenderName(sender.getNickname());
-				if (m.getBizType() == 0) {
-					Article ar = this.articleDao.getById(m.getBizId());
-					if (ar != null) {
-						m.setBizName(ar.getTitle());
-					}
-				} else if (m.getBizType() == 1) {
-					User u = this.userDao.getById(m.getBizId());
-					if (u != null) {
-						m.setBizName(u.getNickname());
-					}
-				}
-			}
-		}
-		return mapper.setData(list).getResultJson();
-	}
+    @Override
+    public String getMsgByType(HttpServletRequest request, String userId, int type) {
+        final ResponseMapper mapper = ResponseMapper.createMapper();
+        if (!userId.equals(request.getHeader("userId"))) {
+            return mapper.code(ResponseCode.ARGS_ERROR.statusCode()).resultJson();
+        }
+        if (this.checkLoginDead(request) == null) {
+            return mapper.code(ResponseCode.LOGIN_INVALIDATE.statusCode()).resultJson();
+        }
+        final Message t = new Message();
+        t.setReceiverId(userId).setType(type);
+        PageHelper.startPage(0, 10);
+        final Page<MessageVo> page = (Page<MessageVo>) this.msgDao.findVoByList(t);
+        final List<MessageVo> list = page.getResult();
+        if (page != null && list != null && list.size() > 0) {
+            for (final MessageVo m : list) {
+                final User sender = this.userDao.getById(m.getSenderId());
+                if (sender != null) {
+                    m.setSenderName(sender.getNickname());
+                }
+                if (m.getBizType() == 0) {
+                    final Article ar = this.articleDao.getById(m.getBizId());
+                    if (ar != null) {
+                        m.setBizName(ar.getTitle());
+                    }
+                } else if (m.getBizType() == 1) {
+                    final User u = this.userDao.getById(m.getBizId());
+                    if (u != null) {
+                        m.setBizName(u.getNickname());
+                    }
+                }
+            }
+        }
+        return mapper.data(list).resultJson();
+    }
 
-	@Override
-	public String removeMsg(HttpServletRequest request, String msgId) {
-		// TODO Auto-generated method stub
-		return null;
-	}
+    @Override
+    public String removeMsg(HttpServletRequest request, String msgId) {
+        // TODO Auto-generated method stub
+        return null;
+    }
 
-	@Override
-	public String replyMsg(HttpServletRequest request, String msgId, String reply) {
-		// TODO Auto-generated method stub
-		return null;
-	}
+    @Override
+    public String replyMsg(HttpServletRequest request, String msgId, String reply) {
+        // TODO Auto-generated method stub
+        return null;
+    }
 
-	@Override
-	public String read(HttpServletRequest request, String msgIds) {
-		ResponseMapper mapper = ResponseMapper.createMapper();
-		if (checkLoginDead(request) == null)
-			return mapper.setCode(ResultConstant.LOGIN_INVALIDATE).getResultJson();
-		String[] ids = msgIds.split(";");
-		if (ids != null && ids.length > 0) {
-			List<String> idsList = Arrays.asList(ids);
-			this.msgDao.read(idsList);
-		}
-		return mapper.getResultJson();
-	}
+    @Override
+    public String read(HttpServletRequest request, String msgIds) {
+        final ResponseMapper mapper = ResponseMapper.createMapper();
+        if (this.checkLoginDead(request) == null) {
+            return mapper.code(ResponseCode.LOGIN_INVALIDATE.statusCode()).resultJson();
+        }
+        final String[] ids = msgIds.split(";");
+        if (ids != null && ids.length > 0) {
+            final List<String> idsList = Arrays.asList(ids);
+            this.msgDao.read(idsList);
+        }
+        return mapper.resultJson();
+    }
 
-	@Override
-	public String unreadNum(HttpServletRequest request) {
-		ResponseMapper mapper = ResponseMapper.createMapper();
-		User u = checkLoginDead(request);
-		if (u == null)
-			return mapper.setCode(ResultConstant.LOGIN_INVALIDATE).getResultJson();
-		int num = this.msgDao.getUnreadNumBefore1Hour(u.getId());
-		if (num > 0)
-			return mapper.setData(num).getResultJson();
+    @Override
+    public String unreadNum(HttpServletRequest request) {
+        final ResponseMapper mapper = ResponseMapper.createMapper();
+        final User u = this.checkLoginDead(request);
+        if (u == null) {
+            return mapper.code(ResponseCode.LOGIN_INVALIDATE.statusCode()).resultJson();
+        }
+        final int num = this.msgDao.getUnreadNumBefore1Hour(u.getId());
+        if (num > 0) {
+            return mapper.data(num).resultJson();
+        }
 
-		return mapper.setCode(ResultConstant.NOT_DATA).getResultJson();
-	}
+        return mapper.code(ResponseCode.NO_DATA.statusCode()).resultJson();
+    }
 
 }

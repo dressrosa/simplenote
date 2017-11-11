@@ -10,40 +10,37 @@ import com.xiaoyu.common.base.BaseEntity;
  */
 public class Article extends BaseEntity {
 
-	/**
-	 * 
-	 */
-	private static final long serialVersionUID = 1L;
+    private static final long serialVersionUID = 1L;
 
-	private String userId;
-	private String title;
-	private String content;
+    private String userId;
+    private String title;
+    private String content;
 
-	public String getUserId() {
-		return userId;
-	}
+    public String getUserId() {
+        return this.userId;
+    }
 
-	public Article setUserId(String userId) {
-		this.userId = userId;
-		return this;
-	}
+    public Article setUserId(String userId) {
+        this.userId = userId;
+        return this;
+    }
 
-	public String getTitle() {
-		return title;
-	}
+    public String getTitle() {
+        return this.title;
+    }
 
-	public Article setTitle(String title) {
-		this.title = title;
-		return this;
-	}
+    public Article setTitle(String title) {
+        this.title = title;
+        return this;
+    }
 
-	public String getContent() {
-		return content;
-	}
+    public String getContent() {
+        return this.content;
+    }
 
-	public Article setContent(String content) {
-		this.content = content;
-		return this;
-	}
+    public Article setContent(String content) {
+        this.content = content;
+        return this;
+    }
 
 }

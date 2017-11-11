@@ -1,77 +1,77 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
 <mapper namespace="com.xiaoyu.modules.biz.article.dao.ArticleCollectDao">
-	<sql id="Base_Column_List">
+    <sql id="Base_Column_List">
 
-	</sql>
-
-
-	<select id="get"
-		parameterType="com.xiaoyu.modules.biz.article.entity.ArticleCollect"
-		resultType="com.xiaoyu.modules.biz.article.entity.ArticleCollect">
-		select
-		status as
-		status
-		from biz_article_collect
-		where user_id
-		=
-		#{userId} and
-		article_id = #{articleId}
-	</select>
-	<insert id="insert"
-		parameterType="com.xiaoyu.modules.biz.article.entity.ArticleCollect">
-		insert into biz_article_collect
-		<trim prefix="(" suffix=")" suffixOverrides=",">
-			<if test="id != null">
-				id,
-			</if>
-			<if test="articleId != null">
-				article_id,
-			</if>
-			<if test="userId != null">
-				user_id,
-			</if>
-		</trim>
-		<trim prefix="values (" suffix=")" suffixOverrides=",">
-			<if test="id != null">
-				#{id},
-			</if>
-			<if test="articleId != null">
-				#{articleId},
-			</if>
-			<if test="userId != null">
-				#{userId},
-			</if>
-		</trim>
-	</insert>
+    </sql>
 
 
-	<update id="update"
-		parameterType="com.xiaoyu.modules.biz.article.entity.ArticleCollect">
-		update biz_article_collect
-		<set>
-			<if test="status != null">
-				status = #{status},
-			</if>
-		</set>
-		where article_id = #{articleId} and user_id =#{userId}
-	</update>
+    <select id="get"
+        parameterType="com.xiaoyu.modules.biz.article.entity.ArticleCollect"
+        resultType="com.xiaoyu.modules.biz.article.entity.ArticleCollect">
+        select
+        status as
+        status
+        from biz_article_collect
+        where user_id
+        =
+        #{userId} and
+        article_id = #{articleId}
+    </select>
+    <insert id="insert"
+        parameterType="com.xiaoyu.modules.biz.article.entity.ArticleCollect">
+        insert into biz_article_collect
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="id != null">
+                id,
+            </if>
+            <if test="articleId != null">
+                article_id,
+            </if>
+            <if test="userId != null">
+                user_id,
+            </if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="id != null">
+                #{id},
+            </if>
+            <if test="articleId != null">
+                #{articleId},
+            </if>
+            <if test="userId != null">
+                #{userId},
+            </if>
+        </trim>
+    </insert>
 
-	<select id="isExist"
-		parameterType="com.xiaoyu.modules.biz.article.entity.ArticleCollect"
-		resultType="java.lang.Integer">
-		select count(*) from biz_article_collect
-		where article_id =
-		#{articleId} and user_id =#{userId}
-	</select>
 
-	<select id="getForUpdate"
-		parameterType="com.xiaoyu.modules.biz.article.entity.ArticleCollect"
-		resultType="com.xiaoyu.modules.biz.article.entity.ArticleCollect">
-		select * from biz_article_collect
-		where
-		article_id=#{articleId}
-		and user_id = #{userId}
-		for update
-	</select>
+    <update id="update"
+        parameterType="com.xiaoyu.modules.biz.article.entity.ArticleCollect">
+        update biz_article_collect
+        <set>
+            <if test="status != null">
+                status = #{status},
+            </if>
+        </set>
+        where article_id = #{articleId} and user_id =#{userId}
+    </update>
+
+    <select id="isExist"
+        parameterType="com.xiaoyu.modules.biz.article.entity.ArticleCollect"
+        resultType="java.lang.Integer">
+        select count(*) from biz_article_collect
+        where article_id =
+        #{articleId} and user_id =#{userId}
+    </select>
+
+    <select id="getForUpdate"
+        parameterType="com.xiaoyu.modules.biz.article.entity.ArticleCollect"
+        resultType="com.xiaoyu.modules.biz.article.entity.ArticleCollect">
+        select * from biz_article_collect
+        where
+        article_id=#{articleId}
+        and user_id = #{userId}
+        for update
+    </select>
 </mapper>

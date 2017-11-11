@@ -15,6 +15,6 @@ import com.xiaoyu.modules.biz.article.entity.ArticleAttr;
 @Repository
 public interface ArticleAttrDao extends BaseDao<ArticleAttr> {
 
-	public ArticleAttr getForUpdate(@Param("articleId") String articleId);
+    ArticleAttr getForUpdate(@Param("articleId") String articleId);
 
 }

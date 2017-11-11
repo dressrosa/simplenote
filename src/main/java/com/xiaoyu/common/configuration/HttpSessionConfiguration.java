@@ -4,7 +4,6 @@
 package com.xiaoyu.common.configuration;
 
 import org.springframework.boot.autoconfigure.AutoConfigureAfter;
-import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.session.data.redis.config.annotation.web.http.EnableRedisHttpSession;
 
@@ -14,7 +13,6 @@ import org.springframework.session.data.redis.config.annotation.web.http.EnableR
  * @author xiaoyu 2016年4月14日
  */
 @Configuration
-@EnableAutoConfiguration
 @EnableRedisHttpSession
 @AutoConfigureAfter(JedisPoolConfiguration.class)
 public class HttpSessionConfiguration {

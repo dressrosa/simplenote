@@ -19,20 +19,20 @@ import com.xiaoyu.modules.biz.article.vo.ArticleCommentVo;
 @Repository
 public interface ArticleCommentDao extends BaseDao<ArticleComment> {
 
-	List<ArticleCommentVo> findNewComments(@Param("articleId") String articleId);
+    List<ArticleCommentVo> findNewComments(@Param("articleId") String articleId);
 
-	List<ArticleCommentVo> findList(String articleId);
+    List<ArticleCommentVo> findList(String articleId);
 
-	ArticleComment getForUpdate(@Param("id") String id);
+    ArticleComment getForUpdate(@Param("id") String id);
 
-	CommentLike getLikeForUpdate(CommentLike t);
+    CommentLike getLikeForUpdate(CommentLike t);
 
-	int updateLike(CommentLike t);
+    int updateLike(CommentLike t);
 
-	int insertLike(CommentLike t);
+    int insertLike(CommentLike t);
 
-	int isLiked(CommentLike t);
+    int isLiked(CommentLike t);
 
-	CommentLike getLike(CommentLike t);
+    CommentLike getLike(CommentLike t);
 
 }

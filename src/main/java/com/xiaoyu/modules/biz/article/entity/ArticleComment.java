@@ -10,75 +10,75 @@ import com.xiaoyu.common.base.BaseEntity;
  */
 public class ArticleComment extends BaseEntity {
 
-	private static final long serialVersionUID = 1L;
+    private static final long serialVersionUID = 1L;
 
-	private String articleId;
-	private String authorId;
-	private String parentId;
-	private String parentReplyerId;
-	private String content;
-	private String replyerId;
-	private Integer num;// 被赞数
+    private String articleId;
+    private String authorId;
+    private String parentId;
+    private String parentReplyerId;
+    private String content;
+    private String replyerId;
+    private Integer num;// 被赞数
 
-	public Integer getNum() {
-		return num;
-	}
+    public Integer getNum() {
+        return this.num;
+    }
 
-	public void setNum(Integer num) {
-		this.num = num;
-	}
+    public void setNum(Integer num) {
+        this.num = num;
+    }
 
-	public String getParentReplyerId() {
-		return parentReplyerId;
-	}
+    public String getParentReplyerId() {
+        return this.parentReplyerId;
+    }
 
-	public void setParentReplyerId(String parentReplyerId) {
-		this.parentReplyerId = parentReplyerId;
-	}
+    public void setParentReplyerId(String parentReplyerId) {
+        this.parentReplyerId = parentReplyerId;
+    }
 
-	public String getArticleId() {
-		return articleId;
-	}
+    public String getArticleId() {
+        return this.articleId;
+    }
 
-	public ArticleComment setArticleId(String articleId) {
-		this.articleId = articleId;
-		return this;
-	}
+    public ArticleComment setArticleId(String articleId) {
+        this.articleId = articleId;
+        return this;
+    }
 
-	public String getAuthorId() {
-		return authorId;
-	}
+    public String getAuthorId() {
+        return this.authorId;
+    }
 
-	public ArticleComment setAuthorId(String authorId) {
-		this.authorId = authorId;
-		return this;
-	}
+    public ArticleComment setAuthorId(String authorId) {
+        this.authorId = authorId;
+        return this;
+    }
 
-	public String getParentId() {
-		return parentId;
-	}
+    public String getParentId() {
+        return this.parentId;
+    }
 
-	public ArticleComment setParentId(String parentId) {
-		this.parentId = parentId;
-		return this;
-	}
+    public ArticleComment setParentId(String parentId) {
+        this.parentId = parentId;
+        return this;
+    }
 
-	public String getContent() {
-		return content;
-	}
+    public String getContent() {
+        return this.content;
+    }
 
-	public ArticleComment setContent(String content) {
-		this.content = content;
-		return this;
-	}
+    public ArticleComment setContent(String content) {
+        this.content = content;
+        return this;
+    }
 
-	public String getReplyerId() {
-		return replyerId;
-	}
+    public String getReplyerId() {
+        return this.replyerId;
+    }
 
-	public ArticleComment setReplyerId(String replyerId) {
-		this.replyerId = replyerId;
-		return this;
-	}
+    public ArticleComment setReplyerId(String replyerId) {
+        this.replyerId = replyerId;
+        return this;
+    }
 
 }

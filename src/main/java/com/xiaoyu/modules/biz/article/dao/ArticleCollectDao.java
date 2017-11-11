@@ -14,6 +14,6 @@ import com.xiaoyu.modules.biz.article.entity.ArticleCollect;
 @Repository
 public interface ArticleCollectDao extends BaseDao<ArticleCollect> {
 
-	ArticleCollect  getForUpdate(ArticleCollect t);
+    ArticleCollect getForUpdate(ArticleCollect t);
 
 }
