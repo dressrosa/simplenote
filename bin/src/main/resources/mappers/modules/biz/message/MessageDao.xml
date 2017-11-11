@@ -1,0 +1,152 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.xiaoyu.modules.biz.message.dao.MessageDao">
+	<sql id="Base_Column_List">
+		a.id as id,
+		a.type as type,
+		a.sender_id as senderId,
+		a.receiver_id as reveiverId,
+		a.biz_type as bizType,
+		a.biz_action as
+		bizAction,
+		a.content as content ,
+		a.reply as reply,
+		a.is_read as isRead,
+		a.create_date as createDate
+	</sql>
+
+	<select id="isDoAgain" parameterType="com.xiaoyu.modules.biz.message.entity.Message"
+		resultType="java.lang.Integer">
+		select count(*)
+		from biz_message as a
+		where
+		a.sender_id=#{senderId}
+		and a.biz_id = #{bizId}
+	</select>
+
+	<select id="findVoByList" parameterType="com.xiaoyu.modules.biz.message.entity.Message"
+		resultType="com.xiaoyu.modules.biz.message.vo.MessageVo">
+		select
+		a.id as messageId,
+		a.type as type,
+		a.sender_id as senderId,
+		a.receiver_id as reveiverId,
+		a.biz_type as bizType,
+		a.biz_id as bizId,
+		a.biz_action as
+		bizAction,
+		a.content as content ,
+		a.reply as reply,
+		a.is_read as isRead,
+		a.create_date as createDate
+		from biz_message as a
+		where a.del_flag =0
+		and
+		a.receiver_id =
+		#{receiverId}
+		<if test="type != null">
+			and a.type=#{type}
+		</if>
+	</select>
+	<insert id="insert" parameterType="com.xiaoyu.modules.biz.message.entity.Message">
+		insert into biz_message
+		<trim prefix="(" suffix=")" suffixOverrides=",">
+			<if test="id != null">
+				id,
+			</if>
+			<if test="type != null">
+				type,
+			</if>
+			<if test="senderId != null">
+				sender_id,
+			</if>
+			<if test="receiverId != null">
+				receiver_id,
+			</if>
+			<if test="bizType != null">
+				biz_type,
+			</if>
+			<if test="bizId != null">
+				biz_id,
+			</if>
+			<if test="bizAction != null">
+				biz_action,
+			</if>
+			<if test="content != null">
+				content,
+			</if>
+			<if test="reply != null">
+				reply,
+			</if>
+			<if test="isRead != null">
+				is_read,
+			</if>
+		</trim>
+		<trim prefix="values (" suffix=")" suffixOverrides=",">
+			<if test="id != null">
+				#{id},
+			</if>
+			<if test="type != null">
+				#{type},
+			</if>
+			<if test="senderId != null">
+				#{senderId},
+			</if>
+			<if test="receiverId != null">
+				#{receiverId},
+			</if>
+			<if test="bizType != null">
+				#{bizType},
+			</if>
+			<if test="bizId != null">
+				#{bizId},
+			</if>
+			<if test="bizAction != null">
+				#{bizAction},
+			</if>
+			<if test="content != null">
+				#{content},
+			</if>
+			<if test="reply != null">
+				#{reply},
+			</if>
+			<if test="isRead != null">
+				#{isRead},
+			</if>
+		</trim>
+	</insert>
+
+	<update id="addNum">
+		update biz_message set
+		is_read=#{isRead}
+		where user_id=
+		#{userId}
+	</update>
+
+	<update id="delete">
+		update biz_message
+		set
+		del_flag=1
+		where id=#{id}
+	</update>
+
+	<update id="read">
+		update biz_message set
+		is_read = 1
+		where id in
+		<foreach collection="list" index="index" item="item" open="("
+			separator="," close=")">
+			#{item}
+		</foreach>
+	</update>
+	<select id="getUnreadNumBefore1Hour" resultType="java.lang.Integer">
+		select count(*)
+		from biz_message
+		where receiver_id =
+		#{receiverId}
+		and is_read=0 and
+		del_flag=0
+		and
+		TIMESTAMPDIFF(HOUR,create_date,NOW())&lt;2
+	</select>
+</mapper>
