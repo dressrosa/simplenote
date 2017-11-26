@@ -63,12 +63,12 @@ public class ImgUtils {
     }
 
     private static String getPath(String path) {
-        String p = StringUtils.replace(path, "\\", "/");
-        p = StringUtils.join(StringUtils.split(p, "/"), "/");
-        if (!StringUtils.startsWithAny(p, "/") && StringUtils.startsWithAny(path, "\\", "/")) {
+        String p = StringUtil.replace(path, "\\", "/");
+        p = StringUtil.join(StringUtil.split(p, "/"), "/");
+        if (!StringUtil.startsWithAny(p, "/") && StringUtil.startsWithAny(path, "\\", "/")) {
             p += "/";
         }
-        if (!StringUtils.endsWithAny(p, "/") && StringUtils.endsWithAny(path, "\\", "/")) {
+        if (!StringUtil.endsWithAny(p, "/") && StringUtil.endsWithAny(path, "\\", "/")) {
             p = p + "/";
         }
         while (p.endsWith("/")) {// 去掉url最尾的"/"

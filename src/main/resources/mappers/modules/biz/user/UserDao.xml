@@ -41,7 +41,8 @@
         r.follower_num as
         'attr.followerNum'
         from biz_user as a
-        left join biz_user_attr as r on
+        left join biz_user_attr as r
+        on
         r.user_id=a.id
         where
         a.del_flag=0
@@ -82,7 +83,8 @@
         select
         a.id as id,
         a.nickname as nickname,
-        a.sex as sex,
+        a.sex as
+        sex,
         a.description
         as
         description,
@@ -100,7 +102,8 @@
         ua.viewed_num as
         "attr.viewedNum"
         from biz_user as a
-        left join biz_user_attr as ua
+        left join
+        biz_user_attr as ua
         on
         ua.user_id = a.id
         where

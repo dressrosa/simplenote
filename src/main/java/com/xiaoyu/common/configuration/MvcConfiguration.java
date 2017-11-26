@@ -39,7 +39,7 @@ import com.alibaba.fastjson.support.spring.FastJsonHttpMessageConverter;
 // @ComponentScan(basePackages = "com.xiaoyu.modules.sys.controller")
 public class MvcConfiguration extends WebMvcConfigurerAdapter {
 
-    private static Logger logger = Logger.getLogger(MvcConfiguration.class);
+    private final static Logger logger = Logger.getLogger(MvcConfiguration.class);
 
     /**
      * springboot 默认静态资源访问路径

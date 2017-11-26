@@ -29,7 +29,7 @@ public class ConsumerListener implements ApplicationListener<ApplicationReadyEve
     @Override
     public void onApplicationEvent(final ApplicationReadyEvent event) {
         final MessageHandler handler = this.msgHandler;
-        handler.consume();
+        handler.consume(); 
         ConsumerListener.logger.info("消费者已启动,进行消息处理...");
     }
 

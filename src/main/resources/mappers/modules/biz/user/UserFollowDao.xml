@@ -18,14 +18,17 @@
         u1.nickname as
         userName,
         u1.avatar as userAvatar,
-        u2.nickname as followerName,
+        u2.nickname as
+        followerName,
         u2.avatar as followerAvatar
-        from biz_user_follow as a
+        from biz_user_follow as
+        a
         left join
         biz_user
         as u1
         on u1.id = user_id
-        left join biz_user as u2 on u2.id
+        left join biz_user as
+        u2 on u2.id
         =
         a.follower_id
         where

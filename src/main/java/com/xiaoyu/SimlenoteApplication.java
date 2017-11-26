@@ -18,9 +18,9 @@ import org.springframework.transaction.annotation.EnableTransactionManagement;
 // @EnableAutoConfiguration
 @SpringBootApplication
 @EnableTransactionManagement // 开启事务管理
-public class Application {
+public class SimlenoteApplication {
 
     public static void main(String args[]) {
-        SpringApplication.run(Application.class);
+        SpringApplication.run(SimlenoteApplication.class);
     }
 }

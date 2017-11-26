@@ -13,7 +13,8 @@
         status as
         status
         from biz_article_like
-        where user_id =
+        where
+        user_id =
         #{userId} and
         article_id = #{articleId}
     </select>
@@ -66,7 +67,8 @@
         parameterType="com.xiaoyu.modules.biz.article.entity.ArticleLike"
         resultType="java.lang.Integer">
         select count(*) from biz_article_like
-        where article_id =
+        where article_id
+        =
         #{articleId} and user_id =#{userId}
     </select>
 
@@ -74,7 +76,8 @@
         parameterType="com.xiaoyu.modules.biz.article.entity.ArticleLike"
         resultType="com.xiaoyu.modules.biz.article.entity.ArticleLike">
         select * from biz_article_like
-        where article_id=#{articleId}
+        where
+        article_id=#{articleId}
         and user_id = #{userId}
         for update
     </select>

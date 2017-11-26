@@ -13,7 +13,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.xiaoyu.common.base.ResponseMapper;
-import com.xiaoyu.common.utils.StringUtils;
+import com.xiaoyu.common.utils.StringUtil;
 import com.xiaoyu.common.base.ResponseCode;
 import com.xiaoyu.modules.biz.article.service.api.IArticleService;
 
@@ -41,7 +41,7 @@ public class ArticleController {
      */
     @RequestMapping(value = "api/v1/article/{articleId}", method = RequestMethod.GET)
     public String detail(@PathVariable String articleId, HttpServletRequest request) {
-        if (StringUtils.isBlank(articleId)) {
+        if (StringUtil.isBlank(articleId)) {
             return ResponseMapper.createMapper().code(ResponseCode.ARGS_ERROR.statusCode()).resultJson();
         }
         return this.articleService.detail(articleId);
@@ -73,7 +73,7 @@ public class ArticleController {
      */
     @RequestMapping(value = "api/v1/article/list", method = RequestMethod.GET)
     public String list(HttpServletRequest request, String userId, Integer pageNum, Integer pageSize) {
-        if (StringUtils.isBlank(userId)) {
+        if (StringUtil.isBlank(userId)) {
             return ResponseMapper.createMapper().code(ResponseCode.ARGS_ERROR.statusCode()).resultJson();
         }
         return this.articleService.list(request, userId, pageNum, pageSize);
@@ -86,15 +86,15 @@ public class ArticleController {
 
     @RequestMapping(value = "api/v1/article/list/collect", method = RequestMethod.GET)
     public String collectList(HttpServletRequest request, String userId, Integer pageNum, Integer pageSize) {
-        if (StringUtils.isBlank(userId)) {
+        if (StringUtil.isBlank(userId)) {
             return ResponseMapper.createMapper().code(ResponseCode.ARGS_ERROR.statusCode()).resultJson();
         }
         return this.articleService.collectList(request, userId, pageNum, pageSize);
     }
 
-    @RequestMapping(value = "api/v1/article/viewNum/{articleId}")
+    @RequestMapping(value = "api/v1/article/views/{articleId}")
     public String changeViewNum(HttpServletRequest request, @PathVariable String articleId) {
-        if (StringUtils.isBlank(articleId)) {
+        if (StringUtil.isBlank(articleId)) {
             return ResponseMapper.createMapper().code(ResponseCode.ARGS_ERROR.statusCode()).resultJson();
         }
         return this.articleService.addReadNum(request, articleId);
@@ -125,7 +125,7 @@ public class ArticleController {
         return this.articleService.comment(request, articleId, content);
     }
 
-    @RequestMapping(value = "api/v1/article/{articleId}/newComments", method = RequestMethod.GET)
+    @RequestMapping(value = "api/v1/article/{articleId}/new-comments", method = RequestMethod.GET)
     public String newComments(HttpServletRequest request, @PathVariable String articleId) {
         return this.articleService.newComments(request, articleId);
     }
@@ -146,7 +146,7 @@ public class ArticleController {
         return this.articleService.search(request, keyword);
     }
 
-    @RequestMapping(value = "api/v1/article/synElastic", method = RequestMethod.GET)
+    @RequestMapping(value = "api/v1/article/syn-elastic", method = RequestMethod.GET)
     public String synElastic(HttpServletRequest request, String password) {
         return this.articleService.synElastic(request, password);
     }

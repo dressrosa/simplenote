@@ -57,11 +57,10 @@ var $arPromise = $
 						$('pre code').each(function(i, block) {
 							hljs.highlightBlock(block);
 						});
-					}
-					else{
+					} else {
 						window.location.href = "/common/404";
 					}
-				} else if(obj.code == '2') {
+				} else if (obj.code == '2') {
 					window.location.href = "/common/404";
 					return false;
 				}
@@ -74,7 +73,7 @@ var $coPromise = $
 			cache : false,
 			type : "get",
 			async : true,
-			url : '/api/v1/article/' + articleId + "/newComments",
+			url : '/api/v1/article/' + articleId + "/new-comments",
 			beforeSend : function(xhr) {
 				var $userInfo = jQuery.parseJSON($.session.get("user"));
 				if (!checkNull($userInfo)) {
@@ -288,7 +287,7 @@ var isFollow = function() {
 			cache : false,
 			type : "post",
 			async : true,
-			url : '/api/v1/user/isFollowed',
+			url : '/api/v1/user/is-followed',
 			data : {
 				userId : userInfo.userId,
 				followTo : $(".avatar").attr('id')
@@ -308,7 +307,7 @@ var isFollow = function() {
 						$(".p_love").attr("data-love", '1');
 					}
 				} else if (obj.code = '20001') {
-					
+
 				}
 			}
 
@@ -380,7 +379,7 @@ $(document).ready(
 								$.ajax({
 									type : 'POST',
 									async : true,
-									url : '/api/v1/article/viewNum/' + item,
+									url : '/api/v1/article/views/' + item,
 									error : function(data) {
 										console.log(data);
 										return false;
@@ -430,7 +429,5 @@ $(document).ready(
 			$(".p_love").on('click', function() {
 				follow();
 			});
-
-			 
 
 		});

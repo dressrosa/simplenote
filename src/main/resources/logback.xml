@@ -40,12 +40,14 @@
     <!--生产环境 -->
     <appender name="FILE"
         class="ch.qos.logback.core.rolling.RollingFileAppender">
-        <file>/home/logs/springbootDemo.out</file>
-
+        <!-- <file>/home/logs/springbootDemo.out</file> -->
+<file>/Users/hongyu/springbootDemo.out</file>
         <!-- 按时间输出 -->
         <rollingPolicy
             class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
-            <fileNamePattern>/home/logs/%d{yyyy-MM,aux}/%d{yyyy-MM-dd}.log.zip
+            <!-- <fileNamePattern>/home/logs/%d{yyyy-MM,aux}/%d{yyyy-MM-dd}.log.zip
+            </fileNamePattern> -->
+            <fileNamePattern>/Users/hongyu/%d{yyyy-MM,aux}/%d{yyyy-MM-dd}.log.zip
             </fileNamePattern>
             <!-- logs/%d{yyyy-MM,aux}/%d{yyyy-MM-dd_HH-mm}.log.zip -->
             <maxHistory>30</maxHistory>

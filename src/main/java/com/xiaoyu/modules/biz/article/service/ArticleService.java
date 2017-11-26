@@ -162,7 +162,6 @@ public class ArticleService extends BaseService<ArticleDao, Article> implements 
     @Override
     public String hotList(HttpServletRequest request) {
         final ResponseMapper mapper = ResponseMapper.createMapper();
-        System.out.println(request.getHeader("userId"));
         // if (EhCacheUtil.IsExist("SystemCache")) {// 从缓存取
         // @SuppressWarnings("unchecked")
         // List<Object> total = (List<Object>) EhCacheUtil.get("SystemCache",

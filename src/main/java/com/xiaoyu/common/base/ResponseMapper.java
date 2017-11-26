@@ -42,7 +42,7 @@ public class ResponseMapper {
         @Override
         protected ConcurrentHashMap<String, Object> initialValue() {
             final ConcurrentHashMap<String, Object> dataMap = new ConcurrentHashMap<>(8);
-            dataMap.put(ResponseMapper.CODE, ResponseCode.SUCCESS);
+            dataMap.put(ResponseMapper.CODE, ResponseCode.SUCCESS.statusCode());
             dataMap.put(ResponseMapper.MESSAGE, "");
             dataMap.put(ResponseMapper.COUNT, "");
             dataMap.put(ResponseMapper.DATA, "");
@@ -76,7 +76,7 @@ public class ResponseMapper {
                 SerializerFeature.WriteNullStringAsEmpty);
         logger.info("code:" + this.getLocalMap().get("code"));
         // getLocalMap().clear();
-        this.getLocalMap().put(ResponseMapper.CODE, ResponseCode.SUCCESS);
+        this.getLocalMap().put(ResponseMapper.CODE, ResponseCode.SUCCESS.statusCode());
         this.getLocalMap().put(ResponseMapper.MESSAGE, "");
         this.getLocalMap().put(ResponseMapper.COUNT, "");
         this.getLocalMap().put(ResponseMapper.DATA, "");

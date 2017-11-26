@@ -17,7 +17,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.xiaoyu.common.base.ResponseCode;
 import com.xiaoyu.common.base.ResponseMapper;
-import com.xiaoyu.common.utils.StringUtils;
+import com.xiaoyu.common.utils.StringUtil;
 import com.xiaoyu.modules.biz.user.service.api.IUserService;
 
 /**
@@ -45,7 +45,7 @@ public class UserController {
      */
     @RequestMapping(value = "api/v1/user/login", method = RequestMethod.POST)
     public String login(HttpServletRequest request, String loginName, String password) throws IOException {
-        if (StringUtils.isAnyBlank(loginName, password)) {
+        if (StringUtil.isAnyBlank(loginName, password)) {
             return ResponseMapper.createMapper().code(ResponseCode.ARGS_ERROR.statusCode()).resultJson();
         }
         return this.userService.login(request, loginName, password);
@@ -56,7 +56,7 @@ public class UserController {
             @RequestParam(required = true) String password, @RequestParam(required = true) String repassword)
             throws IOException {
         final ResponseMapper mapper = ResponseMapper.createMapper();
-        if (!StringUtils.isMobile(loginName) && !StringUtils.isEmail(loginName)) {
+        if (!StringUtil.isMobile(loginName) && !StringUtil.isEmail(loginName)) {
             return mapper.code(ResponseCode.ARGS_ERROR.statusCode()).message("请填写正确的邮箱或手机号").resultJson();
         }
         if (password.length() < 6) {
@@ -77,9 +77,9 @@ public class UserController {
      * @return
      * @time 2016年4月12日上午10:30:37
      */
-    @RequestMapping(value = "api/v1/user/loginRecord", method = RequestMethod.POST)
+    @RequestMapping(value = "api/v1/user/login/record", method = RequestMethod.POST)
     public String loginRecord(HttpServletRequest request, String userId, String device) {
-        if (org.apache.commons.lang3.StringUtils.isNotBlank(userId)) {
+        if (StringUtil.isNotBlank(userId)) {
             return this.userService.loginRecord(request, userId, device);
         }
         return null;
@@ -111,7 +111,7 @@ public class UserController {
      */
     @RequestMapping(value = "api/v1/user/{userId}", method = RequestMethod.GET)
     public String userDetail(@PathVariable String userId, HttpServletRequest request) {
-        if (StringUtils.isBlank(userId)) {
+        if (StringUtil.isBlank(userId)) {
             return ResponseMapper.createMapper().code(ResponseCode.ARGS_ERROR.statusCode()).resultJson();
         }
         return this.userService.userDetail(request, userId);
@@ -125,7 +125,7 @@ public class UserController {
     @RequestMapping(value = "api/v1/user/{userId}/edit", method = RequestMethod.POST)
     public String editInfo(HttpServletRequest request, @PathVariable String userId, String content,
             @RequestParam(required = true) Integer flag) {
-        if (StringUtils.isBlank(userId)) {
+        if (StringUtil.isBlank(userId)) {
             return ResponseMapper.createMapper().code(ResponseCode.ARGS_ERROR.statusCode()).resultJson();
         }
         return this.userService.editUser(request, userId, content, flag);
@@ -141,7 +141,7 @@ public class UserController {
         return this.userService.cancelFollow(request, userId, followTo);
     }
 
-    @RequestMapping(value = "api/v1/user/isFollowed", method = RequestMethod.POST)
+    @RequestMapping(value = "api/v1/user/is-followed", method = RequestMethod.POST)
     public String isFollowed(HttpServletRequest request, String userId, String followTo) {
         return this.userService.isFollowed(request, userId, followTo);
     }

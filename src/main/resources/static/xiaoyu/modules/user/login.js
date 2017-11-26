@@ -49,7 +49,7 @@ var login = function() {
 				$.ajax({
 					type : 'post',
 					async : true,
-					url : '/api/v1/user/loginRecord',
+					url : '/api/v1/user/login/record',
 					data : {
 						userId : jsonObj.data.userId,
 						device : getDevice()

@@ -21,7 +21,8 @@
     </select>
 
     <insert id="insert" parameterType="com.xiaoyu.modules.biz.user.entity.LoginRecord">
-        insert into biz_user_login_record
+        insert into
+        biz_user_login_record
         (id,user_id,login_ip,device)
         values(#{id},#{userId},#{loginIp},#{device})
     </insert>

@@ -4,7 +4,8 @@
     <sql id="Base_Column_List">
         a.id as id,
         a.article_id as articleId,
-        a.readNum as readNum,
+        a.readNum as
+        readNum,
         a.commentNum as commentNum
     </sql>
 
@@ -30,7 +31,8 @@
         parameterType="com.xiaoyu.modules.biz.article.entity.ArticleAttr">
         update biz_article_attr set
         del_flag=1
-        where id = #{id}
+        where id =
+        #{id}
     </delete>
 
 
@@ -135,7 +137,8 @@
     <select id="getForUpdate" parameterType="java.lang.String"
         resultType="com.xiaoyu.modules.biz.article.entity.ArticleAttr">
         select * from biz_article_attr
-        where article_id=#{articleId}
+        where
+        article_id=#{articleId}
         for update
     </select>
 </mapper>

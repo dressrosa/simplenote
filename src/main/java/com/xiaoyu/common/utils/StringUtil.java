@@ -10,8 +10,9 @@ import java.util.regex.Pattern;
 import javax.servlet.http.HttpServletRequest;
 
 import org.apache.commons.lang3.StringEscapeUtils;
+import org.apache.commons.lang3.StringUtils;
 
-public class StringUtils extends org.apache.commons.lang3.StringUtils {
+public class StringUtil extends StringUtils {
 
     private static final char SEPARATOR = '_';
     private static final String CHARSET_NAME = "UTF-8";
@@ -25,7 +26,7 @@ public class StringUtils extends org.apache.commons.lang3.StringUtils {
     public static byte[] getBytes(String str) {
         if (str != null) {
             try {
-                return str.getBytes(StringUtils.CHARSET_NAME);
+                return str.getBytes(StringUtil.CHARSET_NAME);
             } catch (final UnsupportedEncodingException e) {
                 return new byte[0];
             }
@@ -42,9 +43,9 @@ public class StringUtils extends org.apache.commons.lang3.StringUtils {
      */
     public static String toString(byte[] bytes) {
         try {
-            return new String(bytes, StringUtils.CHARSET_NAME);
+            return new String(bytes, StringUtil.CHARSET_NAME);
         } catch (final UnsupportedEncodingException e) {
-            return org.apache.commons.lang3.StringUtils.EMPTY;
+            return StringUtil.EMPTY;
         }
     }
 
@@ -60,7 +61,7 @@ public class StringUtils extends org.apache.commons.lang3.StringUtils {
     public static boolean inString(String str, String... strs) {
         if (str != null) {
             for (final String s : strs) {
-                if (str.equals(org.apache.commons.lang3.StringUtils.trim(s))) {
+                if (str.equals(StringUtil.trim(s))) {
                     return true;
                 }
             }
@@ -72,7 +73,7 @@ public class StringUtils extends org.apache.commons.lang3.StringUtils {
      * 替换掉HTML标签方法
      */
     public static String replaceHtml(String html) {
-        if (org.apache.commons.lang3.StringUtils.isBlank(html)) {
+        if (StringUtil.isBlank(html)) {
             return "";
         }
         final String regEx = "<.+?>";
@@ -98,7 +99,7 @@ public class StringUtils extends org.apache.commons.lang3.StringUtils {
         try {
             final StringBuilder sb = new StringBuilder();
             int currentLength = 0;
-            for (final char c : StringUtils.replaceHtml(StringEscapeUtils.unescapeHtml4(str)).toCharArray()) {
+            for (final char c : StringUtil.replaceHtml(StringEscapeUtils.unescapeHtml4(str)).toCharArray()) {
                 currentLength += String.valueOf(c).getBytes("GBK").length;
                 if (currentLength <= length - 3) {
                     sb.append(c);
@@ -119,11 +120,11 @@ public class StringUtils extends org.apache.commons.lang3.StringUtils {
      */
     public static String getRemoteAddr(HttpServletRequest request) {
         String remoteAddr = request.getHeader("X-Real-IP");
-        if (org.apache.commons.lang3.StringUtils.isNotBlank(remoteAddr)) {
+        if (StringUtil.isNotBlank(remoteAddr)) {
             remoteAddr = request.getHeader("X-Forwarded-For");
-        } else if (org.apache.commons.lang3.StringUtils.isNotBlank(remoteAddr)) {
+        } else if (StringUtil.isNotBlank(remoteAddr)) {
             remoteAddr = request.getHeader("Proxy-Client-IP");
-        } else if (org.apache.commons.lang3.StringUtils.isNotBlank(remoteAddr)) {
+        } else if (StringUtil.isNotBlank(remoteAddr)) {
             remoteAddr = request.getHeader("WL-Proxy-Client-IP");
         }
         return remoteAddr != null ? remoteAddr : request.getRemoteAddr();
@@ -148,7 +149,7 @@ public class StringUtils extends org.apache.commons.lang3.StringUtils {
         for (int i = 0; i < s.length(); i++) {
             final char c = s.charAt(i);
 
-            if (c == StringUtils.SEPARATOR) {
+            if (c == StringUtil.SEPARATOR) {
                 upperCase = true;
             } else if (upperCase) {
                 sb.append(Character.toUpperCase(c));
@@ -172,7 +173,7 @@ public class StringUtils extends org.apache.commons.lang3.StringUtils {
         if (s == null) {
             return null;
         }
-        s = StringUtils.toCamelCase(s);
+        s = StringUtil.toCamelCase(s);
         return s.substring(0, 1).toUpperCase() + s.substring(1);
     }
 
@@ -201,7 +202,7 @@ public class StringUtils extends org.apache.commons.lang3.StringUtils {
 
             if ((i > 0) && Character.isUpperCase(c)) {
                 if (!upperCase || !nextUpperCase) {
-                    sb.append(StringUtils.SEPARATOR);
+                    sb.append(StringUtil.SEPARATOR);
                 }
                 upperCase = true;
             } else {

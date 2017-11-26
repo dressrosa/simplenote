@@ -28,7 +28,7 @@ public class MessageController {
         return this.messageService.read(request, msgIds);
     }
 
-    @RequestMapping(value = "api/v1/message/unreadNum", method = RequestMethod.GET)
+    @RequestMapping(value = "api/v1/message/unread-num", method = RequestMethod.GET)
     public String unreadNum(HttpServletRequest request) {
         return this.messageService.unreadNum(request);
     }

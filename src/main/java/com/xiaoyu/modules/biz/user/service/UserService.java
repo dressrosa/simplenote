@@ -26,7 +26,7 @@ import com.xiaoyu.common.base.ResponseMapper;
 import com.xiaoyu.common.base.ResponseCode;
 import com.xiaoyu.common.utils.IdGenerator;
 import com.xiaoyu.common.utils.Md5Utils;
-import com.xiaoyu.common.utils.StringUtils;
+import com.xiaoyu.common.utils.StringUtil;
 import com.xiaoyu.common.utils.UserUtils;
 import com.xiaoyu.modules.biz.message.entity.Message;
 import com.xiaoyu.modules.biz.message.service.MessageHandler;
@@ -51,6 +51,7 @@ import com.xiaoyu.modules.sys.constant.NumCountType;
 public class UserService extends BaseService<UserDao, User> implements IUserService {
 
     private static final Logger logger = LoggerFactory.getLogger(UserService.class);
+    
     @Autowired
     private UserDao userDao;
 
@@ -124,7 +125,7 @@ public class UserService extends BaseService<UserDao, User> implements IUserServ
                 return mapper.data(map).resultJson();
             }
         }
-        if (StringUtils.isAnyBlank(password, loginName)) {
+        if (StringUtil.isAnyBlank(password, loginName)) {
             mapper.code(ResponseCode.ARGS_ERROR.statusCode()).message("姓名和密码不能为空");
             return mapper.resultJson();
         }
@@ -132,7 +133,7 @@ public class UserService extends BaseService<UserDao, User> implements IUserServ
         User user = new User();
         user.setLoginName(loginName.trim());
         user = this.getForLogin(user);
-        if (StringUtils.isBlank(user.getId()) || !Md5Utils.MD5(password.trim()).equalsIgnoreCase(user.getPassword())) {
+        if (StringUtil.isBlank(user.getId()) || !Md5Utils.MD5(password.trim()).equalsIgnoreCase(user.getPassword())) {
             mapper.code(ResponseCode.ARGS_ERROR.statusCode()).message("用户名或密码不正确");
             return mapper.resultJson();
         }
@@ -216,25 +217,25 @@ public class UserService extends BaseService<UserDao, User> implements IUserServ
         temp.setId(userId);
         switch (flag) {
         case 0:// 修改头像
-            if (StringUtils.isBlank(content)) {
+            if (StringUtil.isBlank(content)) {
                 return mapper.code(ResponseCode.ARGS_ERROR.statusCode()).message("请上传头像").resultJson();
             }
             temp.setAvatar(content.substring(content.lastIndexOf("/")));
             break;
         case 1:// 修改签名
-            if (StringUtils.isNotBlank(content) && content.length() > 15) {
+            if (StringUtil.isNotBlank(content) && content.length() > 15) {
                 return mapper.code(ResponseCode.ARGS_ERROR.statusCode()).message("签名最多15个字").resultJson();
             }
             temp.setSignature(content);
             break;
         case 2:// 修改简介
-            if (StringUtils.isNotBlank(content) && content.length() > 100) {
+            if (StringUtil.isNotBlank(content) && content.length() > 100) {
                 return mapper.code(ResponseCode.ARGS_ERROR.statusCode()).message("简介最多100个字").resultJson();
             }
             temp.setDescription(content);
             break;
         case 3:// 修改昵称
-            if (StringUtils.isBlank(content)) {
+            if (StringUtil.isBlank(content)) {
                 return mapper.code(ResponseCode.ARGS_ERROR.statusCode()).message("昵称不能为空").resultJson();
             }
             if (content.length() > 10) {
@@ -243,7 +244,7 @@ public class UserService extends BaseService<UserDao, User> implements IUserServ
             temp.setNickname(content);
             break;
         case 4:// 修改背景图片
-            if (StringUtils.isBlank(content)) {
+            if (StringUtil.isBlank(content)) {
                 return mapper.code(ResponseCode.ARGS_ERROR.statusCode()).message("请上传背景图片").resultJson();
             }
             temp.setBackground(content.substring(content.lastIndexOf("/")));

@@ -13,7 +13,8 @@
         status as
         status
         from biz_article_collect
-        where user_id
+        where
+        user_id
         =
         #{userId} and
         article_id = #{articleId}
@@ -61,7 +62,8 @@
         parameterType="com.xiaoyu.modules.biz.article.entity.ArticleCollect"
         resultType="java.lang.Integer">
         select count(*) from biz_article_collect
-        where article_id =
+        where
+        article_id =
         #{articleId} and user_id =#{userId}
     </select>
 

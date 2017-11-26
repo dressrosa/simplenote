@@ -22,7 +22,8 @@
         select * from biz_article_comment
         where
         id=#{id}
-        for update
+        for
+        update
     </select>
     <!-- 分页查询信息 -->
     <select id="findByList"
@@ -38,13 +39,15 @@
         SELECT
         a.id AS id,
         a.article_id AS articleId,
-        a.num as num,
+        a.num
+        as num,
         a.author_id
         AS authorId,
         a.parent_id AS parentId,
         u1.nickname AS
         parentReplyerName,
-        a.parent_replyer_id AS parentReplyerId,
+        a.parent_replyer_id AS
+        parentReplyerId,
         a.content AS
         content,
         a.replyer_id AS replyerId,
@@ -52,20 +55,25 @@
         u.avatar
         AS
         replyerAvatar,
-        a.create_date AS createDate
+        a.create_date
+        AS createDate
         FROM
         biz_article_comment AS
         a
-        LEFT JOIN biz_user AS u ON a.replyer_id = u.id
+        LEFT JOIN biz_user AS u
+        ON a.replyer_id = u.id
         LEFT JOIN
-        biz_article_comment AS a1 ON a.parent_id = a.id
+        biz_article_comment AS a1 ON
+        a.parent_id = a.id
         LEFT JOIN biz_user AS
-        u1 ON a.parent_replyer_id = u1.id
+        u1 ON a.parent_replyer_id
+        = u1.id
         WHERE
         a.del_flag = 0 and a.article_id
         =
         #{articleId}
-        order by a.create_date desc
+        order by
+        a.create_date desc
         LIMIT 5
 
     </select>
@@ -81,7 +89,8 @@
         a.parent_id AS parentId,
         u1.nickname AS
         parentReplyerName,
-        a.parent_replyer_id AS parentReplyerId,
+        a.parent_replyer_id AS
+        parentReplyerId,
         a.content AS
         content,
         a.replyer_id AS replyerId,
@@ -89,27 +98,33 @@
         u.avatar
         AS
         replyerAvatar,
-        a.create_date AS createDate
+        a.create_date
+        AS createDate
         FROM
         biz_article_comment AS
         a
-        LEFT JOIN biz_user AS u ON a.replyer_id = u.id
+        LEFT JOIN biz_user AS u
+        ON a.replyer_id = u.id
         LEFT JOIN
-        biz_article_comment AS a1 ON a.parent_id = a.id
+        biz_article_comment AS a1 ON
+        a.parent_id = a.id
         LEFT JOIN biz_user AS
-        u1 ON a.parent_replyer_id = u1.id
+        u1 ON a.parent_replyer_id
+        = u1.id
         WHERE
         a.del_flag = 0 and a.article_id
         =
         #{articleId}
-        order by a.create_date desc
+        order by
+        a.create_date desc
     </select>
 
     <delete id="delete"
         parameterType="com.xiaoyu.modules.biz.article.entity.ArticleComment">
         update biz_article_comment set
         del_flag=1
-        where id = #{id}
+        where id =
+        #{id}
     </delete>
 
     <insert id="insert"
@@ -169,7 +184,8 @@
         set
         num = #{num}
         where
-        id = #{id}
+        id =
+        #{id}
     </update>
     <!--评论点赞相关 -->
 
@@ -206,7 +222,8 @@
         update
         biz_article_comment_like
         set
-        status = #{status}
+        status =
+        #{status}
         where
         comment_id=#{commentId} and user_id
         =#{userId}

@@ -2,7 +2,7 @@
 <ehcache updateCheck="false">
     <!-- xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="http://ehcache.org/ehcache.xsd" -->
     <!--硬盘缓存位置 -->
-    <diskStore path="/xiaoyu/ehCache" />
+    <diskStore path="/Users/hongyu/ehCache" />
     <!--默认缓存 -->
     <defaultCache eternal="false" maxElementsInMemory="1000"
         timeToIdleSeconds="300" overflowToDisk="true" timeToLiveSeconds="600" />

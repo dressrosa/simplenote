@@ -8,6 +8,8 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 
+import com.xiaoyu.common.utils.StringUtil;
+
 /**
  * 2017年5月24日上午9:59:18
  * 
@@ -25,7 +27,7 @@ public class RouteController {
     @RequestMapping(value = "article/{articleId}", method = RequestMethod.GET)
     public String goArticleDetail(HttpServletRequest request, HttpServletResponse response,
             @PathVariable String articleId) {
-        if (org.apache.commons.lang3.StringUtils.isBlank(articleId)) {
+        if (StringUtil.isBlank(articleId)) {
             return "common/404";
         }
         return "article/articleDetail";
@@ -33,7 +35,7 @@ public class RouteController {
 
     @RequestMapping(value = "user/{userId}", method = RequestMethod.GET)
     public String goUserDetail(@PathVariable String userId, HttpServletRequest request) {
-        if (org.apache.commons.lang3.StringUtils.isBlank(userId)) {
+        if (StringUtil.isBlank(userId)) {
             return "common/404";
         }
         return "user/userDetail";

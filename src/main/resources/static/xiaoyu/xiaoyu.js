@@ -47,7 +47,7 @@ $(document).ready(function() {
 	$.ajax({
 		type : "get",
 		async : true,
-		url : '/api/v1/message/unreadNum',
+		url : '/api/v1/message/unread-num',
 		beforeSend : function(xhr) {
 			var $u = jQuery.parseJSON($.session.get("user"));
 			if (!checkNull(userInfo)) {
