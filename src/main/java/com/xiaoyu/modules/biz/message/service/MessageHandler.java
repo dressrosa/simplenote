@@ -40,39 +40,55 @@ public class MessageHandler extends DefaultAbstractQueueTemplate {
         }
         final User u = this.userDao.getById(msg.getSenderId());
         switch (msg.getType()) {
-        case 0:// 消息
-            if (msg.getBizType() == 0) {// 文章
+        // 消息
+        case 0:
+            // 文章
+            if (msg.getBizType() == 0) {
                 final Article ar = this.articleDao.getById(msg.getBizId());
                 if (ar == null) {
                     return;
                 }
                 msg.setReceiverId(ar.getUserId());
-                if (msg.getBizAction() == 1) {// 评论
+                // 评论
+                if (msg.getBizAction() == 1) {
                     msg.setContent("用户" + u.getNickname() + "在文章“" + ar.getTitle() + "”中评论“" + msg.getContent() + "”");
-                } else if (msg.getBizAction() == 2) {// 点赞
+                }
+                // 点赞
+                else if (msg.getBizAction() == 2) {
                     final Message t = new Message();
                     t.setSenderId(msg.getSenderId()).setBizId(msg.getBizId());
                     if (this.msgDao.isDoAgain(t) > 0) {
                         return;
                     }
                     msg.setContent("用户" + u.getNickname() + "赞了你的文章“" + ar.getTitle() + "”");
-                } else if (msg.getBizAction() == 3) {// 收藏
+                }
+                // 收藏
+                else if (msg.getBizAction() == 3) {
                     final Message t = new Message();
                     t.setSenderId(msg.getSenderId()).setBizId(msg.getBizId());
                     if (this.msgDao.isDoAgain(t) > 0) {
                         return;
                     }
                     msg.setContent("用户" + u.getNickname() + "收藏了你的文章“" + ar.getTitle() + "”");
-                } else if (msg.getBizAction() == 4) {// 回复评论
+                }
+                // 回复评论
+                else if (msg.getBizAction() == 4) {
                     msg.setContent("用户" + u.getNickname() + "对你的评论进行了回复“" + msg.getContent() + "”");
-                } else if (msg.getBizAction() == 5) {// 评论@
+                }
+                // 评论@
+                else if (msg.getBizAction() == 5) {
 
-                } else if (msg.getBizAction() == 6) {// 赞评论
+                }
+                // 赞评论
+                else if (msg.getBizAction() == 6) {
                     msg.setContent("用户" + u.getNickname() + "在文章“" + ar.getTitle() + "”" + "中赞了你的评论“" + msg.getContent()
                             + "”");
                 }
-            } else if (msg.getBizType() == 1) {// 人
-                if (msg.getBizAction() == 8) {// 关注人
+            }
+            // 人
+            else if (msg.getBizType() == 1) {
+                // 关注人
+                if (msg.getBizAction() == 8) {
                     final Follow fo = this.followDao.getById(msg.getBizId());
                     if (fo != null) {
                         msg.setReceiverId(fo.getUserId());
@@ -81,11 +97,14 @@ public class MessageHandler extends DefaultAbstractQueueTemplate {
                 }
             }
             break;
-        case 1:// 留言
+        // 留言
+        case 1:
             msg.setContent("用户" + u.getNickname() + "给您留言“" + msg.getContent() + "”");
             break;
-        case 2:// 通知
-            if (msg.getBizType() == 0) {// 文章
+        // 通知
+        case 2:
+            // 文章
+            if (msg.getBizType() == 0) {
                 final Article ar = this.articleDao.getById(msg.getBizId());
                 if (ar == null) {
                     return;
@@ -95,6 +114,8 @@ public class MessageHandler extends DefaultAbstractQueueTemplate {
 
             } else {
             }
+            break;
+        default:
             break;
         }
         msg.setId(IdGenerator.uuid());

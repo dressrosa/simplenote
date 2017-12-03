@@ -28,7 +28,7 @@ public class ResponseMapper {
     private static final String MESSAGE = "message";
     private static final String DATA = "data";
 
-    private static final ValueFilter filter = new ValueFilter() {
+    private static final ValueFilter FILTER = new ValueFilter() {
         @Override
         public Object process(Object object, String name, Object value) {
             return value == null ? "" : value;
@@ -38,7 +38,7 @@ public class ResponseMapper {
     /**
      * 封装响应的数据,避免单例导致的多线程问题
      */
-    private final static ThreadLocal<ConcurrentHashMap<String, Object>> local = new ThreadLocal<ConcurrentHashMap<String, Object>>() {
+    private final static ThreadLocal<ConcurrentHashMap<String, Object>> LOCAL = new ThreadLocal<ConcurrentHashMap<String, Object>>() {
         @Override
         protected ConcurrentHashMap<String, Object> initialValue() {
             final ConcurrentHashMap<String, Object> dataMap = new ConcurrentHashMap<>(8);
@@ -58,12 +58,12 @@ public class ResponseMapper {
      * 内部类
      */
     private static final class MapperInstance {
-        public static final ResponseMapper mapper = new ResponseMapper();
+        public static final ResponseMapper MAPPER = new ResponseMapper();
     }
 
     // 返回单例
     public static final ResponseMapper createMapper() {
-        return MapperInstance.mapper;
+        return MapperInstance.MAPPER;
     }
 
     // public static ResponseMapper createMapper() {
@@ -72,7 +72,7 @@ public class ResponseMapper {
 
     // 返回json数据
     public String resultJson() {
-        final String result = JSON.toJSONString(this.getLocalMap(), ResponseMapper.filter,
+        final String result = JSON.toJSONString(this.getLocalMap(), ResponseMapper.FILTER,
                 SerializerFeature.WriteNullStringAsEmpty);
         logger.info("code:" + this.getLocalMap().get("code"));
         // getLocalMap().clear();
@@ -84,7 +84,7 @@ public class ResponseMapper {
     }
 
     private final Map<String, Object> getLocalMap() {
-        return ResponseMapper.local.get();
+        return ResponseMapper.LOCAL.get();
     }
 
     public ResponseMapper code(int code) {
@@ -92,16 +92,17 @@ public class ResponseMapper {
         final Map<String, Object> dataMap = this.getLocalMap();
         dataMap.put(ResponseMapper.CODE, code1);
         // 通用返回信息
-        if (ResponseCode.SUCCESS.statusCode() == code1)
+        if (ResponseCode.SUCCESS.statusCode() == code1) {
             dataMap.put(ResponseMapper.MESSAGE, ResponseCode.SUCCESS.statusMsg());
-        else if (ResponseCode.ARGS_ERROR.statusCode() == code1)
+        } else if (ResponseCode.ARGS_ERROR.statusCode() == code1) {
             dataMap.put(ResponseMapper.MESSAGE, ResponseCode.ARGS_ERROR.statusMsg());
-        else if (ResponseCode.FAILED.statusCode() == code1)
+        } else if (ResponseCode.FAILED.statusCode() == code1) {
             dataMap.put(ResponseMapper.MESSAGE, ResponseCode.FAILED.statusMsg());
-        else if (ResponseCode.EXIST.statusCode() == code1)
+        } else if (ResponseCode.EXIST.statusCode() == code1) {
             dataMap.put(ResponseMapper.MESSAGE, ResponseCode.EXIST.statusMsg());
-        else if (ResponseCode.NO_DATA.statusCode() == code1)
+        } else if (ResponseCode.NO_DATA.statusCode() == code1) {
             dataMap.put(ResponseMapper.MESSAGE, ResponseCode.NO_DATA.statusMsg());
+        }
         return this;
     }
 

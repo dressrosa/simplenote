@@ -1,7 +1,7 @@
 /**
  * 不要因为走了很远就忘记当初出发的目的:whatever happened,be yourself
  */
-package com.xiaoyu.modules.sys.controller;
+package com.xiaoyu.modules.controller;
 
 import java.io.IOException;
 import java.util.Collection;
@@ -34,7 +34,7 @@ import com.xiaoyu.modules.biz.user.service.api.IUserService;
 @RestController
 public class UploadController {
 
-    private final static Logger logger = LoggerFactory.getLogger(UploadController.class);
+    private final static Logger LOG = LoggerFactory.getLogger(UploadController.class);
 
     @Autowired
     private IUserService userService;
@@ -67,14 +67,15 @@ public class UploadController {
         Collection<Part> collection = null;
         try {
             collection = request.getParts();
-            if (collection.size() > 1) {// 只准上传一张
+            // 只准上传一张
+            if (collection.size() > 1) {
                 return mapper.code(ResponseCode.ARGS_ERROR.statusCode()).resultJson();
             }
             iter = collection.iterator();
         } catch (final IOException e1) {
-            logger.error(e1.toString());
+            LOG.error(e1.toString());
         } catch (final ServletException e2) {
-            logger.error(e2.toString());
+            LOG.error(e2.toString());
         }
         if (UserUtils.checkLoginDead(request) == null) {
             return mapper.code(ResponseCode.ARGS_ERROR.statusCode()).resultJson();

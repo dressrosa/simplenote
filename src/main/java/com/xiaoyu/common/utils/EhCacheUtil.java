@@ -66,7 +66,7 @@ public class EhCacheUtil {
      * @return
      * @time 2016年3月21日下午4:09:52
      */
-    public static boolean IsExist(String cacheName) {
+    public static boolean isExist(String cacheName) {
         return EhCacheUtil.cacheManager.cacheExists(cacheName);
 
     }

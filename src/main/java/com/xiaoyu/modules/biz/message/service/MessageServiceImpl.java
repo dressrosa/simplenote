@@ -10,6 +10,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Primary;
 import org.springframework.stereotype.Service;
 
 import com.github.pagehelper.Page;
@@ -26,7 +27,8 @@ import com.xiaoyu.modules.biz.user.dao.UserDao;
 import com.xiaoyu.modules.biz.user.entity.User;
 
 @Service
-public class MessageService implements IMessageService {
+@Primary
+public class MessageServiceImpl implements IMessageService {
 
     @Autowired
     private MessageDao msgDao;
@@ -40,13 +42,13 @@ public class MessageService implements IMessageService {
      * 检查登录失效
      */
     private User checkLoginDead(HttpServletRequest request) {
-        final String userId = request.getHeader("userId");
-        final String token = request.getHeader("token");
-        final HttpSession session = request.getSession(false);
+        String userId = request.getHeader("userId");
+        String token = request.getHeader("token");
+        HttpSession session = request.getSession(false);
         if (session == null) {
             return null;
         }
-        final User user = (User) session.getAttribute(token);
+        User user = (User) session.getAttribute(token);
         if (user == null) {
             return null;
         }
@@ -58,31 +60,31 @@ public class MessageService implements IMessageService {
 
     @Override
     public String getMsgByType(HttpServletRequest request, String userId, int type) {
-        final ResponseMapper mapper = ResponseMapper.createMapper();
+        ResponseMapper mapper = ResponseMapper.createMapper();
         if (!userId.equals(request.getHeader("userId"))) {
             return mapper.code(ResponseCode.ARGS_ERROR.statusCode()).resultJson();
         }
         if (this.checkLoginDead(request) == null) {
             return mapper.code(ResponseCode.LOGIN_INVALIDATE.statusCode()).resultJson();
         }
-        final Message t = new Message();
+        Message t = new Message();
         t.setReceiverId(userId).setType(type);
         PageHelper.startPage(0, 10);
-        final Page<MessageVo> page = (Page<MessageVo>) this.msgDao.findVoByList(t);
-        final List<MessageVo> list = page.getResult();
+        Page<MessageVo> page = (Page<MessageVo>) this.msgDao.findVoByList(t);
+        List<MessageVo> list = page.getResult();
         if (page != null && list != null && list.size() > 0) {
             for (final MessageVo m : list) {
-                final User sender = this.userDao.getById(m.getSenderId());
+                User sender = this.userDao.getById(m.getSenderId());
                 if (sender != null) {
                     m.setSenderName(sender.getNickname());
                 }
                 if (m.getBizType() == 0) {
-                    final Article ar = this.articleDao.getById(m.getBizId());
+                    Article ar = this.articleDao.getById(m.getBizId());
                     if (ar != null) {
                         m.setBizName(ar.getTitle());
                     }
                 } else if (m.getBizType() == 1) {
-                    final User u = this.userDao.getById(m.getBizId());
+                    User u = this.userDao.getById(m.getBizId());
                     if (u != null) {
                         m.setBizName(u.getNickname());
                     }
@@ -106,13 +108,13 @@ public class MessageService implements IMessageService {
 
     @Override
     public String read(HttpServletRequest request, String msgIds) {
-        final ResponseMapper mapper = ResponseMapper.createMapper();
+        ResponseMapper mapper = ResponseMapper.createMapper();
         if (this.checkLoginDead(request) == null) {
             return mapper.code(ResponseCode.LOGIN_INVALIDATE.statusCode()).resultJson();
         }
-        final String[] ids = msgIds.split(";");
+        String[] ids = msgIds.split(";");
         if (ids != null && ids.length > 0) {
-            final List<String> idsList = Arrays.asList(ids);
+            List<String> idsList = Arrays.asList(ids);
             this.msgDao.read(idsList);
         }
         return mapper.resultJson();
@@ -120,12 +122,12 @@ public class MessageService implements IMessageService {
 
     @Override
     public String unreadNum(HttpServletRequest request) {
-        final ResponseMapper mapper = ResponseMapper.createMapper();
-        final User u = this.checkLoginDead(request);
+        ResponseMapper mapper = ResponseMapper.createMapper();
+        User u = this.checkLoginDead(request);
         if (u == null) {
             return mapper.code(ResponseCode.LOGIN_INVALIDATE.statusCode()).resultJson();
         }
-        final int num = this.msgDao.getUnreadNumBefore1Hour(u.getId());
+        int num = this.msgDao.getUnreadNumBefore1Hour(u.getId());
         if (num > 0) {
             return mapper.data(num).resultJson();
         }

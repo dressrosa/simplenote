@@ -1,7 +1,7 @@
 /**
  * 不要因为走了很远就忘记当初出发的目的:whatever happened,be yourself
  */
-package com.xiaoyu.modules.sys.controller;
+package com.xiaoyu.modules.controller;
 
 import java.io.IOException;
 
@@ -46,7 +46,9 @@ public class UserController {
     @RequestMapping(value = "api/v1/user/login", method = RequestMethod.POST)
     public String login(HttpServletRequest request, String loginName, String password) throws IOException {
         if (StringUtil.isAnyBlank(loginName, password)) {
-            return ResponseMapper.createMapper().code(ResponseCode.ARGS_ERROR.statusCode()).resultJson();
+            return ResponseMapper.createMapper()
+                    .code(ResponseCode.ARGS_ERROR.statusCode())
+                    .resultJson();
         }
         return this.userService.login(request, loginName, password);
     }
@@ -57,13 +59,19 @@ public class UserController {
             throws IOException {
         final ResponseMapper mapper = ResponseMapper.createMapper();
         if (!StringUtil.isMobile(loginName) && !StringUtil.isEmail(loginName)) {
-            return mapper.code(ResponseCode.ARGS_ERROR.statusCode()).message("请填写正确的邮箱或手机号").resultJson();
+            return mapper.code(ResponseCode.ARGS_ERROR.statusCode())
+                    .message("请填写正确的邮箱或手机号")
+                    .resultJson();
         }
         if (password.length() < 6) {
-            return mapper.code(ResponseCode.ARGS_ERROR.statusCode()).message("密码长度至少6位").resultJson();
+            return mapper.code(ResponseCode.ARGS_ERROR.statusCode())
+                    .message("密码长度至少6位")
+                    .resultJson();
         }
         if (!password.equals(repassword)) {
-            return mapper.code(ResponseCode.ARGS_ERROR.statusCode()).message("密码填写不一致").resultJson();
+            return mapper.code(ResponseCode.ARGS_ERROR.statusCode())
+                    .message("密码填写不一致")
+                    .resultJson();
         }
         return this.userService.register(request, loginName, password);
     }
@@ -112,7 +120,9 @@ public class UserController {
     @RequestMapping(value = "api/v1/user/{userId}", method = RequestMethod.GET)
     public String userDetail(@PathVariable String userId, HttpServletRequest request) {
         if (StringUtil.isBlank(userId)) {
-            return ResponseMapper.createMapper().code(ResponseCode.ARGS_ERROR.statusCode()).resultJson();
+            return ResponseMapper.createMapper()
+                    .code(ResponseCode.ARGS_ERROR.statusCode())
+                    .resultJson();
         }
         return this.userService.userDetail(request, userId);
     }
@@ -126,7 +136,9 @@ public class UserController {
     public String editInfo(HttpServletRequest request, @PathVariable String userId, String content,
             @RequestParam(required = true) Integer flag) {
         if (StringUtil.isBlank(userId)) {
-            return ResponseMapper.createMapper().code(ResponseCode.ARGS_ERROR.statusCode()).resultJson();
+            return ResponseMapper.createMapper()
+                    .code(ResponseCode.ARGS_ERROR.statusCode())
+                    .resultJson();
         }
         return this.userService.editUser(request, userId, content, flag);
     }

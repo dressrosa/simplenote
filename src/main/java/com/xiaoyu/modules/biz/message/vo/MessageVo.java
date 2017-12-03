@@ -14,19 +14,25 @@ import java.util.Date;
 public class MessageVo {
 
     private String messageId;
-    private int type;// '消息类型 0消息 1留言 2通知'
+    // '消息类型 0消息 1留言 2通知'
+    private int type;
     private String senderId;
     private String senderName;
     private String receiverId;
-    private int bizType;// 业务类型 0文章 1用户'
-    private int bizAction;// '业务动作 0无 1评论 2赞 3收藏 4评论回复 5评论@ 6留言
-    private String bizId;// 业务id
-    private String content;// 消息内容
-    private String reply;// 回复内容
+    // 业务类型 0文章 1用户'
+    private int bizType;
+    // '业务动作 0无 1评论 2赞 3收藏 4评论回复 5评论@ 6留言
+    private int bizAction;
+    // 业务id
+    private String bizId;
+    // 消息内容
+    private String content;
+    // 回复内容
+    private String reply;
     private int isRead;
     private Date createDate;
-
-    private String bizName;// 业务名称
+    // 业务名称s
+    private String bizName;
 
     public Date getCreateDate() {
         return this.createDate;

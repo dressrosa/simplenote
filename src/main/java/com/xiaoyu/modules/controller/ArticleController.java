@@ -1,7 +1,7 @@
 /**
  * 不要因为走了很远就忘记当初出发的目的:whatever happened,be yourself
  */
-package com.xiaoyu.modules.sys.controller;
+package com.xiaoyu.modules.controller;
 
 import javax.servlet.http.HttpServletRequest;
 
@@ -12,9 +12,9 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.xiaoyu.common.base.ResponseCode;
 import com.xiaoyu.common.base.ResponseMapper;
 import com.xiaoyu.common.utils.StringUtil;
-import com.xiaoyu.common.base.ResponseCode;
 import com.xiaoyu.modules.biz.article.service.api.IArticleService;
 
 /**
@@ -42,7 +42,9 @@ public class ArticleController {
     @RequestMapping(value = "api/v1/article/{articleId}", method = RequestMethod.GET)
     public String detail(@PathVariable String articleId, HttpServletRequest request) {
         if (StringUtil.isBlank(articleId)) {
-            return ResponseMapper.createMapper().code(ResponseCode.ARGS_ERROR.statusCode()).resultJson();
+            return ResponseMapper.createMapper()
+                    .code(ResponseCode.ARGS_ERROR.statusCode())
+                    .resultJson();
         }
         return this.articleService.detail(articleId);
     }
@@ -74,7 +76,9 @@ public class ArticleController {
     @RequestMapping(value = "api/v1/article/list", method = RequestMethod.GET)
     public String list(HttpServletRequest request, String userId, Integer pageNum, Integer pageSize) {
         if (StringUtil.isBlank(userId)) {
-            return ResponseMapper.createMapper().code(ResponseCode.ARGS_ERROR.statusCode()).resultJson();
+            return ResponseMapper.createMapper()
+                    .code(ResponseCode.ARGS_ERROR.statusCode())
+                    .resultJson();
         }
         return this.articleService.list(request, userId, pageNum, pageSize);
     }
@@ -87,7 +91,9 @@ public class ArticleController {
     @RequestMapping(value = "api/v1/article/list/collect", method = RequestMethod.GET)
     public String collectList(HttpServletRequest request, String userId, Integer pageNum, Integer pageSize) {
         if (StringUtil.isBlank(userId)) {
-            return ResponseMapper.createMapper().code(ResponseCode.ARGS_ERROR.statusCode()).resultJson();
+            return ResponseMapper.createMapper()
+                    .code(ResponseCode.ARGS_ERROR.statusCode())
+                    .resultJson();
         }
         return this.articleService.collectList(request, userId, pageNum, pageSize);
     }
@@ -95,7 +101,9 @@ public class ArticleController {
     @RequestMapping(value = "api/v1/article/views/{articleId}")
     public String changeViewNum(HttpServletRequest request, @PathVariable String articleId) {
         if (StringUtil.isBlank(articleId)) {
-            return ResponseMapper.createMapper().code(ResponseCode.ARGS_ERROR.statusCode()).resultJson();
+            return ResponseMapper.createMapper()
+                    .code(ResponseCode.ARGS_ERROR.statusCode())
+                    .resultJson();
         }
         return this.articleService.addReadNum(request, articleId);
     }

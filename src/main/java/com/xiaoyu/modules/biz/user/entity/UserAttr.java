@@ -12,11 +12,16 @@ public class UserAttr extends BaseEntity {
 
     private static final long serialVersionUID = 1L;
     private String userId;
-    private Integer articleNum;// 发表文章数
-    private Integer commentNum;// 评论文章数
-    private Integer collectNum;// 收藏文章数
-    private Integer viewedNum;// 主页浏览数
-    private Integer followerNum;// 追随者数
+    // 发表文章数
+    private Integer articleNum;
+    // 评论文章数
+    private Integer commentNum;
+    // 收藏文章数
+    private Integer collectNum;
+    // 主页浏览数
+    private Integer viewedNum;
+    // 追随者数
+    private Integer followerNum;
 
     public Integer getFollowerNum() {
         return this.followerNum;

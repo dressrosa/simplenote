@@ -11,7 +11,8 @@ public class ArticleLike extends BaseEntity {
 
     private String articleId;
     private String userId;
-    private Integer num;// 点了几次
+    // 点了几次
+    private Integer num;
     private Integer status;
 
     public Integer getStatus() {

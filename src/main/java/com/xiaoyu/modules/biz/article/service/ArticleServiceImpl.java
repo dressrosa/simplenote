@@ -12,7 +12,10 @@ import java.util.Map;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Primary;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -20,13 +23,14 @@ import com.alibaba.fastjson.JSON;
 import com.github.pagehelper.Page;
 import com.github.pagehelper.PageHelper;
 import com.xiaoyu.common.base.BaseService;
-import com.xiaoyu.common.base.ResponseMapper;
 import com.xiaoyu.common.base.ResponseCode;
+import com.xiaoyu.common.base.ResponseMapper;
 import com.xiaoyu.common.utils.ElasticUtils;
 import com.xiaoyu.common.utils.IdGenerator;
 import com.xiaoyu.common.utils.JedisUtils;
 import com.xiaoyu.common.utils.TimeUtils;
 import com.xiaoyu.common.utils.UserUtils;
+import com.xiaoyu.maple.core.MapleUtil;
 import com.xiaoyu.modules.biz.article.dao.ArticleAttrDao;
 import com.xiaoyu.modules.biz.article.dao.ArticleCollectDao;
 import com.xiaoyu.modules.biz.article.dao.ArticleCommentDao;
@@ -46,15 +50,16 @@ import com.xiaoyu.modules.biz.message.service.MessageHandler;
 import com.xiaoyu.modules.biz.user.dao.UserAttrDao;
 import com.xiaoyu.modules.biz.user.dao.UserDao;
 import com.xiaoyu.modules.biz.user.entity.User;
-import com.xiaoyu.modules.biz.user.vo.UserVo;
-import com.xiaoyu.modules.sys.constant.NumCountType;
+import com.xiaoyu.modules.constant.NumCountType;
 
 /**
  * @author xiaoyu 2016年3月29日
  */
 @Service
-@Transactional
-public class ArticleService extends BaseService<ArticleDao, Article> implements IArticleService {
+@Primary
+public class ArticleServiceImpl extends BaseService<ArticleDao, Article> implements IArticleService {
+
+    private static final Logger LOG = LoggerFactory.getLogger(ArticleServiceImpl.class);
 
     @Autowired
     private UserDao userDao;
@@ -70,39 +75,22 @@ public class ArticleService extends BaseService<ArticleDao, Article> implements 
     private MessageHandler msgHandler;
 
     private Map<String, Object> article2Map(ArticleVo a) {
-        final Map<String, Object> map = new HashMap<>();
-        map.put("articleId", a.getId());
-        map.put("content", a.getContent());
-        map.put("createDate", TimeUtils.format(a.getCreateDate(), "yyyy-MM-dd"));
-        map.put("createTime", TimeUtils.format(a.getCreateDate(), "HH:mm"));
-        map.put("title", a.getTitle());
-        map.put("user", this.user2Map(this.userDao.getVoById(a.getUserId())));
-        map.put("attr", a.getAttr());
-        return map;
+        return MapleUtil.wrap(a)
+                .rename("id", "articleId")
+                .stick("createDate", TimeUtils.format(a.getCreateDate(), "yyyy-MM-dd"))
+                .stick("createTime", TimeUtils.format(a.getCreateDate(), "HH:mm"))
+                .stick("user", this.userDao.getVoById(a.getUserId()))
+                .map();
     }
 
     private Map<String, Object> article2Map1(ArticleVo a) {
-        final Map<String, Object> map = new HashMap<>();
-        map.put("articleId", a.getId());
-        map.put("content", a.getContent().length() > 200 ? a.getContent().substring(0, 199) : a.getContent());
-        map.put("title", a.getTitle());
-        map.put("user", this.user2Map(this.userDao.getVoById(a.getUserId())));
-        map.put("attr", a.getAttr());
-        map.put("isLike", "0");
-        map.put("isCollect", "0");
-        return map;
-    }
-
-    private Map<String, Object> user2Map(UserVo a) {
-        final Map<String, Object> map = new HashMap<>();
-        if (a != null) {
-            map.put("userId", a.getUserId());
-            map.put("nickname", a.getNickname());
-            map.put("avatar", a.getAvatar());
-            map.put("signature", a.getSignature());
-            map.put("description", a.getDescription());
-            map.put("attr", a.getAttr());
-        }
+        Map<String, Object> map = MapleUtil.wrap(a)
+                .rename("id", "articleId")
+                .stick("content", a.getContent().length() > 200 ? a.getContent().substring(0, 199) : a.getContent())
+                .stick("isLike", "0")
+                .stick("isCollect", "0")
+                .stick("user", this.userDao.getVoById(a.getUserId()))
+                .map();
         return map;
     }
 
@@ -110,7 +98,11 @@ public class ArticleService extends BaseService<ArticleDao, Article> implements 
     private void sendMsg(String userId, int type, String bizId, int bizType, int bizAction, String content,
             String reply) {
         final Message msg = new Message();
-        msg.setSenderId(userId).setType(type).setBizId(bizId).setBizType(bizType).setBizAction(bizAction);
+        msg.setSenderId(userId)
+                .setType(type)
+                .setBizId(bizId)
+                .setBizType(bizType)
+                .setBizAction(bizAction);
         if (content != null) {
             msg.setContent(content);
         }
@@ -119,8 +111,8 @@ public class ArticleService extends BaseService<ArticleDao, Article> implements 
         }
         try {
             this.msgHandler.produce(JSON.toJSONString(msg));
-        } catch (final Exception e) {
-            e.printStackTrace();
+        } catch (Exception e) {
+            LOG.error("produce msg error.", e);
             // do nothing
         }
 
@@ -128,32 +120,33 @@ public class ArticleService extends BaseService<ArticleDao, Article> implements 
 
     @Override
     public String detail(String articleId) {
-        final ResponseMapper mapper = ResponseMapper.createMapper();
-        final ArticleVo a = this.articleDao.getVo(articleId);
+        ResponseMapper mapper = ResponseMapper.createMapper();
+        ArticleVo a = this.articleDao.getVo(articleId);
         if (a == null) {
             return mapper.code(ResponseCode.NO_DATA.statusCode()).resultJson();
         }
         return mapper.data(this.article2Map(a)).resultJson();
     }
 
-    @Transactional(readOnly = false)
+    @Transactional(readOnly = false, rollbackFor = RuntimeException.class)
     private String publish(String userId, String title, String content) {
         final ResponseMapper mapper = ResponseMapper.createMapper();
-        final Article t = new Article();
-        final ArticleAttr attr = new ArticleAttr();
-        t.setId(IdGenerator.uuid());
-        t.setContent(content).setTitle(title).setUserId(userId);
+        Article t = new Article();
+        ArticleAttr attr = new ArticleAttr();
+        t.setContent(content)
+                .setTitle(title)
+                .setUserId(userId)
+                .setId(IdGenerator.uuid());
         try {
             this.articleDao.insert(t);
-            attr.setArticleId(t.getId());
-            attr.setId(IdGenerator.uuid());
+
+            attr.setArticleId(t.getId())
+                    .setId(IdGenerator.uuid());
             this.attrDao.insert(attr);
-            try {// 增加发文数
-                this.userAttrDao.addNum(NumCountType.ArticleNum.ordinal(), 1, userId);
-            } catch (final Exception e) {
-                // do nothing
-            }
-        } catch (final RuntimeException e) {
+            // 增加发文数
+            this.userAttrDao.addNum(NumCountType.ArticleNum.ordinal(), 1, userId);
+        } catch (RuntimeException e) {
+            LOG.error("publish artile failed,then rollback", e);
             throw e;
         }
         return mapper.data(t.getId()).resultJson();
@@ -171,12 +164,12 @@ public class ArticleService extends BaseService<ArticleDao, Article> implements 
         // }
         // }
         PageHelper.startPage(1, 12);
-        final Page<ArticleVo> page = (Page<ArticleVo>) this.articleDao.findHotList();
-        final List<ArticleVo> list = page.getResult();
-        final List<Object> total = new ArrayList<>();
-
-        final boolean isLogin = (UserUtils.checkLoginDead(request) != null);// 是否登录
-        final ArticleLike t = new ArticleLike();
+        Page<ArticleVo> page = (Page<ArticleVo>) this.articleDao.findHotList();
+        List<ArticleVo> list = page.getResult();
+        List<Object> total = new ArrayList<>();
+        // 是否登录
+        boolean isLogin = (UserUtils.checkLoginDead(request) != null);
+        ArticleLike t = new ArticleLike();
         t.setUserId(request.getHeader("userId"));
         final ArticleCollect t1 = new ArticleCollect();
         t1.setUserId(request.getHeader("userId"));
@@ -194,7 +187,6 @@ public class ArticleService extends BaseService<ArticleDao, Article> implements 
                 if (ac != null) {
                     m.put("isCollect", ac.getStatus() + "");
                 }
-
             }
             total.add(m);
         }
@@ -215,8 +207,8 @@ public class ArticleService extends BaseService<ArticleDao, Article> implements 
         final Page<ArticleVo> page = this.findByPageWithAttr(userId, pageNum, pageSize);
         final List<ArticleVo> list = page.getResult();
         final List<Map<String, Object>> total = new ArrayList<>();
-
-        final boolean isLogin = (UserUtils.checkLoginDead(request) != null);// 是否登录
+        // 是否登录
+        final boolean isLogin = (UserUtils.checkLoginDead(request) != null);
         final ArticleLike t = new ArticleLike();
         t.setUserId(request.getHeader("userId"));
         final ArticleCollect t1 = new ArticleCollect();
@@ -247,17 +239,8 @@ public class ArticleService extends BaseService<ArticleDao, Article> implements 
     @Override
     public String collectList(HttpServletRequest request, String userId, Integer pageNum, Integer pageSize) {
         final ResponseMapper mapper = ResponseMapper.createMapper();
-        final boolean isLogin = (UserUtils.checkLoginDead(request) != null);// 是否登录
-        // if (!isLogin) {
-        // return
-        // mapper.code(ResponseCode.LOGIN_INVALIDATE).message(ResponseCode.LOGIN_INVALIDATE_MESSAGE)
-        // .resultJson();
-        // }
-        // if (!userId.equals(request.getHeader("userId"))) {
-        // return
-        // mapper.code(ResponseCode.REQ_NOACCESS).message(ResponseCode.REQ_NOACCESS_MESSAGE)
-        // .resultJson();
-        // }
+        // 是否登录
+        final boolean isLogin = (UserUtils.checkLoginDead(request) != null);
         final Article article = new Article();
         article.setUserId(userId);
         if (pageNum == null || pageSize == null || pageNum < 0 || pageSize < 0) {
@@ -279,14 +262,6 @@ public class ArticleService extends BaseService<ArticleDao, Article> implements 
         if (list != null && list.size() > 0) {
             for (final ArticleVo a : list) {
                 final Map<String, Object> m = this.article2Map1(a);
-                final Map<String, Object> map = new HashMap<>();
-                map.put("articleId", a.getId());
-                map.put("title", a.getTitle());
-                map.put("user", this.user2Map(this.userDao.getVoById(a.getUserId())));
-                map.put("attr", a.getAttr());
-                map.put("isLike", "0");
-                map.put("isCollect", "0");
-
                 if (isLogin) {
                     t.setArticleId(a.getId());
                     final ArticleLike al = this.likeDao.get(t);
@@ -318,14 +293,20 @@ public class ArticleService extends BaseService<ArticleDao, Article> implements 
         final ResponseMapper mapper = ResponseMapper.createMapper();
         final HttpSession session = request.getSession(false);
         if (session == null) {
-            return mapper.code(ResponseCode.LOGIN_INVALIDATE.statusCode()).message("登录失效,请刷新登录1").resultJson();
+            return mapper.code(ResponseCode.LOGIN_INVALIDATE.statusCode())
+                    .message("登录失效,请刷新登录1")
+                    .resultJson();
         }
         final User user = (User) session.getAttribute(token);
         if (user == null) {
-            return mapper.code(ResponseCode.LOGIN_INVALIDATE.statusCode()).message("登录失效,请刷新登录2").resultJson();
+            return mapper.code(ResponseCode.LOGIN_INVALIDATE.statusCode())
+                    .message("登录失效,请刷新登录2")
+                    .resultJson();
         }
         if (!userId.equals(user.getId())) {
-            return mapper.code(ResponseCode.LOGIN_INVALIDATE.statusCode()).message("登录失效,请刷新登录3").resultJson();
+            return mapper.code(ResponseCode.LOGIN_INVALIDATE.statusCode())
+                    .message("登录失效,请刷新登录3")
+                    .resultJson();
         }
         return this.publish(userId, title, content);
     }
@@ -336,7 +317,8 @@ public class ArticleService extends BaseService<ArticleDao, Article> implements 
         if (JedisUtils.get("user:login:" + ip) != null) {
             return ResponseMapper.createMapper().resultJson();
         }
-        final ArticleAttr attr = this.attrDao.getForUpdate(articleId);// 行级锁
+        // 行级锁
+        final ArticleAttr attr = this.attrDao.getForUpdate(articleId);
         final ArticleAttr temp = new ArticleAttr();
         temp.setId(attr.getId());
         temp.setArticleId(attr.getArticleId());
@@ -355,7 +337,8 @@ public class ArticleService extends BaseService<ArticleDao, Article> implements 
         if (this.articleDao.isExist(articleId) < 1) {
             return mapper.code(ResponseCode.ARGS_ERROR.statusCode()).resultJson();
         }
-        if (UserUtils.checkLoginDead(request) == null) {// 没登录 或失效
+        // 没登录 或失效
+        if (UserUtils.checkLoginDead(request) == null) {
             if (isLike == 0) {
                 this.addLikeNum(articleId, true);
             } else if (isLike == 1) {
@@ -365,23 +348,29 @@ public class ArticleService extends BaseService<ArticleDao, Article> implements 
         } else {
             final ArticleLike t = new ArticleLike();
             t.setUserId(request.getHeader("userId")).setArticleId(articleId);
-
-            if (this.likeDao.isExist(t) > 0) {// 已经点过
+            // 已经点过
+            if (this.likeDao.isExist(t) > 0) {
                 final ArticleLike like = this.likeDao.getForUpdate(t);
-                if (like.getStatus() == 1) {// 取消点赞
+                // 取消点赞
+                if (like.getStatus() == 1) {
                     t.setStatus(0);
                     this.addLikeNum(articleId, false);
-                } else {// 进行点赞
+                }
+                // 进行点赞
+                else {
                     t.setNum(like.getNum() + 1).setStatus(1);
                     this.addLikeNum(articleId, true);
                 }
                 if (this.likeDao.update(t) > 0) {
-                    if (like.getStatus() == 0) {// 点赞的
+                    // 点赞的
+                    if (like.getStatus() == 0) {
                         // 消息推送
                         this.sendMsg(request.getHeader("userId"), 0, articleId, 0, 2, null, null);
                     }
                 }
-            } else {// 没点过赞
+            }
+            // 没点过赞
+            else {
                 t.setNum(1);
                 if (this.likeDao.insert(t) > 0) {
                     // 消息推送
@@ -417,7 +406,8 @@ public class ArticleService extends BaseService<ArticleDao, Article> implements 
             return mapper.code(ResponseCode.ARGS_ERROR.statusCode()).resultJson();
         }
         final String userId = request.getHeader("userId");
-        if (UserUtils.checkLoginDead(request) == null) {// 没登录 或失效
+        // 没登录 或失效
+        if (UserUtils.checkLoginDead(request) == null) {
             if (isCollect == 0) {
                 this.addCollectNum(articleId, userId, true);
             } else if (isCollect == 1) {
@@ -427,12 +417,16 @@ public class ArticleService extends BaseService<ArticleDao, Article> implements 
         } else {
             final ArticleCollect t = new ArticleCollect();
             t.setUserId(userId).setArticleId(articleId);
-            if (this.collectDao.isExist(t) > 0) {// 已经收藏
+            // 已经收藏
+            if (this.collectDao.isExist(t) > 0) {
                 final ArticleCollect co = this.collectDao.getForUpdate(t);
-                if (co.getStatus() == 1) {// 取消收藏
+                // 取消收藏
+                if (co.getStatus() == 1) {
                     t.setStatus(0);
                     this.addCollectNum(articleId, userId, false);
-                } else {// 进行收藏
+                }
+                // 进行收藏
+                else {
                     t.setStatus(1);
                     if (this.addCollectNum(articleId, userId, true) > 0) {
                         // 消息推送
@@ -440,7 +434,9 @@ public class ArticleService extends BaseService<ArticleDao, Article> implements 
                     }
                 }
                 this.collectDao.update(t);
-            } else {// 没收藏
+            }
+            // 没收藏
+            else {
                 t.setId(IdGenerator.uuid());
                 this.collectDao.insert(t);
                 if (this.addCollectNum(articleId, userId, true) > 0) {
@@ -458,7 +454,8 @@ public class ArticleService extends BaseService<ArticleDao, Article> implements 
         final ArticleAttr attr = new ArticleAttr();
         final ArticleAttr at = this.attrDao.getForUpdate(articleId);
         attr.setArticleId(articleId);
-        if (flag) {// 收藏
+        // 收藏
+        if (flag) {
             attr.setCollectNum(at.getCollectNum() + 1);
             try {
                 this.userAttrDao.addNum(NumCountType.CollectNum.ordinal(), 1, userId);
@@ -494,7 +491,10 @@ public class ArticleService extends BaseService<ArticleDao, Article> implements 
         if (ar == null) {
             return mapper.code(ResponseCode.ARGS_ERROR.statusCode()).resultJson();
         }
-        co.setArticleId(articleId).setReplyerId(user.getId()).setContent(content).setAuthorId(ar.getUserId())
+        co.setArticleId(articleId)
+                .setReplyerId(user.getId())
+                .setContent(content)
+                .setAuthorId(ar.getUserId())
                 .setId(IdGenerator.uuid());
         if (this.arCommentDao.insert(co) > 0) {
             this.addCommentNum(articleId, true);
@@ -514,9 +514,12 @@ public class ArticleService extends BaseService<ArticleDao, Article> implements 
         final ArticleAttr attr = new ArticleAttr();
         final ArticleAttr at = this.attrDao.getForUpdate(articleId);
         attr.setArticleId(articleId);
-        if (flag) {// 评论
+        // 评论
+        if (flag) {
             attr.setCommentNum(at.getCommentNum() + 1);
-        } else {// 删除评论
+        }
+        // 删除评论
+        else {
             attr.setCommentNum(at.getCommentNum() - 1);
         }
         this.attrDao.update(attr);
@@ -531,26 +534,32 @@ public class ArticleService extends BaseService<ArticleDao, Article> implements 
         if (list == null || list.size() < 1) {
             return mapper.resultJson();
         }
-        final boolean isLogin = (UserUtils.checkLoginDead(request) != null);// 是否登录
+        // 是否登录
+        final boolean isLogin = (UserUtils.checkLoginDead(request) != null);
         final CommentLike t = new CommentLike();
         if (isLogin) {
             t.setUserId(request.getHeader("userId"));
         }
 
-        Map<String, String> map = null;
-        final List<Map<String, String>> total = new ArrayList<>();
+        Map<String, Object> map = null;
+        final List<Map<String, Object>> total = new ArrayList<>();
         for (final ArticleCommentVo a : list) {
-            map = new HashMap<>();
-            map.put("commentId", a.getId());
-            map.put("num", a.getNum().toString());
-            map.put("replyerName", a.getReplyerName());
-            map.put("replyerId", a.getReplyerId());
-            map.put("replyerAvatar", a.getReplyerAvatar());
-            map.put("parentReplyerId", a.getParentReplyerId());
-            map.put("parentReplyerName", a.getParentReplyerName());
-            map.put("content", a.getContent());
-            map.put("createDate", TimeUtils.format(a.getCreateDate(), "yyyy-MM-dd HH:mm"));
-            map.put("isLike", "0");
+            map = MapleUtil.wrap(a)
+                    .rename("id", "commentId")
+                    .stick("createDate", TimeUtils.format(a.getCreateDate(), "yyyy-MM-dd HH:mm"))
+                    .stick("isLike", "0")
+                    .map();
+            // map.put("commentId", a.getId());
+            // map.put("num", a.getNum().toString());
+            // map.put("replyerName", a.getReplyerName());
+            // map.put("replyerId", a.getReplyerId());
+            // map.put("replyerAvatar", a.getReplyerAvatar());
+            // map.put("parentReplyerId", a.getParentReplyerId());
+            // map.put("parentReplyerName", a.getParentReplyerName());
+            // map.put("content", a.getContent());
+            // map.put("createDate", TimeUtils.format(a.getCreateDate(), "yyyy-MM-dd
+            // HH:mm"));
+            // map.put("isLike", "0");
             if (isLogin) {
                 t.setCommentId(a.getId());
                 final CommentLike cl = this.arCommentDao.getLike(t);
@@ -570,25 +579,31 @@ public class ArticleService extends BaseService<ArticleDao, Article> implements 
         if (list == null || list.size() < 1) {
             return mapper.resultJson();
         }
-        Map<String, String> map = null;
-        final List<Map<String, String>> total = new ArrayList<>();
-        final boolean isLogin = (UserUtils.checkLoginDead(request) != null);// 是否登录
+        Map<String, Object> map = null;
+        final List<Map<String, Object>> total = new ArrayList<>();
+        // 是否登录
+        final boolean isLogin = (UserUtils.checkLoginDead(request) != null);
         final CommentLike t = new CommentLike();
         if (isLogin) {
             t.setUserId(request.getHeader("userId"));
         }
         for (final ArticleCommentVo a : list) {
-            map = new HashMap<>();
-            map.put("commentId", a.getId());
-            map.put("num", a.getNum().toString());
-            map.put("replyerName", a.getReplyerName());
-            map.put("replyerId", a.getReplyerId());
-            map.put("replyerAvatar", a.getReplyerAvatar());
-            map.put("parentReplyerId", a.getParentReplyerId());
-            map.put("parentReplyerName", a.getParentReplyerName());
-            map.put("content", a.getContent());
-            map.put("createDate", TimeUtils.format(a.getCreateDate(), "yyyy-MM-dd HH:mm"));
-            map.put("isLike", "0");
+            map = MapleUtil.wrap(a)
+                    .rename("id", "commentId")
+                    .stick("createDate", TimeUtils.format(a.getCreateDate(), "yyyy-MM-dd HH:mm"))
+                    .stick("isLike", "0")
+                    .map();
+            // map.put("commentId", a.getId());
+            // map.put("num", a.getNum().toString());
+            // map.put("replyerName", a.getReplyerName());
+            // map.put("replyerId", a.getReplyerId());
+            // map.put("replyerAvatar", a.getReplyerAvatar());
+            // map.put("parentReplyerId", a.getParentReplyerId());
+            // map.put("parentReplyerName", a.getParentReplyerName());
+            // map.put("content", a.getContent());
+            // map.put("createDate", TimeUtils.format(a.getCreateDate(), "yyyy-MM-dd
+            // HH:mm"));
+            // map.put("isLike", "0");
             if (isLogin) {
                 t.setCommentId(a.getId());
                 final CommentLike cl = this.arCommentDao.getLike(t);
@@ -606,7 +621,8 @@ public class ArticleService extends BaseService<ArticleDao, Article> implements 
     @Override
     public String addCommentLike(HttpServletRequest request, String commentId, Integer isLike) {
         final ResponseMapper mapper = ResponseMapper.createMapper();
-        if (UserUtils.checkLoginDead(request) == null) {// 没登录 或失效
+        // 没登录 或失效
+        if (UserUtils.checkLoginDead(request) == null) {
             if (isLike == 0) {
                 this.addCommentLikeNum(commentId, true);
             } else if (isLike == 1) {
@@ -616,12 +632,16 @@ public class ArticleService extends BaseService<ArticleDao, Article> implements 
         } else {
             final CommentLike t = new CommentLike();
             t.setUserId(request.getHeader("userId")).setCommentId(commentId);
-            if (this.arCommentDao.isLiked(t) > 0) {// 已经点过
+            // 已经点过
+            if (this.arCommentDao.isLiked(t) > 0) {
                 final CommentLike like = this.arCommentDao.getLikeForUpdate(t);
-                if (like.getStatus() == 1) {// 取消点赞
+                // 取消点赞
+                if (like.getStatus() == 1) {
                     t.setStatus(0);
                     this.addCommentLikeNum(commentId, false);
-                } else {// 进行点赞
+                }
+                // 进行点赞
+                else {
                     t.setStatus(1);
                     if (this.addCommentLikeNum(commentId, true) > 0) {
                         // 消息推送
@@ -629,7 +649,9 @@ public class ArticleService extends BaseService<ArticleDao, Article> implements 
                     }
                 }
                 this.arCommentDao.updateLike(t);
-            } else {// 没点过赞
+            }
+            // 没点过赞
+            else {
                 if (this.arCommentDao.insertLike(t) > 0) {
                     // 消息推送
                     this.sendMsg(request.getHeader("userId"), 0, commentId, 0, 6, null, null);

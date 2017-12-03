@@ -8,6 +8,8 @@ import javax.servlet.http.HttpServletRequest;
 public interface IUserService {
 
     /**
+     * 登录
+     * 
      * @param request
      * @param loginName
      * @param password
@@ -15,24 +17,100 @@ public interface IUserService {
      */
     public String login(HttpServletRequest request, String loginName, String password);
 
+    /**
+     * 登录记录
+     * 
+     * @param request
+     * @param userId
+     * @param device
+     * @return
+     */
     public String loginRecord(HttpServletRequest request, String userId, String device);
 
+    /**
+     * 用户详情
+     * 
+     * @param request
+     * @param userId
+     * @return
+     */
     public String userDetail(HttpServletRequest request, String userId);
 
+    /**
+     * 注册
+     * 
+     * @param request
+     * @param loginName
+     * @param password
+     * @return
+     */
     public String register(HttpServletRequest request, String loginName, String password);
 
+    /**
+     * 编辑用户
+     * 
+     * @param request
+     * @param userId
+     * @param content
+     * @param flag
+     * @return
+     */
     public String editUser(HttpServletRequest request, String userId, String content, Integer flag);
 
-    /* 关注相关 */
+    /**
+     * 关注用户
+     * 
+     * @param request
+     * @param userId
+     * @param followTo
+     * @return
+     */
     public String followUser(HttpServletRequest request, String userId, String followTo);
 
+    /**
+     * 取消关注
+     * 
+     * @param request
+     * @param userId
+     * @param followTo
+     * @return
+     */
     public String cancelFollow(HttpServletRequest request, String userId, String followTo);
 
+    /**
+     * 是否关注
+     * 
+     * @param request
+     * @param userId
+     * @param followTo
+     * @return
+     */
     public String isFollowed(HttpServletRequest request, String userId, String followTo);
 
+    /**
+     * 我的关注者
+     * 
+     * @param request
+     * @param userId
+     * @return
+     */
     public String follower(HttpServletRequest request, String userId);
 
+    /**
+     * 我关注的人
+     * 
+     * @param request
+     * @param userId
+     * @return
+     */
     public String following(HttpServletRequest request, String userId);
 
+    /**
+     * 通用的统计数
+     * 
+     * @param request
+     * @param userId
+     * @return
+     */
     public String commonNums(HttpServletRequest request, String userId);
 }

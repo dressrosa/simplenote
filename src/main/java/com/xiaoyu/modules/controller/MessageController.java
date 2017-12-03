@@ -1,4 +1,4 @@
-package com.xiaoyu.modules.sys.controller;
+package com.xiaoyu.modules.controller;
 
 import javax.servlet.http.HttpServletRequest;
 

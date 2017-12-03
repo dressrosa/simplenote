@@ -26,6 +26,14 @@ public class ExecutionTimeAop {
 
     private final static Logger logger = LoggerFactory.getLogger(ExecutionTimeAop.class);
 
+    /*
+     * 网络释义: 例如定义切入点表达式 execution (* com.sample.service.impl..*.*(..))
+     * execution()是最常用的切点函数，其语法如下所示： 整个表达式可以分为五个部分： 1、execution(): 表达式主体。
+     * 2、第一个*号：表示返回类型，*号表示所有的类型。
+     * 3、包名：表示需要拦截的包名，后面的两个句点表示当前包和当前包的所有子包，com.sample.service.impl包、子孙包下所有类的方法。
+     * 4、第二个*号：表示类名，*号表示所有的类。
+     * 5、*(..):最后这个星号表示方法名，*号表示所有的方法，后面括弧里面表示方法的参数，两个句点表示任何参数。
+     */
     @Pointcut("execution(* com.xiaoyu.modules.sys.controller..*(..))")
     public void pointcut() {
 
@@ -42,7 +50,7 @@ public class ExecutionTimeAop {
         final String userId = null;// 用户id
         final String token = null;// 登录 token
         String ipLimit = null;//
-        final String redis_userId = null;
+        final String redisUserId = null;
         String methodName = null;// 调用方法名
         int limit = 0;// ip限制访问次数
         for (final Object o : args) {
@@ -80,13 +88,13 @@ public class ExecutionTimeAop {
         // 需登录情况下
         // userId = request.getHeader("userId");
         // token = request.getHeader("token");
-        // redis_userId = JedisUtils.get(token);
-        // if (null == redis_userId) {
+        // redisUserId = JedisUtils.get(token);
+        // if (null == redisUserId) {
         // ResponseMapper mapper = ResponseMapper.createMapper();
         // mapper.setCode(ResponseCode.ARGS_ERROR).setMessage("token异常,请重新登录");
         // return mapper.getResultJson();
         // }
-        // if (redis_userId.equals(userId)) {
+        // if (redisUserId.equals(userId)) {
         // JedisUtils.set(token, userId, 6 * 60 * 60);
         // } else {
         // ResponseMapper mapper = ResponseMapper.createMapper();

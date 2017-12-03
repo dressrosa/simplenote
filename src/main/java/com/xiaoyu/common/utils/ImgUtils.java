@@ -71,7 +71,8 @@ public class ImgUtils {
         if (!StringUtil.endsWithAny(p, "/") && StringUtil.endsWithAny(path, "\\", "/")) {
             p = p + "/";
         }
-        while (p.endsWith("/")) {// 去掉url最尾的"/"
+        // 去掉url最尾的"/"
+        while (p.endsWith("/")) {
             p = p.substring(0, p.length() - 1);
         }
         if (!p.startsWith("/")) {

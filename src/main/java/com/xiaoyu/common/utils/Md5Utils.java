@@ -10,11 +10,11 @@ import java.security.MessageDigest;
  */
 public class Md5Utils {
 
-    private final static String[] hexDigits = { "0", "1", "2", "3", "4", "5", "6", "7", "8", "9", "a", "b", "c", "d",
+    private final static String[] HEX_DIGITS = { "0", "1", "2", "3", "4", "5", "6", "7", "8", "9", "a", "b", "c", "d",
             "e", "f" };
 
-    public static String MD5(String s) {
-        return Md5Utils.MD5Encode(s);
+    public static String md5(String s) {
+        return Md5Utils.md5Encode(s);
     }
 
     /**
@@ -46,7 +46,7 @@ public class Md5Utils {
         }
         final int d1 = n / 16;
         final int d2 = n % 16;
-        return Md5Utils.hexDigits[d1] + Md5Utils.hexDigits[d2];
+        return Md5Utils.HEX_DIGITS[d1] + Md5Utils.HEX_DIGITS[d2];
     }
 
     /**
@@ -56,7 +56,7 @@ public class Md5Utils {
      *            原始字符串
      * @return 经过MD5加密之后的结果
      */
-    public static String MD5Encode(String origin) {
+    public static String md5Encode(String origin) {
         String resultString = null;
         try {
             resultString = origin;

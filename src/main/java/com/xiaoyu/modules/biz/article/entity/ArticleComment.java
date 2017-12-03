@@ -18,7 +18,8 @@ public class ArticleComment extends BaseEntity {
     private String parentReplyerId;
     private String content;
     private String replyerId;
-    private Integer num;// 被赞数
+    // 被赞数
+    private Integer num;
 
     public Integer getNum() {
         return this.num;

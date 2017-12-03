@@ -54,7 +54,8 @@ public class ElasticUtils {
     // private String type = "news";
 
     private static Client init() {
-        final Settings sets = Settings.settingsBuilder().put("tclient.transport.sniff", true)// 自动嗅探整个集群的状态，把集群中其它机器的ip地址加到客户端中
+        // 自动嗅探整个集群的状态，把集群中其它机器的ip地址加到客户端中
+        final Settings sets = Settings.settingsBuilder().put("tclient.transport.sniff", true)
                 .put("cluster.name", ElasticUtils.CLUSTER_NAME).build();
         return ElasticUtils.client = TransportClient.builder().settings(sets).build().addTransportAddress(
                 new InetSocketTransportAddress(new InetSocketAddress(ElasticUtils.HOST1, ElasticUtils.PORT1)));
@@ -217,13 +218,19 @@ public class ElasticUtils {
         try {
             ElasticUtils.init();
             final SearchRequestBuilder builder = ElasticUtils.client.prepareSearch(index);
-            builder.setTypes(type).setSearchType(SearchType.DEFAULT).setExplain(true).setFetchSource(true);// 返回source
+            builder.setTypes(type)
+                    .setSearchType(SearchType.DEFAULT)
+                    .setExplain(true)
+                    // 返回source
+                    .setFetchSource(true);
             // .setNoFields()//不返回参数;
             // 设置高亮
             builder.addHighlightedField("*")// *代表全部高亮 fields == null ? null :
                                             // fields[0]
-                    .setHighlighterPreTags("<span style=\"color:red\">").setHighlighterPostTags("</span>")
-                    .setHighlighterForceSource(true).setHighlighterRequireFieldMatch(false);
+                    .setHighlighterPreTags("<span style=\"color:red\">")
+                    .setHighlighterPostTags("</span>")
+                    .setHighlighterForceSource(true)
+                    .setHighlighterRequireFieldMatch(false);
 
             final BoolQueryBuilder qb = new BoolQueryBuilder();
             final QueryStringQueryBuilder queryBuilder = QueryBuilders.queryStringQuery(query);
@@ -293,7 +300,8 @@ public class ElasticUtils {
             builder.addHighlightedField("*").setHighlighterPreTags("<span style=\"color:red\">")
                     .setHighlighterPostTags("</span>")
                     // .setHighlighterForceSource(true)
-                    .setHighlighterRequireFieldMatch(false)// 这句不加就不会高亮
+                    // 这句不加就不会高亮
+                    .setHighlighterRequireFieldMatch(false)
             // .setHighlighterNumOfFragments(0)//
             // 默认的fragment数量是5,所以设置为0就不会分开,整个source就会被高亮
             ;
