@@ -32,6 +32,8 @@ public interface ArticleCommentDao extends BaseDao<ArticleComment> {
     int insertLike(CommentLike t);
 
     int isLiked(CommentLike t);
+    
+    int predo();
 
     CommentLike getLike(CommentLike t);
 

@@ -63,6 +63,16 @@ public interface IArticleService {
      */
     public String addArticle(HttpServletRequest request, String title, String content, String userId, String token);
 
+    /**编辑文章
+     * @param request
+     * @param title
+     * @param content
+     * @param userId
+     * @param token
+     * @param token 
+     * @return
+     */
+    public String editArticle(HttpServletRequest request, String title, String content, String userId, String articleId, String token);
     /**
      * 增加阅读数
      * 
@@ -157,4 +167,5 @@ public interface IArticleService {
      * @return
      */
     public String synElastic(HttpServletRequest request, String password);
+
 }

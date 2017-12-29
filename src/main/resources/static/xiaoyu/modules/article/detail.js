@@ -20,6 +20,7 @@ var $arPromise = $
 				var ar = obj.data;
 				if (!checkNull(ar)) {
 					setTitle('详情-' + ar.title);
+					$("#titleSpan").html(ar.title);
 					var $partUp = $(".part_up");
 					$partUp.find("img").attr('src', ar.user.avatar);
 					$partUp.find("img").attr('id', ar.user.userId);
@@ -41,7 +42,7 @@ var $arPromise = $
 					$co.find("label").html(
 						'<a>' + ar.user.nickname + ':' + '</a>');
 					$co.find("p").html(ar.user.description);
-					$("#co_title").html('作者简介');
+					$("#co_title").html('半点故事');
 					var $partDown = $(".part_down");
 					$partDown.attr("id", ar.articleId);
 					$partDown.find(".ar_date").html(ar.createDate);
@@ -230,8 +231,6 @@ var comment = function () {
 				}
 			},
 			error: function (data) {
-				console.log(data);
-				var jsonObj = jQuery.parseJSON(data);
 				$(".co_btn").removeAttr("disabled");
 				return false;
 			},
@@ -429,5 +428,17 @@ $(document).ready(
 		$(".p_love").on('click', function () {
 			follow();
 		});
+		// 标题呈现在header
+		$(window)
+			.scroll(
+			function () {
+				var $top = document.body.scrollTop;
+				//console.log("top:" + $top);
+				if ($top > 305) {
+					$("#titleSpan").css("display","initial");
+				} else {
+					$("#titleSpan").css("display","none");
+				}
 
+			});
 	});

@@ -2,7 +2,7 @@
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
 <meta name="viewport"
-	content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=yes" />
+    content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=yes" />
 <meta http-equiv="Expires" content="0" />
 <meta http-equiv="Cache-Control" content="no-cache" />
 <meta http-equiv="Cache-Control" content="no-store" />
@@ -17,112 +17,117 @@
 <script type="text/javascript" src="/xiaoyu/common.js"></script>
 <script type="text/javascript" src="/xiaoyu/xiaoyu.js"></script>
 <script type="text/javascript"
-	src="/xiaoyu/modules/user/personcenter.js"></script>
+    src="/xiaoyu/modules/user/personcenter.js"></script>
 
 </head>
 
 <body>
-	<div class="header">
-		<div class="container">
-			<span style="float: left;"><a class="header_w "
-				href="/article/hot">首页</a></span> <span id="userSpan"
-				style="float: right; display: none;"> <a class="header_w"
-				style="padding-right: 15px;" id="nickname" href="#">xiao</a>
-				<ul class="user_dropdown">
-					<li><a href="/message"> <i
-							class="icon_mail_alt margin_r_short"></i>消息 <span
-							id="zh-top-nav-pm-count"
-							class="zu-top-nav-pm-count zg-noti-number"
-							style="visibility: hidden" data-count="0"> </span>
-					</a></li>
-					<li><a href="/article/write"> <i
-							class="icon_pencil-edit margin_r_short"></i>日志
-					</a></li>
-					<li><a href="/settings"> <i
-							class="icon_cog margin_r_short"></i>设置
-					</a></li>
-					<li><a href="" onclick="logout()"> <i
-							class="icon_stop_alt2 margin_r_short"></i>退出
-					</a></li>
-				</ul>
-			</span> <span id="loginSpan" style="float: right; display: none;"> <a
-				class="header_w" style=""
-				onclick="javascript:gotoLogin('/article/hot')" id="login">登录</a>
-			</span>
-		</div>
-	</div>
-	<div class="main_user">
-		<div class="panel"
-			style="background: url(http://xiaoyu1-1253813687.costj.myqcloud.com/common/4.jpg) no-repeat 0% 70%/cover;">
-			<div class="panel-body">
-				<div class="avatar_wrapper">
-					<img class="avatar" style="cursor: default;" />
-				</div>
-			</div>
+    <div class="header">
+        <div class="container">
+            <span style="float: left;"><a class="header_w "
+                href="/article/hot">首页</a></span> <span id="userSpan"
+                style="float: right; display: none;"> <a
+                class="header_w" style="padding-right: 15px;"
+                id="nickname" href="#">xiao</a>
+                <ul class="user_dropdown">
+                    <li><a href="/message"> <i
+                            class="icon_mail_alt margin_r_short"></i>消息
+                            <span id="zh-top-nav-pm-count"
+                            class="zu-top-nav-pm-count zg-noti-number"
+                            style="visibility: hidden" data-count="0">
+                        </span>
+                    </a></li>
+                    <li><a href="/article/write"> <i
+                            class="icon_pencil-edit margin_r_short"></i>日志
+                    </a></li>
+                    <li><a href="/settings"> <i
+                            class="icon_cog margin_r_short"></i>设置
+                    </a></li>
+                    <li><a href="" onclick="logout()"> <i
+                            class="icon_stop_alt2 margin_r_short"></i>退出
+                    </a></li>
+                </ul>
+            </span> <span id="loginSpan" style="float: right; display: none;">
+                <a class="header_w" style=""
+                onclick="javascript:gotoLogin('/article/hot')"
+                id="login">登录</a>
+            </span>
+        </div>
+    </div>
+    <div class="main_user">
+        <div class="panel"
+            style="background: url(http://xiaoyu1-1253813687.costj.myqcloud.com/common/4.jpg) no-repeat 0% 70%/cover;">
+            <div class="panel-body">
+                <div class="avatar_wrapper">
+                    <img class="avatar" style="cursor: default;" />
+                </div>
+            </div>
 
-			<div class="panel-body nickname_panel"></div>
-			<div class="panel-body des_panel"></div>
+            <div class="panel-body nickname_panel"></div>
+            <div class="panel-body des_panel"></div>
 
-		</div>
-		<div class="content" style="">
+        </div>
+        <div class="content" style="">
 
-			<div class="content-left">
-				<div>
-					<ul class="tab_ul">
-						<li class="li_active" data-select="0">文章</li>
-						<li data-select="1">收藏</li>
-						<li data-select="2">关注</li>
-					</ul>
-				</div>
-				<ul class="list-group">
+            <div class="content-left">
+                <div>
+                    <ul class="tab_ul">
+                        <li class="li_active" data-select="0">文章</li>
+                        <li data-select="1">收藏</li>
+                        <li data-select="2">关注</li>
+                    </ul>
+                </div>
+                <ul class="list-group">
 
-				</ul>
+                </ul>
 
-			</div>
-			<div class="content-right">
-				<div class="module-part" style="">
-					<div class="lean">
-						<i class="icon_pushpin" style="font-size: 1.5em; color: #fbe8e8;"></i>
-					</div>
-					<div class="module-body">
-						<div class="part-content">
-							<lable class="font-title">文章</lable>
-							<label class="font-number ar_number">0</label>
-						</div>
-						<div class="part-content">
-							<lable class="font-title">收藏</lable>
-							<label class="font-number co_number">0</label>
-						</div>
-						<div class="part-content">
-							<lable class="font-title">读者</lable>
-							<label class="font-number fo_number">0</label>
-						</div>
-					</div>
+            </div>
+            <div class="content-right">
+                <div class="module-part" style="">
+                    <div class="lean">
+                        <i class="icon_pushpin"
+                            style="font-size: 1.5em; color: #fbe8e8;"></i>
+                    </div>
+                    <div class="module-body">
+                        <div class="part-content">
+                            <lable class="font-title">文章</lable>
+                            <label class="font-number ar_number">0</label>
+                        </div>
+                        <div class="part-content">
+                            <lable class="font-title">收藏</lable>
+                            <label class="font-number co_number">0</label>
+                        </div>
+                        <div class="part-content">
+                            <lable class="font-title">读者</lable>
+                            <label class="font-number fo_number">0</label>
+                        </div>
+                    </div>
 
-				</div>
-				<div class="module-part" style="">
-					<div class="lean">
-						<i class="icon_pushpin" style="font-size: 1.5em; color: #fbe8e8;"></i>
-					</div>
-					<div class="module-body" style="">
-						<div class="part-content">
-							<lable class="font-title">点赞</lable>
-							<label class="font-number">66</label>
-						</div>
-						<div class="part-content">
-							<lable class="font-title">点赞</lable>
-							<label class="font-number">66</label>
-						</div>
-						<div class="part-content">
-							<lable class="font-title">点赞</lable>
-							<label class="font-number">66</label>
-						</div>
-					</div>
+                </div>
+                <div class="module-part" style="">
+                    <div class="lean">
+                        <i class="icon_pushpin"
+                            style="font-size: 1.5em; color: #fbe8e8;"></i>
+                    </div>
+                    <div class="module-body" style="">
+                        <div class="part-content">
+                            <lable class="font-title">点赞</lable>
+                            <label class="font-number">66</label>
+                        </div>
+                        <div class="part-content">
+                            <lable class="font-title">点赞</lable>
+                            <label class="font-number">66</label>
+                        </div>
+                        <div class="part-content">
+                            <lable class="font-title">点赞</lable>
+                            <label class="font-number">66</label>
+                        </div>
+                    </div>
 
-				</div>
-			</div>
-		</div>
-	</div>
+                </div>
+            </div>
+        </div>
+    </div>
 </body>
 
 </html>

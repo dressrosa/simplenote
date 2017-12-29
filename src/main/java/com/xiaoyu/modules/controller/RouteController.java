@@ -33,6 +33,15 @@ public class RouteController {
         return "article/articleDetail";
     }
 
+    @RequestMapping(value = "article/edit/{articleId}", method = RequestMethod.GET)
+    public String goArticleEdit(HttpServletRequest request, HttpServletResponse response,
+            @PathVariable String articleId) {
+        if (StringUtil.isBlank(articleId)) {
+            return "common/404";
+        }
+        return "article/articleEdit";
+    }
+
     @RequestMapping(value = "user/{userId}", method = RequestMethod.GET)
     public String goUserDetail(@PathVariable String userId, HttpServletRequest request) {
         if (StringUtil.isBlank(userId)) {

@@ -22,15 +22,15 @@ import com.xiaoyu.modules.biz.message.service.MessageHandler;
 @Component
 public class ConsumerListener implements ApplicationListener<ApplicationReadyEvent> {
 
-    private final static Logger logger = LoggerFactory.getLogger(ConsumerListener.class);
+    private final static Logger LOG = LoggerFactory.getLogger(ConsumerListener.class);
     @Autowired
     private MessageHandler msgHandler;
 
     @Override
     public void onApplicationEvent(final ApplicationReadyEvent event) {
-//        final MessageHandler handler = this.msgHandler;
-//        handler.consume(); 
-        ConsumerListener.logger.info("消费者已启动,进行消息处理...");
+        final MessageHandler handler = this.msgHandler;
+        handler.consume(); 
+        LOG.info("消费者已启动,进行消息处理...");
     }
 
 }

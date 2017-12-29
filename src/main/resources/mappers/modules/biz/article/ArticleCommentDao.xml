@@ -126,7 +126,11 @@
         where id =
         #{id}
     </delete>
-
+    
+    <update id="predo">
+        set names utf8mb4
+    </update>
+    
     <insert id="insert"
         parameterType="com.xiaoyu.modules.biz.article.entity.ArticleComment">
         insert into biz_article_comment

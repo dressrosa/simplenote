@@ -86,7 +86,7 @@ public class ArticleServiceImpl extends BaseService<ArticleDao, Article> impleme
     private Map<String, Object> article2Map1(ArticleVo a) {
         Map<String, Object> map = MapleUtil.wrap(a)
                 .rename("id", "articleId")
-                .stick("content", a.getContent().length() > 200 ? a.getContent().substring(0, 199) : a.getContent())
+                .stick("content", a.getContent().length() > 150 ? a.getContent().substring(0, 149) : a.getContent())
                 .stick("isLike", "0")
                 .stick("isCollect", "0")
                 .stick("user", this.userDao.getVoById(a.getUserId()))
@@ -290,7 +290,7 @@ public class ArticleServiceImpl extends BaseService<ArticleDao, Article> impleme
 
     @Override
     public String addArticle(HttpServletRequest request, String title, String content, String userId, String token) {
-        final ResponseMapper mapper = ResponseMapper.createMapper();
+        ResponseMapper mapper = ResponseMapper.createMapper();
         final HttpSession session = request.getSession(false);
         if (session == null) {
             return mapper.code(ResponseCode.LOGIN_INVALIDATE.statusCode())
@@ -309,6 +309,46 @@ public class ArticleServiceImpl extends BaseService<ArticleDao, Article> impleme
                     .resultJson();
         }
         return this.publish(userId, title, content);
+    }
+
+    @Override
+    public String editArticle(HttpServletRequest request, String title, String content, String userId, String articleId,
+            String token) {
+        ResponseMapper mapper = ResponseMapper.createMapper();
+        final HttpSession session = request.getSession(false);
+        if (session == null) {
+            return mapper.code(ResponseCode.LOGIN_INVALIDATE.statusCode())
+                    .message("登录失效,请刷新登录1")
+                    .resultJson();
+        }
+        final User user = (User) session.getAttribute(token);
+        if (user == null) {
+            return mapper.code(ResponseCode.LOGIN_INVALIDATE.statusCode())
+                    .message("登录失效,请刷新登录2")
+                    .resultJson();
+        }
+        if (!userId.equals(user.getId())) {
+            return mapper.code(ResponseCode.LOGIN_INVALIDATE.statusCode())
+                    .message("登录失效,请刷新登录3")
+                    .resultJson();
+        }
+        return this.edit(userId, title, content, articleId);
+    }
+
+    private String edit(String userId, String title, String content, String articleId) {
+        ResponseMapper mapper = ResponseMapper.createMapper();
+        Article ar = this.get(articleId);
+        if (ar == null || !userId.equals(ar.getUserId())) {
+            return mapper.code(ResponseCode.NO_DATA.statusCode()).resultJson();
+        }
+        Article temp = new Article();
+        temp.setTitle(title)
+                .setContent(content)
+                .setId(articleId);
+        if (this.articleDao.update(temp) <= 0) {
+            return mapper.code(ResponseCode.FAILED.statusCode()).resultJson();
+        }
+        return mapper.data(articleId).resultJson();
     }
 
     @Override
@@ -496,10 +536,15 @@ public class ArticleServiceImpl extends BaseService<ArticleDao, Article> impleme
                 .setContent(content)
                 .setAuthorId(ar.getUserId())
                 .setId(IdGenerator.uuid());
+        // 为表情内容的设置
+        this.arCommentDao.predo();
         if (this.arCommentDao.insert(co) > 0) {
             this.addCommentNum(articleId, true);
-            // 消息推送
-            this.sendMsg(user.getId(), 0, articleId, 0, 1, content, null);
+            // 别人评论的
+            if (!co.getAuthorId().equals(co.getReplyerId())) {
+                // 消息推送
+                this.sendMsg(user.getId(), 0, articleId, 0, 1, content, null);
+            }
         }
         final Map<String, String> map = new HashMap<>();
         map.put("replyerId", user.getId());

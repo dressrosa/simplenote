@@ -334,6 +334,10 @@ li a {
 	cursor: pointer;
 }
 
+.item_ar_content:hover {
+	color: #a1a1a1;
+}
+
 .item_ar_title {
 	text-align: center;
 }
@@ -351,7 +355,7 @@ li a {
 	border: 1px solid #ddd;
 	border-bottom: 0px;
 	box-shadow: 0 1px 3px rgba(0, 37, 55, .05);
-	min-height: 185px;
+	min-height: 150px;
 }
 
 .list-group-item:last-child {
@@ -361,7 +365,30 @@ li a {
 .group_item_p {
 	cursor: pointer;
 	position: relative;
-	margin-bottom: 25px;
+	color: #636363;
+	font-size: 13px;
+}
+
+.group_item_edit_part {
+	position: absolute;
+	right: 0px;
+	width: auto;
+	float: right;
+	top: 5px;
+	font-size: 12px;
+	color: #848484;
+	display:none;
+}
+.list-group-item:hover .group_item_edit_part {
+    display: initial;
+}
+.edit_part_label {
+	margin: 2px;
+	cursor: pointer;
+}
+
+.group_item_p:hover,.edit_part_label:hover {
+	color: #b7b7b7;
 }
 
 .love_list {

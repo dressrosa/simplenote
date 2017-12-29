@@ -61,8 +61,11 @@ public class UploadController {
     @SuppressWarnings("unchecked")
     private String upload(FirewalledRequest initialRequest, HttpServletResponse response, int bizType) {
 
-        final HttpServletRequest request = (HttpServletRequest) initialRequest.getRequest();
         final ResponseMapper mapper = ResponseMapper.createMapper();
+        final HttpServletRequest request = (HttpServletRequest) initialRequest.getRequest();
+        if (UserUtils.checkLoginDead(request) == null) {
+            return mapper.code(ResponseCode.ARGS_ERROR.statusCode()).resultJson();
+        }
         Iterator<Part> iter = null;
         Collection<Part> collection = null;
         try {
@@ -72,17 +75,17 @@ public class UploadController {
                 return mapper.code(ResponseCode.ARGS_ERROR.statusCode()).resultJson();
             }
             iter = collection.iterator();
+
         } catch (final IOException e1) {
             LOG.error(e1.toString());
         } catch (final ServletException e2) {
             LOG.error(e2.toString());
         }
-        if (UserUtils.checkLoginDead(request) == null) {
+        if (iter == null) {
             return mapper.code(ResponseCode.ARGS_ERROR.statusCode()).resultJson();
         }
         while (iter.hasNext()) {
-            final Part p = iter.next();
-            final String result = ImgUtils.saveImgToTencentOss(p);
+            final String result = ImgUtils.saveImgToTencentOss(iter.next());
             final Map<String, Object> map = (Map<String, Object>) JSON.parse(result);
             String path = null;
             if (map.get("code").equals(0)) {
@@ -93,6 +96,5 @@ public class UploadController {
             }
         }
         return mapper.code(ResponseCode.ARGS_ERROR.statusCode()).resultJson();
-
     }
 }

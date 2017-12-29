@@ -115,6 +115,14 @@ public class ArticleController {
         return this.articleService.addArticle(request, title, content, userId, token);
     }
 
+    @RequestMapping(value = "api/v1/article/edit", method = RequestMethod.POST)
+    public String editArticle(HttpServletRequest request, @RequestParam(required = true) String title,
+            @RequestParam(required = true) String content, @RequestParam(required = true) String userId,
+            @RequestParam(required = true) String articleId,
+            @RequestParam(required = true) String token) {
+        return this.articleService.editArticle(request, title, content, userId, articleId,token);
+    }
+
     @RequestMapping(value = "api/v1/article/like", method = RequestMethod.POST)
     public String like(HttpServletRequest request, @RequestParam(required = true) String articleId,
             @RequestParam(required = true) Integer isLike) {
