@@ -43,7 +43,6 @@
         <!-- 按时间输出 -->
         <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
             <fileNamePattern>/home/logs/%d{yyyy-MM,aux}/%d{yyyy-MM-dd}.log.zip </fileNamePattern>
-            </fileNamePattern>
             <!-- logs/%d{yyyy-MM,aux}/%d{yyyy-MM-dd_HH-mm}.log.zip -->
             <maxHistory>30</maxHistory>
         </rollingPolicy>
