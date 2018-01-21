@@ -5,6 +5,8 @@ package com.xiaoyu.modules.biz.message.service.api;
 
 import javax.servlet.http.HttpServletRequest;
 
+import com.xiaoyu.modules.biz.message.entity.Message;
+
 public interface IMessageService {
 
     /**
@@ -31,10 +33,10 @@ public interface IMessageService {
      * 
      * @param request
      * @param msgId
-     * @param reply
+     * @param replyContent
      * @return
      */
-    public String replyMsg(HttpServletRequest request, String msgId, String reply);
+    public String replyMsg(HttpServletRequest request, String msgId, String replyContent);
 
     /**
      * 读消息(动作)
@@ -52,4 +54,10 @@ public interface IMessageService {
      * @return
      */
     public String unreadNum(HttpServletRequest request);
+
+    /**推送消息事件
+     * @param message
+     * @return
+     */
+    public String sendMsgEvent(Message message);
 }

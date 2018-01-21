@@ -26,16 +26,19 @@ import com.zaxxer.hikari.HikariDataSource;
 public class DataSourceConfiguration {
 
     @Value("${spring.datasource.username}")
-    private String username;// 用户名
+    private String username;
 
     @Value("${spring.datasource.password}")
-    private String password;// 密码
+    private String password;
 
     @Value("${spring.datasource.url}")
-    private String url;// 数据库地址
+    private String url;
 
+    /**
+     * 和driverClassName不能同时使用
+     */
     @Value("${spring.datasource.sourceClassName}")
-    private String sourceClassName;// 和driverClassName不能同时使用
+    private String sourceClassName;
 
     @Value("${spring.datasource.driverClassName}")
     private String driverClassName;
@@ -56,12 +59,12 @@ public class DataSourceConfiguration {
         final HikariConfig config = new HikariConfig();
         config.setMaximumPoolSize(this.maximumPoolSize);
         config.setMinimumIdle(this.minimumIdle);
-        // config.setDataSourceClassName(sourceClassName);//这个会忽视JdbcUrl
+        // 这个会忽视JdbcUrl
+        // config.setDataSourceClassName(sourceClassName);
         config.setDriverClassName(this.driverClassName);
         config.setUsername(this.username);
         config.setPassword(this.password);
         config.setJdbcUrl(this.url);
-        // config.setConnectionTestQuery("select 1");
         return new HikariDataSource(config);
     }
 
@@ -74,12 +77,16 @@ public class DataSourceConfiguration {
     @Bean(name = "sqlSessionFactory")
     public SqlSessionFactory sqlSessionFactory() throws Exception {
         final SqlSessionFactoryBean factory = new SqlSessionFactoryBean();
-        factory.setDataSource(this.initDataSource());// 初始化数据库
+        // 初始化数据库
+        factory.setDataSource(this.initDataSource());
         factory.setFailFast(true);
-        factory.setTypeAliasesPackage("com.xiaoyu.modules.biz");// 设置别名包
+        // 设置别名包
+        factory.setTypeAliasesPackage("com.xiaoyu.modules.biz");
         final ResourcePatternResolver resolver = new PathMatchingResourcePatternResolver();
-        factory.setMapperLocations(resolver.getResources("mappers/modules/biz/**/*Dao.xml"));// 设置mapper映射路径
-        factory.setConfigLocation(new ClassPathResource("mybatis-config.xml"));// 获取mybatis.xml
+        // 设置mapper映射路径
+        factory.setMapperLocations(resolver.getResources("mappers/modules/biz/**/*Dao.xml"));
+        // 获取mybatis.xml
+        factory.setConfigLocation(new ClassPathResource("mybatis-config.xml"));
         return factory.getObject();
     }
 

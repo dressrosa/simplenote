@@ -3,7 +3,6 @@
  */
 package com.xiaoyu.modules.biz.user.service;
 
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -18,7 +17,6 @@ import org.springframework.context.annotation.Primary;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import com.alibaba.fastjson.JSON;
 import com.github.pagehelper.Page;
 import com.github.pagehelper.PageHelper;
 import com.xiaoyu.common.base.BaseService;
@@ -30,7 +28,7 @@ import com.xiaoyu.common.utils.StringUtil;
 import com.xiaoyu.common.utils.UserUtils;
 import com.xiaoyu.maple.core.MapleUtil;
 import com.xiaoyu.modules.biz.message.entity.Message;
-import com.xiaoyu.modules.biz.message.service.MessageHandler;
+import com.xiaoyu.modules.biz.message.service.api.IMessageService;
 import com.xiaoyu.modules.biz.user.dao.FollowDao;
 import com.xiaoyu.modules.biz.user.dao.LoginRecordDao;
 import com.xiaoyu.modules.biz.user.dao.UserAttrDao;
@@ -42,6 +40,9 @@ import com.xiaoyu.modules.biz.user.entity.UserAttr;
 import com.xiaoyu.modules.biz.user.service.api.IUserService;
 import com.xiaoyu.modules.biz.user.vo.FollowVo;
 import com.xiaoyu.modules.biz.user.vo.UserVo;
+import com.xiaoyu.modules.constant.BizAction;
+import com.xiaoyu.modules.constant.BizType;
+import com.xiaoyu.modules.constant.MsgType;
 import com.xiaoyu.modules.constant.NumCountType;
 
 /**
@@ -59,9 +60,18 @@ public class UserServiceImpl extends BaseService<UserDao, User> implements IUser
     @Autowired
     private LoginRecordDao userRecordDao;
 
+    @Autowired
+    private UserAttrDao userAttrDao;
+
+    @Autowired
+    private FollowDao followDao;
+
+    @Autowired
+    private IMessageService messageService;
+
     private Map<String, Object> user2Map(User u) {
         return MapleUtil.wrap(u)
-                .rename("id", "userId")
+                .rename("uuid", "userId")
                 .skip("password")
                 .skip("sex")
                 .skip("loginName")
@@ -81,70 +91,44 @@ public class UserServiceImpl extends BaseService<UserDao, User> implements IUser
         return u;
     }
 
-    @Autowired
-    private MessageHandler msgHandler;
-
-    // 发送消息
-    private void sendMsg(String userId, int type, String bizId, int bizType, int bizAction, String content,
-            String reply) {
-        Message msg = new Message();
-        msg.setSenderId(userId)
-                .setType(type)
-                .setBizId(bizId)
-                .setBizType(bizType)
-                .setBizAction(bizAction);
-        if (content != null) {
-            msg.setContent(content);
-        }
-        if (reply != null) {
-            msg.setReply(reply);
-        }
-        try {
-            this.msgHandler.produce(JSON.toJSONString(msg));
-        } catch (final Exception e) {
-            LOG.error(e.toString());
-            // do nothing
-        }
-
-    }
-
     @Override
     public String login(HttpServletRequest request, String loginName, String password) {
-        HttpSession session = request.getSession(false);
         ResponseMapper mapper = ResponseMapper.createMapper();
-        if (session != null) {
-            @SuppressWarnings("unchecked")
-            Map<String, Object> map = (Map<String, Object>) session.getAttribute(request.getHeader("token"));
-            // 3hours
-            session.setMaxInactiveInterval(60 * 60 * 3);
-            if (map != null) {
-                return mapper.data(map).resultJson();
-            }
-        }
         if (StringUtil.isAnyBlank(password, loginName)) {
             return mapper.code(ResponseCode.ARGS_ERROR.statusCode())
                     .message("姓名和密码不能为空")
                     .resultJson();
         }
+        HttpSession session = request.getSession(false);
+        if (session != null) {
+            @SuppressWarnings("unchecked")
+            Map<String, Object> map = (Map<String, Object>) session.getAttribute(request.getHeader("token"));
+            // 3hours
+            session.setMaxInactiveInterval(3600 * 3);
+            if (map != null) {
+                return mapper.data(map).resultJson();
+            }
+        }
 
         User user = new User();
         user.setLoginName(loginName.trim());
         user = this.getForLogin(user);
-        if (StringUtil.isBlank(user.getId()) || !Md5Utils.md5(password.trim()).equalsIgnoreCase(user.getPassword())) {
+        if (user.getId() == null || !Md5Utils.md5(password.trim()).equalsIgnoreCase(user.getPassword())) {
             return mapper.code(ResponseCode.ARGS_ERROR.statusCode())
                     .message("用户名或密码不正确")
                     .resultJson();
         }
+        // 消去密码
         user.setPassword(null);
         // 登录名存入session
-        HttpSession session1 = request.getSession(true);
+        HttpSession tsession = request.getSession(true);
         // 3h
-        session1.setMaxInactiveInterval(60 * 60 * 3);
+        tsession.setMaxInactiveInterval(3600 * 3);
         // 用户id和密码和当前时间生成的md5用于token
         String token = Md5Utils.md5(user.getId() + password + System.currentTimeMillis());
-        session1.setAttribute(token, user);
+        tsession.setAttribute(token, user);
         // 不管怎么设置过期时间 都没用 暂不知道为撒
-        // session1.setMaxInactiveInterval(2060);
+        // tsession.setMaxInactiveInterval(2060);
         Map<String, Object> result = this.user2Map(user);
         result.put("token", token);
         return mapper.data(result).resultJson();
@@ -152,12 +136,12 @@ public class UserServiceImpl extends BaseService<UserDao, User> implements IUser
 
     @Override
     public String loginRecord(HttpServletRequest request, String userId, String device) {
-        String loginIp = request.getRemoteHost();
+        final String loginIp = request.getRemoteHost();
         LoginRecord record = new LoginRecord();
         record.setUserId(userId)
                 .setLoginIp(loginIp)
                 .setDevice(device)
-                .setId(IdGenerator.uuid());
+                .setUuid(IdGenerator.uuid());
         this.userRecordDao.insert(record);
         return null;
     }
@@ -166,16 +150,13 @@ public class UserServiceImpl extends BaseService<UserDao, User> implements IUser
     public String userDetail(HttpServletRequest request, String userId) {
         ResponseMapper mapper = ResponseMapper.createMapper();
         User user = new User();
-        user.setId(userId);
+        user.setUuid(userId);
         UserVo u = this.userDao.getVo(user);
         if (u == null) {
             return mapper.code(ResponseCode.NO_DATA.statusCode()).resultJson();
         }
         return mapper.data(this.user2Map(u)).resultJson();
     }
-
-    @Autowired
-    private UserAttrDao userAttrDao;
 
     @Transactional(readOnly = false, rollbackFor = RuntimeException.class)
     @Override
@@ -188,24 +169,32 @@ public class UserServiceImpl extends BaseService<UserDao, User> implements IUser
 
         if (this.userDao.isExist(user) > 0) {
             return mapper.code(ResponseCode.EXIST.statusCode())
-                    .message("此账号早已注册")
+                    .message("此账号已存在")
                     .resultJson();
         }
-        user.setId(IdGenerator.uuid());
+        user.setUuid(IdGenerator.uuid());
         try {
             if (this.userDao.insert(user) > 0) {
+                //用户初始化数据
                 UserAttr attr = new UserAttr();
-                attr.setUserId(user.getId());
+                attr.setUserId(user.getUuid());
                 this.userAttrDao.insert(attr);
                 // 消息推送
-                this.sendMsg(user.getId(), 2, user.getId(), 1, 0, "很高兴与您相识,希望以后的日子见字如面", null);
+                this.messageService.sendMsgEvent(new Message()
+                        .setSenderId(user.getUuid())
+                        .setReceiverId(user.getUuid())
+                        .setType(MsgType.NOTICE.statusCode())
+                        .setBizId(user.getUuid())
+                        .setBizType(BizType.USER.statusCode())
+                        .setBizAction(BizAction.NONE.statusCode())
+                        .setContent("很高兴与您相识,希望以后的日子见字如面")
+                        .setReply(null));
                 return mapper.resultJson();
             }
         } catch (RuntimeException e) {
             LOG.error(e.toString());
             throw e;
         }
-
         return mapper.code(ResponseCode.FAILED.statusCode())
                 .message("抱歉,注册没成功")
                 .resultJson();
@@ -221,7 +210,7 @@ public class UserServiceImpl extends BaseService<UserDao, User> implements IUser
                     .resultJson();
         }
         User temp = new User();
-        temp.setId(userId);
+        temp.setUuid(u.getUuid());
         switch (flag) {
         // 修改头像
         case 0:
@@ -287,9 +276,7 @@ public class UserServiceImpl extends BaseService<UserDao, User> implements IUser
 
     }
 
-    @Autowired
-    private FollowDao followDao;
-
+    @Transactional(readOnly = false, rollbackFor = RuntimeException.class)
     @Override
     public String followUser(HttpServletRequest request, String userId, String followTo) {
         ResponseMapper mapper = ResponseMapper.createMapper();
@@ -299,7 +286,7 @@ public class UserServiceImpl extends BaseService<UserDao, User> implements IUser
                     .message("您未登录或登录失效,请重新登录")
                     .resultJson();
         }
-        if (!u.getId().equals(userId)) {
+        if (!u.getUuid().equals(userId)) {
             return mapper.code(ResponseCode.ARGS_ERROR.statusCode())
                     .resultJson();
         }
@@ -309,7 +296,7 @@ public class UserServiceImpl extends BaseService<UserDao, User> implements IUser
                     .resultJson();
         }
         User t = new User();
-        t.setId(followTo);
+        t.setUuid(followTo);
         if (this.userDao.isExist(t) < 1) {
             return mapper.code(ResponseCode.ARGS_ERROR.statusCode())
                     .message("所关注用户不存在")
@@ -323,8 +310,8 @@ public class UserServiceImpl extends BaseService<UserDao, User> implements IUser
         Follow f = new Follow();
         f.setUserId(followTo)
                 .setFollowerId(userId)
-                .setId(IdGenerator.uuid());
-
+                .setUuid(IdGenerator.uuid());
+        boolean isSendMsg = false;
         try {
             if (this.followDao.isExist(f) > 0) {
                 this.followDao.update(f);
@@ -332,16 +319,29 @@ public class UserServiceImpl extends BaseService<UserDao, User> implements IUser
                 this.followDao.insert(f);
             }
             this.userAttrDao.addNum(NumCountType.FollowerNum.ordinal(), 1, f.getUserId());
-            this.sendMsg(userId, 0, f.getId(), 1, 8, null, null);
-        } catch (final RuntimeException e) {
+            isSendMsg = true;
+        } catch (RuntimeException e) {
             LOG.error(e.toString());
             throw e;
         }
-        Map<String, String> map = new HashMap<>();
+        Map<String, String> map = new HashMap<>(2);
         map.put("isFollow", "1");
+
+        if (isSendMsg) {
+            this.messageService.sendMsgEvent(new Message()
+                    .setSenderId(userId)
+                    .setReceiverId(followTo)
+                    .setType(MsgType.NEWS.statusCode())
+                    .setBizId(f.getUuid())
+                    .setBizType(BizType.USER.statusCode())
+                    .setBizAction(BizAction.FOLLOW.statusCode())
+                    .setContent(null)
+                    .setReply(null));
+        }
         return mapper.data(map).resultJson();
     }
 
+    @Transactional(readOnly = false, rollbackFor = RuntimeException.class)
     @Override
     public String cancelFollow(HttpServletRequest request, String userId, String followTo) {
         ResponseMapper mapper = ResponseMapper.createMapper();
@@ -351,26 +351,27 @@ public class UserServiceImpl extends BaseService<UserDao, User> implements IUser
                     .message("未登录或登录失效,请重新登录")
                     .resultJson();
         }
-        if (!u.getId().equals(userId)) {
+        if (!u.getUuid().equals(userId)) {
             return mapper.code(ResponseCode.ARGS_ERROR.statusCode())
                     .resultJson();
         }
         User t = new User();
-        t.setId(followTo);
+        t.setUuid(followTo);
         if (this.userDao.isExist(t) < 1) {
             return mapper.code(ResponseCode.ARGS_ERROR.statusCode())
                     .message("所关注用户不存在")
                     .resultJson();
         }
+
         try {
-            this.followDao.cancelLove(followTo, userId);
+            this.followDao.cancelFollow(followTo, userId);
             this.userAttrDao.addNum(NumCountType.FollowerNum.ordinal(), -1, followTo);
-        } catch (final RuntimeException e) {
+        } catch (RuntimeException e) {
             LOG.error(e.toString());
             throw e;
         }
 
-        Map<String, String> map = new HashMap<>();
+        Map<String, String> map = new HashMap<>(2);
         map.put("isFollow", "0");
         return mapper.data(map).resultJson();
     }
@@ -381,16 +382,14 @@ public class UserServiceImpl extends BaseService<UserDao, User> implements IUser
         String pageNum = request.getHeader("pageNum");
         Follow f = new Follow();
         f.setUserId(userId);
-        List<FollowVo> result = new ArrayList<>();
         PageHelper.startPage(Integer.valueOf(pageNum), 10);
         Page<FollowVo> page = (Page<FollowVo>) this.followDao.findList(f);
-        if (page != null) {
-            result = page.getResult();
-            if (result != null && result.size() > 0) {
-                mapper.data(result);
-            }
+        List<FollowVo> list = page.getResult();
+
+        if (list == null || list.isEmpty()) {
+            return mapper.code(ResponseCode.NO_DATA.statusCode()).resultJson();
         }
-        return mapper.data(result).resultJson();
+        return mapper.data(list).resultJson();
     }
 
     @Override
@@ -399,23 +398,22 @@ public class UserServiceImpl extends BaseService<UserDao, User> implements IUser
         String pageNum = request.getHeader("pageNum");
         Follow f = new Follow();
         f.setFollowerId(userId);
-        List<FollowVo> result = new ArrayList<>();
+
         PageHelper.startPage(Integer.valueOf(pageNum), 10);
         Page<FollowVo> page = (Page<FollowVo>) this.followDao.findList(f);
-        if (page != null) {
-            result = page.getResult();
-            if (result != null && result.size() > 0) {
-                mapper.data(result);
-            }
+        List<FollowVo> list = page.getResult();
+
+        if (list == null || list.isEmpty()) {
+            return mapper.code(ResponseCode.NO_DATA.statusCode()).resultJson();
         }
-        return mapper.data(result).resultJson();
+        return mapper.data(list).resultJson();
     }
 
     @Override
     public String isFollowed(HttpServletRequest request, String userId, String followTo) {
         ResponseMapper mapper = ResponseMapper.createMapper();
         int num = this.followDao.isFollow(userId, followTo);
-        Map<String, String> map = new HashMap<>();
+        Map<String, String> map = new HashMap<>(2);
         map.put("isFollow", "" + num);
         return mapper.data(map).resultJson();
     }
@@ -423,10 +421,8 @@ public class UserServiceImpl extends BaseService<UserDao, User> implements IUser
     @Override
     public String commonNums(HttpServletRequest request, String userId) {
         ResponseMapper mapper = ResponseMapper.createMapper();
-        UserAttr t = new UserAttr();
-        t.setUserId(userId);
-        UserAttr attr = this.userAttrDao.get(t);
-        Map<String, Object> map = new HashMap<>();
+        UserAttr attr = this.userAttrDao.get(new UserAttr().setUserId(userId));
+        Map<String, Object> map = new HashMap<>(4);
         if (attr != null) {
             map.put("articleNum", attr.getArticleNum());
             map.put("collectNum", attr.getCollectNum());

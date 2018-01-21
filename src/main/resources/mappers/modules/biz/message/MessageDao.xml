@@ -3,12 +3,12 @@
 <mapper namespace="com.xiaoyu.modules.biz.message.dao.MessageDao">
     <sql id="Base_Column_List">
         a.id as id,
+        a.uuid as uuid,
         a.type as type,
         a.sender_id as senderId,
         a.receiver_id as reveiverId,
         a.biz_type as bizType,
-        a.biz_action as
-        bizAction,
+        a.biz_action as bizAction,
         a.content as content ,
         a.reply as reply,
         a.is_read as isRead,
@@ -24,35 +24,45 @@
         and a.biz_id = #{bizId}
     </select>
 
+    <select id="getByUuid" parameterType="java.lang.String"
+        resultType="com.xiaoyu.modules.biz.message.entity.Message">
+        select
+        <include refid="Base_Column_List" />
+        from biz_message as a
+        where a.del_flag=0 and a.uuid=#{uuid}
+    </select>
+
     <select id="findVoByList" parameterType="com.xiaoyu.modules.biz.message.entity.Message"
         resultType="com.xiaoyu.modules.biz.message.vo.MessageVo">
         select
-        a.id as messageId,
+        a.uuid as messageId,
         a.type as type,
         a.sender_id as senderId,
         a.receiver_id as reveiverId,
         a.biz_type as bizType,
         a.biz_id as bizId,
-        a.biz_action as
-        bizAction,
-        a.content as content ,
+        a.biz_action as bizAction,
+        a.content as content,
         a.reply as reply,
         a.is_read as isRead,
-        a.create_date as createDate
+        a.create_date as createDate,
+        u.nickname as senderName
         from biz_message as a
-        where a.del_flag =0
-        and
-        a.receiver_id =
-        #{receiverId}
+        left join biz_user as u
+        on u.uuid=a.sender_id
+        where 
+        a.receiver_id = #{receiverId}
+        and a.del_flag =0
         <if test="type != null">
             and a.type=#{type}
         </if>
     </select>
+    
     <insert id="insert" parameterType="com.xiaoyu.modules.biz.message.entity.Message">
         insert into biz_message
         <trim prefix="(" suffix=")" suffixOverrides=",">
-            <if test="id != null">
-                id,
+            <if test="uuid != null">
+                uuid,
             </if>
             <if test="type != null">
                 type,
@@ -83,8 +93,8 @@
             </if>
         </trim>
         <trim prefix="values (" suffix=")" suffixOverrides=",">
-            <if test="id != null">
-                #{id},
+            <if test="uuid != null">
+                #{uuid},
             </if>
             <if test="type != null">
                 #{type},
@@ -117,36 +127,39 @@
     </insert>
 
     <update id="addNum">
-        update biz_message set
+        update biz_message
+        set
         is_read=#{isRead}
-        where user_id=
-        #{userId}
+        where
+        user_id= #{userId}
     </update>
 
     <update id="delete">
         update biz_message
         set
         del_flag=1
-        where id=#{id}
+        where 
+        uuid=#{uuid}
+        and receiver_id =#{reveiverId}
     </update>
 
     <update id="read">
         update biz_message set
         is_read = 1
-        where id in
+        where uuid in
         <foreach collection="list" index="index" item="item"
             open="(" separator="," close=")">
             #{item}
         </foreach>
     </update>
+    
     <select id="getUnreadNumBefore1Hour" resultType="java.lang.Integer">
-        select count(*)
+        select
+        count(*)
         from biz_message
-        where receiver_id =
-        #{receiverId}
-        and is_read=0 and
-        del_flag=0
-        and
-        TIMESTAMPDIFF(HOUR,create_date,NOW())&lt;2
+        where receiver_id = #{receiverId}
+        and is_read=0 
+        and del_flag=0
+        and TIMESTAMPDIFF(HOUR,create_date,NOW())&lt;2
     </select>
 </mapper>

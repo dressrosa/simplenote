@@ -20,16 +20,16 @@ import com.xiaoyu.modules.biz.message.service.MessageHandler;
  * @description 启动时执行消费者进行消费
  */
 @Component
-public class ConsumerListener implements ApplicationListener<ApplicationReadyEvent> {
+public class MqConsumerListener implements ApplicationListener<ApplicationReadyEvent> {
 
-    private final static Logger LOG = LoggerFactory.getLogger(ConsumerListener.class);
+    private final static Logger LOG = LoggerFactory.getLogger(MqConsumerListener.class);
     @Autowired
     private MessageHandler msgHandler;
 
     @Override
     public void onApplicationEvent(final ApplicationReadyEvent event) {
         final MessageHandler handler = this.msgHandler;
-        handler.consume(); 
+        handler.consume();
         LOG.info("消费者已启动,进行消息处理...");
     }
 

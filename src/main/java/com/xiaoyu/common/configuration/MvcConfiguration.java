@@ -13,6 +13,7 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.core.Ordered;
 import org.springframework.http.converter.HttpMessageConverter;
 import org.springframework.http.converter.StringHttpMessageConverter;
+import org.springframework.scheduling.annotation.EnableScheduling;
 import org.springframework.web.multipart.MultipartResolver;
 import org.springframework.web.multipart.commons.CommonsMultipartResolver;
 import org.springframework.web.servlet.config.annotation.EnableWebMvc;
@@ -33,10 +34,12 @@ import com.alibaba.fastjson.support.spring.FastJsonHttpMessageConverter;
  *         摘自spring官方Blog:http://spring.io/blog/2013/11/01/exception
  *         -handling-in-spring-mvc
  */
+/*
+ * @EnableWebMvc // Optionally setup Spring MVC defaults if you aren’t doing so
+ * elsewhere
+ */
 @Configuration
-// @EnableWebMvc
-// Optionally setup Spring MVC defaults if you aren’t doing so elsewhere4
-// @ComponentScan(basePackages = "com.xiaoyu.modules.sys.controller")
+@EnableScheduling
 public class MvcConfiguration extends WebMvcConfigurerAdapter {
 
     private final static Logger logger = Logger.getLogger(MvcConfiguration.class);
@@ -47,17 +50,24 @@ public class MvcConfiguration extends WebMvcConfigurerAdapter {
     private static final String[] CLASSPATH_RESOURCE_LOCATIONS = { "classpath:/META-INF/resources/",
             "classpath:/resources/", "classpath:/static/", "classpath:/public/" };
 
-    // 前缀
+    /**
+     * 前缀
+     */
     @Value("${spring.mvc.view.prefix}")
     private String prefix;
-    // 后缀
+    /**
+     * 后缀
+     */
     @Value("${spring.mvc.view.suffix}")
     private String suffix;
-
-    // 图片目录
+    /**
+     * 图片目录
+     */
     @Value("${img.imagesDir}")
     private String imagesDir;
-    // 图片磁盘
+    /**
+     * 图片磁盘
+     */
     @Value("${img.disk}")
     private String disk;
 
@@ -76,9 +86,12 @@ public class MvcConfiguration extends WebMvcConfigurerAdapter {
         // mappings.setProperty("RuntimeException", "runtimeError");
         // r.setExceptionMappings(mappings); // None by default
         // 只能拦截Exception，404错误是拦截不了
-        r.setDefaultErrorView("common/500"); // 产生exception后跳转的页面
-        r.setExceptionAttribute("ex"); // Default is "exception"
-        r.setWarnLogCategory("info"); // No default//TODO 未明白配置
+        // 产生exception后跳转的页面
+        r.setDefaultErrorView("common/500");
+        // Default is "exception"
+        r.setExceptionAttribute("ex");
+        // No default//TODO 未明白配置
+        r.setWarnLogCategory("info");
         MvcConfiguration.logger.info("mvc配置:" + r.getOrder());
         return r;
     }
@@ -88,7 +101,6 @@ public class MvcConfiguration extends WebMvcConfigurerAdapter {
      */
     @Override
     public void addResourceHandlers(ResourceHandlerRegistry registry) {
-        // TODO Auto-generated method stub
         if (!registry.hasMappingForPattern("/webjars/**")) {
             registry.addResourceHandler("/webjars/**").addResourceLocations("classpath:/META-INF/resources/webjars/");
         }
@@ -120,9 +132,9 @@ public class MvcConfiguration extends WebMvcConfigurerAdapter {
      */
     @Override
     public void configureMessageConverters(List<HttpMessageConverter<?>> converters) {
-        final StringHttpMessageConverter converter1 = new StringHttpMessageConverter(Charset.forName("UTF-8"));
+        StringHttpMessageConverter converter1 = new StringHttpMessageConverter(Charset.forName("UTF-8"));
         // alibaba json转化
-        final FastJsonHttpMessageConverter converter2 = new FastJsonHttpMessageConverter();
+        FastJsonHttpMessageConverter converter2 = new FastJsonHttpMessageConverter();
         converter2.setFeatures(SerializerFeature.UseISO8601DateFormat);
         converter2.setFeatures(SerializerFeature.WriteMapNullValue);
         converter2.setFeatures(SerializerFeature.WriteNullStringAsEmpty);
@@ -135,21 +147,14 @@ public class MvcConfiguration extends WebMvcConfigurerAdapter {
      */
     @Override
     public void configureViewResolvers(ViewResolverRegistry registry) {
-        // TODO Auto-generated method stub
         super.configureViewResolvers(registry);
+        // 设置多个视图解析器是没用的
         final InternalResourceViewResolver resolver = new InternalResourceViewResolver();
         resolver.setPrefix(this.prefix);
         resolver.setSuffix(this.suffix);
         resolver.setOrder(0);
         registry.viewResolver(resolver);
-        // 设置多个视图解析器是没用的
-        // InternalResourceViewResolver resolver1= new
-        // InternalResourceViewResolver();
-        // resolver1.setPrefix("/WEB-INF/");
-        // resolver1.setSuffix(".html");
-        // resolver1.setViewNames("html*");
-        // resolver1.setOrder(1);
-        // registry.viewResolver(resolver1);
+
     }
 
     /**

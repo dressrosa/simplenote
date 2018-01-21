@@ -113,7 +113,7 @@ public interface IArticleService {
     public String addCollect(HttpServletRequest request, String articleId, Integer isCollect);
 
     /**
-     * 收藏
+     * 评论
      * 
      * @param request
      * @param articleId
@@ -121,6 +121,16 @@ public interface IArticleService {
      * @return
      */
     public String comment(HttpServletRequest request, String articleId, String content);
+    
+    /**
+     * 回复
+     * 
+     * @param request
+     * @param commentId
+     * @param replyContent
+     * @return
+     */
+    public String reply(HttpServletRequest request, String commentId, String replyContent);
 
     /**
      * 评论列表
@@ -162,10 +172,8 @@ public interface IArticleService {
     /**
      * 同步到es
      * 
-     * @param request
-     * @param password
      * @return
      */
-    public String synElastic(HttpServletRequest request, String password);
+    public void synElastic();
 
 }

@@ -14,17 +14,39 @@
         status
         from biz_article_collect
         where
-        user_id
-        =
-        #{userId} and
+        user_id = #{userId}
+        and
         article_id = #{articleId}
     </select>
+
+    <select id="findListByBatch" parameterType="java.util.List"
+        resultType="com.xiaoyu.modules.biz.article.entity.ArticleCollect">
+        select
+        a.article_id as articleId,
+        a.user_id as userId,
+        a.status as
+        status
+        from biz_article_collect as a
+        where
+        a.article_id in
+        <foreach collection="list" item="item" index="index"
+            open="(" close=")" separator=",">
+            #{item.articleId}
+        </foreach>
+        and a.user_id in
+        <foreach collection="list" item="item" index="index"
+            open="(" close=")" separator=",">
+            #{item.userId}
+        </foreach>
+        and a.del_flag=0
+    </select>
+
     <insert id="insert"
         parameterType="com.xiaoyu.modules.biz.article.entity.ArticleCollect">
         insert into biz_article_collect
         <trim prefix="(" suffix=")" suffixOverrides=",">
-            <if test="id != null">
-                id,
+            <if test="uuid != null">
+                uuid,
             </if>
             <if test="articleId != null">
                 article_id,
@@ -34,8 +56,8 @@
             </if>
         </trim>
         <trim prefix="values (" suffix=")" suffixOverrides=",">
-            <if test="id != null">
-                #{id},
+            <if test="uuid != null">
+                #{uuid},
             </if>
             <if test="articleId != null">
                 #{articleId},
@@ -55,7 +77,8 @@
                 status = #{status},
             </if>
         </set>
-        where article_id = #{articleId} and user_id =#{userId}
+        where article_id = #{articleId}
+        and user_id =#{userId}
     </update>
 
     <select id="isExist"
@@ -63,8 +86,8 @@
         resultType="java.lang.Integer">
         select count(*) from biz_article_collect
         where
-        article_id =
-        #{articleId} and user_id =#{userId}
+        article_id =#{articleId}
+        and user_id =#{userId}
     </select>
 
     <select id="getForUpdate"

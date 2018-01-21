@@ -18,8 +18,10 @@ public class BaseEntity implements Serializable {
     /**
      * 唯一主键
      */
-    private String id;
-
+    private Long id;
+    
+    private String uuid;
+    
     /**
      * 创建时间
      */
@@ -35,13 +37,21 @@ public class BaseEntity implements Serializable {
      */
     private int delFlag;
 
-    public String getId() {
+    public Long getId() {
         return this.id;
     }
 
-    public BaseEntity setId(String id) {
+    public BaseEntity setId(long id) {
         this.id = id;
         return this;
+    }
+
+    public String getUuid() {
+        return uuid;
+    }
+
+    public void setUuid(String uuid) {
+        this.uuid = uuid;
     }
 
     public Date getCreateDate() {

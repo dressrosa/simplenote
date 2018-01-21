@@ -28,7 +28,6 @@ public class MessageHandler extends DefaultAbstractQueueTemplate {
     private ArticleDao articleDao;
     @Autowired
     private UserDao userDao;
-
     @Autowired
     private FollowDao followDao;
 
@@ -38,13 +37,13 @@ public class MessageHandler extends DefaultAbstractQueueTemplate {
         if (msg == null) {
             return;
         }
-        final User u = this.userDao.getById(msg.getSenderId());
+        final User u = this.userDao.getByUuid(msg.getSenderId());
         switch (msg.getType()) {
         // 消息
         case 0:
             // 文章
             if (msg.getBizType() == 0) {
-                final Article ar = this.articleDao.getById(msg.getBizId());
+                final Article ar = this.articleDao.getByUuid(msg.getBizId());
                 if (ar == null) {
                     return;
                 }
@@ -77,9 +76,9 @@ public class MessageHandler extends DefaultAbstractQueueTemplate {
                 }
                 // 评论@
                 else if (msg.getBizAction() == 5) {
-
+                    //TODO
                 }
-                // 赞评论
+                // 评论点赞
                 else if (msg.getBizAction() == 6) {
                     msg.setContent("用户" + u.getNickname() + "在文章“" + ar.getTitle() + "”" + "中赞了你的评论“" + msg.getContent()
                             + "”");
@@ -89,7 +88,7 @@ public class MessageHandler extends DefaultAbstractQueueTemplate {
             else if (msg.getBizType() == 1) {
                 // 关注人
                 if (msg.getBizAction() == 8) {
-                    final Follow fo = this.followDao.getById(msg.getBizId());
+                    final Follow fo = this.followDao.getByUuid(msg.getBizId());
                     if (fo != null) {
                         msg.setReceiverId(fo.getUserId());
                     }
@@ -105,7 +104,7 @@ public class MessageHandler extends DefaultAbstractQueueTemplate {
         case 2:
             // 文章
             if (msg.getBizType() == 0) {
-                final Article ar = this.articleDao.getById(msg.getBizId());
+                final Article ar = this.articleDao.getByUuid(msg.getBizId());
                 if (ar == null) {
                     return;
                 }
@@ -118,7 +117,7 @@ public class MessageHandler extends DefaultAbstractQueueTemplate {
         default:
             break;
         }
-        msg.setId(IdGenerator.uuid());
+        msg.setUuid(IdGenerator.uuid());
         this.msgDao.insert(msg);
     }
 }

@@ -162,6 +162,18 @@ li a {
 	background: rgba(255, 255, 255, 0.5);
 }
 
+.avatar {
+	cursor: pointer;
+	border-radius: 50%;
+	height: 100px;
+	width: 100px;
+}
+
+.small {
+	height: 50px;
+	width: 50px;
+}
+
 .avatar_wrapper {
 	position: relative;
 	height: 100px;
@@ -377,17 +389,19 @@ li a {
 	top: 5px;
 	font-size: 12px;
 	color: #848484;
-	display:none;
+	display: none;
 }
+
 .list-group-item:hover .group_item_edit_part {
-    display: initial;
+	display: initial;
 }
+
 .edit_part_label {
 	margin: 2px;
 	cursor: pointer;
 }
 
-.group_item_p:hover,.edit_part_label:hover {
+.group_item_p:hover, .edit_part_label:hover {
 	color: #b7b7b7;
 }
 
@@ -1219,18 +1233,6 @@ white-space:nowrap;            娑撳秵宕茬悰锟� */
 	margin: 1px;
 	padding: 10px;
 	/* display: inline-block; */
-}
-
-.avatar {
-	cursor: pointer;
-	border-radius: 50%;
-	height: 100px;
-	width: 100px;
-}
-
-.small {
-	height: 50px;
-	width: 50px;
 }
 
 .comment_bar {

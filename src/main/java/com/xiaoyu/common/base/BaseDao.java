@@ -29,6 +29,10 @@ public interface BaseDao<T extends BaseEntity> {
     public T get(T t);
 
     public T getById(@Param("id") String id);
+    
+    public T getById(@Param("id") long id);
+    
+    public T getByUuid(@Param("uuid") String uuid);
 
     public int isExist(T t);
 

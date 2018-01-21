@@ -1,5 +1,10 @@
 package com.xiaoyu.common.base;
 
+/**
+ * @author hongyu
+ * @date 2018-01
+ * @description 请求返回码
+ */
 public enum ResponseCode {
 
     /**
@@ -23,7 +28,14 @@ public enum ResponseCode {
      */
     EXIST(4, "data exist"),
 
-    LOGIN_INVALIDATE(20001, "login expire"), REQ_NOACCESS(20002, "no access");
+    /**
+     * 登陆失效
+     */
+    LOGIN_INVALIDATE(20001, "login expire"),
+    /**
+     * 没有权限
+     */
+    REQ_NOACCESS(20002, "no access");
 
     private int code;
     private String message;

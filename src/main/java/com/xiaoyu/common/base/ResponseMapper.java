@@ -19,7 +19,7 @@ import com.alibaba.fastjson.serializer.ValueFilter;
  */
 public class ResponseMapper {
 
-    private final static Logger logger = LoggerFactory.getLogger(ResponseMapper.class);
+    private final static Logger LOG = LoggerFactory.getLogger(ResponseMapper.class);
     /**
      * 默认为成功
      */
@@ -61,7 +61,9 @@ public class ResponseMapper {
         public static final ResponseMapper MAPPER = new ResponseMapper();
     }
 
-    // 返回单例
+    /**
+     * 返回单例
+     */
     public static final ResponseMapper createMapper() {
         return MapperInstance.MAPPER;
     }
@@ -70,16 +72,19 @@ public class ResponseMapper {
     // return new ResponseMapper();
     // }
 
-    // 返回json数据
+    /**
+     * 返回json数据
+     */
     public String resultJson() {
-        final String result = JSON.toJSONString(this.getLocalMap(), ResponseMapper.FILTER,
+        final Map<String, Object> localMap = this.getLocalMap();
+        final String result = JSON.toJSONString(localMap, ResponseMapper.FILTER,
                 SerializerFeature.WriteNullStringAsEmpty);
-        logger.info("code:" + this.getLocalMap().get("code"));
+        LOG.info("code:{},message:{}",localMap.get("code"),localMap.get("message"));
         // getLocalMap().clear();
-        this.getLocalMap().put(ResponseMapper.CODE, ResponseCode.SUCCESS.statusCode());
-        this.getLocalMap().put(ResponseMapper.MESSAGE, "");
-        this.getLocalMap().put(ResponseMapper.COUNT, "");
-        this.getLocalMap().put(ResponseMapper.DATA, "");
+        localMap.put(ResponseMapper.CODE, ResponseCode.SUCCESS.statusCode());
+        localMap.put(ResponseMapper.MESSAGE, "");
+        localMap.put(ResponseMapper.COUNT, "");
+        localMap.put(ResponseMapper.DATA, "");
         return result;
     }
 
@@ -88,19 +93,19 @@ public class ResponseMapper {
     }
 
     public ResponseMapper code(int code) {
-        final int code1 = code;
+        final int tcode = code;
         final Map<String, Object> dataMap = this.getLocalMap();
-        dataMap.put(ResponseMapper.CODE, code1);
+        dataMap.put(ResponseMapper.CODE, tcode);
         // 通用返回信息
-        if (ResponseCode.SUCCESS.statusCode() == code1) {
+        if (ResponseCode.SUCCESS.statusCode() == tcode) {
             dataMap.put(ResponseMapper.MESSAGE, ResponseCode.SUCCESS.statusMsg());
-        } else if (ResponseCode.ARGS_ERROR.statusCode() == code1) {
+        } else if (ResponseCode.ARGS_ERROR.statusCode() == tcode) {
             dataMap.put(ResponseMapper.MESSAGE, ResponseCode.ARGS_ERROR.statusMsg());
-        } else if (ResponseCode.FAILED.statusCode() == code1) {
+        } else if (ResponseCode.FAILED.statusCode() == tcode) {
             dataMap.put(ResponseMapper.MESSAGE, ResponseCode.FAILED.statusMsg());
-        } else if (ResponseCode.EXIST.statusCode() == code1) {
+        } else if (ResponseCode.EXIST.statusCode() == tcode) {
             dataMap.put(ResponseMapper.MESSAGE, ResponseCode.EXIST.statusMsg());
-        } else if (ResponseCode.NO_DATA.statusCode() == code1) {
+        } else if (ResponseCode.NO_DATA.statusCode() == tcode) {
             dataMap.put(ResponseMapper.MESSAGE, ResponseCode.NO_DATA.statusMsg());
         }
         return this;
@@ -110,8 +115,7 @@ public class ResponseMapper {
         if (message == null) {
             return this;
         }
-        final Map<String, Object> dataMap = this.getLocalMap();
-        dataMap.put(ResponseMapper.MESSAGE, message);
+        this.getLocalMap().put(ResponseMapper.MESSAGE, message);
         return this;
     }
 
@@ -119,8 +123,7 @@ public class ResponseMapper {
         if (count == null) {
             return this;
         }
-        final Map<String, Object> dataMap = this.getLocalMap();
-        dataMap.put(ResponseMapper.COUNT, count);
+        this.getLocalMap().put(ResponseMapper.COUNT, count);
         return this;
     }
 
@@ -128,8 +131,7 @@ public class ResponseMapper {
         if (data == null) {
             return this;
         }
-        final Map<String, Object> dataMap = this.getLocalMap();
-        dataMap.put(ResponseMapper.DATA, data);
+        this.getLocalMap().put(ResponseMapper.DATA, data);
         return this;
     }
 }

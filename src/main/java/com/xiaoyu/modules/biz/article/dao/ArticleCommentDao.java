@@ -23,7 +23,7 @@ public interface ArticleCommentDao extends BaseDao<ArticleComment> {
 
     List<ArticleCommentVo> findList(String articleId);
 
-    ArticleComment getForUpdate(@Param("id") String id);
+    ArticleComment getForUpdate(@Param("uuid") String uuid);
 
     CommentLike getLikeForUpdate(CommentLike t);
 
@@ -32,9 +32,11 @@ public interface ArticleCommentDao extends BaseDao<ArticleComment> {
     int insertLike(CommentLike t);
 
     int isLiked(CommentLike t);
-    
+
     int predo();
 
     CommentLike getLike(CommentLike t);
+
+    List<CommentLike> getLikes(List<CommentLike> list);
 
 }

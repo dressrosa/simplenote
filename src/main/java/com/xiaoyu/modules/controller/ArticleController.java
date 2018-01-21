@@ -141,6 +141,12 @@ public class ArticleController {
         return this.articleService.comment(request, articleId, content);
     }
 
+    @RequestMapping(value = "api/v1/article/{commentId}/reply", method = RequestMethod.POST)
+    public String reply(HttpServletRequest request, @PathVariable String commentId,
+            @RequestParam(required = true) String replyContent) {
+        return this.articleService.reply(request, commentId, replyContent);
+    }
+    
     @RequestMapping(value = "api/v1/article/{articleId}/new-comments", method = RequestMethod.GET)
     public String newComments(HttpServletRequest request, @PathVariable String articleId) {
         return this.articleService.newComments(request, articleId);
@@ -162,8 +168,4 @@ public class ArticleController {
         return this.articleService.search(request, keyword);
     }
 
-    @RequestMapping(value = "api/v1/article/syn-elastic", method = RequestMethod.GET)
-    public String synElastic(HttpServletRequest request, String password) {
-        return this.articleService.synElastic(request, password);
-    }
 }

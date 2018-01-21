@@ -128,7 +128,7 @@ public class UserController {
     }
 
     /**
-     * 编辑信息 flag 0 头像 1 签名 2 简介 content 3 昵称 修改后的内容
+     * 编辑信息 flag 0头像 1签名 2简介 3昵称 4背景图片
      * 
      * @return
      */
