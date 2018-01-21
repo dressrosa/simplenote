@@ -3,6 +3,8 @@
  */
 package com.xiaoyu.modules.biz.user.dao;
 
+import java.util.List;
+
 import org.apache.ibatis.annotations.Param;
 import org.springframework.stereotype.Repository;
 
@@ -20,5 +22,7 @@ public interface UserDao extends BaseDao<User> {
 
     public UserVo getVo(User user);
 
-    public UserVo getVoById(@Param("id") String id);
+    public UserVo getVoByUuid(@Param("uuid") String uuid);
+
+    public List<UserVo> findVoByUuid(List<String> userIdList);
 }

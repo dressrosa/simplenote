@@ -5,24 +5,17 @@ package com.xiaoyu.common.utils;
 
 import org.springframework.beans.BeansException;
 import org.springframework.beans.factory.DisposableBean;
-import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.ApplicationContextAware;
-import org.springframework.stereotype.Service;
+import org.springframework.stereotype.Component;
 
 /**
  * 注入applicationContext
  * 
  * @author xiaoyu 2016年3月18日
  */
-@EnableAutoConfiguration
-@Service
+@Component
 public class SpringBeanUtils implements ApplicationContextAware, DisposableBean {
-
-    // SpringContext;
-    // private SpringBeanUtils() {
-    //
-    // }
 
     private static ApplicationContext applicationContext = null;
 

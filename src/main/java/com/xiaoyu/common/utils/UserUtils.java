@@ -31,9 +31,10 @@ public class UserUtils {
         if (user == null) {
             return null;
         }
-        if (!userId.equals(user.getId())) {
+        if (!userId.equals(user.getUuid())) {
             return null;
         }
         return user;
     }
+    
 }

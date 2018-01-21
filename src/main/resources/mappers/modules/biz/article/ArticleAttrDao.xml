@@ -3,9 +3,9 @@
 <mapper namespace="com.xiaoyu.modules.biz.article.dao.ArticleAttrDao">
     <sql id="Base_Column_List">
         a.id as id,
+        a.uuid as uuid,
         a.article_id as articleId,
-        a.readNum as
-        readNum,
+        a.readNum as readNum,
         a.commentNum as commentNum
     </sql>
 
@@ -15,7 +15,8 @@
         select
         <include refid="Base_Column_List" />
         from biz_article_attr as a
-        where a.id = #{id} and a.del_flag=0
+        where a.uuid = #{uuid} and
+        a.del_flag=0
     </select>
 
     <!-- 分页查询用户信息 -->
@@ -24,15 +25,16 @@
         parameterType="com.xiaoyu.modules.biz.article.entity.ArticleAttr">
         select
         <include refid="Base_Column_List" />
-        from biz_article_attr as a where a.del_flag=0
+        from biz_article_attr as a 
+        where a.del_flag=0
     </select>
 
     <delete id="delete"
         parameterType="com.xiaoyu.modules.biz.article.entity.ArticleAttr">
         update biz_article_attr set
         del_flag=1
-        where id =
-        #{id}
+        where
+        uuid =#{uuid}
     </delete>
 
 
@@ -40,8 +42,8 @@
         parameterType="com.xiaoyu.modules.biz.article.entity.ArticleAttr">
         insert into biz_article_attr
         <trim prefix="(" suffix=")" suffixOverrides=",">
-            <if test="id != null">
-                id,
+            <if test="uuid != null">
+                uuid,
             </if>
             <if test="articleId != null">
                 article_id,
@@ -69,8 +71,8 @@
             </if>
         </trim>
         <trim prefix="values (" suffix=")" suffixOverrides=",">
-            <if test="id != null">
-                #{id},
+            <if test="uuid != null">
+                #{uuid},
             </if>
             <if test="articleId != null">
                 #{articleId},
@@ -125,8 +127,8 @@
         resultType="java.lang.Integer">
         select count(*) from biz_article_attr
         where del_flag=0
-        <if test="id != null">
-            and id=#{id}
+        <if test="uuid != null">
+            and uuid=#{uuid}
         </if>
         <if test="articleId != null">
             and article_id = #{articleId}

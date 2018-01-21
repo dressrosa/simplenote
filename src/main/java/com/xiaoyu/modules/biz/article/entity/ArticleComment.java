@@ -25,16 +25,18 @@ public class ArticleComment extends BaseEntity {
         return this.num;
     }
 
-    public void setNum(Integer num) {
+    public ArticleComment setNum(Integer num) {
         this.num = num;
+        return this;
     }
 
     public String getParentReplyerId() {
         return this.parentReplyerId;
     }
 
-    public void setParentReplyerId(String parentReplyerId) {
+    public ArticleComment setParentReplyerId(String parentReplyerId) {
         this.parentReplyerId = parentReplyerId;
+        return this;
     }
 
     public String getArticleId() {

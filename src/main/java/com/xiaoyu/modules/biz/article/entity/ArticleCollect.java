@@ -17,8 +17,9 @@ public class ArticleCollect extends BaseEntity {
         return this.status;
     }
 
-    public void setStatus(Integer status) {
+    public ArticleCollect setStatus(Integer status) {
         this.status = status;
+        return this;
     }
 
     public String getArticleId() {

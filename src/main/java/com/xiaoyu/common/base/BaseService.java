@@ -13,7 +13,7 @@ import com.google.common.collect.Lists;
 import com.xiaoyu.common.utils.IdGenerator;
 
 /**
- * 基本CRUD操作,坚决不返回null
+ * 基本CRUD操作
  * 
  * @author xiaoyu 2016年3月22日
  */
@@ -38,6 +38,12 @@ public abstract class BaseService<D extends BaseDao<T>, T extends BaseEntity> {
     }
 
     public T get(String id) {
+        T temp = null;
+        temp = this.tDao.getById(id);
+        return temp;
+    }
+
+    public T get(long id) {
         T temp = null;
         temp = this.tDao.getById(id);
         return temp;
@@ -123,10 +129,10 @@ public abstract class BaseService<D extends BaseDao<T>, T extends BaseEntity> {
         if (null == t) {
             return temp;
         }
-        if (org.apache.commons.lang3.StringUtils.isNotBlank(t.getId())) {
+        if (t.getId() != null) {
             return temp;
         }
-        t.setId(IdGenerator.uuid());
+        t.setUuid(IdGenerator.uuid());
         temp = this.tDao.insert(t);
         return temp;
     }
@@ -139,6 +145,7 @@ public abstract class BaseService<D extends BaseDao<T>, T extends BaseEntity> {
      * @return
      * @time 2016年3月22日下午3:13:11
      */
+    @SuppressWarnings("unused")
     private boolean isExist(T t) {
         if (null == t) {
             return false;
@@ -150,6 +157,7 @@ public abstract class BaseService<D extends BaseDao<T>, T extends BaseEntity> {
         return false;
     }
 
+    @SuppressWarnings("unused")
     private boolean isExist(String id) {
         final int count = this.tDao.isExist(id);
         if (count > 0) {

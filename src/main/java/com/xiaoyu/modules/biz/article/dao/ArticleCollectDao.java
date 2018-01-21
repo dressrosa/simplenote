@@ -3,6 +3,8 @@
  */
 package com.xiaoyu.modules.biz.article.dao;
 
+import java.util.List;
+
 import org.springframework.stereotype.Repository;
 
 import com.xiaoyu.common.base.BaseDao;
@@ -15,5 +17,7 @@ import com.xiaoyu.modules.biz.article.entity.ArticleCollect;
 public interface ArticleCollectDao extends BaseDao<ArticleCollect> {
 
     ArticleCollect getForUpdate(ArticleCollect t);
+
+    List<ArticleCollect> findListByBatch(List<ArticleCollect> collectQueryList);
 
 }

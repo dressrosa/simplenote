@@ -6,8 +6,7 @@
         a.article_num as articleNum,
         a.collect_num as collectNum,
         a.viewed_num as viewedNum,
-        a.comment_num as
-        commentNum,
+        a.comment_num as commentNum,
         a.follower_num as followerNum
     </sql>
 
@@ -22,7 +21,6 @@
     <insert id="insert" parameterType="com.xiaoyu.modules.biz.user.entity.UserAttr">
         insert into biz_user_attr
         <trim prefix="(" suffix=")" suffixOverrides=",">
-
             <if test="userId != null">
                 user_id,
             </if>

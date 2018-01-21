@@ -44,8 +44,8 @@ public class TimeUtils extends DateUtils {
             calendar = Calendar.getInstance();
             calendar.setTime(date);
         } catch (final ParseException e) {
-            // TODO Auto-generated catch block
             e.printStackTrace();
+            return list;
         }
         TimeUtils.setFirstDay(calendar);
         for (int i = 0; i < 7; i++) {

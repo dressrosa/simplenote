@@ -21,11 +21,11 @@ public interface ArticleDao extends BaseDao<Article> {
 
     List<ArticleVo> findByListWithAttr(@Param("userId") String userId);
 
-    Article getForUpdate(@Param("id") String articleId);
+    Article getForUpdate(@Param("uuid") String articleId);
 
     List<ArticleVo> findHotList();
 
-    ArticleVo getVo(@Param("id") String articleId);
+    ArticleVo getVoByUuid(@Param("uuid") String articleId);
 
     Page<ArticleVo> findCollectList(@Param("userId") String userId);
 

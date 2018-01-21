@@ -4,108 +4,111 @@
 
     <sql id="columns">
         a.id as id,
+        a.uuid as uuid,
         a.nickname as nickname,
         a.sex as sex,
-        a.login_name as
-        loginName,
+        a.login_name as loginName,
         a.avatar as avatar,
-        a.background as
-        background,
-        a.description as
-        description,
+        a.background as background,
+        a.description as description,
         a.signature as signature
     </sql>
+
     <sql id="vocolumns">
-        a.id as userId,
+        a.uuid as userId,
         a.nickname as nickname,
         a.sex as sex,
-        a.login_name as
-        loginName,
+        a.login_name as loginName,
         a.avatar as avatar,
-        a.background as
-        background,
-        a.description as
-        description,
+        a.background as background,
+        a.description as description,
         a.signature as signature
     </sql>
-    <sql id="userJoins">
-    </sql>
-
-
+    
     <!-- 根据登录名查询用户 -->
-    <select id="getVo" resultType="com.xiaoyu.modules.biz.user.vo.UserVo"
+    <select id="getVo" resultType="com.xiaoyu.modules.biz.user.vo.UserVo" 
         parameterType="com.xiaoyu.modules.biz.user.entity.User">
         select
         <include refid="vocolumns" />
         ,r.article_num as 'attr.articleNum',
-        r.follower_num as
-        'attr.followerNum'
+        r.follower_num as 'attr.followerNum'
         from biz_user as a
         left join biz_user_attr as r
-        on
-        r.user_id=a.id
+        on r.user_id=a.uuid
         where
         a.del_flag=0
-        <if test="id != null">
-            and a.id=#{id}
+        <if test="uuid != null">
+            and a.uuid=#{uuid}
         </if>
         <if test="loginName != null">
             and a.login_name=#{loginName}
         </if>
     </select>
 
-    <select id="getVoById" resultType="com.xiaoyu.modules.biz.user.vo.UserVo"
-        parameterType="java.lang.String">
+    <select id="getVoByUuid"  parameterType="java.lang.String"
+        resultType="com.xiaoyu.modules.biz.user.vo.UserVo">
         select
         <include refid="vocolumns" />
         ,ua.article_num as "attr.articleNum",
-        ua.viewed_num as
-        "attr.viewedNum"
+        ua.viewed_num as "attr.viewedNum"
         from biz_user as a
         left join biz_user_attr as ua
-        on ua.user_id = a.id
+        on ua.user_id = a.uuid
         where
-        a.del_flag=0
-        and a.id=#{id}
+        a.uuid=#{uuid} 
+        and a.del_flag=0
     </select>
-    <select id="getById" resultType="com.xiaoyu.modules.biz.user.entity.User"
+
+    <select id="findVoByUuid" parameterType="java.util.List"
+        resultType="com.xiaoyu.modules.biz.user.vo.UserVo">
+        select
+        <include refid="vocolumns" />
+        from biz_user as a
+        where a.uuid in
+        <foreach collection="list" item="item" index="index" open="(" separator="," close=")">
+            #{item}
+        </foreach>
+        and a.del_flag=0 
+    </select>
+
+    <select id="getById" parameterType="java.lang.String"
+        resultType="com.xiaoyu.modules.biz.user.entity.User">
+        select
+        <include refid="columns" />
+        from biz_user as a
+        where
+        a.id=#{id}
+        and a.del_flag=0
+    </select>
+
+    <select id="getByUuid" resultType="com.xiaoyu.modules.biz.user.entity.User"
         parameterType="java.lang.String">
         select
         <include refid="columns" />
         from biz_user as a
         where
-        a.del_flag=0
-        and a.id=#{id}
+        a.uuid=#{uuid}
+        and a.del_flag=0
     </select>
+    
     <!-- 分页查询用户信息 -->
     <select id="findByList" resultType="com.xiaoyu.modules.biz.user.entity.User"
         parameterType="com.xiaoyu.modules.biz.user.entity.User">
         select
         a.id as id,
+        a.uuid as uuid,
         a.nickname as nickname,
-        a.sex as
-        sex,
-        a.description
-        as
-        description,
+        a.sex as sex,
+        a.description as description,
         a.signature as signature,
-        date_format(a.create_date,'%Y-%m-%d') as
-        createDate,
-        a.update_date as
-        updateDate,
-        a.del_flag as delFlag,
-        a.login_name as
-        name,
-        a.avatar as
-        avatar
-        ,ua.article_num as "attr.articleNum",
-        ua.viewed_num as
-        "attr.viewedNum"
+        date_format(a.create_date,'%Y-%m-%d') as createDate,
+        a.login_name as name,
+        a.avatar as avatar,
+        ua.article_num as "attr.articleNum",
+        ua.viewed_num as "attr.viewedNum"
         from biz_user as a
-        left join
-        biz_user_attr as ua
-        on
-        ua.user_id = a.id
+        left join biz_user_attr as ua
+        on ua.user_id = a.uuid
         where
         a.del_flag=0
     </select>
@@ -114,8 +117,8 @@
     <insert id="insert" parameterType="com.xiaoyu.modules.biz.user.entity.User">
         insert into biz_user
         <trim prefix="(" suffix=")" suffixOverrides=",">
-            <if test="id != null">
-                id,
+            <if test="uuid != null">
+                uuid,
             </if>
             <if test="nickname != null">
                 nickname,
@@ -128,8 +131,8 @@
             </if>
         </trim>
         <trim prefix="values (" suffix=")" suffixOverrides=",">
-            <if test="id != null">
-                #{id},
+            <if test="uuid != null">
+                #{uuid},
             </if>
             <if test="nickname != null">
                 #{nickname},
@@ -169,30 +172,28 @@
                 update_date=#{updateDate},
             </if>
         </set>
-
-        where id=#{id} and del_flag=0
+        where uuid=#{uuid} and del_flag=0
     </update>
-
-
 
     <!-- 逻辑删除用户 -->
     <update id="delete">
-        update biz_user set del_flag=1 where id=#{id}
+        update biz_user 
+        set del_flag=1 
+        where uuid=#{uuid}
     </update>
+    
     <select id="isExist" parameterType="com.xiaoyu.modules.biz.user.entity.User"
-        resultType="java.lang.Integer">
+         resultType="java.lang.Integer">
         select count(*) from biz_user as a
         where
-        1=1
-        <if test="id != null">
-            and a.id=#{id}
+        a.del_flag=0
+        <if test="uuid != null">
+            and a.uuid=#{uuid}
         </if>
         <if test="loginName != null">
             and a.login_name=#{loginName}
         </if>
-        and a.del_flag=0
     </select>
-
 
     <!-- 根据登录名查询用户 -->
     <select id="getForLogin" resultType="com.xiaoyu.modules.biz.user.entity.User"
@@ -203,8 +204,8 @@
         from biz_user as a
         where
         a.del_flag=0
-        <if test="id != null">
-            and a.id=#{id}
+        <if test="uuid != null">
+            and a.uuid=#{uuid}
         </if>
         <if test="loginName != null">
             and a.login_name=#{loginName}

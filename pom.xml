@@ -17,9 +17,9 @@
         <mybatis.version>3.3.1</mybatis.version>
         <mybatisspring.version>1.2.4</mybatisspring.version>
         <HikariCP.version>2.4.4</HikariCP.version>
-        <celery.version>/Users/hongyu/git/celery-0.0.1-SNAPSHOT.jar</celery.version>
+        <!-- <celery.version>/Users/hongyu/git/celery-0.0.1-SNAPSHOT.jar</celery.version>
         <toolbox.version>/Users/hongyu/git/toolbox/maple/target/maple-0.0.1-SNAPSHOT.jar</toolbox.version>
-        <ribbon.version>/Users/hongyu/git/toolbox/ribbon/target/ribbon-0.0.1-SNAPSHOT.jar</ribbon.version>
+        <ribbon.version>/Users/hongyu/git/toolbox/ribbon/target/ribbon-0.0.1-SNAPSHOT.jar</ribbon.version> -->
     </properties>
     <dependencies>
         <dependency>
@@ -30,6 +30,11 @@
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-security</artifactId>
+        </dependency>
+        <!-- junit -->
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-test</artifactId>
         </dependency>
         <!--ehcache -->
         <!-- <dependency> <groupId>org.springframework</groupId> <artifactId>spring-context-support</artifactId> 
@@ -142,7 +147,6 @@
             <artifactId>cos_api</artifactId>
             <version>4.4</version>
         </dependency>
-
         <!--第三方配置 -->
         <!--极光推送 -->
         <!-- <dependency> <groupId>cn.jpush.api</groupId> <artifactId>jpush-client</artifactId> 
@@ -152,28 +156,37 @@
             <groupId>com.xiaoyu</groupId>
             <artifactId>celery</artifactId>
             <version>0.0.1-SNAPSHOT</version>
-            <scope>system</scope>
-            <systemPath>${celery.version}</systemPath>
+            <!-- <scope>system</scope>
+            <systemPath>${celery.version}</systemPath> -->
         </dependency>
 
         <dependency>
             <groupId>com.xiaoyu</groupId>
             <artifactId>maple</artifactId>
             <version>0.0.1-SNAPSHOT</version>
-            <scope>system</scope>
-            <systemPath>${toolbox.version}</systemPath>
+           <!--  <scope>system</scope> -->
+           <!--  <systemPath>${toolbox.version}</systemPath> -->
         </dependency>
         <dependency>
             <groupId>com.xiaoyu</groupId>
             <artifactId>ribbon</artifactId>
             <version>0.0.1-SNAPSHOT</version>
-            <scope>system</scope>
-            <systemPath>${ribbon.version}</systemPath>
+           <!--  <scope>system</scope> -->
+           <!--  <systemPath>${ribbon.version}</systemPath> -->
         </dependency>
     </dependencies>
 
     <!--创建可执行的jar -->
     <build>
+     <!-- <resources>
+            <resource>
+                <directory>src/main/resources</directory>
+                <filtering>true</filtering>
+                <includes>
+                    <include>**/*.properties</include>
+                </includes>
+            </resource>
+        </resources> -->
         <plugins>
             <plugin>
                 <groupId>org.springframework.boot</groupId>

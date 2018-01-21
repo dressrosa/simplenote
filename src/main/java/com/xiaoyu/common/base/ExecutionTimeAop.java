@@ -24,9 +24,9 @@ import com.xiaoyu.common.utils.JedisUtils;
 @Aspect
 public class ExecutionTimeAop {
 
-    private final static Logger logger = LoggerFactory.getLogger(ExecutionTimeAop.class);
+    private final static Logger LOG = LoggerFactory.getLogger(ExecutionTimeAop.class);
 
-    /*
+    /**
      * 网络释义: 例如定义切入点表达式 execution (* com.sample.service.impl..*.*(..))
      * execution()是最常用的切点函数，其语法如下所示： 整个表达式可以分为五个部分： 1、execution(): 表达式主体。
      * 2、第一个*号：表示返回类型，*号表示所有的类型。
@@ -34,25 +34,35 @@ public class ExecutionTimeAop {
      * 4、第二个*号：表示类名，*号表示所有的类。
      * 5、*(..):最后这个星号表示方法名，*号表示所有的方法，后面括弧里面表示方法的参数，两个句点表示任何参数。
      */
-    @Pointcut("execution(* com.xiaoyu.modules.sys.controller..*(..))")
+    @Pointcut("execution(* com.xiaoyu.modules.controller..*(..))")
     public void pointcut() {
 
     }
 
-    private static final int URI_LIMIT = 100;// 限制次数
+    /**
+     * 限制次数
+     */
+    private static final int URI_LIMIT = 100;
 
+    @SuppressWarnings("null")
     @Around("pointcut()")
     public Object around(ProceedingJoinPoint point) {
         final Object[] args = point.getArgs();
         HttpServletRequest request = null;
-        String ip = null;// 客户端ip
-        String uri = null;// 接口地址
-        final String userId = null;// 用户id
-        final String token = null;// 登录 token
+        // 客户端ip
+        String ip = null;
+        // 接口地址
+        String uri = null;
+        // 用户id
+        // final String userId = null;
+        // 登录 token
+        // final String token = null;
+        // final String redisUserId = null;
         String ipLimit = null;//
-        final String redisUserId = null;
-        String methodName = null;// 调用方法名
-        int limit = 0;// ip限制访问次数
+        // 调用方法名
+        String methodName = null;
+        // ip限制访问次数
+        int limit = 0;
         for (final Object o : args) {
             if (o instanceof HttpServletRequest) {
                 request = (HttpServletRequest) o;
@@ -61,7 +71,7 @@ public class ExecutionTimeAop {
         }
         ip = request.getRemoteHost();
         uri = request.getRequestURI();
-        ExecutionTimeAop.logger.info("ip:" + ip + " uri:" + uri);
+        LOG.info("ip:" + ip + " uri:" + uri);
         methodName = point.getSignature().getName();
         if (uri.endsWith(".jpg") || uri.endsWith(".png") || uri.endsWith(".jpeg")) {
             return null;
@@ -75,8 +85,9 @@ public class ExecutionTimeAop {
         }
         limit = Integer.valueOf(ipLimit);
         if (limit > ExecutionTimeAop.URI_LIMIT) {
-            final ResponseMapper mapper = ResponseMapper.createMapper();
-            mapper.code(ResponseCode.FAILED.statusCode()).message("访问次数异常,一分钟之内无法访问");
+            ResponseMapper mapper = ResponseMapper.createMapper();
+            mapper.code(ResponseCode.FAILED.statusCode())
+                    .message("访问次数异常,一分钟之内无法访问");
             JedisUtils.hset(methodName + ":" + ip, uri, limit + "", 60);
             JedisUtils.hincrby(methodName + ":" + ip, uri, 1);
             return mapper.resultJson();
@@ -122,17 +133,14 @@ public class ExecutionTimeAop {
 
     private Object getResult(ProceedingJoinPoint point) {
         Object result = null;
-        long start = 0;
-        long end = 0;
         final String methodName = point.getSignature().getName();
+        long start = System.currentTimeMillis();
         try {
-            start = System.currentTimeMillis();
             result = point.proceed();
-            end = System.currentTimeMillis();
         } catch (final Throwable e) {
-            ExecutionTimeAop.logger.error(e.toString());
+            LOG.error(e.toString());
         }
-        ExecutionTimeAop.logger.info("方法[" + methodName + "]执行时间为:[" + (end - start) + " milliseconds] ");
+        LOG.info("方法[" + methodName + "]执行时间为:[" + (System.currentTimeMillis() - start) + " milliseconds] ");
         return result;
     }
 

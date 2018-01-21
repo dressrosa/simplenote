@@ -8,7 +8,6 @@ import javax.sql.DataSource;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.jdbc.datasource.DataSourceTransactionManager;
@@ -21,7 +20,6 @@ import org.springframework.transaction.annotation.TransactionManagementConfigure
  * @author xiaoyu 2016年3月17日
  */
 @Configuration
-@EnableAutoConfiguration
 public class TransactionConfiguration implements TransactionManagementConfigurer {
 
     private static Logger logger = LoggerFactory.getLogger(TransactionConfiguration.class);

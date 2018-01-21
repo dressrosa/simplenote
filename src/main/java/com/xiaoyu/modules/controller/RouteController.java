@@ -9,6 +9,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 
 import com.xiaoyu.common.utils.StringUtil;
+import com.xiaoyu.modules.constant.JumpPath;
 
 /**
  * 2017年5月24日上午9:59:18
@@ -21,77 +22,68 @@ public class RouteController {
 
     @RequestMapping(value = "article/hot", method = RequestMethod.GET)
     public String hotList(HttpServletRequest request, HttpServletResponse response) {
-        return "article/hotList";
+        return JumpPath.ArticleRelated.HOT_LIST;
     }
 
     @RequestMapping(value = "article/{articleId}", method = RequestMethod.GET)
     public String goArticleDetail(HttpServletRequest request, HttpServletResponse response,
             @PathVariable String articleId) {
         if (StringUtil.isBlank(articleId)) {
-            return "common/404";
+            return JumpPath.CommonRelated.PAGE_404;
         }
-        return "article/articleDetail";
+        return JumpPath.ArticleRelated.DETAIL;
+    }
+
+    @RequestMapping(value = "article/write", method = RequestMethod.GET)
+    public String goWrite(HttpServletRequest request) {
+        return JumpPath.ArticleRelated.WRITE;
     }
 
     @RequestMapping(value = "article/edit/{articleId}", method = RequestMethod.GET)
     public String goArticleEdit(HttpServletRequest request, HttpServletResponse response,
             @PathVariable String articleId) {
         if (StringUtil.isBlank(articleId)) {
-            return "common/404";
+            return JumpPath.CommonRelated.PAGE_404;
         }
-        return "article/articleEdit";
+        return JumpPath.ArticleRelated.EDIT;
+    }
+
+    @RequestMapping(value = "article/{articleId}/comments", method = RequestMethod.GET)
+    public String goComments(HttpServletRequest request, @PathVariable String articleId) {
+        return JumpPath.ArticleRelated.COMMENT_LIST;
+    }
+
+    @RequestMapping(value = "search", method = RequestMethod.GET)
+    public String goSearch(HttpServletRequest request, String keyword) {
+        return JumpPath.ArticleRelated.SEARCH;
     }
 
     @RequestMapping(value = "user/{userId}", method = RequestMethod.GET)
     public String goUserDetail(@PathVariable String userId, HttpServletRequest request) {
         if (StringUtil.isBlank(userId)) {
-            return "common/404";
+            return JumpPath.CommonRelated.PAGE_404;
         }
-        return "user/userDetail";
+        return JumpPath.UserRelated.DETAIL;
     }
 
-    @RequestMapping(value = "article/write", method = RequestMethod.GET)
-    public String goWrite(HttpServletRequest request) {
-        return "article/articleForm";
-    }
-
-    @RequestMapping(value = "login", method = RequestMethod.GET)
-    public String goLogin(HttpServletRequest request) {
-        return "common/login";
-    }
-
-    @RequestMapping(value = "article/{articleId}/comments", method = RequestMethod.GET)
-    public String goComments(HttpServletRequest request, @PathVariable String articleId) {
-        return "article/commentList";
+    @RequestMapping(value = "message", method = RequestMethod.GET)
+    public String goMsg(HttpServletRequest request) {
+        return JumpPath.UserRelated.MESSAGE;
     }
 
     @RequestMapping(value = "user/edit", method = RequestMethod.GET)
     public String goEditUserInfo(HttpServletRequest request) {
-        return "user/userForm";
+        return JumpPath.UserRelated.EDIT;
     }
 
-    /**
-     * 跳转上传页面
-     * 
-     * @author xiaoyu
-     * @param request
-     * @param response
-     * @return
-     * @time 2016年3月29日下午4:02:17
-     */
-    @RequestMapping("user/upload")
+    @RequestMapping(value = "login", method = RequestMethod.GET)
+    public String goLogin(HttpServletRequest request) {
+        return JumpPath.CommonRelated.LOGIN;
+    }
+
+    @RequestMapping(value = "user/upload", method = RequestMethod.GET)
     public String goUpload(HttpServletRequest request, HttpServletResponse response) {
-        return "common/uploadFile";
+        return JumpPath.CommonRelated.UPLOAD;
     }
 
-    @RequestMapping(value = "search", method = RequestMethod.GET)
-    public String goSearch(HttpServletRequest request, String keyword) {
-        return "article/searchList";
-    }
-
-    // 消息
-    @RequestMapping(value = "message", method = RequestMethod.GET)
-    public String goMsg(HttpServletRequest request) {
-        return "user/messageList";
-    }
 }

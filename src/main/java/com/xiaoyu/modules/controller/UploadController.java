@@ -60,8 +60,7 @@ public class UploadController {
 
     @SuppressWarnings("unchecked")
     private String upload(FirewalledRequest initialRequest, HttpServletResponse response, int bizType) {
-
-        final ResponseMapper mapper = ResponseMapper.createMapper();
+        ResponseMapper mapper = ResponseMapper.createMapper();
         final HttpServletRequest request = (HttpServletRequest) initialRequest.getRequest();
         if (UserUtils.checkLoginDead(request) == null) {
             return mapper.code(ResponseCode.ARGS_ERROR.statusCode()).resultJson();
@@ -86,7 +85,7 @@ public class UploadController {
         }
         while (iter.hasNext()) {
             final String result = ImgUtils.saveImgToTencentOss(iter.next());
-            final Map<String, Object> map = (Map<String, Object>) JSON.parse(result);
+            Map<String, Object> map = (Map<String, Object>) JSON.parse(result);
             String path = null;
             if (map.get("code").equals(0)) {
                 final Map<String, String> urlMap = (Map<String, String>) map.get("data");

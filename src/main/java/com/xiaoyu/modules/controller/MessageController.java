@@ -32,4 +32,15 @@ public class MessageController {
     public String unreadNum(HttpServletRequest request) {
         return this.messageService.unreadNum(request);
     }
+
+    @RequestMapping(value = "api/v1/message/remove", method = RequestMethod.POST)
+    public String removeMsg(HttpServletRequest request, @RequestParam(required = true) String msgIds) {
+        return this.messageService.removeMsg(request, msgIds);
+    }
+
+    @RequestMapping(value = "api/v1/message/reply", method = RequestMethod.POST)
+    public String replyMsg(HttpServletRequest request, @RequestParam(required = true) String msgId,
+            @RequestParam(required = true) String replyContent) {
+        return this.messageService.replyMsg(request, msgId, replyContent);
+    }
 }
