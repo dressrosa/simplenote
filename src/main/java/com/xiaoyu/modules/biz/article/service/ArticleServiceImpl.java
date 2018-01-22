@@ -252,7 +252,7 @@ public class ArticleServiceImpl extends BaseService<ArticleDao, Article> impleme
     }
 
     @Override
-    public String addArticle(HttpServletRequest request, String title, String content, String userId, String token) {
+    public String addArticle(HttpServletRequest request, String title, String content, String userId) {
         if (UserUtils.checkLoginDead(request) == null) {
             return ResponseMapper.createMapper()
                     .code(ResponseCode.LOGIN_INVALIDATE.statusCode())
@@ -286,8 +286,7 @@ public class ArticleServiceImpl extends BaseService<ArticleDao, Article> impleme
     }
 
     @Override
-    public String editArticle(HttpServletRequest request, String title, String content, String userId, String articleId,
-            String token) {
+    public String editArticle(HttpServletRequest request, String title, String content, String userId, String articleId) {
         if (UserUtils.checkLoginDead(request) == null) {
             return ResponseMapper.createMapper()
                     .code(ResponseCode.LOGIN_INVALIDATE.statusCode())

@@ -58,21 +58,18 @@ public interface IArticleService {
      * @param title
      * @param content
      * @param userId
-     * @param token
      * @return
      */
-    public String addArticle(HttpServletRequest request, String title, String content, String userId, String token);
+    public String addArticle(HttpServletRequest request, String title, String content, String userId);
 
     /**编辑文章
      * @param request
      * @param title
      * @param content
      * @param userId
-     * @param token
-     * @param token 
      * @return
      */
-    public String editArticle(HttpServletRequest request, String title, String content, String userId, String articleId, String token);
+    public String editArticle(HttpServletRequest request, String title, String content, String userId, String articleId);
     /**
      * 增加阅读数
      * 

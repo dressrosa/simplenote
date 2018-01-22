@@ -64,19 +64,20 @@ function modify() {
         }).open();
         return false;
     }
-    var userId = userInfo.userId;
-    var token = userInfo.token;
     $.ajax({
         type : "post",
         url : "/api/v1/article/edit",
+        async : true,
         data : {
             articleId : articleId,
-            userId : userId,
-            token : token,
+            userId : userInfo.userId,
             content : content.val(),
             title : title.val()
         },
-        async : true,
+        beforeSend : function(xhr) {
+            xhr.setRequestHeader('token', userInfo.token);
+            xhr.setRequestHeader('userId', userInfo.userId);
+        },
         error : function(data) {
             tip = "没成功,是不是没网啊"
             $('.tooltip').jBox('Tooltip', {
