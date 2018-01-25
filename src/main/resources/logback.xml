@@ -51,9 +51,9 @@
             <pattern> %d{HH:mm:ss.SSS}-%msg%n</pattern>
         </layout>
         <!-- 文件大小 -->
-        <triggeringPolicy class="com.bigbasket.dapp.utilities.SizeBasedTriggeringPolicy">
+        <!-- <triggeringPolicy class="com.bigbasket.dapp.utilities.SizeBasedTriggeringPolicy">
             <maxFileSize>5MB</maxFileSize>
-        </triggeringPolicy>
+        </triggeringPolicy> -->
     </appender>
     <!-- 默认级别和输出 -->
     <root level="DEBUG">
