@@ -7,15 +7,15 @@ import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
-
-import org.apache.log4j.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * @author xiaoyu 2016年3月19日
  */
 public class SerializeUtil {
 
-    private final static Logger logger = Logger.getLogger(SerializeUtil.class);
+    private final static Logger logger = LoggerFactory.getLogger(SerializeUtil.class);
 
     /**
      * 序列化对象

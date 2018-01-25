@@ -88,10 +88,8 @@
     <select id="getForUpdate" parameterType="com.xiaoyu.modules.biz.article.entity.ArticleLike"
         resultType="com.xiaoyu.modules.biz.article.entity.ArticleLike">
         select 
-        a.id as id,
-        a.uuid as uuid,
-        a.num as num,
-        a.status as status,
+        num as num,
+        status as status,
         article_id as articleId,
         user_id as userId
         from biz_article_like

@@ -206,38 +206,49 @@ public class ArticleServiceImpl extends BaseService<ArticleDao, Article> impleme
             likeList = this.likeDao.findListByBatch(likeQueryList);
             collectList = this.collectDao.findListByBatch(collectQueryList);
         }
-
+        // 封装数据
+        Map<String, UserVo> voMap = new HashMap<>(userVoList.size() * 2);
+        for (UserVo u : userVoList) {
+            voMap.put(u.getUserId(), u);
+        }
+        Map<String, ArticleLike> likeMap = new HashMap<>();
+        if (likeList != null && !likeList.isEmpty()) {
+            for (ArticleLike li : likeList) {
+                likeMap.put(li.getArticleId(), li);
+            }
+        }
+        Map<String, ArticleCollect> coMap = new HashMap<>();
+        if (collectList != null && !collectList.isEmpty()) {
+            for (ArticleCollect c : collectList) {
+                coMap.put(c.getArticleId(), c);
+            }
+        }
         Map<String, Object> map = null;
+        UserVo u = null;
+        ArticleLike li = null;
+        ArticleCollect c = null;
+        String tuserId1 = null;
+        String tarticleId1 = null;
+        // 处理数据
         for (ArticleVo a : list) {
-            String tuserId1 = a.getUserId();
-            String tarticleId1 = a.getUuid();
-            for (UserVo u : userVoList) {
-                if (u.getUserId().equals(tuserId1)) {
-                    a.setUser(u);
-                    break;
-                }
+            tuserId1 = a.getUserId();
+            tarticleId1 = a.getUuid();
+            u = voMap.get(tuserId1);
+            if (u != null) {
+                a.setUser(u);
             }
             map = this.article2Map(a);
             if (!isLogin) {
                 total.add(map);
                 continue;
             }
-
-            if (likeList != null && !likeList.isEmpty()) {
-                for (ArticleLike li : likeList) {
-                    if (tarticleId1.equals(li.getArticleId()) && tuserId1.equals(li.getUserId())) {
-                        map.put("isLike", li.getStatus() + "");
-                        break;
-                    }
-                }
+            li = likeMap.get(tarticleId1);
+            if (li != null) {
+                map.put("isLike", Integer.toString(li.getStatus()));
             }
-            if (collectList != null && !collectList.isEmpty()) {
-                for (ArticleCollect c : collectList) {
-                    if (tarticleId1.equals(c.getArticleId()) && tuserId1.equals(c.getUserId())) {
-                        map.put("isCollect", c.getStatus() + "");
-                        break;
-                    }
-                }
+            c = coMap.get(tarticleId1);
+            if (c != null) {
+                map.put("isCollect", Integer.toString(c.getStatus()));
             }
             total.add(map);
         }
@@ -253,40 +264,42 @@ public class ArticleServiceImpl extends BaseService<ArticleDao, Article> impleme
 
     @Override
     public String addArticle(HttpServletRequest request, String title, String content, String userId) {
+        ResponseMapper mapper = ResponseMapper.createMapper();
         if (UserUtils.checkLoginDead(request) == null) {
             return ResponseMapper.createMapper()
                     .code(ResponseCode.LOGIN_INVALIDATE.statusCode())
                     .message("登录失效,请重新登录")
                     .resultJson();
         }
-        return this.doPublish(userId, title, content);
-    }
-
-    @Transactional(readOnly = false, rollbackFor = RuntimeException.class)
-    private String doPublish(String userId, String title, String content) {
-        ResponseMapper mapper = ResponseMapper.createMapper();
         Article t = new Article();
         ArticleAttr attr = new ArticleAttr();
         t.setContent(content)
                 .setTitle(title)
                 .setUserId(userId)
                 .setUuid(IdGenerator.uuid());
+        attr.setArticleId(t.getUuid())
+                .setUuid(IdGenerator.uuid());
+
+        this.doInsertArticle(t, attr, userId);
+        return mapper.data(t.getUuid()).resultJson();
+    }
+
+    @Transactional(readOnly = false, rollbackFor = RuntimeException.class)
+    private void doInsertArticle(final Article t, final ArticleAttr attr, final String userId) {
         try {
-            attr.setArticleId(t.getUuid())
-                    .setUuid(IdGenerator.uuid());
             this.articleDao.insert(t);
             this.articleAttrDao.insert(attr);
             // 增加发文数
             this.userAttrDao.addNum(NumCountType.ArticleNum.ordinal(), 1, userId);
         } catch (RuntimeException e) {
-            LOG.error("publish artile failed,then rollback", e);
+            LOG.error("publish artile failed,then rollback.", e);
             throw e;
         }
-        return mapper.data(t.getUuid()).resultJson();
     }
 
     @Override
-    public String editArticle(HttpServletRequest request, String title, String content, String userId, String articleId) {
+    public String editArticle(HttpServletRequest request, String title, String content, String userId,
+            String articleId) {
         if (UserUtils.checkLoginDead(request) == null) {
             return ResponseMapper.createMapper()
                     .code(ResponseCode.LOGIN_INVALIDATE.statusCode())
@@ -298,7 +311,7 @@ public class ArticleServiceImpl extends BaseService<ArticleDao, Article> impleme
 
     private String doEdit(String userId, String title, String content, String articleId) {
         ResponseMapper mapper = ResponseMapper.createMapper();
-        Article ar = this.get(articleId);
+        Article ar = articleDao.getByUuid(articleId);
         if (ar == null || !userId.equals(ar.getUserId())) {
             return mapper.code(ResponseCode.NO_DATA.statusCode()).resultJson();
         }
@@ -331,7 +344,7 @@ public class ArticleServiceImpl extends BaseService<ArticleDao, Article> impleme
 
     @Override
     public String addLike(HttpServletRequest request, String articleId, Integer isLike) {
-        final ResponseMapper mapper = ResponseMapper.createMapper();
+        ResponseMapper mapper = ResponseMapper.createMapper();
         if (this.articleDao.isExist(articleId) < 1) {
             return mapper.code(ResponseCode.ARGS_ERROR.statusCode()).resultJson();
         }
@@ -409,7 +422,7 @@ public class ArticleServiceImpl extends BaseService<ArticleDao, Article> impleme
     @Override
     public String comment(HttpServletRequest request, String articleId, String content) {
         ResponseMapper mapper = ResponseMapper.createMapper();
-        if (StringUtil.isBlank(content)) {
+        if (StringUtil.isEmpty(content)) {
             return mapper.code(ResponseCode.ARGS_ERROR.statusCode()).resultJson();
         }
         final User user = UserUtils.checkLoginDead(request);
@@ -461,7 +474,7 @@ public class ArticleServiceImpl extends BaseService<ArticleDao, Article> impleme
     @Override
     public String reply(HttpServletRequest request, String commentId, String replyContent) {
         ResponseMapper mapper = ResponseMapper.createMapper();
-        if (StringUtil.isBlank(replyContent)) {
+        if (StringUtil.isEmpty(replyContent)) {
             return mapper.code(ResponseCode.ARGS_ERROR.statusCode()).resultJson();
         }
         final User user = UserUtils.checkLoginDead(request);
@@ -531,6 +544,7 @@ public class ArticleServiceImpl extends BaseService<ArticleDao, Article> impleme
             final String tuserId) {
         CommentLike t = null;
         List<CommentLike> likeQueryList = new ArrayList<>(list.size());
+        // 查询条件
         if (isLogin) {
             for (final ArticleCommentVo a : list) {
                 t = new CommentLike();
@@ -538,30 +552,35 @@ public class ArticleServiceImpl extends BaseService<ArticleDao, Article> impleme
                 likeQueryList.add(t);
             }
         }
+        // 查询数据
         List<CommentLike> likeList = null;
         if (!likeQueryList.isEmpty()) {
             likeList = this.arCommentDao.getLikes(likeQueryList);
         }
-
+        // 封装数据
+        Map<String, CommentLike> likeMap = new HashMap<>();
+        if (likeList != null && !likeList.isEmpty()) {
+            for (CommentLike c : likeList) {
+                likeMap.put(c.getCommentId(), c);
+            }
+        }
+        // 处理数据
         Map<String, Object> map = null;
         List<Map<String, Object>> total = new ArrayList<>();
+        CommentLike c = null;
         for (final ArticleCommentVo a : list) {
             map = MapleUtil.wrap(a)
-                    .rename("id", "commentId")
+                    .rename("uuid", "commentId")
                     .stick("createDate", TimeUtils.format(a.getCreateDate(), "yyyy-MM-dd HH:mm"))
                     .stick("isLike", "0")
                     .map();
             if (!isLogin) {
+                total.add(map);
                 continue;
             }
-            if (likeList != null && !likeList.isEmpty()) {
-                for (CommentLike c : likeList) {
-                    if (c.getDelFlag() != 1 && c.getCommentId().equals(a.getUuid())) {
-                        map.put("isLike", c.getStatus() + "");
-                        c.setDelFlag(1);
-                        break;
-                    }
-                }
+            c = likeMap.get(a.getUuid());
+            if (c != null) {
+                map.put("isLike", Integer.toString(c.getStatus()));
             }
             total.add(map);
         }
@@ -734,11 +753,11 @@ public class ArticleServiceImpl extends BaseService<ArticleDao, Article> impleme
         Map<String, String> jsonMap = null;
         // 分页同步 防止一次性取出量过大
         int i = 1;
+        Article t = new Article();
         while (i <= pageNum) {
             PageHelper.startPage(i++, pageSize, true);
-            page = (Page<Article>) this.articleDao.findByList(new Article());
-            if (page != null && page.getResult() != null && !page.getResult().isEmpty()) {
-                list = page.getResult();
+            page = (Page<Article>) this.articleDao.findByList(t);
+            if ((list = page.getResult()) != null && !list.isEmpty()) {
                 jsonMap = new HashMap<>(134);
                 for (Article a : list) {
                     jsonMap.put(a.getUuid(), JSON.toJSONString(a));

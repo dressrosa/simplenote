@@ -17,14 +17,23 @@
         <mybatis.version>3.3.1</mybatis.version>
         <mybatisspring.version>1.2.4</mybatisspring.version>
         <HikariCP.version>2.4.4</HikariCP.version>
-        <!-- <celery.version>/Users/hongyu/git/celery-0.0.1-SNAPSHOT.jar</celery.version>
-        <toolbox.version>/Users/hongyu/git/toolbox/maple/target/maple-0.0.1-SNAPSHOT.jar</toolbox.version>
-        <ribbon.version>/Users/hongyu/git/toolbox/ribbon/target/ribbon-0.0.1-SNAPSHOT.jar</ribbon.version> -->
+        <!-- <celery.version>/Users/hongyu/git/celery-0.0.1-SNAPSHOT.jar</celery.version> <toolbox.version>/Users/hongyu/git/toolbox/maple/target/maple-0.0.1-SNAPSHOT.jar</toolbox.version> 
+            <ribbon.version>/Users/hongyu/git/toolbox/ribbon/target/ribbon-0.0.1-SNAPSHOT.jar</ribbon.version> -->
     </properties>
     <dependencies>
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-web</artifactId>
+            <exclusions>
+                <exclusion>
+                    <groupId>org.slf4j</groupId>
+                    <artifactId>slf4j-log4j12</artifactId>
+                </exclusion>
+                <exclusion>
+                    <groupId>log4j</groupId>
+                    <artifactId>log4j</artifactId>
+                </exclusion>
+            </exclusions>
         </dependency>
         <!-- 安全机制 -->
         <dependency>
@@ -131,62 +140,63 @@
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-data-redis</artifactId>
         </dependency>
-        <!--activemq -->
-        <dependency>
-            <groupId>org.springframework.boot</groupId>
-            <artifactId> spring-boot-starter-activemq</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>org.apache.activemq</groupId>
-            <artifactId>activemq-broker</artifactId>
-        </dependency>
 
         <!--腾讯云oss -->
         <dependency>
             <groupId>com.qcloud</groupId>
             <artifactId>cos_api</artifactId>
             <version>4.4</version>
+            <exclusions>
+                <exclusion>
+                    <groupId>org.slf4j</groupId>
+                    <artifactId>slf4j-log4j12</artifactId>
+                </exclusion>
+            </exclusions>
         </dependency>
         <!--第三方配置 -->
         <!--极光推送 -->
-        <!-- <dependency> <groupId>cn.jpush.api</groupId> <artifactId>jpush-client</artifactId> 
-            <version>3.2.9</version> </dependency> -->
+        <!-- <dependency> <groupId>cn.jpush.api</groupId> <artifactId>jpush-client</artifactId> <version>3.2.9</version> 
+            </dependency> -->
         <!--本地项目 -->
         <dependency>
             <groupId>com.xiaoyu</groupId>
             <artifactId>celery</artifactId>
             <version>0.0.1-SNAPSHOT</version>
-            <!-- <scope>system</scope>
-            <systemPath>${celery.version}</systemPath> -->
+            <!-- <scope>system</scope> <systemPath>${celery.version}</systemPath> -->
         </dependency>
 
         <dependency>
             <groupId>com.xiaoyu</groupId>
             <artifactId>maple</artifactId>
             <version>0.0.1-SNAPSHOT</version>
-           <!--  <scope>system</scope> -->
-           <!--  <systemPath>${toolbox.version}</systemPath> -->
+            <!-- <scope>system</scope> -->
+            <!-- <systemPath>${toolbox.version}</systemPath> -->
+            <exclusions>
+                <exclusion>
+                    <groupId>ch.qos.logback</groupId>
+                    <artifactId>logback-classic</artifactId>
+                </exclusion>
+            </exclusions>
         </dependency>
         <dependency>
             <groupId>com.xiaoyu</groupId>
             <artifactId>ribbon</artifactId>
             <version>0.0.1-SNAPSHOT</version>
-           <!--  <scope>system</scope> -->
-           <!--  <systemPath>${ribbon.version}</systemPath> -->
+            <!-- <scope>system</scope> -->
+            <!-- <systemPath>${ribbon.version}</systemPath> -->
+            <exclusions>
+                <exclusion>
+                    <groupId>ch.qos.logback</groupId>
+                    <artifactId>logback-classic</artifactId>
+                </exclusion>
+            </exclusions>
         </dependency>
     </dependencies>
 
     <!--创建可执行的jar -->
     <build>
-     <!-- <resources>
-            <resource>
-                <directory>src/main/resources</directory>
-                <filtering>true</filtering>
-                <includes>
-                    <include>**/*.properties</include>
-                </includes>
-            </resource>
-        </resources> -->
+        <!-- <resources> <resource> <directory>src/main/resources</directory> <filtering>true</filtering> 
+            <includes> <include>**/*.properties</include> </includes> </resource> </resources> -->
         <plugins>
             <plugin>
                 <groupId>org.springframework.boot</groupId>

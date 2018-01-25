@@ -205,7 +205,8 @@
         and user_id = #{userId}
     </select>
 
-    <select id="getLikes" parameterType="java.util.List">
+    <select id="getLikes" parameterType="java.util.List"
+        resultType="com.xiaoyu.modules.biz.article.entity.CommentLike">
         select *
         from biz_article_comment_like
         where

@@ -1,7 +1,5 @@
 package com.xiaoyu.modules.biz.test;
 
-import java.util.concurrent.CountDownLatch;
-
 import javax.servlet.http.HttpServletRequest;
 
 import org.junit.After;
@@ -30,7 +28,7 @@ public class TestBiz {
 
     @Autowired
     private ConfigurableApplicationContext context;
-    
+
     @Test
     public void test() {
         HttpServletRequest request = new MockHttpServletRequest();
@@ -42,7 +40,6 @@ public class TestBiz {
         System.out.println("context已关闭");
         context.stop();
         context.close();
-        new CountDownLatch(1).await();
     }
 
 }

@@ -45,7 +45,7 @@ public class ResponseMapper {
             dataMap.put(ResponseMapper.CODE, ResponseCode.SUCCESS.statusCode());
             dataMap.put(ResponseMapper.MESSAGE, "");
             dataMap.put(ResponseMapper.COUNT, "");
-            dataMap.put(ResponseMapper.DATA, "");
+            dataMap.put(ResponseMapper.DATA,"");
             return dataMap;
         }
 
@@ -68,10 +68,6 @@ public class ResponseMapper {
         return MapperInstance.MAPPER;
     }
 
-    // public static ResponseMapper createMapper() {
-    // return new ResponseMapper();
-    // }
-
     /**
      * 返回json数据
      */
@@ -87,7 +83,9 @@ public class ResponseMapper {
         localMap.put(ResponseMapper.DATA, "");
         return result;
     }
-
+    public static void main(String[] args) {
+        System.out.println(ResponseMapper.createMapper().resultJson());
+    }
     private final Map<String, Object> getLocalMap() {
         return ResponseMapper.LOCAL.get();
     }

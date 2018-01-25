@@ -8,18 +8,17 @@ var $arPromise = $.ajax({
     url : '/api/v1/article/' + articleId,
     success : function(data) {
         var obj = jQuery.parseJSON(data);
-        if (obj.code == '0') {
-            var ar = obj.data;
-            if (!checkNull(ar)) {
-                $(".note_input").val(ar.title);
-                $(".textarea").html(ar.content);
-            } else {
-                window.location.href = "/common/404";
-            }
-        } else if (obj.code == '2') {
+        if (obj.code != '0') {
             window.location.href = "/common/404";
             return false;
         }
+        var ar = obj.data;
+        if (checkNull(ar)) {
+            window.location.href = "/common/404";
+            return false;
+        }
+        $(".note_input").val(ar.title);
+        $(".textarea").html(ar.content);
         addHeadForImg();
         return true;
     }
@@ -41,7 +40,6 @@ function modify() {
     }
     var content = $("#articleContent");
     var title = $(".note_input");
-    console.log("title:" + title.val());
     if (checkNull(title.val())) {
         tip = "标题怎么一个字都不留呀"
         $('.tooltip').jBox('Tooltip', {
@@ -102,7 +100,6 @@ function modify() {
                     closeOnClick : 'body',
                     target : $(".btn")
                 }).open();
-
             } else {
                 $('.tooltip').jBox('Tooltip', {
                     content : jsonObj.message,

@@ -45,7 +45,7 @@ public class UserController {
      */
     @RequestMapping(value = "api/v1/user/login", method = RequestMethod.POST)
     public String login(HttpServletRequest request, String loginName, String password) throws IOException {
-        if (StringUtil.isAnyBlank(loginName, password)) {
+        if (StringUtil.isAnyEmpty(loginName, password)) {
             return ResponseMapper.createMapper()
                     .code(ResponseCode.ARGS_ERROR.statusCode())
                     .resultJson();
@@ -119,7 +119,7 @@ public class UserController {
      */
     @RequestMapping(value = "api/v1/user/{userId}", method = RequestMethod.GET)
     public String userDetail(@PathVariable String userId, HttpServletRequest request) {
-        if (StringUtil.isBlank(userId)) {
+        if (StringUtil.isEmpty(userId)) {
             return ResponseMapper.createMapper()
                     .code(ResponseCode.ARGS_ERROR.statusCode())
                     .resultJson();
@@ -135,7 +135,7 @@ public class UserController {
     @RequestMapping(value = "api/v1/user/{userId}/edit", method = RequestMethod.POST)
     public String editInfo(HttpServletRequest request, @PathVariable String userId, String content,
             @RequestParam(required = true) Integer flag) {
-        if (StringUtil.isBlank(userId)) {
+        if (StringUtil.isEmpty(userId)) {
             return ResponseMapper.createMapper()
                     .code(ResponseCode.ARGS_ERROR.statusCode())
                     .resultJson();

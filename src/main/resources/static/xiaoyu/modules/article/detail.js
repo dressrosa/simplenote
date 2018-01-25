@@ -15,46 +15,45 @@ var $arPromise = $.ajax({
     url : '/api/v1/article/' + articleId,
     success : function(data) {
         var obj = jQuery.parseJSON(data);
-        if (obj.code == '0') {
-            var ar = obj.data;
-            if (!checkNull(ar)) {
-                setTitle('详情-' + ar.title);
-                $("#titleSpan").html(ar.title);
-                var $partUp = $(".part_up");
-                $partUp.find("img").attr('src', ar.user.avatar);
-                $partUp.find("img").attr('id', ar.user.userId);
-                $partUp.find("img").on("click", function() {
-                    window.location.href = "/user/" + ar.user.userId;
-                });
-                $partUp.find(".p_description").find("span").html(ar.user.description);
-                $partUp.find(".p_username").find(".nickname").html(ar.user.nickname);
-
-                $partUp.find(".red").find("label").html(ar.attr.likeNum);
-                $partUp.find(".blue").find("label").html(ar.attr.collectNum);
-                $partUp.find(".green").find("label").html(ar.attr.commentNum);
-                var $co = $partUp.find(".p_comment");
-                $co.find("label").html('<a>' + ar.user.nickname + ':' + '</a>');
-                $co.find("p").html(ar.user.description);
-                $("#co_title").html('半点故事');
-                var $partDown = $(".part_down");
-                $partDown.attr("id", ar.articleId);
-                $partDown.find(".ar_date").html(ar.createDate);
-                $partDown.find(".ar_title").find("h2").html(ar.title);
-                $partDown.find(".ar_time").find("label").html(ar.createTime);
-                $partDown.find(".ar_view").html('浏览量:' + ar.attr.readNum);
-                $partDown.find(".ar_content").attr("id", ar.articleId);
-                var converter = new showdown.Converter();
-                $partDown.find(".ar_content").html(converter.makeHtml(ar.content));
-                $('pre code').each(function(i, block) {
-                    hljs.highlightBlock(block);
-                });
-            } else {
-                window.location.href = "/common/404";
-            }
-        } else if (obj.code == '2') {
+        if (obj.code != '0') {
             window.location.href = "/common/404";
             return false;
         }
+        var ar = obj.data;
+        if (checkNull(ar)) {
+            window.location.href = "/common/404";
+            return false;
+        }
+        setTitle('详情-' + ar.title);
+        $("#titleSpan").html(ar.title);
+        var $partUp = $(".part_up");
+        $partUp.find("img").attr('src', ar.user.avatar);
+        $partUp.find("img").attr('id', ar.user.userId);
+        $partUp.find("img").on("click", function() {
+            window.location.href = "/user/" + ar.user.userId;
+        });
+        $partUp.find(".p_description").find("span").html(ar.user.description);
+        $partUp.find(".p_username").find(".nickname").html(ar.user.nickname);
+
+        $partUp.find(".red").find("label").html(ar.attr.likeNum);
+        $partUp.find(".blue").find("label").html(ar.attr.collectNum);
+        $partUp.find(".green").find("label").html(ar.attr.commentNum);
+        var $co = $partUp.find(".p_comment");
+        $co.find("label").html('<a>' + ar.user.nickname + ':' + '</a>');
+        $co.find("p").html(ar.user.description);
+        $("#co_title").html('半点故事');
+        var $partDown = $(".part_down");
+        $partDown.attr("id", ar.articleId);
+        $partDown.find(".ar_date").html(ar.createDate);
+        $partDown.find(".ar_title").find("h2").html(ar.title);
+        $partDown.find(".ar_time").find("label").html(ar.createTime);
+        $partDown.find(".ar_view").html('浏览量:' + ar.attr.readNum);
+        $partDown.find(".ar_content").attr("id", ar.articleId);
+        var converter = new showdown.Converter();
+        $partDown.find(".ar_content").html(converter.makeHtml(ar.content));
+        $('pre code').each(function(i, block) {
+            hljs.highlightBlock(block);
+        });
         addHeadForImg();
         return true;
     }
@@ -75,43 +74,45 @@ var $coPromise = $
             },
             success : function(data) {
                 var obj = jQuery.parseJSON(data);
-                if (obj.code == '0') {
-                    var $coList = obj.data;
-                    if (!checkNull($coList)) {
-                        var $coComment = $(".co_comment");
-                        var $html = '<div class="co_num"><span>最新评论</span></div>';
-                        $html += '<div class="co_list">';
-                        $
-                                .each(
-                                        $coList,
-                                        function(index, co) {
-                                            $html += '<div class="co_item" data-id="'
-                                                    + co.commentId
-                                                    + '"><div class="item_up"><div style="margin-top: -30px; margin-left: -10px;">	<img img-type="avatar " class="avatar small" src="'
-                                                    + co.replyerAvatar + '"></div><div class="item_p"><label class="item_p_username"><a>'
-                                                    + co.replyerName + '</a></label>';
-                                            if (!checkNull(co.parentReplyerName)) {
-                                                $html += '<label class="item_p_label">回复</label> <label class="item_p_username">'
-                                                        + co.parentReplyerName + '</label>';
-                                            }
-
-                                            $html += '<p>' + co.content + '</p></div>';
-                                            if (co.isLike == "1") {
-                                                $html += '<div class="item_like"><i class="icon_like" style="color:#fd4d4d;"  data-like="1"></i><label class="co_item_label">'
-                                                        + co.num + '</label></div>';
-                                            } else {
-                                                $html += '<div class="item_like"><i class="icon_like"  data-like="0"></i><label class="co_item_label">'
-                                                        + co.num + '</label></div>';
-                                            }
-                                            $html += '</div>';
-                                            $html += '<div class="item_down"><label class="item_p_title_pure">' + co.createDate
-                                                    + '</label></div></div>';
-                                        });
-                        $html += '</div>';
-                        $html += '<div class="co_all"><span><a href="/article/' + articleId + '/comments">查看全部</a></span></div>';
-                        $coComment.html($html);
-                    }
+                if (obj.code != '0') {
+                    return false;
                 }
+                var $coList = obj.data;
+                if (checkNull($coList)) {
+                    return false;
+                }
+                var $coComment = $(".co_comment");
+                var $html = '<div class="co_num"><span>最新评论</span></div>';
+                $html += '<div class="co_list">';
+                $
+                        .each(
+                                $coList,
+                                function(index, co) {
+                                    $html += '<div class="co_item" data-id="'
+                                            + co.commentId
+                                            + '"><div class="item_up"><div style="margin-top: -30px; margin-left: -10px;">	<img img-type="avatar " class="avatar small" src="'
+                                            + co.replyerAvatar + '"></div><div class="item_p"><label class="item_p_username"><a>' + co.replyerName
+                                            + '</a></label>';
+                                    if (!checkNull(co.parentReplyerName)) {
+                                        $html += '<label class="item_p_label">回复</label> <label class="item_p_username">' + co.parentReplyerName
+                                                + '</label>';
+                                    }
+
+                                    $html += '<p>' + co.content + '</p></div>';
+                                    if (co.isLike == "1") {
+                                        $html += '<div class="item_like"><i class="icon_like" style="color:#fd4d4d;"  data-like="1"></i><label class="co_item_label">'
+                                                + co.num + '</label></div>';
+                                    } else {
+                                        $html += '<div class="item_like"><i class="icon_like"  data-like="0"></i><label class="co_item_label">'
+                                                + co.num + '</label></div>';
+                                    }
+                                    $html += '</div>';
+                                    $html += '<div class="item_down"><label class="item_p_title_pure">' + co.createDate + '</label></div></div>';
+                                });
+                $html += '</div>';
+                $html += '<div class="co_all"><span><a href="/article/' + articleId + '/comments">查看全部</a></span></div>';
+                $coComment.html($html);
+
                 $(".co_comment .icon_like").on("click", function() {
                     var $icon = $(this);
                     var elem = $icon.parent().parent().parent();
@@ -143,10 +144,8 @@ var $coPromise = $
                                 xhr.setRequestHeader('token', $userInfo.token);
                                 xhr.setRequestHeader('userId', $userInfo.userId);
                             }
-
                         },
                         success : function(data) {
-                            console.log(data);
                             var obj = jQuery.parseJSON(data);
                             if (obj.code == "20001") {
                                 console.log("未登录");
@@ -154,7 +153,6 @@ var $coPromise = $
                             return true;
                         },
                         error : function(data) {
-                            console.log(data);
                             return false;
                         }
                     });
@@ -238,38 +236,38 @@ var comment = function() {
 var isFollow = function() {
     // is loved
     var userInfo = jQuery.parseJSON($.session.get("user"));
-    if (!checkNull(userInfo)) {
-        console.log("id:" + $(".avatar").attr('id'))
-        $.ajax({
-            cache : false,
-            type : "post",
-            async : true,
-            url : '/api/v1/user/is-followed',
-            data : {
-                userId : userInfo.userId,
-                followTo : $(".avatar").attr('id')
-            },
-            beforeSend : function(xhr) {
-                return before(xhr);
-            },
-            success : function(data) {
-                console.log(data);
-                var obj = jQuery.parseJSON(data);
-                if (obj.code == 0) {
-                    if (obj.data.isFollow == '1') {
-                        $(".p_love").text("取消关注");
-                        $(".p_love").css({
-                            "background" : "#e2e2e2"
-                        });
-                        $(".p_love").attr("data-love", '1');
-                    }
-                } else if (obj.code = '20001') {
-
-                }
+    if (checkNull(userInfo)) {
+        return;
+    }
+    $.ajax({
+        cache : false,
+        type : "post",
+        async : true,
+        url : '/api/v1/user/is-followed',
+        data : {
+            userId : userInfo.userId,
+            followTo : $(".avatar").attr('id')
+        },
+        beforeSend : function(xhr) {
+            return before(xhr);
+        },
+        success : function(data) {
+            var obj = jQuery.parseJSON(data);
+            if (obj.code == 0 || checkNull(obj.data)) {
+                return false;
+            }
+            if (obj.data.isFollow == '1') {
+                $(".p_love").text("取消关注");
+                $(".p_love").css({
+                    "background" : "#e2e2e2"
+                });
+                $(".p_love").attr("data-love", '1');
             }
 
-        });
-    }
+        }
+
+    });
+
 };
 
 var follow = function() {

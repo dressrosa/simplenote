@@ -10,8 +10,8 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
-
-import org.apache.log4j.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.elasticsearch.action.delete.DeleteRequestBuilder;
 import org.elasticsearch.action.delete.DeleteResponse;
 import org.elasticsearch.action.get.GetRequestBuilder;
@@ -43,7 +43,7 @@ import org.elasticsearch.search.highlight.HighlightField;
  */
 public class ElasticUtils {
 
-    private static final Logger logger = Logger.getLogger(ElasticUtils.class);
+    private static final Logger logger = LoggerFactory.getLogger(ElasticUtils.class);
     private static Client client;
     private static final String CLUSTER_NAME = "xiaoyu";
 

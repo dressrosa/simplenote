@@ -94,7 +94,7 @@ public class UserServiceImpl extends BaseService<UserDao, User> implements IUser
     @Override
     public String login(HttpServletRequest request, String loginName, String password) {
         ResponseMapper mapper = ResponseMapper.createMapper();
-        if (StringUtil.isAnyBlank(password, loginName)) {
+        if (StringUtil.isAnyEmpty(password, loginName)) {
             return mapper.code(ResponseCode.ARGS_ERROR.statusCode())
                     .message("姓名和密码不能为空")
                     .resultJson();
@@ -214,7 +214,7 @@ public class UserServiceImpl extends BaseService<UserDao, User> implements IUser
         switch (flag) {
         // 修改头像
         case 0:
-            if (StringUtil.isBlank(content)) {
+            if (StringUtil.isEmpty(content)) {
                 return mapper.code(ResponseCode.ARGS_ERROR.statusCode())
                         .message("请上传头像")
                         .resultJson();
@@ -241,7 +241,7 @@ public class UserServiceImpl extends BaseService<UserDao, User> implements IUser
             break;
         // 修改昵称
         case 3:
-            if (StringUtil.isBlank(content)) {
+            if (StringUtil.isEmpty(content)) {
                 return mapper.code(ResponseCode.ARGS_ERROR.statusCode())
                         .message("昵称不能为空")
                         .resultJson();
@@ -255,7 +255,7 @@ public class UserServiceImpl extends BaseService<UserDao, User> implements IUser
             break;
         // 修改背景图片
         case 4:
-            if (StringUtil.isBlank(content)) {
+            if (StringUtil.isEmpty(content)) {
                 return mapper.code(ResponseCode.ARGS_ERROR.statusCode())
                         .message("请上传背景图片")
                         .resultJson();

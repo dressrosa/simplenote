@@ -27,8 +27,9 @@
     <!-- 下面配置一些第三方包的日志过滤级别，用于避免刷屏 -->
     <logger name="org.springframework" level="WARN" />
     <logger name="com.opensymphony" level="WARN" />
-    <logger name="org.apache" level="WARN" />
-    <logger name="com.zaxxer.hikari" level="WARN" />
+    <logger name="org.apache.ibatis" level="WARN" />
+    <logger name="org.apache.activemq" level="DEBUG" />
+    <logger name="com.zaxxer.hikari" level="ERROR" />
     <!-- <logger name="ch.qos.logback" level="WARN" /> -->
     <logger name="org.mybatis.spring" level="WARN" />
     <logger name="net.sf" level="WARN" />
@@ -50,8 +51,9 @@
             <pattern> %d{HH:mm:ss.SSS}-%msg%n</pattern>
         </layout>
         <!-- 文件大小 -->
-        <!-- <triggeringPolicy class="com.bigbasket.dapp.utilities.SizeBasedTriggeringPolicy"> <maxFileSize>5MB</maxFileSize> 
-            </triggeringPolicy> -->
+        <triggeringPolicy class="com.bigbasket.dapp.utilities.SizeBasedTriggeringPolicy">
+            <maxFileSize>5MB</maxFileSize>
+        </triggeringPolicy>
     </appender>
     <!-- 默认级别和输出 -->
     <root level="DEBUG">

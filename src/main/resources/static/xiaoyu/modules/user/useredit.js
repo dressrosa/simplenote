@@ -15,30 +15,32 @@ var $ajaxPromise1 = $.ajax({
     },
     success : function(data) {
         var obj = jQuery.parseJSON(data);
-        if (obj.code == "0") {
-            var $user = obj.data;
-            if (!checkNull($user)) {
-                setTitle($user.nickname + '-编辑资料');
-                var $userPanel = $(".panel-default");
-                if (checkNull($user.avatar)) {
-                    $user.avatar = '/common/avatar.png';
-                }
-                $userPanel.find("img").attr("src", $user.avatar);
-                $userPanel.find("img").attr("id", $user.userId);
-                // $userPanel.find(".nickname_panel").html($user.nickname);
-                // $userPanel.find(".des_panel").html($user.description);
-                $("#item_name").find(".info_input").val($user.nickname);
-                $("#item_sign").find(".info_input").val($user.signature);
-                $("#item_desc").find(".info_input").val($user.description);
-                $(".panel").css("background", 'url(' + imgHead + $user.background + ') no-repeat 0% 70%/cover');
-                $(".panel_card").css("background", 'url(' + imgHead + $user.avatar + ')');
-                $(".panel_card").css("background-size", 'contain');
-                $(".card_u").find("label")[0].innerHTML = $user.nickname;
-                $(".card_u").find("label")[1].innerHTML = $user.signature;
-                $(".card_down").find("#ar_number").html($user.attr.articleNum);
-                $(".card_down").find("#fo_number").html($user.attr.followerNum);
-            }
+        if (obj.code != "0") {
+            return false;
         }
+        var $user = obj.data;
+        if (checkNull($user)) {
+            return false;
+        }
+        setTitle($user.nickname + '-编辑资料');
+        var $userPanel = $(".panel-default");
+        if (checkNull($user.avatar)) {
+            $user.avatar = '/common/avatar.png';
+        }
+        $userPanel.find("img").attr("src", $user.avatar);
+        $userPanel.find("img").attr("id", $user.userId);
+        // $userPanel.find(".nickname_panel").html($user.nickname);
+        // $userPanel.find(".des_panel").html($user.description);
+        $("#item_name").find(".info_input").val($user.nickname);
+        $("#item_sign").find(".info_input").val($user.signature);
+        $("#item_desc").find(".info_input").val($user.description);
+        $(".panel").css("background", 'url(' + imgHead + $user.background + ') no-repeat 0% 70%/cover');
+        $(".panel_card").css("background", 'url(' + imgHead + $user.avatar + ')');
+        $(".panel_card").css("background-size", 'contain');
+        $(".card_u").find("label")[0].innerHTML = $user.nickname;
+        $(".card_u").find("label")[1].innerHTML = $user.signature;
+        $(".card_down").find("#ar_number").html($user.attr.articleNum);
+        $(".card_down").find("#fo_number").html($user.attr.followerNum);
         addHeadForImg();
     }
 });
@@ -213,7 +215,6 @@ var editDesc = function() {
             return before(xhr);
         },
         error : function(data) {
-            console.log(data);
             var obj = jQuery.parseJSON(data);
             new jBox('Tooltip', {
                 content : data.message,
@@ -225,7 +226,6 @@ var editDesc = function() {
             return false;
         },
         success : function(data) {
-            console.log(data);
             var obj = jQuery.parseJSON(data);
             if (obj.code == 0) {
                 hideBtn('item_desc');

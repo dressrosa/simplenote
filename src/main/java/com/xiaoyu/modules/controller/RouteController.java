@@ -28,7 +28,7 @@ public class RouteController {
     @RequestMapping(value = "article/{articleId}", method = RequestMethod.GET)
     public String goArticleDetail(HttpServletRequest request, HttpServletResponse response,
             @PathVariable String articleId) {
-        if (StringUtil.isBlank(articleId)) {
+        if (StringUtil.isEmpty(articleId)) {
             return JumpPath.CommonRelated.PAGE_404;
         }
         return JumpPath.ArticleRelated.DETAIL;
@@ -42,7 +42,7 @@ public class RouteController {
     @RequestMapping(value = "article/edit/{articleId}", method = RequestMethod.GET)
     public String goArticleEdit(HttpServletRequest request, HttpServletResponse response,
             @PathVariable String articleId) {
-        if (StringUtil.isBlank(articleId)) {
+        if (StringUtil.isEmpty(articleId)) {
             return JumpPath.CommonRelated.PAGE_404;
         }
         return JumpPath.ArticleRelated.EDIT;
@@ -60,7 +60,7 @@ public class RouteController {
 
     @RequestMapping(value = "user/{userId}", method = RequestMethod.GET)
     public String goUserDetail(@PathVariable String userId, HttpServletRequest request) {
-        if (StringUtil.isBlank(userId)) {
+        if (StringUtil.isEmpty(userId)) {
             return JumpPath.CommonRelated.PAGE_404;
         }
         return JumpPath.UserRelated.DETAIL;

@@ -42,41 +42,7 @@ var login = function() {
         },
         success : function(data) {
             var jsonObj = jQuery.parseJSON(data);
-            console.log(jsonObj);
-
-            if (jsonObj.code == '0') {
-                // record user ip
-                $.ajax({
-                    type : 'post',
-                    async : true,
-                    url : '/api/v1/user/login/record',
-                    data : {
-                        userId : jsonObj.data.userId,
-                        device : getDevice()
-                    },
-                    beforeSend : function(xhr) {
-                        var userInfo = jQuery.parseJSON($.session.get("user"));
-                        if (!checkNull(userInfo)) {
-                            xhr.setRequestHeader('token', userInfo.token);
-                        }
-
-                    }// 这里设置header
-                });
-                // console.log( JSON.stringify(jsonObj.data));
-                // save the login info
-                $.session.set('user', JSON.stringify(jsonObj.data), true);
-                // go to the previous page,or go to the home
-                var nowUrl = $.session.get("nowUrl");
-                console.log("跳转地址:" + nowUrl);
-                if (checkNull(nowUrl) || nowUrl == 'null') {
-                    window.location.href = "/xiaoyu.me.html";
-                } else {
-                    $.session.remove("nowUrl");
-                    window.location.href = nowUrl;
-                }
-
-                return true;
-            } else {
+            if (jsonObj.code != '0') {
                 $('.tooltip').jBox('Tooltip', {
                     content : jsonObj.message,
                     pointer : false,
@@ -85,9 +51,35 @@ var login = function() {
                     closeOnClick : 'body',
                     target : $("#xyForm")
                 }).open();
-
                 return false;
             }
+            // record user ip
+            $.ajax({
+                type : 'post',
+                async : true,
+                url : '/api/v1/user/login/record',
+                data : {
+                    userId : jsonObj.data.userId,
+                    device : getDevice()
+                },
+                beforeSend : function(xhr) {
+                    var userInfo = jQuery.parseJSON($.session.get("user"));
+                    if (!checkNull(userInfo)) {
+                        xhr.setRequestHeader('token', userInfo.token);
+                    }
+                }// 这里设置header
+            });
+            // save the login info
+            $.session.set('user', JSON.stringify(jsonObj.data), true);
+            // go to the previous page,or go to the home
+            var nowUrl = $.session.get("nowUrl");
+            if (checkNull(nowUrl) || nowUrl == 'null') {
+                window.location.href = "/xiaoyu.me.html";
+            } else {
+                $.session.remove("nowUrl");
+                window.location.href = nowUrl;
+            }
+            return true;
         }
     });
 };
@@ -210,7 +202,6 @@ $(document).ready(function() {
     if (!isPC()) {
 
     }
-
     $(".logining").bind("click", login);
     $(".registering").bind("click", register);
     $(".goregister").bind("click", function() {

@@ -3,8 +3,9 @@
  */
 package com.xiaoyu.common.configuration;
 
-import org.apache.log4j.Logger;
 import org.mybatis.spring.mapper.MapperScannerConfigurer;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.context.annotation.Bean;
 
 /**
@@ -17,7 +18,7 @@ import org.springframework.context.annotation.Bean;
 // @AutoConfigureAfter(DataSourceConfiguration.class)//在datasource初始化后
 public class MyBatisMapperScannerConfig {
 
-    Logger logger = Logger.getLogger(MyBatisMapperScannerConfig.class);
+    Logger logger = LoggerFactory.getLogger(MyBatisMapperScannerConfig.class);
 
     @Bean
     public MapperScannerConfigurer scannerConfigurer() {

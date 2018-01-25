@@ -41,7 +41,7 @@ public class ArticleController {
      */
     @RequestMapping(value = "api/v1/article/{articleId}", method = RequestMethod.GET)
     public String detail(@PathVariable String articleId, HttpServletRequest request) {
-        if (StringUtil.isBlank(articleId)) {
+        if (StringUtil.isEmpty(articleId)) {
             return ResponseMapper.createMapper()
                     .code(ResponseCode.ARGS_ERROR.statusCode())
                     .resultJson();
@@ -75,7 +75,7 @@ public class ArticleController {
      */
     @RequestMapping(value = "api/v1/article/list", method = RequestMethod.GET)
     public String list(HttpServletRequest request, String userId, Integer pageNum, Integer pageSize) {
-        if (StringUtil.isBlank(userId)) {
+        if (StringUtil.isEmpty(userId)) {
             return ResponseMapper.createMapper()
                     .code(ResponseCode.ARGS_ERROR.statusCode())
                     .resultJson();
@@ -90,7 +90,7 @@ public class ArticleController {
 
     @RequestMapping(value = "api/v1/article/list/collect", method = RequestMethod.GET)
     public String collectList(HttpServletRequest request, String userId, Integer pageNum, Integer pageSize) {
-        if (StringUtil.isBlank(userId)) {
+        if (StringUtil.isEmpty(userId)) {
             return ResponseMapper.createMapper()
                     .code(ResponseCode.ARGS_ERROR.statusCode())
                     .resultJson();
@@ -100,7 +100,7 @@ public class ArticleController {
 
     @RequestMapping(value = "api/v1/article/views/{articleId}")
     public String changeViewNum(HttpServletRequest request, @PathVariable String articleId) {
-        if (StringUtil.isBlank(articleId)) {
+        if (StringUtil.isEmpty(articleId)) {
             return ResponseMapper.createMapper()
                     .code(ResponseCode.ARGS_ERROR.statusCode())
                     .resultJson();

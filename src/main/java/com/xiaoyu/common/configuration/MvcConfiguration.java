@@ -6,7 +6,8 @@ package com.xiaoyu.common.configuration;
 import java.nio.charset.Charset;
 import java.util.List;
 
-import org.apache.log4j.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -42,7 +43,7 @@ import com.alibaba.fastjson.support.spring.FastJsonHttpMessageConverter;
 @EnableScheduling
 public class MvcConfiguration extends WebMvcConfigurerAdapter {
 
-    private final static Logger logger = Logger.getLogger(MvcConfiguration.class);
+    private final static Logger logger = LoggerFactory.getLogger(MvcConfiguration.class);
 
     /**
      * springboot 默认静态资源访问路径

@@ -40,11 +40,11 @@ var $note = $.ajax({
     },
     success : function(data) {
         var obj = jQuery.parseJSON(data);
-        if (obj.code == '0' && !checkNull(obj.data)) {
-            return handleMsg(1, obj.data)
-        } else {
+        if (obj.code != '0' && checkNull(obj.data)) {
             $(".msg_list").html(blankPage);
+            return false;
         }
+        return handleMsg(1, obj.data)
     }
 });
 var $notice = $.ajax({
@@ -64,11 +64,11 @@ var $notice = $.ajax({
     },
     success : function(data) {
         var obj = jQuery.parseJSON(data);
-        if (obj.code == '0' && !checkNull(obj.data)) {
-            return handleMsg(2, obj.data)
-        } else {
+        if (obj.code != '0' && checkNull(obj.data)) {
             $(".msg_list").html(blankPage);
+            return false;
         }
+        return handleMsg(2, obj.data)
     }
 });
 var handleMsg = function(type, data) {
@@ -139,15 +139,15 @@ var handleMsg = function(type, data) {
             });
             break;
     }
-
     $(".msg_list").html($html);
 
 }
 $(document).ready(function() {
     $msg.promise().done(function() {
         var isRead = ($(".msg_list").find(".red").length > 0);
-        if (isRead)
+        if (isRead) {
             $(".li_active").find(".mark").css("visibility", "visible");
+        }
     });
     $note.promise().done(function() {
 

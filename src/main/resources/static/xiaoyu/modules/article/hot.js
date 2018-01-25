@@ -11,10 +11,15 @@ var $ajaxPromise = $.ajax({
     },
     success : function(data) {
         var obj = jQuery.parseJSON(data);
-        if (obj.code == '0') {
-            if (obj.data != null || obj.data.len >= 0) {
-                var arHtml = '<div class="item_list"  >';
-                $.each(obj.data, function(index2, ar) {
+        if (obj.code != '0') {
+            return false;
+        }
+        if (checkNull(obj.data)) {
+            return false;
+        }
+        var arHtml = '<div class="item_list" >';
+        $.each(obj.data,
+                function(index2, ar) {
                     var childHtml = '<dl>';
 
                     childHtml += '<div class="list_item">';
@@ -51,11 +56,9 @@ var $ajaxPromise = $.ajax({
                     childHtml += '</dl>';
                     arHtml += childHtml;
                 });
-                arHtml += '</div>';
-                $(".list_hot").append(arHtml);
+        arHtml += '</div>';
+        $(".list_hot").append(arHtml);
 
-            }
-        }
         $(".icon_heart_alt").on("click", function() {
             var $userInfo = jQuery.parseJSON($.session.get("user"));
             if (checkNull($userInfo)) {
@@ -96,7 +99,6 @@ var $ajaxPromise = $.ajax({
 
                 },
                 success : function(data) {
-                    console.log(data);
                     var obj = jQuery.parseJSON(data);
                     if (obj.code == "20001") {
                         showTip('您未登录或登录失效,请重新登录');
@@ -105,7 +107,6 @@ var $ajaxPromise = $.ajax({
                     return true;
                 },
                 error : function(data) {
-                    console.log(data);
                     return false;
                 }
             });
@@ -115,7 +116,6 @@ var $ajaxPromise = $.ajax({
             var elem = $icon.parent().parent().parent();
             var $ar = elem.find(".item_ar");
             window.location.href = "/article/" + $ar.attr("id") + "/comments"
-
         });
         $(".icon_like").on("click", function() {
             var $icon = $(this);
@@ -149,10 +149,8 @@ var $ajaxPromise = $.ajax({
                         xhr.setRequestHeader('token', userInfo.token);
                         xhr.setRequestHeader('userId', userInfo.userId);
                     }
-
                 },
                 success : function(data) {
-                    console.log(data);
                     var obj = jQuery.parseJSON(data);
                     if (obj.code == "20001") {
                         console.log("未登录");
@@ -160,7 +158,6 @@ var $ajaxPromise = $.ajax({
                     return true;
                 },
                 error : function(data) {
-                    console.log(data);
                     return false;
                 }
             });
@@ -207,13 +204,9 @@ $(document).ready(function() {
         $(".item_list").find("img").hover(function() {
             var $avatar = $(this);
             var $info = $.session.get('$u_' + $avatar.attr("id"));
-//            var $u = jQuery.parseJSON($.session.get("user"));
 
             if (!checkNull($info) && $info != 'null') {
                 var $uinfo = jQuery.parseJSON($info);
-//                if (!checkNull($u) && $u.userId == $avatar.attr("id")) {
-//                    $uinfo.data = jQuery.parseJSON($.session.get("user"));
-//                }
                 fillInfo($avatar, JSON.stringify($uinfo));
                 return true;
             }
@@ -227,7 +220,6 @@ $(document).ready(function() {
                         $.session.set('$u_' + obj.data.userId, data, 30 * 60);
                         fillInfo($avatar, data);
                     }
-
                     return true;
                 }
             });

@@ -36,7 +36,7 @@ public interface BaseDao<T extends BaseEntity> {
 
     public int isExist(T t);
 
-    public int isExist(@Param("id") String id);
+    public int isExist(@Param("uuid") String uuid);
 
     public List<T> findByList(T t);
 }
