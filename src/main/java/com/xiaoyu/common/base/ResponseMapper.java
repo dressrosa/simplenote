@@ -83,9 +83,7 @@ public class ResponseMapper {
         localMap.put(ResponseMapper.DATA, "");
         return result;
     }
-    public static void main(String[] args) {
-        System.out.println(ResponseMapper.createMapper().resultJson());
-    }
+    
     private final Map<String, Object> getLocalMap() {
         return ResponseMapper.LOCAL.get();
     }
