@@ -6,11 +6,13 @@
         a.uuid as uuid,
         a.type as type,
         a.sender_id as senderId,
-        a.receiver_id as reveiverId,
+        a.receiver_id as
+        reveiverId,
         a.biz_type as bizType,
         a.biz_action as bizAction,
         a.content as content ,
-        a.reply as reply,
+        a.reply as
+        reply,
         a.is_read as isRead,
         a.create_date as createDate
     </sql>
@@ -21,11 +23,11 @@
         from biz_message as a
         where
         a.sender_id=#{senderId}
-        and a.biz_id = #{bizId}
+        and a.biz_id =
+        #{bizId}
     </select>
 
-    <select id="getByUuid" parameterType="java.lang.String"
-        resultType="com.xiaoyu.modules.biz.message.entity.Message">
+    <select id="getByUuid" parameterType="java.lang.String" resultType="com.xiaoyu.modules.biz.message.entity.Message">
         select
         <include refid="Base_Column_List" />
         from biz_message as a
@@ -38,26 +40,29 @@
         a.uuid as messageId,
         a.type as type,
         a.sender_id as senderId,
-        a.receiver_id as reveiverId,
+        a.receiver_id as
+        reveiverId,
         a.biz_type as bizType,
         a.biz_id as bizId,
         a.biz_action as bizAction,
-        a.content as content,
+        a.content as
+        content,
         a.reply as reply,
         a.is_read as isRead,
         a.create_date as createDate,
-        u.nickname as senderName
+        u.nickname as
+        senderName
         from biz_message as a
         left join biz_user as u
         on u.uuid=a.sender_id
-        where 
+        where
         a.receiver_id = #{receiverId}
         and a.del_flag =0
         <if test="type != null">
             and a.type=#{type}
         </if>
     </select>
-    
+
     <insert id="insert" parameterType="com.xiaoyu.modules.biz.message.entity.Message">
         insert into biz_message
         <trim prefix="(" suffix=")" suffixOverrides=",">
@@ -138,27 +143,38 @@
         update biz_message
         set
         del_flag=1
-        where 
+        where
         uuid=#{uuid}
-        and receiver_id =#{reveiverId}
+        and receiver_id =#{receiverId}
+    </update>
+
+    <update id="batchDelete">
+        update biz_message
+        set del_flag=1
+        where
+        uuid in
+        <foreach collection="list" index="index" item="item" open="(" separator="," close=")">
+            #{item.uuid}
+        </foreach>
+        and receiver_id =#{list[0].receiverId}
     </update>
 
     <update id="read">
         update biz_message set
         is_read = 1
         where uuid in
-        <foreach collection="list" index="index" item="item"
-            open="(" separator="," close=")">
+        <foreach collection="list" index="index" item="item" open="(" separator="," close=")">
             #{item}
         </foreach>
     </update>
-    
+
     <select id="getUnreadNumBefore1Hour" resultType="java.lang.Integer">
         select
         count(*)
         from biz_message
-        where receiver_id = #{receiverId}
-        and is_read=0 
+        where
+        receiver_id = #{receiverId}
+        and is_read=0
         and del_flag=0
         and TIMESTAMPDIFF(HOUR,create_date,NOW())&lt;2
     </select>

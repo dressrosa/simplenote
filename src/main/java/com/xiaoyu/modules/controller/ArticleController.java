@@ -74,13 +74,13 @@ public class ArticleController {
      * @time 2016年3月30日下午2:16:59
      */
     @RequestMapping(value = "api/v1/article/list", method = RequestMethod.GET)
-    public String list(HttpServletRequest request, String userId, Integer pageNum, Integer pageSize) {
+    public String list(HttpServletRequest request, String userId) {
         if (StringUtil.isEmpty(userId)) {
             return ResponseMapper.createMapper()
                     .code(ResponseCode.ARGS_ERROR.statusCode())
                     .resultJson();
         }
-        return this.articleService.list(request, userId, pageNum, pageSize);
+        return this.articleService.list(request, userId);
     }
 
     @RequestMapping(value = "api/v1/article/latest", method = RequestMethod.POST)
@@ -89,13 +89,13 @@ public class ArticleController {
     }
 
     @RequestMapping(value = "api/v1/article/list/collect", method = RequestMethod.GET)
-    public String collectList(HttpServletRequest request, String userId, Integer pageNum, Integer pageSize) {
+    public String collectList(HttpServletRequest request, String userId) {
         if (StringUtil.isEmpty(userId)) {
             return ResponseMapper.createMapper()
                     .code(ResponseCode.ARGS_ERROR.statusCode())
                     .resultJson();
         }
-        return this.articleService.collectList(request, userId, pageNum, pageSize);
+        return this.articleService.collectList(request, userId);
     }
 
     @RequestMapping(value = "api/v1/article/views/{articleId}")
@@ -144,7 +144,7 @@ public class ArticleController {
             @RequestParam(required = true) String replyContent) {
         return this.articleService.reply(request, commentId, replyContent);
     }
-    
+
     @RequestMapping(value = "api/v1/article/{articleId}/new-comments", method = RequestMethod.GET)
     public String newComments(HttpServletRequest request, @PathVariable String articleId) {
         return this.articleService.newComments(request, articleId);

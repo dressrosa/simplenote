@@ -9,6 +9,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.xiaoyu.modules.biz.message.entity.Message;
 import com.xiaoyu.modules.biz.message.service.api.IMessageService;
 
 @RestController
@@ -33,14 +34,14 @@ public class MessageController {
         return this.messageService.unreadNum(request);
     }
 
-    @RequestMapping(value = "api/v1/message/remove", method = RequestMethod.POST)
-    public String removeMsg(HttpServletRequest request, @RequestParam(required = true) String msgIds) {
-        return this.messageService.removeMsg(request, msgIds);
-    }
-
     @RequestMapping(value = "api/v1/message/reply", method = RequestMethod.POST)
     public String replyMsg(HttpServletRequest request, @RequestParam(required = true) String msgId,
             @RequestParam(required = true) String replyContent) {
         return this.messageService.replyMsg(request, msgId, replyContent);
+    }
+
+    @RequestMapping(value = "api/v1/message/remove", method = RequestMethod.POST)
+    public String remove(HttpServletRequest request, @RequestParam(required = true) Message... messages) {
+        return this.messageService.removeMessage(request, messages);
     }
 }

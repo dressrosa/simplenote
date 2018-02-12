@@ -25,6 +25,8 @@ public interface BaseDao<T extends BaseEntity> {
     public int update(T t);
 
     public int delete(T t);
+    
+    public int batchDelete(List<T> list);
 
     public T get(T t);
 

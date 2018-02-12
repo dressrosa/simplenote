@@ -7,18 +7,15 @@
     <parent>
         <groupId>org.springframework.boot</groupId>
         <artifactId>spring-boot-starter-parent</artifactId>
-        <version>1.4.0.RELEASE</version>
+        <version>1.5.8.RELEASE</version>
     </parent>
 
     <!--version -->
     <properties>
         <redis.version>2.0</redis.version>
         <mysql.version>5.1.38</mysql.version>
-        <mybatis.version>3.3.1</mybatis.version>
-        <mybatisspring.version>1.2.4</mybatisspring.version>
-        <HikariCP.version>2.4.4</HikariCP.version>
-        <!-- <celery.version>/Users/hongyu/git/celery-0.0.1-SNAPSHOT.jar</celery.version> <toolbox.version>/Users/hongyu/git/toolbox/maple/target/maple-0.0.1-SNAPSHOT.jar</toolbox.version> 
-            <ribbon.version>/Users/hongyu/git/toolbox/ribbon/target/ribbon-0.0.1-SNAPSHOT.jar</ribbon.version> -->
+        <mybatis.version>3.4.5</mybatis.version>
+        <mybatisspring.version>1.3.1</mybatisspring.version>
     </properties>
     <dependencies>
         <dependency>
@@ -66,7 +63,7 @@
         <dependency>
             <groupId>org.mybatis.spring.boot</groupId>
             <artifactId>mybatis-spring-boot-starter</artifactId>
-            <version>1.0.1</version>
+            <version>1.3.1</version>
         </dependency>
         <dependency>
             <groupId>org.mybatis</groupId>
@@ -82,8 +79,9 @@
         <dependency>
             <groupId>com.github.pagehelper</groupId>
             <artifactId>pagehelper</artifactId>
-            <version>4.0.1</version>
+            <version>4.0.2</version>
         </dependency>
+        
         <!--fastJson -->
         <dependency>
             <groupId>com.alibaba</groupId>

@@ -16,7 +16,10 @@ var $ajaxPromise1 = $.ajax({
             setTitle($user.nickname + '-个人主页');
             var $userPanel = $(".panel");
             if (checkNull($user.avatar)) {
-                $user.avatar = 'common/avatar.png';
+                $user.avatar = imgHead + 'common/avatar.png';
+            }
+            if (checkNull($user.background)) {
+                $user.background = 'common/4.jpg';
             }
             $(".panel").css("background", 'url(' + imgHead + $user.background + ') no-repeat 0% 70%/cover');
             $userPanel.find("img").attr("src", $user.avatar);
@@ -32,6 +35,8 @@ var before = function(xhr) {
     if (!checkNull(userInfo)) {
         xhr.setRequestHeader('token', userInfo.token);
         xhr.setRequestHeader('userId', userInfo.userId);
+        xhr.setRequestHeader('pageNum', 1);
+        xhr.setRequestHeader('pageSize', 10);
     }
 };
 var handleAll = function(data) {
@@ -231,7 +236,7 @@ $(document).ready(function() {
     $ajaxPromise1.promise().done(function() {
     });
     $all.promise().done(function() {
-
+        addHeadForImg();
     });
     // tab page
     $(".tab_ul").on('click', 'li', function() {

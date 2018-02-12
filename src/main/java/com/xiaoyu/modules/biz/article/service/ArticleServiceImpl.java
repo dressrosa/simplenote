@@ -82,7 +82,7 @@ public class ArticleServiceImpl extends BaseService<ArticleDao, Article> impleme
     @Autowired
     private IMessageService messageService;
 
-    private Map<String, Object> article2Map(ArticleVo a) {
+    private Map<String, Object> article2Map(final ArticleVo a) {
         return MapleUtil.wrap(a)
                 .rename("uuid", "articleId")
                 .stick("content", a.getContent().length() > 150 ? a.getContent().substring(0, 149) : a.getContent())
@@ -119,9 +119,15 @@ public class ArticleServiceImpl extends BaseService<ArticleDao, Article> impleme
         // return mapper.data(total).resultJson();
         // }
         // }
-        PageHelper.startPage(1, 12);
-        Page<ArticleVo> page = (Page<ArticleVo>) this.articleDao.findHotList();
-        List<ArticleVo> list = page.getResult();
+        String pageNum = request.getHeader("pageNum");
+        String pageSize = request.getHeader("pageSize");
+        if (pageNum == null || pageSize == null || Integer.valueOf(pageNum) < 0
+                || Integer.valueOf(pageSize) < 0) {
+            pageNum = "1";
+            pageSize = "12";
+        }
+       PageHelper.startPage(Integer.valueOf(pageNum), Integer.valueOf(pageSize));
+        List<ArticleVo> list = this.articleDao.findHotList();
         // 是否登录
         boolean isLogin = (UserUtils.checkLoginDead(request) != null);
         String tuserId = request.getHeader("userId");
@@ -131,16 +137,19 @@ public class ArticleServiceImpl extends BaseService<ArticleDao, Article> impleme
     }
 
     @Override
-    public String list(HttpServletRequest request, String userId, Integer pageNum, Integer pageSize) {
+    public String list(HttpServletRequest request, String userId) {
         ResponseMapper mapper = ResponseMapper.createMapper();
         final Article article = new Article();
         article.setUserId(userId);
-        if (pageNum == null || pageSize == null || pageNum < 0 || pageSize < 0) {
-            pageNum = 0;
-            pageSize = 10;
+        String pageNum = request.getHeader("pageNum");
+        String pageSize = request.getHeader("pageSize");
+        if (pageNum == null || pageSize == null || Integer.valueOf(pageNum) < 0
+                || Integer.valueOf(pageSize) < 0) {
+            pageNum = "1";
+            pageSize = "10";
         }
 
-        Page<ArticleVo> page = this.findByPageWithAttr(userId, pageNum, pageSize);
+        Page<ArticleVo> page = this.findByPageWithAttr(userId, Integer.valueOf(pageNum), Integer.valueOf(pageSize));
         final List<ArticleVo> list = page.getResult();
         if (list == null || list.isEmpty()) {
             return mapper.resultJson();
@@ -154,24 +163,27 @@ public class ArticleServiceImpl extends BaseService<ArticleDao, Article> impleme
     }
 
     @Override
-    public String collectList(HttpServletRequest request, String userId, Integer pageNum, Integer pageSize) {
+    public String collectList(HttpServletRequest request, String userId) {
         ResponseMapper mapper = ResponseMapper.createMapper();
         // 是否登录
         final boolean isLogin = (UserUtils.checkLoginDead(request) != null);
         final Article article = new Article();
         article.setUserId(userId);
-        if (pageNum == null || pageSize == null || pageNum < 0 || pageSize < 0) {
-            pageNum = 0;
-            pageSize = 10;
+        String pageNum = request.getHeader("pageNum");
+        String pageSize = request.getHeader("pageSize");
+        if (pageNum == null || pageSize == null || Integer.valueOf(pageNum) < 0 || Integer.valueOf(pageSize) < 0) {
+            pageNum = "1";
+            pageSize = "10";
         }
 
         Page<ArticleVo> page = new Page<ArticleVo>();
-        PageHelper.startPage(pageNum, pageSize);
+        PageHelper.startPage(Integer.valueOf(pageNum), Integer.valueOf(pageSize));
         page = this.articleDao.findCollectList(userId);
         final List<ArticleVo> list = page.getResult();
         String tuserId = request.getHeader("userId");
 
         List<Map<String, Object>> total = this.handleArticleVoList(list, tuserId, isLogin);
+
         return mapper.data(total).resultJson();
     }
 
@@ -211,13 +223,13 @@ public class ArticleServiceImpl extends BaseService<ArticleDao, Article> impleme
         for (UserVo u : userVoList) {
             voMap.put(u.getUserId(), u);
         }
-        Map<String, ArticleLike> likeMap = new HashMap<>();
+        Map<String, ArticleLike> likeMap = new HashMap<>(16);
         if (likeList != null && !likeList.isEmpty()) {
             for (ArticleLike li : likeList) {
                 likeMap.put(li.getArticleId(), li);
             }
         }
-        Map<String, ArticleCollect> coMap = new HashMap<>();
+        Map<String, ArticleCollect> coMap = new HashMap<>(16);
         if (collectList != null && !collectList.isEmpty()) {
             for (ArticleCollect c : collectList) {
                 coMap.put(c.getArticleId(), c);
@@ -327,7 +339,7 @@ public class ArticleServiceImpl extends BaseService<ArticleDao, Article> impleme
 
     @Override
     public String addReadNum(HttpServletRequest request, String articleId) {
-        final String ip = request.getRemoteHost();
+        String ip = request.getRemoteHost();
         if (JedisUtils.get("user:login:" + ip) != null) {
             return ResponseMapper.createMapper().resultJson();
         }
@@ -370,7 +382,8 @@ public class ArticleServiceImpl extends BaseService<ArticleDao, Article> impleme
         ArticleAttr attr = new ArticleAttr();
         attr.setArticleId(a.getArticleId());
         final ArticleAttr at = this.articleAttrDao.getForUpdate(a.getArticleId());
-        if (flag) {// 点赞
+        if (flag) {
+            // 点赞
             attr.setLikeNum(at.getLikeNum() + 1);
         } else {
             attr.setLikeNum(at.getLikeNum() - 1);
@@ -378,7 +391,7 @@ public class ArticleServiceImpl extends BaseService<ArticleDao, Article> impleme
         this.articleAttrDao.update(attr);
     }
 
-    /*
+    /**
      * isCollect 0取消收藏 1收藏
      */
     @Override
@@ -558,7 +571,7 @@ public class ArticleServiceImpl extends BaseService<ArticleDao, Article> impleme
             likeList = this.arCommentDao.getLikes(likeQueryList);
         }
         // 封装数据
-        Map<String, CommentLike> likeMap = new HashMap<>();
+        Map<String, CommentLike> likeMap = new HashMap<>(16);
         if (likeList != null && !likeList.isEmpty()) {
             for (CommentLike c : likeList) {
                 likeMap.put(c.getCommentId(), c);
@@ -602,6 +615,7 @@ public class ArticleServiceImpl extends BaseService<ArticleDao, Article> impleme
     }
 
     // =============================评论相关===========================//
+
     @Override
     public String addCommentLike(HttpServletRequest request, String commentId, Integer isLike) {
         ResponseMapper mapper = ResponseMapper.createMapper();
@@ -622,7 +636,7 @@ public class ArticleServiceImpl extends BaseService<ArticleDao, Article> impleme
         return mapper.resultJson();
     }
 
-    @Transactional
+    @Transactional(rollbackFor = RuntimeException.class)
     private <T> void handleLikeOrCollectNum(T t) {
         final Message msg = new Message()
                 .setReceiverId(null)
@@ -717,7 +731,8 @@ public class ArticleServiceImpl extends BaseService<ArticleDao, Article> impleme
         ArticleComment temp = new ArticleComment();
         temp.setUuid(c.getCommentId());
         ArticleComment ac = this.arCommentDao.getForUpdate(c.getCommentId());
-        if (flag) {// 点赞
+        if (flag) {
+            // 点赞
             temp.setNum(ac.getNum() + 1);
         } else {
             temp.setNum(ac.getNum() - 1);
@@ -745,7 +760,7 @@ public class ArticleServiceImpl extends BaseService<ArticleDao, Article> impleme
 
     @Override
     public void synElastic() {
-        int pageSize = 100;
+        int pageSize = 96;
         Page<Article> page = new Page<>();
         int count = this.articleDao.count();
         int pageNum = (count + pageSize - 1) / pageSize;
@@ -758,7 +773,7 @@ public class ArticleServiceImpl extends BaseService<ArticleDao, Article> impleme
             PageHelper.startPage(i++, pageSize, true);
             page = (Page<Article>) this.articleDao.findByList(t);
             if ((list = page.getResult()) != null && !list.isEmpty()) {
-                jsonMap = new HashMap<>(134);
+                jsonMap = new HashMap<>(128);
                 for (Article a : list) {
                     jsonMap.put(a.getUuid(), JSON.toJSONString(a));
                     ElasticUtils.upsertList("website", "article", jsonMap);
