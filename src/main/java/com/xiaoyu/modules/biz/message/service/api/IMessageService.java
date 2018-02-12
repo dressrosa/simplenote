@@ -7,6 +7,13 @@ import javax.servlet.http.HttpServletRequest;
 
 import com.xiaoyu.modules.biz.message.entity.Message;
 
+/**
+ * 消息相关
+ * 
+ * @author hongyu
+ * @date 2018-02
+ * @description
+ */
 public interface IMessageService {
 
     /**
@@ -18,15 +25,6 @@ public interface IMessageService {
      * @return
      */
     public String getMsgByType(HttpServletRequest request, String userId, int type);
-
-    /**
-     * 删除消息
-     * 
-     * @param request
-     * @param msgId
-     * @return
-     */
-    public String removeMsg(HttpServletRequest request, String msgId);
 
     /**
      * 回复消息
@@ -55,9 +53,18 @@ public interface IMessageService {
      */
     public String unreadNum(HttpServletRequest request);
 
-    /**推送消息事件
+    /**
+     * 推送消息事件
+     * 
      * @param message
      * @return
      */
     public String sendMsgEvent(Message message);
+
+    /**
+     * @param request
+     * @param message
+     * @return
+     */
+    public String removeMessage(HttpServletRequest request, Message ...message);
 }

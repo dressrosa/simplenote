@@ -81,19 +81,6 @@ public class MessageServiceImpl implements IMessageService {
     }
 
     @Override
-    public String removeMsg(HttpServletRequest request, String msgId) {
-        ResponseMapper mapper = ResponseMapper.createMapper();
-        if (UserUtils.checkLoginDead(request) == null) {
-            return mapper.code(ResponseCode.LOGIN_INVALIDATE.statusCode()).resultJson();
-        }
-        Message m = new Message();
-        m.setReceiverId(request.getHeader("userId"))
-                .setUuid(msgId);
-        this.msgDao.delete(m);
-        return mapper.resultJson();
-    }
-
-    @Override
     public String replyMsg(HttpServletRequest request, String msgId, String replyContent) {
         // TODO 1.回复单纯的消息 2.回复评论等,应该调用回复评论等相应的接口 目前回复消息只有回复评论
         ResponseMapper mapper = ResponseMapper.createMapper();
@@ -158,6 +145,22 @@ public class MessageServiceImpl implements IMessageService {
         }
         this.eventPublisher.publishEvent(new MessageEvent(msg));
         return null;
+    }
+
+    @Override
+    public String removeMessage(HttpServletRequest request, Message... messages) {
+        ResponseMapper mapper = ResponseMapper.createMapper();
+        User u = UserUtils.checkLoginDead(request);
+        if (u == null) {
+            return mapper.code(ResponseCode.LOGIN_INVALIDATE.statusCode()).resultJson();
+        }
+        Message temp = new Message();
+        if(messages.length == 1) {
+            temp.setReceiverId(u.getUuid()).setUuid(messages[0].getUuid());
+            this.msgDao.delete(temp);
+        }
+        this.msgDao.batchDelete(Arrays.asList(messages));
+        return mapper.resultJson();
     }
 
 }

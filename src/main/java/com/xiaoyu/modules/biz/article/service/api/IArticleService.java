@@ -38,7 +38,7 @@ public interface IArticleService {
      * @param pageSize
      * @return
      */
-    public String list(HttpServletRequest request, String userId, Integer pageNum, Integer pageSize);
+    public String list(HttpServletRequest request, String userId);
 
     /**
      * 收藏列表
@@ -49,7 +49,7 @@ public interface IArticleService {
      * @param pageSize
      * @return
      */
-    public String collectList(HttpServletRequest request, String userId, Integer pageNum, Integer pageSize);
+    public String collectList(HttpServletRequest request, String userId);
 
     /**
      * 增加文章

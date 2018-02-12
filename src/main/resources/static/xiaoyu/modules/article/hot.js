@@ -1,200 +1,27 @@
-var $ajaxPromise = $.ajax({
-    type : "get",
-    async : true,
-    url : '/api/v1/article/hot',
-    beforeSend : function(xhr) {
-        var $userInfo = jQuery.parseJSON($.session.get("user"));
-        if (!checkNull($userInfo)) {
-            xhr.setRequestHeader('token', $userInfo.token);
-            xhr.setRequestHeader('userId', $userInfo.userId);
-        }
-    },
-    success : function(data) {
-        var obj = jQuery.parseJSON(data);
-        if (obj.code != '0') {
-            return false;
-        }
-        if (checkNull(obj.data)) {
-            return false;
-        }
-        var arHtml = '<div class="item_list" >';
-        $.each(obj.data,
-                function(index2, ar) {
-                    var childHtml = '<dl>';
-
-                    childHtml += '<div class="list_item">';
-                    childHtml += '<span class="item_userinfo" ><img class="avatar small" img-type="avatar" src="' + ar.user.avatar + '" id="'
-                            + ar.user.userId + '" />';
-                    childHtml += '<p class="item_desc">' + ar.user.signature + '</p>';
-                    childHtml += '</span>';
-                    childHtml += '<dt class="item_username">' + ar.user.nickname + '</dt>';
-                    childHtml += '<div class="item_ar" id="' + ar.articleId + '">';
-                    childHtml += '<dt class="item_ar_title">' + ar.title + '</dt>';
-                    childHtml += '<p class="item_ar_content">' + ar.content + '</p>';
-                    childHtml += ' </div>';
-
-                    childHtml += '<div class="comment_bar"><div class="bar_part">';
-                    if (ar.isLike == "1") {
-                        childHtml += '<i class="icon_like" style="color:#fd4d4d;" data-like="1"></i>';
-                    } else {
-                        childHtml += '<i class="icon_like" data-like="0"></i>';
-                    }
-
-                    childHtml += '<label style="margin: 2px;">' + ar.attr.likeNum + '</label></div>';
-                    childHtml += '<div class="bar_part"><i class="icon_comment_alt"></i><label style="margin: 2px;">' + ar.attr.commentNum
-                            + '</label></div>';
-                    childHtml += '<div class="bar_part">';
-                    if (ar.isCollect == "1") {
-                        childHtml += '<i class="icon_heart_alt" style="color:#fd4d4d;" data-heart="1"></i>';
-                    } else {
-                        childHtml += '<i class="icon_heart_alt" data-heart="0"></i>';
-                    }
-                    childHtml += '<label style="margin: 2px;">' + ar.attr.collectNum + '</label></div>';
-                    childHtml += '</div>';
-                    childHtml += '</li>';
-                    childHtml += ' </div>';
-                    childHtml += '</dl>';
-                    arHtml += childHtml;
-                });
-        arHtml += '</div>';
-        $(".list_hot").append(arHtml);
-
-        $(".icon_heart_alt").on("click", function() {
+var $lock = true;
+var getList = function(pageNum, pageSize) {
+    var $ajaxPromise = $.ajax({
+        type : "get",
+        async : true,
+        url : '/api/v1/article/hot',
+        beforeSend : function(xhr) {
             var $userInfo = jQuery.parseJSON($.session.get("user"));
-            if (checkNull($userInfo)) {
-                showTip('您未登录或登录失效,请重新登录');
-                return false;
+            xhr.setRequestHeader('pageNum', pageNum);
+            xhr.setRequestHeader('pageSize', pageSize);
+            if (!checkNull($userInfo)) {
+                xhr.setRequestHeader('token', $userInfo.token);
+                xhr.setRequestHeader('userId', $userInfo.userId);
             }
-
-            var $icon = $(this);
-            var elem = $icon.parent().parent().parent();
-            var $ar = elem.find(".item_ar");
-            var $next = $icon.next();
-            var num = $next.html();
-            var $isCollect;
-            if ($icon.attr('data-heart') == '0') {
-                $icon.css("color", "#fd4d4d");
-                $icon.attr("data-heart", "1");
-                $next.html(num - (-1));
-                $isCollect = 0;
-            } else if ($icon.attr('data-heart') == '1') {
-                $icon.css("color", "#a7a7a7");
-                $icon.attr("data-heart", "0");
-                $next.html(num - 1);
-                $isCollect = 1;
-            }
-            $.ajax({
-                type : "post",
-                async : true,
-                url : '/api/v1/article/collect',
-                data : {
-                    articleId : $ar.attr("id"),
-                    isCollect : $isCollect
-                },
-                beforeSend : function(xhr) {
-                    if (!checkNull($userInfo)) {
-                        xhr.setRequestHeader('token', $userInfo.token);
-                        xhr.setRequestHeader('userId', $userInfo.userId);
-                    }
-
-                },
-                success : function(data) {
-                    var obj = jQuery.parseJSON(data);
-                    if (obj.code == "20001") {
-                        showTip('您未登录或登录失效,请重新登录');
-                        return false;
-                    }
-                    return true;
-                },
-                error : function(data) {
-                    return false;
-                }
-            });
-        });
-        $(".icon_comment_alt").on("click", function() {
-            var $icon = $(this);
-            var elem = $icon.parent().parent().parent();
-            var $ar = elem.find(".item_ar");
-            window.location.href = "/article/" + $ar.attr("id") + "/comments"
-        });
-        $(".icon_like").on("click", function() {
-            var $icon = $(this);
-            var elem = $icon.parent().parent().parent();
-            var $ar = elem.find(".item_ar");
-            var $next = $icon.next();
-            var num = $next.html();
-            var $isLike;
-            if ($icon.attr('data-like') == '0') {
-                $icon.css("color", "#fd4d4d");
-                $icon.attr("data-like", "1");
-                $next.html(num - (-1));
-                $isLike = 0;
-            } else if ($icon.attr('data-like') == '1') {
-                $icon.css("color", "#a7a7a7");
-                $icon.attr("data-like", "0");
-                $next.html(num - 1);
-                $isLike = 1;
-            }
-            $.ajax({
-                type : "post",
-                async : true,
-                url : '/api/v1/article/like',
-                data : {
-                    articleId : $ar.attr("id"),
-                    isLike : $isLike
-                },
-                beforeSend : function(xhr) {
-                    var userInfo = jQuery.parseJSON($.session.get("user"));
-                    if (!checkNull(userInfo)) {
-                        xhr.setRequestHeader('token', userInfo.token);
-                        xhr.setRequestHeader('userId', userInfo.userId);
-                    }
-                },
-                success : function(data) {
-                    var obj = jQuery.parseJSON(data);
-                    if (obj.code == "20001") {
-                        console.log("未登录");
-                    }
-                    return true;
-                },
-                error : function(data) {
-                    return false;
-                }
-            });
-        });
-        addHeadForImg();
-        $('.item_ar').bind('click', function() {
-            var $elem = $(this);
-            window.location.href = "/article/" + $elem.attr('id');
-        });
-        $('.avatar').bind('click', function() {
-            var $elem = $(this);
-            window.location.href = "/user/" + $elem.attr('id');
-        });
-        return true;
-    }
-});
-
-var userInfo = jQuery.parseJSON($.session.get('user'));
-var fillInfo = function(item1, item2) {
-    var $avatar = item1;
-    var $user = jQuery.parseJSON(item2).data;
-    var $userCard = $(".panel_card_wrapper_smaller");
-    $userCard.find(".panel_card").css("background", 'url(' + imgHead + $user.avatar + ')');
-    $userCard.find(".panel_card").css("background-size", 'contain');
-    $userCard.find(".card_u").find("label")[0].innerHTML = $user.nickname;
-    $userCard.find(".card_u").find("label")[1].innerHTML = $user.signature;
-    $userCard.find("#ar_number").html($user.attr.articleNum);
-    $userCard.find("#fo_number").html($user.attr.followerNum);
-    var $top = $avatar.parent().parent().position().top;
-    $userCard.css({
-        "position" : "absolute",
-        "top" : $top - 190,
-        "left" : "65px",
-        "display" : "initial"
+        },
+        success : function(data) {
+            handleData(data);
+            $lock = false;
+            return true;
+        },
+        error : function(data) {
+            return false;
+        }
     });
-}
-$(document).ready(function() {
     $ajaxPromise.promise().done(function() {
         if (!isPC()) {
             $(".hot").css("display", "block");
@@ -233,6 +60,194 @@ $(document).ready(function() {
             });
         });
     });
+};
+
+// handle the data
+var handleData = function(data) {
+    var obj = jQuery.parseJSON(data);
+    if (obj.code != '0') {
+        return false;
+    }
+    if (checkNull(obj.data)) {
+        return false;
+    }
+    var arHtml = '<div class="item_list" >';
+    $.each(obj.data, function(index2, ar) {
+        var childHtml = '<dl>';
+
+        childHtml += '<div class="list_item">';
+        childHtml += '<span class="item_userinfo" ><img class="avatar small" img-type="avatar" src="' + ar.user.avatar + '" id="' + ar.user.userId
+                + '" />';
+        childHtml += '<p class="item_desc">' + ar.user.signature + '</p>';
+        childHtml += '</span>';
+        childHtml += '<dt class="item_username">' + ar.user.nickname + '</dt>';
+        childHtml += '<div class="item_ar" id="' + ar.articleId + '">';
+        childHtml += '<dt class="item_ar_title">' + ar.title + '</dt>';
+        childHtml += '<p class="item_ar_content">' + ar.content + '</p>';
+        childHtml += ' </div>';
+
+        childHtml += '<div class="comment_bar"><div class="bar_part">';
+        if (ar.isLike == "1") {
+            childHtml += '<i class="icon_like" style="color:#fd4d4d;" data-like="1"></i>';
+        } else {
+            childHtml += '<i class="icon_like" data-like="0"></i>';
+        }
+
+        childHtml += '<label style="margin: 2px;">' + ar.attr.likeNum + '</label></div>';
+        childHtml += '<div class="bar_part"><i class="icon_comment_alt"></i><label style="margin: 2px;">' + ar.attr.commentNum + '</label></div>';
+        childHtml += '<div class="bar_part">';
+        if (ar.isCollect == "1") {
+            childHtml += '<i class="icon_heart_alt" style="color:#fd4d4d;" data-heart="1"></i>';
+        } else {
+            childHtml += '<i class="icon_heart_alt" data-heart="0"></i>';
+        }
+        childHtml += '<label style="margin: 2px;">' + ar.attr.collectNum + '</label></div>';
+        childHtml += '</div>';
+        childHtml += '</li>';
+        childHtml += ' </div>';
+        childHtml += '</dl>';
+        arHtml += childHtml;
+    });
+    arHtml += '</div>';
+    $(".list_hot").append(arHtml);
+
+    $(".icon_heart_alt").on("click", function() {
+        var $userInfo = jQuery.parseJSON($.session.get("user"));
+        if (checkNull($userInfo)) {
+            showTip('您未登录或登录失效,请重新登录');
+            return false;
+        }
+
+        var $icon = $(this);
+        var elem = $icon.parent().parent().parent();
+        var $ar = elem.find(".item_ar");
+        var $next = $icon.next();
+        var num = $next.html();
+        var $isCollect;
+        if ($icon.attr('data-heart') == '0') {
+            $icon.css("color", "#fd4d4d");
+            $icon.attr("data-heart", "1");
+            $next.html(num - (-1));
+            $isCollect = 0;
+        } else if ($icon.attr('data-heart') == '1') {
+            $icon.css("color", "#a7a7a7");
+            $icon.attr("data-heart", "0");
+            $next.html(num - 1);
+            $isCollect = 1;
+        }
+        $.ajax({
+            type : "post",
+            async : true,
+            url : '/api/v1/article/collect',
+            data : {
+                articleId : $ar.attr("id"),
+                isCollect : $isCollect
+            },
+            beforeSend : function(xhr) {
+                if (!checkNull($userInfo)) {
+                    xhr.setRequestHeader('token', $userInfo.token);
+                    xhr.setRequestHeader('userId', $userInfo.userId);
+                }
+
+            },
+            success : function(data) {
+                var obj = jQuery.parseJSON(data);
+                if (obj.code == "20001") {
+                    showTip('您未登录或登录失效,请重新登录');
+                    return false;
+                }
+                return true;
+            },
+            error : function(data) {
+                return false;
+            }
+        });
+    });
+    $(".icon_comment_alt").on("click", function() {
+        var $icon = $(this);
+        var elem = $icon.parent().parent().parent();
+        var $ar = elem.find(".item_ar");
+        window.location.href = "/article/" + $ar.attr("id") + "/comments"
+    });
+    $(".icon_like").on("click", function() {
+        var $icon = $(this);
+        var elem = $icon.parent().parent().parent();
+        var $ar = elem.find(".item_ar");
+        var $next = $icon.next();
+        var num = $next.html();
+        var $isLike;
+        if ($icon.attr('data-like') == '0') {
+            $icon.css("color", "#fd4d4d");
+            $icon.attr("data-like", "1");
+            $next.html(num - (-1));
+            $isLike = 0;
+        } else if ($icon.attr('data-like') == '1') {
+            $icon.css("color", "#a7a7a7");
+            $icon.attr("data-like", "0");
+            $next.html(num - 1);
+            $isLike = 1;
+        }
+        $.ajax({
+            type : "post",
+            async : true,
+            url : '/api/v1/article/like',
+            data : {
+                articleId : $ar.attr("id"),
+                isLike : $isLike
+            },
+            beforeSend : function(xhr) {
+                var userInfo = jQuery.parseJSON($.session.get("user"));
+                if (!checkNull(userInfo)) {
+                    xhr.setRequestHeader('token', userInfo.token);
+                    xhr.setRequestHeader('userId', userInfo.userId);
+                }
+            },
+            success : function(data) {
+                var obj = jQuery.parseJSON(data);
+                if (obj.code == "20001") {
+                    console.log("未登录");
+                }
+                return true;
+            },
+            error : function(data) {
+                return false;
+            }
+        });
+    });
+    $('.item_ar').bind('click', function() {
+        var $elem = $(this);
+        window.location.href = "/article/" + $elem.attr('id');
+    });
+    $('.avatar').bind('click', function() {
+        var $elem = $(this);
+        window.location.href = "/user/" + $elem.attr('id');
+    });
+    addHeadForImg();
+    return true;
+
+};
+
+var userInfo = jQuery.parseJSON($.session.get('user'));
+var fillInfo = function(item1, item2) {
+    var $avatar = item1;
+    var $user = jQuery.parseJSON(item2).data;
+    var $userCard = $(".panel_card_wrapper_smaller");
+    $userCard.find(".panel_card").css("background", 'url(' + imgHead + $user.avatar + ')');
+    $userCard.find(".panel_card").css("background-size", 'contain');
+    $userCard.find(".card_u").find("label")[0].innerHTML = $user.nickname;
+    $userCard.find(".card_u").find("label")[1].innerHTML = $user.signature;
+    $userCard.find("#ar_number").html($user.attr.articleNum);
+    $userCard.find("#fo_number").html($user.attr.followerNum);
+    var $top = $avatar.parent().parent().position().top;
+    $userCard.css({
+        "position" : "absolute",
+        "top" : $top - 190,
+        "left" : "65px",
+        "display" : "initial"
+    });
+}
+$(document).ready(function() {
+    getList(1, 12);
     if (checkNull(userInfo)) {
         $("#loginSpan").css("display", "block");
     } else {
@@ -277,4 +292,24 @@ $(document).ready(function() {
         if (curKey == 13)
             $(".icon_search").click();
     });
+
+    // 滚动事件触发
+    var $pageNum = 2;
+    window.onscroll = function() {
+        // console.log("可视高度:" + getClientHeight() + " 滚动位置:" + getScrollTop() +
+        // " doc高度:" + getScrollHeight() + " 相加:"
+        // + (getScrollTop() + getClientHeight()) + "位置:" +
+        // $(".header").offset().top)
+
+        if (getScrollTop() + getClientHeight() == getScrollHeight()) {
+            if (!$lock) {
+                $lock = true;
+                $(".loading").css("visibility", "visible");
+                setTimeout(function() {
+                    getList($pageNum++, 12);
+                    $(".loading").css("visibility", "hidden");
+                }, 50);
+            }
+        }
+    }
 });

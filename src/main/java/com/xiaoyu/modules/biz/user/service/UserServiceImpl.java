@@ -382,7 +382,7 @@ public class UserServiceImpl extends BaseService<UserDao, User> implements IUser
         String pageNum = request.getHeader("pageNum");
         Follow f = new Follow();
         f.setUserId(userId);
-        PageHelper.startPage(Integer.valueOf(pageNum), 10);
+        PageHelper.startPage(Integer.valueOf(pageNum), 12);
         Page<FollowVo> page = (Page<FollowVo>) this.followDao.findList(f);
         List<FollowVo> list = page.getResult();
 
@@ -399,7 +399,7 @@ public class UserServiceImpl extends BaseService<UserDao, User> implements IUser
         Follow f = new Follow();
         f.setFollowerId(userId);
 
-        PageHelper.startPage(Integer.valueOf(pageNum), 10);
+        PageHelper.startPage(Integer.valueOf(pageNum), 12);
         Page<FollowVo> page = (Page<FollowVo>) this.followDao.findList(f);
         List<FollowVo> list = page.getResult();
 

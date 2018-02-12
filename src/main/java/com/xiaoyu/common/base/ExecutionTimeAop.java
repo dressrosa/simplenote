@@ -140,7 +140,7 @@ public class ExecutionTimeAop {
         } catch (final Throwable e) {
             LOG.error(e.toString());
         }
-        LOG.info("方法[" + methodName + "]执行时间为:[" + (System.currentTimeMillis() - start) + " milliseconds] ");
+        LOG.info("方法[{}]执行时间为:[{}milliseconds] ", methodName, (System.currentTimeMillis() - start));
         return result;
     }
 

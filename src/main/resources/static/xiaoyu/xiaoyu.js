@@ -6,8 +6,13 @@ function addHeadForImg() {
     var len = imgs.length;
     for (var i = 0; i < len; i++) {
         var $img = $(imgs[i]);
+        if ($img.attr("withHead") == 0) {
+            continue;
+        }
         var $src = $img.attr("src");
-        if (checkNull($src) || !$src.startsWith('http')) {
+        if (checkNull($src)) {
+
+        } else if (!$src.startsWith('http')) {
             $img.attr("src", imgHead + $img.attr("src"));
         }
 
@@ -15,7 +20,7 @@ function addHeadForImg() {
 }
 function addHeadForOneImg(item) {
     var $imgs = item;
-    $img.attr("src", "http://xiaoyu1-1253813687.costj.myqcloud.com/" + $img.attr("src"));
+    $img.attr("src", imgHead + $img.attr("src"));
 }
 function writeBox() {
     var jBoxId;
@@ -61,4 +66,5 @@ $(document).ready(function() {
             }
         }
     });
+    addHeadForImg();
 });

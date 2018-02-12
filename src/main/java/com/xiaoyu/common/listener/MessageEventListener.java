@@ -32,7 +32,7 @@ public class MessageEventListener implements ApplicationListener<ApplicationEven
      */
     @Async
     @Override
-    public void onApplicationEvent(ApplicationEvent event) {
+    public void onApplicationEvent(final ApplicationEvent event) {
         if (event instanceof MessageEvent) {
             MessageEvent msgEvent = (MessageEvent) event;
             Message msg = (Message) msgEvent.getSource();

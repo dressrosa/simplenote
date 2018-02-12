@@ -25,12 +25,16 @@ var $ajaxPromise1 = $.ajax({
         setTitle($user.nickname + '-编辑资料');
         var $userPanel = $(".panel-default");
         if (checkNull($user.avatar)) {
-            $user.avatar = '/common/avatar.png';
+            $user.avatar = imgHead+'common/avatar.png';
+        }
+        if(checkNull($user.background)) {
+            $user.background='common/4.jpg';
         }
         $userPanel.find("img").attr("src", $user.avatar);
         $userPanel.find("img").attr("id", $user.userId);
         // $userPanel.find(".nickname_panel").html($user.nickname);
         // $userPanel.find(".des_panel").html($user.description);
+        
         $("#item_name").find(".info_input").val($user.nickname);
         $("#item_sign").find(".info_input").val($user.signature);
         $("#item_desc").find(".info_input").val($user.description);
@@ -41,7 +45,6 @@ var $ajaxPromise1 = $.ajax({
         $(".card_u").find("label")[1].innerHTML = $user.signature;
         $(".card_down").find("#ar_number").html($user.attr.articleNum);
         $(".card_down").find("#fo_number").html($user.attr.followerNum);
-        addHeadForImg();
     }
 });
 
