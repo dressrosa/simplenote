@@ -29,8 +29,8 @@
         resultType="com.xiaoyu.modules.biz.article.entity.Article">
         select 
         <include refid="Base_Column_List" />
-        from  biz_article 
-        where uuid = #{uuid}
+        from  biz_article as a
+        where a.uuid = #{uuid}
         for update
     </select>
 
@@ -115,8 +115,7 @@
             a.user_id =#{item}
         </foreach>
         group by a.user_id
-        order by
-        a.create_date
+        order by createDate desc
     </select>
 
     <select id="findHotList" resultType="com.xiaoyu.modules.biz.article.vo.ArticleVo">

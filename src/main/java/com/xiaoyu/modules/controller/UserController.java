@@ -132,15 +132,10 @@ public class UserController {
      * 
      * @return
      */
-    @RequestMapping(value = "api/v1/user/{userId}/edit", method = RequestMethod.POST)
-    public String editInfo(HttpServletRequest request, @PathVariable String userId, String content,
+    @RequestMapping(value = "api/v1/user/edit", method = RequestMethod.POST)
+    public String editInfo(HttpServletRequest request,String content,
             @RequestParam(required = true) Integer flag) {
-        if (StringUtil.isEmpty(userId)) {
-            return ResponseMapper.createMapper()
-                    .code(ResponseCode.ARGS_ERROR.statusCode())
-                    .resultJson();
-        }
-        return this.userService.editUser(request, userId, content, flag);
+        return this.userService.editUser(request, content, flag);
     }
 
     @RequestMapping(value = "api/v1/user/follow", method = RequestMethod.POST)

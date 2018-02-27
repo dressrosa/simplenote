@@ -192,7 +192,7 @@
         set
         num = #{num}
         where
-        uuid ==#{uuid}
+        uuid =#{uuid}
     </update>
     
     <!--评论点赞相关 -->

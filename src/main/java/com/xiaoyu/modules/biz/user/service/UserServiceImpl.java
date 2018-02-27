@@ -10,14 +10,11 @@ import java.util.Map;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Primary;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import com.github.pagehelper.Page;
 import com.github.pagehelper.PageHelper;
 import com.xiaoyu.common.base.BaseService;
 import com.xiaoyu.common.base.ResponseCode;
@@ -51,8 +48,6 @@ import com.xiaoyu.modules.constant.NumCountType;
 @Service
 @Primary
 public class UserServiceImpl extends BaseService<UserDao, User> implements IUserService {
-
-    private static final Logger LOG = LoggerFactory.getLogger(UserServiceImpl.class);
 
     @Autowired
     private UserDao userDao;
@@ -103,8 +98,8 @@ public class UserServiceImpl extends BaseService<UserDao, User> implements IUser
         if (session != null) {
             @SuppressWarnings("unchecked")
             Map<String, Object> map = (Map<String, Object>) session.getAttribute(request.getHeader("token"));
-            // 3hours
-            session.setMaxInactiveInterval(3600 * 3);
+            // 4hours
+            session.setMaxInactiveInterval(3600 << 2);
             if (map != null) {
                 return mapper.data(map).resultJson();
             }
@@ -122,8 +117,8 @@ public class UserServiceImpl extends BaseService<UserDao, User> implements IUser
         user.setPassword(null);
         // 登录名存入session
         HttpSession tsession = request.getSession(true);
-        // 3h
-        tsession.setMaxInactiveInterval(3600 * 3);
+        // 4h
+        tsession.setMaxInactiveInterval(3600 << 2);
         // 用户id和密码和当前时间生成的md5用于token
         String token = Md5Utils.md5(user.getId() + password + System.currentTimeMillis());
         tsession.setAttribute(token, user);
@@ -173,27 +168,22 @@ public class UserServiceImpl extends BaseService<UserDao, User> implements IUser
                     .resultJson();
         }
         user.setUuid(IdGenerator.uuid());
-        try {
-            if (this.userDao.insert(user) > 0) {
-                //用户初始化数据
-                UserAttr attr = new UserAttr();
-                attr.setUserId(user.getUuid());
-                this.userAttrDao.insert(attr);
-                // 消息推送
-                this.messageService.sendMsgEvent(new Message()
-                        .setSenderId(user.getUuid())
-                        .setReceiverId(user.getUuid())
-                        .setType(MsgType.NOTICE.statusCode())
-                        .setBizId(user.getUuid())
-                        .setBizType(BizType.USER.statusCode())
-                        .setBizAction(BizAction.NONE.statusCode())
-                        .setContent("很高兴与您相识,希望以后的日子见字如面")
-                        .setReply(null));
-                return mapper.resultJson();
-            }
-        } catch (RuntimeException e) {
-            LOG.error(e.toString());
-            throw e;
+        if (this.userDao.insert(user) > 0) {
+            // 用户初始化数据
+            UserAttr attr = new UserAttr();
+            attr.setUserId(user.getUuid());
+            this.userAttrDao.insert(attr);
+            // 消息推送
+            this.messageService.sendMsgEvent(new Message()
+                    .setSenderId(user.getUuid())
+                    .setReceiverId(user.getUuid())
+                    .setType(MsgType.NOTICE.statusCode())
+                    .setBizId(user.getUuid())
+                    .setBizType(BizType.USER.statusCode())
+                    .setBizAction(BizAction.NONE.statusCode())
+                    .setContent("很高兴与您相识,希望以后的日子见字如面")
+                    .setReply(null));
+            return mapper.resultJson();
         }
         return mapper.code(ResponseCode.FAILED.statusCode())
                 .message("抱歉,注册没成功")
@@ -201,7 +191,7 @@ public class UserServiceImpl extends BaseService<UserDao, User> implements IUser
     }
 
     @Override
-    public String editUser(HttpServletRequest request, String userId, String content, Integer flag) {
+    public String editUser(HttpServletRequest request, String content, Integer flag) {
         ResponseMapper mapper = ResponseMapper.createMapper();
         User u = UserUtils.checkLoginDead(request);
         if (u == null) {
@@ -312,18 +302,13 @@ public class UserServiceImpl extends BaseService<UserDao, User> implements IUser
                 .setFollowerId(userId)
                 .setUuid(IdGenerator.uuid());
         boolean isSendMsg = false;
-        try {
-            if (this.followDao.isExist(f) > 0) {
-                this.followDao.update(f);
-            } else {
-                this.followDao.insert(f);
-            }
-            this.userAttrDao.addNum(NumCountType.FollowerNum.ordinal(), 1, f.getUserId());
-            isSendMsg = true;
-        } catch (RuntimeException e) {
-            LOG.error(e.toString());
-            throw e;
+        if (this.followDao.isExist(f) > 0) {
+            this.followDao.update(f);
+        } else {
+            this.followDao.insert(f);
         }
+        this.userAttrDao.addNum(NumCountType.FollowerNum.ordinal(), 1, f.getUserId());
+        isSendMsg = true;
         Map<String, String> map = new HashMap<>(2);
         map.put("isFollow", "1");
 
@@ -362,14 +347,8 @@ public class UserServiceImpl extends BaseService<UserDao, User> implements IUser
                     .message("所关注用户不存在")
                     .resultJson();
         }
-
-        try {
-            this.followDao.cancelFollow(followTo, userId);
-            this.userAttrDao.addNum(NumCountType.FollowerNum.ordinal(), -1, followTo);
-        } catch (RuntimeException e) {
-            LOG.error(e.toString());
-            throw e;
-        }
+        this.followDao.cancelFollow(followTo, userId);
+        this.userAttrDao.addNum(NumCountType.FollowerNum.ordinal(), -1, followTo);
 
         Map<String, String> map = new HashMap<>(2);
         map.put("isFollow", "0");
@@ -379,14 +358,12 @@ public class UserServiceImpl extends BaseService<UserDao, User> implements IUser
     @Override
     public String follower(HttpServletRequest request, String userId) {
         ResponseMapper mapper = ResponseMapper.createMapper();
-        String pageNum = request.getHeader("pageNum");
         Follow f = new Follow();
         f.setUserId(userId);
-        PageHelper.startPage(Integer.valueOf(pageNum), 12);
-        Page<FollowVo> page = (Page<FollowVo>) this.followDao.findList(f);
-        List<FollowVo> list = page.getResult();
+        PageHelper.startPage(Integer.valueOf(request.getHeader("pageNum")), 12);
+        List<FollowVo> list = this.followDao.findList(f);
 
-        if (list == null || list.isEmpty()) {
+        if (list.isEmpty()) {
             return mapper.code(ResponseCode.NO_DATA.statusCode()).resultJson();
         }
         return mapper.data(list).resultJson();
@@ -395,15 +372,13 @@ public class UserServiceImpl extends BaseService<UserDao, User> implements IUser
     @Override
     public String following(HttpServletRequest request, String userId) {
         ResponseMapper mapper = ResponseMapper.createMapper();
-        String pageNum = request.getHeader("pageNum");
         Follow f = new Follow();
         f.setFollowerId(userId);
 
-        PageHelper.startPage(Integer.valueOf(pageNum), 12);
-        Page<FollowVo> page = (Page<FollowVo>) this.followDao.findList(f);
-        List<FollowVo> list = page.getResult();
+        PageHelper.startPage(Integer.valueOf(request.getHeader("pageNum")), 12);
+        List<FollowVo> list = this.followDao.findList(f);
 
-        if (list == null || list.isEmpty()) {
+        if (list.isEmpty()) {
             return mapper.code(ResponseCode.NO_DATA.statusCode()).resultJson();
         }
         return mapper.data(list).resultJson();
@@ -411,11 +386,10 @@ public class UserServiceImpl extends BaseService<UserDao, User> implements IUser
 
     @Override
     public String isFollowed(HttpServletRequest request, String userId, String followTo) {
-        ResponseMapper mapper = ResponseMapper.createMapper();
         int num = this.followDao.isFollow(userId, followTo);
-        Map<String, String> map = new HashMap<>(2);
-        map.put("isFollow", "" + num);
-        return mapper.data(map).resultJson();
+        Map<String, Object> map = new HashMap<>(2);
+        map.put("isFollow", num);
+        return ResponseMapper.createMapper().data(map).resultJson();
     }
 
     @Override

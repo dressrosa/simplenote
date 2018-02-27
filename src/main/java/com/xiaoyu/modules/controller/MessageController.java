@@ -12,6 +12,11 @@ import org.springframework.web.bind.annotation.RestController;
 import com.xiaoyu.modules.biz.message.entity.Message;
 import com.xiaoyu.modules.biz.message.service.api.IMessageService;
 
+/**
+ * @author hongyu
+ * @date 2018-02
+ * @description
+ */
 @RestController
 public class MessageController {
 

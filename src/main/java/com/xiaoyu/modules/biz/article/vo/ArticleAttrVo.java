@@ -3,6 +3,11 @@
  */
 package com.xiaoyu.modules.biz.article.vo;
 
+/**
+ * @author hongyu
+ * @date 2018-02
+ * @description
+ */
 public class ArticleAttrVo {
     private Integer readNum;
     private Integer commentNum;

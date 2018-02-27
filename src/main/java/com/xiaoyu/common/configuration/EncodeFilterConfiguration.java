@@ -53,9 +53,10 @@ public class EncodeFilterConfiguration implements Filter {
          * it seems that Facelets internally needs a session for something.
          */
         req.getSession(true);
-
-        res.setCharacterEncoding("UTF-8");// 设置编码格式
-        res.setHeader("author", "xiaoyu");// 设置请求头
+        // 设置编码格式
+        res.setCharacterEncoding("UTF-8");
+        // 设置请求头
+        res.setHeader("author", "xiaoyu");
         // 对于无参请求 设置时间戳 不允许页面缓存
         req.setCharacterEncoding("utf-8");
         // Method[] m= req.getClass().getMethods();
@@ -83,8 +84,8 @@ public class EncodeFilterConfiguration implements Filter {
         // //Cannot call sendError() after the response has been committed
         // return;
         // }
-
-        chain.doFilter(req, res);// 请求转发
+        // 请求转发
+        chain.doFilter(req, res);
 
     }
 

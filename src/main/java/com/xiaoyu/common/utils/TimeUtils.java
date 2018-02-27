@@ -5,6 +5,7 @@ package com.xiaoyu.common.utils;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
@@ -14,8 +15,6 @@ import java.util.TimeZone;
 import org.apache.commons.lang3.time.DateFormatUtils;
 import org.apache.commons.lang3.time.DateUtils;
 import org.apache.commons.lang3.time.FastDateFormat;
-
-import com.google.common.collect.Lists;
 
 /**
  * @author xiaoyu 2016年3月19日
@@ -38,19 +37,18 @@ public class TimeUtils extends DateUtils {
         Date date = null;
         Calendar calendar = null;
         final SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
-        final List<String> list = Lists.newArrayList();
+        final List<String> list = new ArrayList<>(7);
         try {
             date = dateFormat.parse(str);
             calendar = Calendar.getInstance();
             calendar.setTime(date);
         } catch (final ParseException e) {
-            e.printStackTrace();
             return list;
         }
         TimeUtils.setFirstDay(calendar);
         for (int i = 0; i < 7; i++) {
             // dateFormat = new SimpleDateFormat("yyyy-MM-dd EE");
-            final String s = dateFormat.format(calendar.getTime());
+            String s = dateFormat.format(calendar.getTime());
             list.add(s);
             calendar.add(Calendar.DATE, 1);
         }
@@ -95,7 +93,7 @@ public class TimeUtils extends DateUtils {
     public static List<String> getDatesInTheWeekByGivenWeek(String year, String week) {
         final SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
         final Calendar calendar = TimeUtils.setCalByGivenWeek(year, week);
-        final List<String> list = Lists.newArrayList();
+        final List<String> list = new ArrayList<>(7);
         TimeUtils.setFirstDay(calendar);
         for (int i = 0; i < 7; i++) {
             final String s = dateFormat.format(calendar.getTime());
@@ -115,7 +113,7 @@ public class TimeUtils extends DateUtils {
     public static double getDistanceOfTwoDate(Date before, Date after) {
         final long beforeTime = before.getTime();
         final long afterTime = after.getTime();
-        return (afterTime - beforeTime) / (1000 * 60 * 60 * 24);
+        return (afterTime - beforeTime) / (1000 * 3600 * 24);
     }
 
     /**
@@ -151,7 +149,11 @@ public class TimeUtils extends DateUtils {
         }
     }
 
-    // 获得当天0点时间
+    /**
+     * // 获得当天0点时间
+     * 
+     * @return
+     */
     public static Date getTimesmorning() {
         final Calendar cal = Calendar.getInstance();
         cal.set(Calendar.HOUR_OF_DAY, 0);
@@ -161,7 +163,11 @@ public class TimeUtils extends DateUtils {
         return cal.getTime();
     }
 
-    // 获得当天24点时间
+    /**
+     * // 获得当天24点时间
+     * 
+     * @return
+     */
     public static Date getTimesnight() {
         final Calendar cal = Calendar.getInstance();
         cal.set(Calendar.HOUR_OF_DAY, 24);

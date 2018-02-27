@@ -21,7 +21,8 @@ public class FilterBeanConfiguration {
     public FilterRegistrationBean filtersRegistration() {
         final FilterRegistrationBean registration = new FilterRegistrationBean();
         registration.setFilter(this.encodeFilter());
-        registration.addUrlPatterns("/back/*");// 只对后台接口/页面起作用
+        // 只对后台接口/页面起作用
+        registration.addUrlPatterns("/back/*");
         // registration.addInitParameter("paramName", "paramValue");
         return registration;
     }

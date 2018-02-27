@@ -15,6 +15,10 @@ import com.xiaoyu.modules.biz.user.dao.UserDao;
 import com.xiaoyu.modules.biz.user.entity.Follow;
 import com.xiaoyu.modules.biz.user.entity.User;
 
+/**
+ * @author hongyu
+ * @description
+ */
 @Component
 public class MessageHandler extends DefaultAbstractQueueTemplate {
 
@@ -76,7 +80,7 @@ public class MessageHandler extends DefaultAbstractQueueTemplate {
                 }
                 // 评论@
                 else if (msg.getBizAction() == 5) {
-                    //TODO
+                    // TODO
                 }
                 // 评论点赞
                 else if (msg.getBizAction() == 6) {
@@ -109,7 +113,9 @@ public class MessageHandler extends DefaultAbstractQueueTemplate {
                     return;
                 }
                 msg.setContent("大家都在读这篇文章“" + ar.getTitle() + "”" + "快来围观吧");
-            } else if (msg.getBizType() == 1) {// 人
+            }
+            // 人
+            else if (msg.getBizType() == 1) {
 
             } else {
             }

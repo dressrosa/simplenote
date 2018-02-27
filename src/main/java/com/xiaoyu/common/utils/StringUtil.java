@@ -12,6 +12,11 @@ import javax.servlet.http.HttpServletRequest;
 import org.apache.commons.lang3.StringEscapeUtils;
 import org.apache.commons.lang3.StringUtils;
 
+/**
+ * @author hongyu
+ * @date 2018-02
+ * @description
+ */
 public class StringUtil extends StringUtils {
 
     private static final char SEPARATOR = '_';

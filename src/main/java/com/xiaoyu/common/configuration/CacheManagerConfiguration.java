@@ -21,7 +21,7 @@ import net.sf.ehcache.CacheManager;
  * @author xiaoyu 2016年3月18日
  */
 @Configuration
-@EnableCaching // 启用缓存
+@EnableCaching 
 public class CacheManagerConfiguration {
 
     private final static Logger logger = LoggerFactory.getLogger(CacheManagerConfiguration.class);

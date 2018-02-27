@@ -225,8 +225,9 @@ public class ElasticUtils {
                     .setFetchSource(true);
             // .setNoFields()//不返回参数;
             // 设置高亮
-            builder.addHighlightedField("*")// *代表全部高亮 fields == null ? null :
-                                            // fields[0]
+            // *代表全部高亮 fields == null ? null :
+            // fields[0]
+            builder.addHighlightedField("*")
                     .setHighlighterPreTags("<span style=\"color:red\">")
                     .setHighlighterPostTags("</span>")
                     .setHighlighterForceSource(true)
@@ -263,7 +264,8 @@ public class ElasticUtils {
             builder.addHighlightedField("*").setHighlighterPreTags("<span style=\"color:red\">")
                     .setHighlighterPostTags("</span>")
                     // .setHighlighterForceSource(true)
-                    .setHighlighterRequireFieldMatch(false)// 这句不加就不会高亮
+                    // 这句不加就不会高亮
+                    .setHighlighterRequireFieldMatch(false)
             // .setHighlighterNumOfFragments(0)//
             // 默认的fragment数量是5,所以设置为0就不会分开,整个source就会被高亮
             ;
@@ -290,7 +292,7 @@ public class ElasticUtils {
     public static Map<String, Object> searchWithCount(String[] indexs, String[] types, Integer pageNum,
             Integer pageSize, String query, String... fields) {
         SearchHits hits = null;
-        final Map<String, Object> map = new HashMap<>();
+        final Map<String, Object> map = new HashMap<>(4);
         try {
             ElasticUtils.init();
             final SearchRequestBuilder builder = ElasticUtils.client.prepareSearch(indexs);

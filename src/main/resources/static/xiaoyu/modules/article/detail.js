@@ -383,7 +383,7 @@ $(document).ready(function() {
         var $top = document.body.scrollTop;
         // console.log("top:" + $top);
         if ($top > 305) {
-            $("#titleSpan").css("display", "initial");
+            $("#titleSpan").css("display", "inline-block");
         } else {
             $("#titleSpan").css("display", "none");
         }

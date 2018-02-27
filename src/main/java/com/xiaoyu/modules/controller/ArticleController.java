@@ -110,8 +110,8 @@ public class ArticleController {
 
     @RequestMapping(value = "api/v1/article/add", method = RequestMethod.POST)
     public String addArticle(HttpServletRequest request, @RequestParam(required = true) String title,
-            @RequestParam(required = true) String content, @RequestParam(required = true) String userId) {
-        return this.articleService.addArticle(request, title, content, userId);
+            @RequestParam(required = true) String content) {
+        return this.articleService.addArticle(request, title, content);
     }
 
     @RequestMapping(value = "api/v1/article/edit", method = RequestMethod.POST)
@@ -151,8 +151,8 @@ public class ArticleController {
     }
 
     @RequestMapping(value = "api/v1/article/{articleId}/comments", method = RequestMethod.GET)
-    public String comments(HttpServletRequest request, @PathVariable String articleId, Integer pageNum) {
-        return this.articleService.comments(request, articleId, pageNum);
+    public String comments(HttpServletRequest request, @PathVariable String articleId) {
+        return this.articleService.comments(request, articleId);
     }
 
     @RequestMapping(value = "api/v1/article/comments/like", method = RequestMethod.POST)

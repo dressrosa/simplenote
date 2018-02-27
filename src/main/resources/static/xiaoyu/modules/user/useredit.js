@@ -25,16 +25,16 @@ var $ajaxPromise1 = $.ajax({
         setTitle($user.nickname + '-编辑资料');
         var $userPanel = $(".panel-default");
         if (checkNull($user.avatar)) {
-            $user.avatar = imgHead+'common/avatar.png';
+            $user.avatar = imgHead + 'common/avatar.png';
         }
-        if(checkNull($user.background)) {
-            $user.background='common/4.jpg';
+        if (checkNull($user.background)) {
+            $user.background = 'common/4.jpg';
         }
         $userPanel.find("img").attr("src", $user.avatar);
         $userPanel.find("img").attr("id", $user.userId);
         // $userPanel.find(".nickname_panel").html($user.nickname);
         // $userPanel.find(".des_panel").html($user.description);
-        
+
         $("#item_name").find(".info_input").val($user.nickname);
         $("#item_sign").find(".info_input").val($user.signature);
         $("#item_desc").find(".info_input").val($user.description);
@@ -92,7 +92,7 @@ var editNickname = function() {
     $.ajax({
         cache : false,
         type : "post",
-        url : '/api/v1/user/' + userInfo.userId + '/edit',
+        url : '/api/v1/user/edit',
         data : {
             content : con,
             flag : 3
@@ -145,7 +145,7 @@ var editSignature = function() {
     $.ajax({
         cache : false,
         type : "post",
-        url : '/api/v1/user/' + userInfo.userId + '/edit',
+        url : '/api/v1/user/edit',
         data : {
             content : con,
             flag : 1
@@ -208,7 +208,7 @@ var editDesc = function() {
     $.ajax({
         cache : false,
         type : "post",
-        url : '/api/v1/user/' + userInfo.userId + '/edit',
+        url : '/api/v1/user/edit',
         data : {
             content : con,
             flag : 2
@@ -245,6 +245,7 @@ var editDesc = function() {
 
 $(document).ready(function() {
     $ajaxPromise1.promise().done(function() {
+        addHeadForImg();
     });
 
     $("#login").bind("click", function() {

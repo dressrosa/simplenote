@@ -13,7 +13,6 @@ import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.context.annotation.Primary;
 import org.springframework.stereotype.Service;
 
-import com.github.pagehelper.Page;
 import com.github.pagehelper.PageHelper;
 import com.xiaoyu.common.base.ResponseCode;
 import com.xiaoyu.common.base.ResponseMapper;
@@ -30,6 +29,11 @@ import com.xiaoyu.modules.biz.user.dao.UserDao;
 import com.xiaoyu.modules.biz.user.entity.User;
 import com.xiaoyu.modules.constant.BizAction;
 
+/**
+ * @author hongyu
+ * @date 2018-02
+ * @description
+ */
 @Service
 @Primary
 public class MessageServiceImpl implements IMessageService {
@@ -59,11 +63,10 @@ public class MessageServiceImpl implements IMessageService {
         }
         Message t = new Message();
         t.setReceiverId(userId).setType(type);
-        PageHelper.startPage(0, 10);
-        Page<MessageVo> page = (Page<MessageVo>) this.msgDao.findVoByList(t);
-        List<MessageVo> list = page.getResult();
+        PageHelper.startPage(1, 12);
+        List<MessageVo> list = this.msgDao.findVoByList(t);
 
-        if (list == null || list.isEmpty()) {
+        if (list.isEmpty()) {
             return mapper.code(ResponseCode.NO_DATA.statusCode()).resultJson();
         }
         Article tarticle = null;
@@ -129,7 +132,7 @@ public class MessageServiceImpl implements IMessageService {
     }
 
     @Override
-    public String sendMsgEvent(Message message) {
+    public String sendMsgEvent(final Message message) {
         final Message msg = new Message();
         msg.setSenderId(message.getSenderId())
                 .setReceiverId(message.getReceiverId())
@@ -155,7 +158,7 @@ public class MessageServiceImpl implements IMessageService {
             return mapper.code(ResponseCode.LOGIN_INVALIDATE.statusCode()).resultJson();
         }
         Message temp = new Message();
-        if(messages.length == 1) {
+        if (messages.length == 1) {
             temp.setReceiverId(u.getUuid()).setUuid(messages[0].getUuid());
             this.msgDao.delete(temp);
         }

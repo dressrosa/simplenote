@@ -57,10 +57,9 @@ public interface IArticleService {
      * @param request
      * @param title
      * @param content
-     * @param userId
      * @return
      */
-    public String addArticle(HttpServletRequest request, String title, String content, String userId);
+    public String addArticle(HttpServletRequest request, String title, String content);
 
     /**编辑文章
      * @param request
@@ -134,10 +133,9 @@ public interface IArticleService {
      * 
      * @param request
      * @param articleId
-     * @param pageNum
      * @return
      */
-    public String comments(HttpServletRequest request, String articleId, Integer pageNum);
+    public String comments(HttpServletRequest request, String articleId);
 
     /**
      * 最新评论

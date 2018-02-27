@@ -30,14 +30,12 @@ import com.alibaba.fastjson.support.spring.FastJsonHttpMessageConverter;
 
 /**
  * 设置mvc的一些基本配置
- * 
+ * @EnableWebMvc // Optionally setup Spring MVC defaults if you aren’t doing so
+ * elsewhere
  * @author xiaoyu 2016年3月21日
  *         摘自spring官方Blog:http://spring.io/blog/2013/11/01/exception
  *         -handling-in-spring-mvc
- */
-/*
- * @EnableWebMvc // Optionally setup Spring MVC defaults if you aren’t doing so
- * elsewhere
+ *         
  */
 @Configuration
 @EnableScheduling
@@ -124,7 +122,7 @@ public class MvcConfiguration extends WebMvcConfigurerAdapter {
     @Bean
     public MultipartResolver multipartResolver() {
         final CommonsMultipartResolver multipartResolver = new CommonsMultipartResolver();
-        multipartResolver.setMaxUploadSize(5000000);
+        multipartResolver.setMaxUploadSize(5_000_000);
         return multipartResolver;
     }
 
