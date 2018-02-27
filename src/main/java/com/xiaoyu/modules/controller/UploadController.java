@@ -90,7 +90,7 @@ public class UploadController {
             if (map.get("code").equals(0)) {
                 final Map<String, String> urlMap = (Map<String, String>) map.get("data");
                 path = urlMap.get("source_url");
-                this.userService.editUser(request, request.getHeader("userId"), path, bizType);
+                this.userService.editUser(request, path, bizType);
                 return mapper.data(path).resultJson();
             }
         }

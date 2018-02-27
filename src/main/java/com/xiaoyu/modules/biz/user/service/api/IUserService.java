@@ -5,6 +5,11 @@ package com.xiaoyu.modules.biz.user.service.api;
 
 import javax.servlet.http.HttpServletRequest;
 
+/**
+ * @author hongyu
+ * @date 2018-02
+ * @description
+ */
 public interface IUserService {
 
     /**
@@ -55,7 +60,7 @@ public interface IUserService {
      * @param flag
      * @return
      */
-    public String editUser(HttpServletRequest request, String userId, String content, Integer flag);
+    public String editUser(HttpServletRequest request, String content, Integer flag);
 
     /**
      * 关注用户

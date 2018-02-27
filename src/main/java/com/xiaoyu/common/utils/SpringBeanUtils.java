@@ -32,13 +32,10 @@ public class SpringBeanUtils implements ApplicationContextAware, DisposableBean 
         return (T) SpringBeanUtils.applicationContext.getBean(name);
     }
 
-    /*
-     * (non-Javadoc)
-     * 
-     * @see
-     * org.springframework.context.ApplicationContextAware#setApplicationContext(org
-     * .springframework.context.ApplicationContext)
-     */
+    public static <T> T getBean(Class<T> cls) {
+        return (T) SpringBeanUtils.applicationContext.getBean(cls);
+    }
+
     @Override
     public void setApplicationContext(ApplicationContext arg0) throws BeansException {
         SpringBeanUtils.applicationContext = arg0;
@@ -46,7 +43,6 @@ public class SpringBeanUtils implements ApplicationContextAware, DisposableBean 
 
     @Override
     public void destroy() throws Exception {
-        // TODO Auto-generated method stub
         SpringBeanUtils.applicationContext = null;
     }
 }

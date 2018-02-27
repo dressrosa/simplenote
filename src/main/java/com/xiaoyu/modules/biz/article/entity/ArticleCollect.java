@@ -5,6 +5,11 @@ package com.xiaoyu.modules.biz.article.entity;
 
 import com.xiaoyu.common.base.BaseEntity;
 
+/**
+ * @author hongyu
+ * @date 2018-02
+ * @description
+ */
 public class ArticleCollect extends BaseEntity {
 
     private static final long serialVersionUID = 1L;

@@ -10,12 +10,12 @@ import org.springframework.context.annotation.Bean;
 
 /**
  * mybatis扫描接口
+ * // @Configuration
+ * // @AutoConfigureAfter(DataSourceConfiguration.class)//在datasource初始化后
  * 
  * @author xiaoyu 2016年3月16日
  */
 @Deprecated
-// @Configuration
-// @AutoConfigureAfter(DataSourceConfiguration.class)//在datasource初始化后
 public class MyBatisMapperScannerConfig {
 
     Logger logger = LoggerFactory.getLogger(MyBatisMapperScannerConfig.class);
@@ -24,7 +24,8 @@ public class MyBatisMapperScannerConfig {
     public MapperScannerConfigurer scannerConfigurer() {
         this.logger.info("进入mybatis扫描");
         final MapperScannerConfigurer config = new MapperScannerConfigurer();
-        config.setAnnotationClass(org.springframework.stereotype.Repository.class);// 指定扫描的注解接口
+        // 指定扫描的注解接口
+        config.setAnnotationClass(org.springframework.stereotype.Repository.class);
         config.setSqlSessionFactoryBeanName("sqlSessionFactory");
         // config.setBasePackage("com.xiaoyu");//TODO 暂时未理解
         return config;

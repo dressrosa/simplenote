@@ -11,11 +11,12 @@ import org.springframework.http.converter.StringHttpMessageConverter;
 /**
  * 解决@{@link reponseBody}中文乱码 其实这里并没有起作用 ,而是设置{@link MvcConfiguration}里面起作用了<br>
  * TODO 这里暂时 也不知道为什么
+ * // @Configuration
  * 
  * @author xiaoyu 2016年3月23日
  */
 @Deprecated
-// @Configuration
+
 public class StringConverterConfiguration {
 
     // private static final Charset DEFAULT_CHARSET = Charset.forName("utf-8");

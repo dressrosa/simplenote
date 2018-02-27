@@ -140,13 +140,13 @@ var handleFollowing = function(data) {
     $.each(obj.data, function(index, u) {
         ids[index] = u.userId;
         if (index < 5) {
-            $l += '<img id="' + u.userId + '" src="' + imgHead + u.userAvatar + '" class="avatar small compact" />';
+            $l += '<img id="' + u.userId + '" src="' + imgHead + u.userAvatar + '" class="avatar small compact" title="'+u.userName+'" />';
         }
         if (index == 4) {
             $l += '</div>';
         }
         if (index > 4 && index < 10) {
-            $r += '<img id="' + u.userId + '" src="' + imgHead + u.userAvatar + '" class="avatar small compact" />';
+            $r += '<img id="' + u.userId + '" src="' + imgHead + u.userAvatar + '" class="avatar small compact" title="'+u.userName+'" />';
         }
     });
 
