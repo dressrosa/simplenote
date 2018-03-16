@@ -44,16 +44,16 @@
         <!-- 按时间输出 -->
         <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
             <fileNamePattern>/home/logs/%d{yyyy-MM,aux}/%d{yyyy-MM-dd}.log.zip </fileNamePattern>
-            logs/%d{yyyy-MM,aux}/%d{yyyy-MM-dd_HH-mm}.log.zip
+            <!-- logs/%d{yyyy-MM,aux}/%d{yyyy-MM-dd_HH-mm}.log.zip -->
             <maxHistory>30</maxHistory>
         </rollingPolicy>
         <layout class="ch.qos.logback.classic.PatternLayout">
             <pattern> %d{HH:mm:ss.SSS}-%msg%n</pattern>
         </layout>
         <!-- 文件大小 -->
-        <triggeringPolicy class="com.bigbasket.dapp.utilities.SizeBasedTriggeringPolicy">
+        <!-- <triggeringPolicy class="com.bigbasket.dapp.utilities.SizeBasedTriggeringPolicy">
             <maxFileSize>5MB</maxFileSize>
-        </triggeringPolicy>
+        </triggeringPolicy> -->
     </appender> 
     <!-- 默认级别和输出 -->
     <root level="DEBUG">
