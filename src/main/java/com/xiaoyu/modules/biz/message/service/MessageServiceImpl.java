@@ -157,8 +157,8 @@ public class MessageServiceImpl implements IMessageService {
         if (u == null) {
             return mapper.code(ResponseCode.LOGIN_INVALIDATE.statusCode()).resultJson();
         }
-        Message temp = new Message();
         if (messages.length == 1) {
+            Message temp = new Message();
             temp.setReceiverId(u.getUuid()).setUuid(messages[0].getUuid());
             this.msgDao.delete(temp);
         }

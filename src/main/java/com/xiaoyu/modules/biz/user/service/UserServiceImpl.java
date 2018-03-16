@@ -12,6 +12,8 @@ import javax.servlet.http.HttpSession;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Primary;
+import org.springframework.context.annotation.Scope;
+import org.springframework.context.annotation.ScopedProxyMode;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -21,6 +23,7 @@ import com.xiaoyu.common.base.ResponseCode;
 import com.xiaoyu.common.base.ResponseMapper;
 import com.xiaoyu.common.utils.IdGenerator;
 import com.xiaoyu.common.utils.Md5Utils;
+import com.xiaoyu.common.utils.SpringBeanUtils;
 import com.xiaoyu.common.utils.StringUtil;
 import com.xiaoyu.common.utils.UserUtils;
 import com.xiaoyu.maple.core.MapleUtil;
@@ -46,6 +49,7 @@ import com.xiaoyu.modules.constant.NumCountType;
  * @author xiaoyu 2016年3月16日
  */
 @Service
+@Scope(proxyMode = ScopedProxyMode.TARGET_CLASS)
 @Primary
 public class UserServiceImpl extends BaseService<UserDao, User> implements IUserService {
 
@@ -153,7 +157,6 @@ public class UserServiceImpl extends BaseService<UserDao, User> implements IUser
         return mapper.data(this.user2Map(u)).resultJson();
     }
 
-    @Transactional(readOnly = false, rollbackFor = RuntimeException.class)
     @Override
     public String register(HttpServletRequest request, String loginName, String password) {
         ResponseMapper mapper = ResponseMapper.createMapper();
@@ -168,11 +171,7 @@ public class UserServiceImpl extends BaseService<UserDao, User> implements IUser
                     .resultJson();
         }
         user.setUuid(IdGenerator.uuid());
-        if (this.userDao.insert(user) > 0) {
-            // 用户初始化数据
-            UserAttr attr = new UserAttr();
-            attr.setUserId(user.getUuid());
-            this.userAttrDao.insert(attr);
+        if (SpringBeanUtils.getBean(UserServiceImpl.class).doRegister(user) == 1) {
             // 消息推送
             this.messageService.sendMsgEvent(new Message()
                     .setSenderId(user.getUuid())
@@ -188,6 +187,18 @@ public class UserServiceImpl extends BaseService<UserDao, User> implements IUser
         return mapper.code(ResponseCode.FAILED.statusCode())
                 .message("抱歉,注册没成功")
                 .resultJson();
+    }
+
+    @Transactional(readOnly = false, rollbackFor = RuntimeException.class)
+    public int doRegister(User user) {
+        if (this.userDao.insert(user) > 0) {
+            // 用户初始化数据
+            UserAttr attr = new UserAttr();
+            attr.setUserId(user.getUuid());
+            this.userAttrDao.insert(attr);
+            return 1;
+        }
+        return 0;
     }
 
     @Override
@@ -266,7 +277,6 @@ public class UserServiceImpl extends BaseService<UserDao, User> implements IUser
 
     }
 
-    @Transactional(readOnly = false, rollbackFor = RuntimeException.class)
     @Override
     public String followUser(HttpServletRequest request, String userId, String followTo) {
         ResponseMapper mapper = ResponseMapper.createMapper();
@@ -302,15 +312,10 @@ public class UserServiceImpl extends BaseService<UserDao, User> implements IUser
                 .setFollowerId(userId)
                 .setUuid(IdGenerator.uuid());
         boolean isSendMsg = false;
-        if (this.followDao.isExist(f) > 0) {
-            this.followDao.update(f);
-        } else {
-            this.followDao.insert(f);
-        }
-        this.userAttrDao.addNum(NumCountType.FollowerNum.ordinal(), 1, f.getUserId());
+        SpringBeanUtils.getBean(UserServiceImpl.class).doFollowUser(f);
         isSendMsg = true;
-        Map<String, String> map = new HashMap<>(2);
-        map.put("isFollow", "1");
+        Map<String, Object> map = new HashMap<>(2);
+        map.put("isFollow", 1);
 
         if (isSendMsg) {
             this.messageService.sendMsgEvent(new Message()
@@ -327,6 +332,15 @@ public class UserServiceImpl extends BaseService<UserDao, User> implements IUser
     }
 
     @Transactional(readOnly = false, rollbackFor = RuntimeException.class)
+    public void doFollowUser(Follow f) {
+        if (this.followDao.isExist(f) > 0) {
+            this.followDao.update(f);
+        } else {
+            this.followDao.insert(f);
+        }
+        this.userAttrDao.addNum(NumCountType.FollowerNum.ordinal(), 1, f.getUserId());
+    }
+
     @Override
     public String cancelFollow(HttpServletRequest request, String userId, String followTo) {
         ResponseMapper mapper = ResponseMapper.createMapper();
@@ -347,12 +361,16 @@ public class UserServiceImpl extends BaseService<UserDao, User> implements IUser
                     .message("所关注用户不存在")
                     .resultJson();
         }
+        SpringBeanUtils.getBean(UserServiceImpl.class).doCancelFollow(followTo, userId);
+        Map<String, Object> map = new HashMap<>(2);
+        map.put("isFollow", 0);
+        return mapper.data(map).resultJson();
+    }
+
+    @Transactional(readOnly = false, rollbackFor = RuntimeException.class)
+    public void doCancelFollow(String followTo, String userId) {
         this.followDao.cancelFollow(followTo, userId);
         this.userAttrDao.addNum(NumCountType.FollowerNum.ordinal(), -1, followTo);
-
-        Map<String, String> map = new HashMap<>(2);
-        map.put("isFollow", "0");
-        return mapper.data(map).resultJson();
     }
 
     @Override
@@ -360,6 +378,7 @@ public class UserServiceImpl extends BaseService<UserDao, User> implements IUser
         ResponseMapper mapper = ResponseMapper.createMapper();
         Follow f = new Follow();
         f.setUserId(userId);
+
         PageHelper.startPage(Integer.valueOf(request.getHeader("pageNum")), 12);
         List<FollowVo> list = this.followDao.findList(f);
 

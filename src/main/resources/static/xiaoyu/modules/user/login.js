@@ -27,6 +27,7 @@ var login = function() {
         type : "post",
         url : '/api/v1/user/login',
         data : $('#xyForm').serialize(),
+        cache:false,
         async : true,
         error : function(data) {
             tip = "服务器错误"
