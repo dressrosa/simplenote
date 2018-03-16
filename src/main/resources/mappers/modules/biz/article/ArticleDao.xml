@@ -84,6 +84,7 @@
         <if test="userId != null">
             and a.user_id=#{userId}
         </if>
+        order by a.create_date desc
     </select>
 
     <select id="findLatestOfUsers" resultType="com.xiaoyu.modules.biz.article.vo.ArticleVo">
