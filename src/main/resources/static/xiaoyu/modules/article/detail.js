@@ -27,7 +27,7 @@ var $arPromise = $.ajax({
         setTitle('详情-' + ar.title);
         $("#titleSpan").html(ar.title);
         var $partUp = $(".part_up");
-        $partUp.find("img").attr('src', ar.user.avatar);
+        $partUp.find("img").attr('src', imgHead+ar.user.avatar);
         $partUp.find("img").attr('id', ar.user.userId);
         $partUp.find("img").on("click", function() {
             window.location.href = "/user/" + ar.user.userId;
@@ -54,7 +54,6 @@ var $arPromise = $.ajax({
         $('pre code').each(function(i, block) {
             hljs.highlightBlock(block);
         });
-        addHeadForImg();
         return true;
     }
 });
@@ -90,8 +89,9 @@ var $coPromise = $
                                 function(index, co) {
                                     $html += '<div class="co_item" data-id="'
                                             + co.commentId
-                                            + '"><div class="item_up"><div style="margin-top: -30px; margin-left: -10px;">	<img img-type="avatar " class="avatar small" src="'
-                                            + co.replyerAvatar + '"></div><div class="item_p"><label class="item_p_username"><a>' + co.replyerName
+                                            //style="margin-top: -30px; margin-left: -10px;"
+                                            + '"><div class="item_up"><div >	<img img-type="avatar " class="avatar tiny" src="'
+                                            +imgHead+ co.replyerAvatar + '"></div><div class="item_p"><label class="item_p_username"><a>' + co.replyerName
                                             + '</a></label>';
                                     if (!checkNull(co.parentReplyerName)) {
                                         $html += '<label class="item_p_label">回复</label> <label class="item_p_username">' + co.parentReplyerName
@@ -159,7 +159,7 @@ var $coPromise = $
                 });
                 return true;
             }
-        });
+});
 
 var comment = function() {
     var $userInfo = jQuery.parseJSON($.session.get("user"));
@@ -326,7 +326,6 @@ $(document).ready(function() {
     });
     $arPromise.promise().done(function() {
         isFollow();
-
         var item = $(".ar_content").attr("id");
         $.ajax({
             type : 'POST',
@@ -368,7 +367,6 @@ $(document).ready(function() {
     });
 
     $coPromise.promise().done(function() {
-        addHeadForImg();
     });
 
     $(".co_btn").on('click', function() {
@@ -383,9 +381,9 @@ $(document).ready(function() {
         var $top = document.body.scrollTop;
         // console.log("top:" + $top);
         if ($top > 305) {
-            $("#titleSpan").css("display", "inline-block");
+            $("#titleSpan").css("visibility", "visible");
         } else {
-            $("#titleSpan").css("display", "none");
+            $("#titleSpan").css("visibility", "hidden");
         }
 
     });

@@ -4,6 +4,7 @@ function addHeadForImg() {
     // 给所有图片加上前缀
     var imgs = document.getElementsByTagName('img');
     var len = imgs.length;
+
     for (var i = 0; i < len; i++) {
         var $img = $(imgs[i]);
         if ($img.attr("withHead") == 0) {
@@ -11,11 +12,9 @@ function addHeadForImg() {
         }
         var $src = $img.attr("src");
         if (checkNull($src)) {
-
         } else if (!$src.startsWith('http')) {
             $img.attr("src", imgHead + $img.attr("src"));
         }
-
     }
 }
 function addHeadForOneImg(item) {
@@ -66,5 +65,4 @@ $(document).ready(function() {
             }
         }
     });
-    addHeadForImg();
 });

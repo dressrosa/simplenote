@@ -38,13 +38,15 @@ var $ajaxPromise1 = $.ajax({
         $("#item_name").find(".info_input").val($user.nickname);
         $("#item_sign").find(".info_input").val($user.signature);
         $("#item_desc").find(".info_input").val($user.description);
-        $(".panel").css("background", 'url(' + imgHead + $user.background + ') no-repeat 0% 70%/cover');
-        $(".panel_card").css("background", 'url(' + imgHead + $user.avatar + ')');
-        $(".panel_card").css("background-size", 'contain');
-        $(".card_u").find("label")[0].innerHTML = $user.nickname;
-        $(".card_u").find("label")[1].innerHTML = $user.signature;
-        $(".card_down").find("#ar_number").html($user.attr.articleNum);
-        $(".card_down").find("#fo_number").html($user.attr.followerNum);
+        if(isPC()) {
+            $(".panel").css("background", 'url(' + imgHead + $user.background + ') no-repeat 0% 70%/cover');
+            $(".panel_card").css("background", 'url(' + imgHead + $user.avatar + ')');
+            $(".panel_card").css("background-size", 'contain');
+            $(".card_u").find("label")[0].innerHTML = $user.nickname;
+            $(".card_u").find("label")[1].innerHTML = $user.signature;
+            $(".card_down").find("#ar_number").html($user.attr.articleNum);
+            $(".card_down").find("#fo_number").html($user.attr.followerNum);
+        }
     }
 });
 

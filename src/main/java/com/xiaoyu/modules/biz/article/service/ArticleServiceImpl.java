@@ -127,7 +127,7 @@ public class ArticleServiceImpl extends BaseService<ArticleDao, Article> impleme
         // }
         int pageNum = Integer.valueOf(request.getHeader("pageNum"));
         int pageSize = Integer.valueOf(request.getHeader("pageSize"));
-        pageSize = pageSize > 50 ? 50 : pageSize;
+        pageSize = pageSize > 32 ? 32 : pageSize;
         PageHelper.startPage(pageNum, pageSize);
         List<ArticleVo> list = this.articleDao.findHotList();
         // 是否登录
@@ -145,7 +145,7 @@ public class ArticleServiceImpl extends BaseService<ArticleDao, Article> impleme
         article.setUserId(userId);
         int pageNum = Integer.valueOf(request.getHeader("pageNum"));
         int pageSize = Integer.valueOf(request.getHeader("pageSize"));
-        pageSize = pageSize > 50 ? 50 : pageSize;
+        pageSize = pageSize > 32 ? 32 : pageSize;
         PageHelper.startPage(pageNum, pageSize);
         List<ArticleVo> list = this.articleDao.findByListWithAttr(userId);
         if (list.isEmpty()) {
@@ -167,7 +167,7 @@ public class ArticleServiceImpl extends BaseService<ArticleDao, Article> impleme
         article.setUserId(userId);
         int pageNum = Integer.valueOf(request.getHeader("pageNum"));
         int pageSize = Integer.valueOf(request.getHeader("pageSize"));
-        pageSize = pageSize > 50 ? 50 : pageSize;
+        pageSize = pageSize > 32 ? 32 : pageSize;
 
         PageHelper.startPage(pageNum, pageSize);
         final List<ArticleVo> list = this.articleDao.findCollectList(userId);
@@ -179,10 +179,10 @@ public class ArticleServiceImpl extends BaseService<ArticleDao, Article> impleme
     private List<Map<String, Object>> handleArticleVoList(final List<ArticleVo> list, final String tuserId,
             final boolean isLogin) {
         int size = list.size();
-        final List<Map<String, Object>> total = new ArrayList<>(size);
-        if (list.isEmpty()) {
-            return total;
+        if (size == 0) {
+            return new ArrayList<>(0);
         }
+        final List<Map<String, Object>> total = new ArrayList<>(size);
         ArticleLike t = new ArticleLike();
         ArticleCollect t1 = new ArticleCollect();
         List<String> userIdList = new ArrayList<>(size);
@@ -332,7 +332,7 @@ public class ArticleServiceImpl extends BaseService<ArticleDao, Article> impleme
                 .setReadNum(attr.getReadNum() + 1)
                 .setId(attr.getId());
         this.articleAttrDao.update(temp);
-        JedisUtils.set("user:login:" + ip, temp.getReadNum().toString(), 60 * 10);
+        JedisUtils.set("user:login:" + ip, temp.getReadNum().toString(), 600);
         return ResponseMapper.createMapper().data(temp.getReadNum()).resultJson();
     }
 
@@ -525,7 +525,7 @@ public class ArticleServiceImpl extends BaseService<ArticleDao, Article> impleme
         ResponseMapper mapper = ResponseMapper.createMapper();
         int pageNum = Integer.valueOf(request.getHeader("pageNum"));
         int pageSize = Integer.valueOf(request.getHeader("pageSize"));
-        pageSize = pageSize > 50 ? 50 : pageSize;
+        pageSize = pageSize > 32 ? 32 : pageSize;
         Page<?> page = PageHelper.startPage(pageNum, pageSize);
         final List<ArticleCommentVo> list = this.arCommentDao.findList(articleId);
         if (list.isEmpty()) {

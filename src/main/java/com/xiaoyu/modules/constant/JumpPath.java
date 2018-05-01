@@ -11,6 +11,7 @@ package com.xiaoyu.modules.constant;
  */
 public class JumpPath {
 
+    public static final String MOBILE = "mobile/";
     public static final class UserRelated {
         public static final String EDIT = "user/userForm";
         public static final String DETAIL = "user/userDetail";

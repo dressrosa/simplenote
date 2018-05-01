@@ -36,17 +36,17 @@ var handleData = function(data) {
         return;
     }
     var $coComment = $(".co_list");
-    $("#co_comment_num").html("("+obj.count+")");
-    var $html="";
+    $("#co_comment_num").html("(" + obj.count + ")");
+    var $html = "";
     $.each($coList, function(index, co) {
         if (co.authorId != co.replyerId) {
-            $html += '<div class="left_comment">' + '<div class="photo">' + ' <img class="circle" src="' + co.replyerAvatar + '" />' + '</div>'
-                    + '<div class="item">' + '<div class="msg">' + '<span>' + co.content + '</span>' + '</div>' + '<div class="left_triangle"></div>'
-                    + ' </div>' + '<div style="clear: both"></div>' + '</div>';
+            $html += '<div class="left_comment">' + '<div class="photo">' + ' <img class="circle" src="' + imgHead + co.replyerAvatar + '" />'
+                    + '</div>' + '<div class="item">' + '<div class="msg">' + '<span>' + co.content + '</span>' + '</div>'
+                    + '<div class="left_triangle"></div>' + ' </div>' + '<div style="clear: both"></div>' + '</div>';
         } else {
-            $html += '<div class="right_comment">' + '<div class="photo" style="float: right;">' + ' <img class="circle" src="' + co.replyerAvatar
-                    + '" />' + '</div>' + '<div class="item" style="float: right;">' + '<div class="msg">' + '<span>' + co.content + '</span>'
-                    + '</div>' + '<div class="right_triangle"></div>' + ' </div>' + '<div style="clear: both"></div>' + '</div>';
+            $html += '<div class="right_comment">' + '<div class="photo" style="float: right;">' + ' <img class="circle" src="' + imgHead
+                    + co.replyerAvatar + '" />' + '</div>' + '<div class="item" style="float: right;">' + '<div class="msg">' + '<span>' + co.content
+                    + '</span>' + '</div>' + '<div class="right_triangle"></div>' + ' </div>' + '<div style="clear: both"></div>' + '</div>';
         }
 
     });
