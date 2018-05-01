@@ -138,7 +138,7 @@ public class ExecutionTimeAop {
         try {
             result = point.proceed();
         } catch (final Throwable e) {
-            LOG.error(e.toString());
+            LOG.error(e.toString(),e);
         }
         LOG.info("方法[{}]执行时间为:[{}milliseconds] ", methodName, (System.currentTimeMillis() - start));
         return result;

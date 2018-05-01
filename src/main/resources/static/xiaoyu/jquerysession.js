@@ -14,13 +14,16 @@
             this._initCache();
 
             // See if we've changed protcols
-
             var matches = (new RegExp(this._generatePrefix() + "=([^;]+);")).exec(document.cookie);
             if (matches && document.location.protocol !== matches[1]) {
                 this._clearSession();
                 for ( var key in this._cookieCache) {
                     try {
-                        window.sessionStorage.setItem(key, this._cookieCache[key]);
+                        if (isPC()) {
+                            window.sessionStorage.setItem(key, this._cookieCache[key]);
+                        } else {
+                            window.localStorage.setItem(key, this._cookieCache[key]);
+                        }
                     } catch (e) {
                     };
                 }
@@ -76,14 +79,19 @@
         },
 
         get : function(key) {
-            return decodeURIComponent(window.sessionStorage.getItem(key)) || decodeURIComponent(this._getFallback(key));
+            return decodeURIComponent(isPC() ? window.sessionStorage.getItem(key) : window.localStorage.getItem(key))
+                    || decodeURIComponent(this._getFallback(key));
         },
 
         set : function(key, value, onceOnly) {
             /* solve chinese character cannot set to cookie */
             value = encodeURIComponent(value);
             try {
-                window.sessionStorage.setItem(key, value);
+                if (isPC()) {
+                    window.sessionStorage.setItem(key, value);
+                } else {
+                    window.localStorage.setItem(key, value);
+                }
             } catch (e) {
             }
             this._setFallback(key, value, onceOnly || false);
@@ -96,7 +104,11 @@
 
         remove : function(key) {
             try {
-                window.sessionStorage.removeItem(key);
+                if (isPC()) {
+                    window.sessionStorage.removeItem(key);
+                } else {
+                    window.localStorage.removeItem(key);
+                }
             } catch (e) {
             };
             this._deleteFallback(key);
@@ -105,11 +117,22 @@
 
         _clearSession : function() {
             try {
-                window.sessionStorage.clear();
-            } catch (e) {
-                for ( var i in window.sessionStorage) {
-                    window.sessionStorage.removeItem(i);
+                if (isPC()) {
+                    window.sessionStorage.clear();
+                } else {
+                    window.localStorage.clear();
                 }
+            } catch (e) {
+                if (isPC()) {
+                    for ( var i in window.localStorage) {
+                        window.localStorage.removeItem(i);
+                    }
+                } else {
+                    for ( var i in window.localStorage) {
+                        window.localStorage.removeItem(i);
+                    }
+                }
+
             }
         },
 

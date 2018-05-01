@@ -13,32 +13,37 @@
 <script src="/stephanwagner/jquery-1.11.0.min.js"></script>
 <meta content="唯有读书,不慵不扰" name="description" />
 <style type="text/css">
+body {
+    overflow-y: hidden;
+    position: static;
+}
+
 .avatar {
-	cursor: pointer;
-	border-radius: 50%;
-	height: 100px;
-	width: 100px;
-	top: 15px;
-	position: relative;
+    cursor: pointer;
+    border-radius: 50%;
+    height: 100px;
+    width: 100px;
+    top: 15px;
+    position: relative;
 }
 
 .small {
-	height: 50px;
-	width: 50px;
+    height: 50px;
+    width: 50px;
 }
 </style>
 <script>
-	
+    
 </script>
 </head>
-<body style="position: static;">
+<body>
 
     <div id="header">
         <h1>
             <img src="/xiaoyu/img/xiaoyu.png" class="avatar small" />
         </h1>
         <a href="/article/hot" class="header-icon icon-home"
-            style="right: 5px;"><span class="label">Note</span></a>
+            style="right: 5px; outline: none;"></a>
     </div>
     <div id="content">
         <div id="slideshow-images" class="" style="height: 658.35px;">
@@ -68,19 +73,19 @@
     <script src="/stephanwagner/0bd9cd-1cadc9.js"></script>
 </body>
 <script type="text/javascript">
-	/* $(document)
-			.ready(
-					function() {
-						$('.xiaoyu_a')
-								.mouseenter(
-										function() {
-											var img1 = '<img src="/xiaoyu/img/xiaoyu.png" class="avatar" height="50px" width="50px"/>';
-											var ring = $(".xiaoyu_a").append(
-													img1);
-											setTimeout((function() {
-												ring.remove();
-											}), 5);
-										});
-					}); */
+    /* $(document)
+    		.ready(
+    				function() {
+    					$('.xiaoyu_a')
+    							.mouseenter(
+    									function() {
+    										var img1 = '<img src="/xiaoyu/img/xiaoyu.png" class="avatar" height="50px" width="50px"/>';
+    										var ring = $(".xiaoyu_a").append(
+    												img1);
+    										setTimeout((function() {
+    											ring.remove();
+    										}), 5);
+    									});
+    				}); */
 </script>
 </html>

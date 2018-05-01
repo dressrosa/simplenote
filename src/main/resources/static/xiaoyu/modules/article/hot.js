@@ -2,8 +2,8 @@ var $lock = true;
 var getList = function(pageNum, pageSize) {
     var $ajaxPromise = $.ajax({
         type : "get",
-        async : true,
-        url : '/api/v1/article/hot',
+        // async : true,
+        url : '/api/v1/article/hot?' + new Date().getTime(),
         beforeSend : function(xhr) {
             var $userInfo = jQuery.parseJSON($.session.get("user"));
             xhr.setRequestHeader('pageNum', pageNum);
@@ -76,8 +76,8 @@ var handleData = function(data) {
         var childHtml = '<dl>';
 
         childHtml += '<div class="list_item">';
-        childHtml += '<span class="item_userinfo" ><img class="avatar small" img-type="avatar" src="' + ar.user.avatar + '" id="' + ar.user.userId
-                + '" />';
+        childHtml += '<span class="item_userinfo" ><img class="avatar small" img-type="avatar" src="' + imgHead + ar.user.avatar + '" id="'
+                + ar.user.userId + '" />';
         childHtml += '<p class="item_desc">' + ar.user.signature + '</p>';
         childHtml += '</span>';
         childHtml += '<dt class="item_username">' + ar.user.nickname + '</dt>';
@@ -222,7 +222,6 @@ var handleData = function(data) {
         var $elem = $(this);
         window.location.href = "/user/" + $elem.attr('id');
     });
-    addHeadForImg();
     return true;
 
 };
@@ -247,7 +246,8 @@ var fillInfo = function(item1, item2) {
     });
 }
 $(document).ready(function() {
-    getList(1, 12);
+    var $pageNum = 1;
+    getList($pageNum, 12);
     if (checkNull(userInfo)) {
         $("#loginSpan").css("display", "block");
     } else {
@@ -258,7 +258,7 @@ $(document).ready(function() {
     // 搜索框隐藏
     $(window).scroll(function() {
         var $top = document.body.scrollTop;
-        $(".top_n1_banner").css("background-position", "center " + $top);
+        // $(".top_n1_banner").css("background-position", "center " + $top);
         // console.log("top:" + $top);
         if ($top > 300) {
             $(".top_n1_info").css("opacity", 1);
@@ -294,7 +294,6 @@ $(document).ready(function() {
     });
 
     // 滚动事件触发
-    var $pageNum = 2;
     window.onscroll = function() {
         // console.log("可视高度:" + getClientHeight() + " 滚动位置:" + getScrollTop() +
         // " doc高度:" + getScrollHeight() + " 相加:"
@@ -306,7 +305,7 @@ $(document).ready(function() {
                 $lock = true;
                 $(".loading").css("visibility", "visible");
                 setTimeout(function() {
-                    getList($pageNum++, 12);
+                    getList(++$pageNum, 12);
                     $(".loading").css("visibility", "hidden");
                 }, 50);
             }

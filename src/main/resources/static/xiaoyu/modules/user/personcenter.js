@@ -22,7 +22,7 @@ var $ajaxPromise1 = $.ajax({
                 $user.background = 'common/4.jpg';
             }
             $(".panel").css("background", 'url(' + imgHead + $user.background + ') no-repeat 0% 70%/cover');
-            $userPanel.find("img").attr("src", $user.avatar);
+            $userPanel.find("img").attr("src", imgHead+$user.avatar);
             $userPanel.find("img").attr("id", $user.userId);
             $userPanel.find(".nickname_panel").html($user.nickname);
             $userPanel.find(".des_panel").html($user.signature);
@@ -35,9 +35,9 @@ var before = function(xhr) {
     if (!checkNull(userInfo)) {
         xhr.setRequestHeader('token', userInfo.token);
         xhr.setRequestHeader('userId', userInfo.userId);
-        xhr.setRequestHeader('pageNum', 1);
-        xhr.setRequestHeader('pageSize', 10);
     }
+    xhr.setRequestHeader('pageNum', 1);
+    xhr.setRequestHeader('pageSize', 10);
 };
 var handleAll = function(data) {
     var userInfo = jQuery.parseJSON($.session.get("user"));
@@ -86,7 +86,6 @@ var handleAll = function(data) {
     $(".list-group").attr("id", "list-all");
     $.session.set("pr-al-0", arHtml, 10 * 60);
 
-    addHeadForImg();
     return true;
 
 };
@@ -119,7 +118,6 @@ var handleCollected = function(data) {
     }
     $.session.set("pr-cd-1", arHtml, 10 * 60);
 
-    addHeadForImg();
     return true;
 };
 var handleFollowing = function(data) {
@@ -140,13 +138,13 @@ var handleFollowing = function(data) {
     $.each(obj.data, function(index, u) {
         ids[index] = u.userId;
         if (index < 5) {
-            $l += '<img id="' + u.userId + '" src="' + imgHead + u.userAvatar + '" class="avatar small compact" title="'+u.userName+'" />';
+            $l += '<img id="' + u.userId + '" src="' + imgHead + u.userAvatar + '" class="avatar small compact" title="' + u.userName + '" />';
         }
         if (index == 4) {
             $l += '</div>';
         }
         if (index > 4 && index < 10) {
-            $r += '<img id="' + u.userId + '" src="' + imgHead + u.userAvatar + '" class="avatar small compact" title="'+u.userName+'" />';
+            $r += '<img id="' + u.userId + '" src="' + imgHead + u.userAvatar + '" class="avatar small compact" title="' + u.userName + '" />';
         }
     });
 
@@ -192,7 +190,6 @@ var handleFollowing = function(data) {
     $ht += '</div>';
     $(".list-group").html($ht);
 
-    addHeadForImg();
     return true;
 };
 var $all = $.ajax({
@@ -236,7 +233,6 @@ $(document).ready(function() {
     $ajaxPromise1.promise().done(function() {
     });
     $all.promise().done(function() {
-        addHeadForImg();
     });
     // tab page
     $(".tab_ul").on('click', 'li', function() {
@@ -488,34 +484,40 @@ $(document).ready(function() {
         var $ar = $(this).parent().parent();
         window.location.href = "/article/edit/" + $ar.attr("id");
     });
-    if (!isPC()) {
-        $(".main").css("width", "100%");
-        $(".content").css("width", "100%");
-        $(".content").css("display", "block");
-        $(".content-left").css("width", "100%");
-        $(".content-right").css("width", "100%");
-    }
+    // if (!isPC()) {
+    // $(".main").css("width", "100%");
+    // $(".content").css("width", "100%");
+    // $(".content").css("display", "block");
+    // $(".content-left").css("width", "100%");
+    // $(".content-right").css("width", "100%");
+    // }
     $("#login").bind("click", function() {
         gotoLogin('/user/' + userId);
     });
     var $userInfo = jQuery.parseJSON($.session.get("user"));
     var $thisUserId = userId;
     if (!checkNull($userInfo) && $userInfo.userId == userId) {
-        $(".panel").hover(function() {
-            var $edit = $(".panel").find('label')[0];
-            if (!checkNull($edit)) {
-                $($edit).css("display", "initial");
-                return;
-            }
-            var $html = '<label style="cursor:pointer;float:left;padding:5px;color:#d64444;">编辑资料</label>';
-            $(".panel").prepend($html);
-            $(".panel").find('label').on("click", function() {
+        if (isPC()) {
+            $(".panel").hover(function() {
+                var $edit = $(".panel").find('label')[0];
+                if (!checkNull($edit)) {
+                    $($edit).css("display", "initial");
+                    return;
+                }
+                var $html = '<label style="cursor:pointer;float:left;padding:5px;color:#d64444;">编辑资料</label>';
+                $(".panel").prepend($html);
+                $(".panel").find('label').on("click", function() {
+                    window.location.href = "/user/edit";
+                });
+            }, function() {
+                var $edit = $(".panel").find('label')[0];
+                $($edit).css("display", "none");
+            });
+        } else {
+            $(".avatar").on("click", function() {
                 window.location.href = "/user/edit";
             });
-        }, function() {
-            var $edit = $(".panel").find('label')[0];
-            $($edit).css("display", "none");
-        });
+        }
 
     }
 });

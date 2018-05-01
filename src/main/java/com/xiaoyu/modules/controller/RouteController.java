@@ -20,70 +20,77 @@ import com.xiaoyu.modules.constant.JumpPath;
 @Controller
 public class RouteController {
 
+    private String path(HttpServletRequest request, String path) {
+        if (StringUtil.isPC(request)) {
+            return path;
+        }
+        return JumpPath.MOBILE.concat(path);
+    }
+
     @RequestMapping(value = "article/hot", method = RequestMethod.GET)
     public String hotList(HttpServletRequest request, HttpServletResponse response) {
-        return JumpPath.ArticleRelated.HOT_LIST;
+        return this.path(request, JumpPath.ArticleRelated.HOT_LIST);
     }
 
     @RequestMapping(value = "article/{articleId}", method = RequestMethod.GET)
     public String goArticleDetail(HttpServletRequest request, HttpServletResponse response,
             @PathVariable String articleId) {
         if (StringUtil.isEmpty(articleId)) {
-            return JumpPath.CommonRelated.PAGE_404;
+            return this.path(request, JumpPath.CommonRelated.PAGE_404);
         }
-        return JumpPath.ArticleRelated.DETAIL;
+        return this.path(request, JumpPath.ArticleRelated.DETAIL);
     }
 
     @RequestMapping(value = "article/write", method = RequestMethod.GET)
     public String goWrite(HttpServletRequest request) {
-        return JumpPath.ArticleRelated.WRITE;
+        return this.path(request, JumpPath.ArticleRelated.WRITE);
     }
 
     @RequestMapping(value = "article/edit/{articleId}", method = RequestMethod.GET)
     public String goArticleEdit(HttpServletRequest request, HttpServletResponse response,
             @PathVariable String articleId) {
         if (StringUtil.isEmpty(articleId)) {
-            return JumpPath.CommonRelated.PAGE_404;
+            return this.path(request, JumpPath.CommonRelated.PAGE_404);
         }
-        return JumpPath.ArticleRelated.EDIT;
+        return this.path(request, JumpPath.ArticleRelated.EDIT);
     }
 
     @RequestMapping(value = "article/{articleId}/comments", method = RequestMethod.GET)
     public String goComments(HttpServletRequest request, @PathVariable String articleId) {
-        return JumpPath.ArticleRelated.COMMENT_LIST;
+        return this.path(request, JumpPath.ArticleRelated.COMMENT_LIST);
     }
 
     @RequestMapping(value = "search", method = RequestMethod.GET)
     public String goSearch(HttpServletRequest request, String keyword) {
-        return JumpPath.ArticleRelated.SEARCH;
+        return this.path(request, JumpPath.ArticleRelated.SEARCH);
     }
 
     @RequestMapping(value = "user/{userId}", method = RequestMethod.GET)
     public String goUserDetail(@PathVariable String userId, HttpServletRequest request) {
         if (StringUtil.isEmpty(userId)) {
-            return JumpPath.CommonRelated.PAGE_404;
+            return this.path(request, JumpPath.CommonRelated.PAGE_404);
         }
-        return JumpPath.UserRelated.DETAIL;
+        return this.path(request, JumpPath.UserRelated.DETAIL);
     }
 
     @RequestMapping(value = "message", method = RequestMethod.GET)
     public String goMsg(HttpServletRequest request) {
-        return JumpPath.UserRelated.MESSAGE;
+        return this.path(request, JumpPath.UserRelated.MESSAGE);
     }
 
     @RequestMapping(value = "user/edit", method = RequestMethod.GET)
     public String goEditUserInfo(HttpServletRequest request) {
-        return JumpPath.UserRelated.EDIT;
+        return this.path(request, JumpPath.UserRelated.EDIT);
     }
 
     @RequestMapping(value = "login", method = RequestMethod.GET)
     public String goLogin(HttpServletRequest request) {
-        return JumpPath.CommonRelated.LOGIN;
+        return this.path(request, JumpPath.CommonRelated.LOGIN);
     }
 
     @RequestMapping(value = "user/upload", method = RequestMethod.GET)
     public String goUpload(HttpServletRequest request, HttpServletResponse response) {
-        return JumpPath.CommonRelated.UPLOAD;
+        return this.path(request, JumpPath.CommonRelated.UPLOAD);
     }
 
 }
