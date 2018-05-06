@@ -4,7 +4,7 @@ $(function() {
     'use strict';
     // Change this to the location of your server-side upload handler:
     var url = window.location.hostname === 'blueimp.github.io' ? '//jquery-file-upload.appspot.com/' : '/api/v1/upload/avatar', uploadButton = $(
-            '<button />').addClass('btn').addClass('sub').prop('disabled', true).text('上传中').on('click', function() {
+            '<button />').addClass('btn').addClass('right').prop('disabled', true).text('上传中').on('click', function() {
         var $this = $(this), data = $this.data();
         $this.off('click').text('取消').on('click', function() {
             $this.remove();
@@ -28,33 +28,27 @@ $(function() {
          * disableImageResize : /Android(?!.*Chrome)|Opera/
          * .test(window.navigator.userAgent),
          */
-        previewMaxWidth : 420,
-        previewMaxHeight : 352,
+        previewMaxWidth : document.body.clientHeight*0.40,
+        previewMaxHeight : document.body.clientHeight*0.40,
         imageCrop : true,
         previewCrop : true
     }).on('fileuploadadd', function(e, data) {
         $("#files").empty();
-        data.context = $('<div/>').appendTo('#files');
-        // .addClass("aa");
+        data.context = $('#files');
         $.each(data.files, function(index, file) {
             var node = $('<p/>');
             if (!index) {
                 node.append(uploadButton.clone(true).data(data));
+                node.appendTo(data.context);
             }
-            node.appendTo(data.context);
-            // $('#fileupload').attr("disabled", true);
-        });
-        $(".loc").css({
-            'top' : '82%',
-            'left' : '3%'
         });
     }).on('fileuploadprocessalways', function(e, data) {
         var index = data.index, file = data.files[index], node = $(data.context.children()[index]);
         if (file.preview) {
-            node.prepend('<br>').prepend(file.preview);
+            node.prepend(file.preview);
         }
         if (file.error) {
-            node.append('<br>').append($('<span class="text-danger"/>').text(file.error));
+            node.append($('<span class="text-danger"/>').text(file.error));
         }
         if (index + 1 === data.files.length) {
             data.context.find('button').text('上传图片').prop('disabled', !!data.files.error);
@@ -64,7 +58,6 @@ $(function() {
         $('#progress .progress-bar').css('width', progress + '%');
     }).on('fileuploaddone', function(e, data) {
         var r = data.result;
-        console.log(r);
         if (r.code == '0') {
             var d = r.data;
             console.log("img" + d);

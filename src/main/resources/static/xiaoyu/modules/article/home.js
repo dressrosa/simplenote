@@ -3,7 +3,7 @@ var getList = function(pageNum, pageSize) {
     var $ajaxPromise = $.ajax({
         type : "get",
         // async : true,
-        url : '/api/v1/article/hot?' + new Date().getTime(),
+        url : '/api/v1/home?' + new Date().getTime(),
         beforeSend : function(xhr) {
             var $userInfo = jQuery.parseJSON($.session.get("user"));
             xhr.setRequestHeader('pageNum', pageNum);

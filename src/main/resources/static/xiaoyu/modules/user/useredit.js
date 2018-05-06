@@ -30,7 +30,7 @@ var $ajaxPromise1 = $.ajax({
         if (checkNull($user.background)) {
             $user.background = 'common/4.jpg';
         }
-        $userPanel.find("img").attr("src", $user.avatar);
+        $userPanel.find("img").attr("src",imgHead+ $user.avatar);
         $userPanel.find("img").attr("id", $user.userId);
         // $userPanel.find(".nickname_panel").html($user.nickname);
         // $userPanel.find(".des_panel").html($user.description);

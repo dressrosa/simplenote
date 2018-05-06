@@ -17,6 +17,7 @@
 <title></title>
 <link href="/xiaoyu/xiaoyu_mobile.css" rel="stylesheet" type="text/css" />
 <script type="text/javascript" src="/xiaoyu/common.js"></script>
+<script type="text/javascript" src="/xiaoyu/page.js"></script>
 <script type="text/javascript" src="/xiaoyu/xiaoyu.js"></script>
 <script type="text/javascript"
     src="/xiaoyu/modules/user/personcenter.js"></script>
@@ -26,7 +27,7 @@
     <div class="header">
         <div class="container">
             <span style="float: left;"><a class="header_w "
-                href="/article/hot">首页</a></span> <span id="userSpan"
+                href="/home">首页</a></span> <span id="userSpan"
                 style="float: right; display: none;"> <a
                 class="header_w" style="padding-right: 15px;"
                 id="nickname" href="#">xiao</a>
@@ -61,7 +62,12 @@
                 <ul class="list-group">
 
                 </ul>
-
+                <div class='loading'
+                    style='visibility: hidden; font-size: 13px; text-align: center; color: rgb(144, 145, 144);'>
+                    <label>加载中</label><img height="15px" withHead="0"
+                        style="top: 3px; position: relative;"
+                        width="15px" src="/xiaoyu/img/loading.gif" />
+                </div>
             </div>
         </div>
     </div>

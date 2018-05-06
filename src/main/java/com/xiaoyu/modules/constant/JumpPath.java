@@ -21,7 +21,7 @@ public class JumpPath {
     public static final class ArticleRelated {
         public static final String EDIT = "article/articleEdit";
         public static final String DETAIL = "article/articleDetail";
-        public static final String HOT_LIST = "article/hotList";
+        public static final String HOME = "article/home";
         public static final String WRITE = "article/articleForm";
         public static final String COMMENT_LIST = "article/commentList";
         public static final String SEARCH = "article/searchList";

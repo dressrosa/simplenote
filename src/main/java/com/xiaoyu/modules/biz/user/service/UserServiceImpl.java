@@ -163,7 +163,7 @@ public class UserServiceImpl extends BaseService<UserDao, User> implements IUser
         User user = new User();
         user.setLoginName(loginName.trim())
                 .setPassword(Md5Utils.md5(password.trim()))
-                .setNickname(loginName.trim());
+                .setNickname(loginName.length() > 8 ? loginName.substring(0, 8) : loginName);
 
         if (this.userDao.isExist(user) > 0) {
             return mapper.code(ResponseCode.EXIST.statusCode())
@@ -247,9 +247,9 @@ public class UserServiceImpl extends BaseService<UserDao, User> implements IUser
                         .message("昵称不能为空")
                         .resultJson();
             }
-            if (content.length() > 10) {
+            if (content.length() > 8) {
                 return mapper.code(ResponseCode.ARGS_ERROR.statusCode())
-                        .message("昵称最多10个字")
+                        .message("昵称最多8个字")
                         .resultJson();
             }
             temp.setNickname(content);
@@ -378,7 +378,7 @@ public class UserServiceImpl extends BaseService<UserDao, User> implements IUser
         ResponseMapper mapper = ResponseMapper.createMapper();
         Follow f = new Follow();
         f.setUserId(userId);
-        
+
         PageHelper.startPage(Integer.valueOf(request.getHeader("pageNum")), 12);
         List<FollowVo> list = this.followDao.findList(f);
 

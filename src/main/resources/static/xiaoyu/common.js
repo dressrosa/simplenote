@@ -125,12 +125,12 @@ function uploadFile() {
         myModal.destroy();
     }
     myModal = new jBox('Modal', {
-        height : 450,
-        width : 450,
+        height : document.body.clientHeight*0.50,
+        width : document.body.clientHeight*0.45,
         animation : 'slide',
         closeButton : 'title',
         closeOnClick : false,
-        draggable : "title",
+        //draggable : "title",
         title : "上传图片",
         ajax : {
             url : "/user/upload",

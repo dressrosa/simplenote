@@ -26,10 +26,15 @@ public class RouteController {
         }
         return JumpPath.MOBILE.concat(path);
     }
+    
+    @RequestMapping(value = "/", method = RequestMethod.GET)
+    public String home(HttpServletRequest request, HttpServletResponse response) {
+        return this.path(request, JumpPath.ArticleRelated.HOME);
+    }
 
-    @RequestMapping(value = "article/hot", method = RequestMethod.GET)
+    @RequestMapping(value = "home", method = RequestMethod.GET)
     public String hotList(HttpServletRequest request, HttpServletResponse response) {
-        return this.path(request, JumpPath.ArticleRelated.HOT_LIST);
+        return this.path(request, JumpPath.ArticleRelated.HOME);
     }
 
     @RequestMapping(value = "article/{articleId}", method = RequestMethod.GET)
