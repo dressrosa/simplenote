@@ -27,6 +27,7 @@ import org.springframework.web.servlet.view.InternalResourceViewResolver;
 
 import com.alibaba.fastjson.serializer.SerializerFeature;
 import com.alibaba.fastjson.support.spring.FastJsonHttpMessageConverter;
+import com.xiaoyu.common.utils.StringUtil;
 
 /**
  * 设置mvc的一些基本配置
@@ -159,11 +160,11 @@ public class MvcConfiguration extends WebMvcConfigurerAdapter {
     /**
      * 设置起始欢迎页
      */
-    @Override
-    public void addViewControllers(ViewControllerRegistry registry) {
-        registry.addViewController("/").setViewName("forward:/xiaoyu.me.html");
-        registry.setOrder(Ordered.HIGHEST_PRECEDENCE);
-        super.addViewControllers(registry);
-    }
+//    @Override
+//    public void addViewControllers(ViewControllerRegistry registry) {
+//        registry.addViewController("/").setViewName("forward:/article/home.html");
+//        registry.setOrder(Ordered.HIGHEST_PRECEDENCE);
+//        super.addViewControllers(registry);
+//    }
 
 }

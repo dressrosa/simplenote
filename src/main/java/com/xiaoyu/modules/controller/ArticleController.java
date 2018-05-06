@@ -57,7 +57,7 @@ public class ArticleController {
      * @return
      * @time 2016年4月1日下午4:08:19
      */
-    @RequestMapping(value = "api/v1/article/hot", method = RequestMethod.GET)
+    @RequestMapping(value = "api/v1/home", method = RequestMethod.GET)
     public String hotList(HttpServletRequest request) {
         return this.articleService.hotList(request);
     }

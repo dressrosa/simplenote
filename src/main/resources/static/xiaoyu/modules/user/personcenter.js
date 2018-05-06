@@ -1,6 +1,7 @@
 var url = document.URL;
 var userId = url.split('/')[4];
-
+var $lock = true;
+var $tabType="all";
 var $ajaxPromise1 = $.ajax({
     type : "get",
     async : true,
@@ -22,7 +23,7 @@ var $ajaxPromise1 = $.ajax({
                 $user.background = 'common/4.jpg';
             }
             $(".panel").css("background", 'url(' + imgHead + $user.background + ') no-repeat 0% 70%/cover');
-            $userPanel.find("img").attr("src", imgHead+$user.avatar);
+            $userPanel.find("img").attr("src", imgHead + $user.avatar);
             $userPanel.find("img").attr("id", $user.userId);
             $userPanel.find(".nickname_panel").html($user.nickname);
             $userPanel.find(".des_panel").html($user.signature);
@@ -36,20 +37,9 @@ var before = function(xhr) {
         xhr.setRequestHeader('token', userInfo.token);
         xhr.setRequestHeader('userId', userInfo.userId);
     }
-    xhr.setRequestHeader('pageNum', 1);
-    xhr.setRequestHeader('pageSize', 10);
 };
-var handleAll = function(data) {
+var handleAll = function(obj) {
     var userInfo = jQuery.parseJSON($.session.get("user"));
-    var obj = jQuery.parseJSON(data);
-    if (obj.code != '0') {
-        $(".list-group").html(blankPage);
-        return;
-    }
-    if (checkNull(obj.data) && obj.data.length <= 0) {
-        $(".list-group").html(blankPage);
-        return;
-    }
     var arHtml = "";
     $.each(obj.data, function(index, ar) {
         arHtml += '<li class="list-group-item"   id="' + ar.articleId + '">';
@@ -82,7 +72,7 @@ var handleAll = function(data) {
         arHtml += '</li>';
 
     });
-    $(".list-group").html(arHtml);
+    $(".list-group").append(arHtml);
     $(".list-group").attr("id", "list-all");
     $.session.set("pr-al-0", arHtml, 10 * 60);
 
@@ -96,6 +86,7 @@ var handleCollected = function(data) {
     if (!checkNull($userInfo) && $userInfo.userId == userId) {
         isSelf = true;
     }
+    
     var obj = jQuery.parseJSON(data);
     if (obj.code != '0' || checkNull(obj.data) || obj.data.length > 0) {
         $(".list-group").html(blankPage);
@@ -192,20 +183,55 @@ var handleFollowing = function(data) {
 
     return true;
 };
-var $all = $.ajax({
-    type : "get",
-    async : true,
-    url : '/api/v1/article/list',
-    data : {
-        userId : userId
-    },
-    beforeSend : function(xhr) {
-        return before(xhr);
-    },
-    success : function(data) {
-        return handleAll(data);
+
+var getSelfList = function(urlType, pageNum, pageSize) {
+    var $url;
+    if ("all" == urlType) {
+        $url = '/api/v1/article/list';
+    } else if ("collected" == urlType) {
+        $url = '/api/v1/article/list/collect';
+    } else if ("following" == urlType) {
+        $url = '/api/v1/user/following';
     }
-});
+    var $all = $.ajax({
+        type : "get",
+        async : true,
+        cache : false,
+        url : $url,
+        data : {
+            userId : userId
+        },
+        beforeSend : function(xhr) {
+            xhr.setRequestHeader('pageNum', pageNum);
+            xhr.setRequestHeader('pageSize', pageSize);
+            return before(xhr);
+        },
+        success : function(data) {
+            $lock = false;
+            var obj = jQuery.parseJSON(data);
+            if (pageNum == 1) {
+                if (obj.code != '0') {
+                    $(".list-group").html(blankPage);
+                    return;
+                }
+                if (checkNull(obj.data) && obj.data.length <= 0) {
+                    $(".list-group").html(blankPage);
+                    return;
+                }
+            }
+            if ("all" == urlType) {
+                return handleAll(obj);
+            } else if ("collected" == urlType) {
+                return handleCollected(data);
+            } else if ("following" == urlType) {
+                return handleFollowing(data);
+            }
+
+        }
+    });
+    $all.promise().done(function() {
+    });
+};
 
 $.ajax({
     type : "get",
@@ -232,8 +258,8 @@ var removeAllCache = function() {
 $(document).ready(function() {
     $ajaxPromise1.promise().done(function() {
     });
-    $all.promise().done(function() {
-    });
+    var $pageNum = 1;
+    getSelfList("all",$pageNum, 12);
     // tab page
     $(".tab_ul").on('click', 'li', function() {
         var $selected = $(this);
@@ -243,74 +269,28 @@ $(document).ready(function() {
         $selected.addClass('li_active');
         switch ($selected.attr('data-select')) {
             case '0' :
+                $tabType="all";
                 var $ck_al = $.session.get("pr-al-0");
                 if (!checkNull($ck_al) && $ck_al != 'null') {
                     $(".list-group").html($ck_al);
                 } else {
-                    $.ajax({
-                        type : "get",
-                        async : true,
-                        url : '/api/v1/article/list',
-                        data : {
-                            userId : userId
-                        },
-                        beforeSend : function(xhr) {
-                            return before(xhr);
-                        },
-                        success : function(data) {
-                            return handleAll(data);
-                        }
-                    });
-
+                    getSelfList("all", $pageNum, 12);
                 }
                 $(".list-group").attr("id", "list-all");
                 break;
             case '1' :
+                $tabType="collected";
                 var $pr_cd = $.session.get("pr-cd-1");
                 if (!checkNull($pr_cd) && $pr_cd != 'null') {
                     $(".list-group").html($pr_cd);
                 } else {
-                    $.ajax({
-                        type : "get",
-                        async : true,
-                        cache : false,
-                        url : '/api/v1/article/list/collect',
-                        data : {
-                            userId : userId
-                        },
-                        beforeSend : function(xhr) {
-                            return before(xhr);
-                        },
-                        success : function(data) {
-                            return handleCollected(data);
-                        }
-
-                    });
-
+                    getSelfList("collected", $pageNum, 12);
                 }
                 $(".list-group").attr("id", "list-collected");
                 break;
             case '2' :
-                $.ajax({
-                    type : "get",
-                    async : true,
-                    url : '/api/v1/user/following',
-                    data : {
-                        userId : userId
-                    },
-                    beforeSend : function(xhr) {
-                        var $userInfo = jQuery.parseJSON($.session.get("user"));
-                        xhr.setRequestHeader('pageNum', 1);
-                        if (!checkNull($userInfo)) {
-                            xhr.setRequestHeader('token', $userInfo.token);
-                            xhr.setRequestHeader('userId', $userInfo.userId);
-                        }
-                    },
-                    success : function(data) {
-                        return handleFollowing(data);
-                    }
-
-                });
+                $tabType="following";
+                getSelfList("following", $pageNum, 12);
                 $(".list-group").attr("id", "list-following");
                 break;
         }
@@ -484,13 +464,6 @@ $(document).ready(function() {
         var $ar = $(this).parent().parent();
         window.location.href = "/article/edit/" + $ar.attr("id");
     });
-    // if (!isPC()) {
-    // $(".main").css("width", "100%");
-    // $(".content").css("width", "100%");
-    // $(".content").css("display", "block");
-    // $(".content-left").css("width", "100%");
-    // $(".content-right").css("width", "100%");
-    // }
     $("#login").bind("click", function() {
         gotoLogin('/user/' + userId);
     });
@@ -519,5 +492,19 @@ $(document).ready(function() {
             });
         }
 
+    }
+
+    // 滚动事件触发
+    window.onscroll = function() {
+        if (getScrollTop() + getClientHeight() == getScrollHeight()) {
+            if (!$lock) {
+                $lock = true;
+                $(".loading").css("visibility", "visible");
+                setTimeout(function() {
+                    getSelfList($tabType,++$pageNum, 12);
+                    $(".loading").css("visibility", "hidden");
+                }, 50);
+            }
+        }
     }
 });

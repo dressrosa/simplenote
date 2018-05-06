@@ -1,12 +1,27 @@
 body {
-    font-family: 'Hiragino Sans GB', "Microsoft Yahei", sans-serif;
+    font-family: "Helvetica Neue", Helvetica, Arial, "PingFang SC",
+        "Hiragino Sans GB", "Heiti SC", "Microsoft YaHei", sans-serif;
     font-size: 15px;
     background: #fff;
     min-height: 1000px;
     line-height: 25px;
-    color: black;
+    color: #2A363B;
 }
 
+/*color:
+深红:#CF4647 
+微红:#F8F6F6
+亮红:#FF4545
+浅红:#ED6D54
+深黑:#2A363B 
+浅黑:#6d6d6d
+橘黄:#FFB563
+灰色:#DDDDDD
+深灰:#888888
+浅白:#f3f3f3
+浅蓝:#487eb3
+
+ */
 html, body, ul, ol, li, h1, h2, h3, h4, h5, h6, form, table, tr, td, div,
     p, img, pre, iframe {
     margin: 0;
@@ -79,7 +94,7 @@ li {
     top: 0px;
     height: 45px;
     width: 100%;
-    background: #d64444;
+    background: #CF4647;
     box-shadow: 0px 0px 5px #a7a7a7;
     z-index: 99;
     -webkit-transition: background .5s;
@@ -101,7 +116,7 @@ li {
 }
 
 .header_w {
-    color: #fff;
+    color: #ffffff;
     font-size: 16px;
     line-height: 45px;
     padding-right: 5px;
@@ -138,7 +153,7 @@ li {
 }
 
 li a {
-    color: #fff;
+    color: #ffffff;
 }
 
 .user_dropdown li:hover {
@@ -173,7 +188,7 @@ li a {
 }
 
 .avatar_wrapper:focus {
-    outline-color: black;
+    outline-color: #2A363B;
 }
 
 .compact {
@@ -222,7 +237,7 @@ li a {
 }
 
 .img_shadow img {
-    background-color: #fff;
+    background-color: #ffffff;
     padding-right: 4px;
     padding-bottom: 4px;
     -moz-box-shadow: 2px 2px 3px #DDDDDD;
@@ -234,7 +249,7 @@ li a {
 .blank_mug {
     text-align: center;
     font-size: 100px;
-    color: #d6d3d3;
+    color: #DDDDDD;
     font-weight: 100;
     position: relative;
     padding: 10%;
@@ -275,12 +290,12 @@ li a {
 
 .bigger:focus {
     -webkit-transition: width .5s;
-    background: #fff;
+    background: #ffffff;
 }
 
 .search {
     position: absolute;
-    color: #d64444;
+    color: #CF4647;
     font-size: larger;
     right: 0px;
     padding: 15px;
@@ -311,18 +326,17 @@ li a {
 .list_item {
     margin: 0;
     min-height: 200px;
-    border: 1px solid white;
+    border: 1px solid #ffffff;
     margin-bottom: 5px;
     font-size: 15px;
     padding: 15px;
-    font-weight: 100;
-    background: white;
-    box-shadow: 0 2px 1px rgba(84, 140, 109, 0.22);
+    font-weight: 200;
+    box-shadow: 0 1px 1px #f3f3f3;
     position: relative;
 }
 
 .item_username {
-    
+    border-bottom: 1px solid #f3f3f3;
 }
 
 .item_userinfo {
@@ -336,11 +350,13 @@ li a {
 }
 
 .item_ar_content:hover {
-    color: #a1a1a1;
+    color: #DDDDDD;
 }
 
 .item_ar_title {
     text-align: center;
+    font-size: 16px;
+    font-weight: 600;
 }
 
 .item_desc {
@@ -352,8 +368,8 @@ li a {
     position: relative;
     display: block;
     padding: 10px 15px;
-    background-color: #fff;
-    border: 1px solid #ddd;
+    background-color: #ffffff;
+    border: 1px solid #DDDDDD;
     border-bottom: 0px;
     box-shadow: 0 1px 3px rgba(0, 37, 55, .05);
     min-height: 150px;
@@ -366,7 +382,7 @@ li a {
 .group_item_p {
     cursor: pointer;
     position: relative;
-    color: #636363;
+    color: #6d6d6d;
     font-size: 13px;
     margin-bottom: 24px;
 }
@@ -378,7 +394,7 @@ li a {
     float: right;
     top: 5px;
     font-size: 12px;
-    color: #848484;
+    color: #6d6d6d;
 }
 
 .list-group-item:hover .group_item_edit_part {
@@ -391,14 +407,14 @@ li a {
 }
 
 .group_item_p:hover, .edit_part_label:hover {
-    color: #b7b7b7;
+    color: #DDDDDD;
 }
 
 .love_list {
     position: relative;
     margin-top: 5px;
     display: flex;
-    border: 1px solid #ddd;
+    border: 1px solid #DDDDDD;
 }
 
 .love_model {
@@ -408,7 +424,7 @@ li a {
 }
 
 .love_ar_list {
-    border: 1px solid #ddd;
+    border: 1px solid #DDDDDD;
     border-top-color: transparent;
     border-bottom: 0px;
 }
@@ -416,7 +432,7 @@ li a {
 .love_ar_model {
     padding: 0 0 0 10;
     min-height: 110px;
-    border-bottom: 1px solid #b9b9b9;
+    border-bottom: 1px solid #DDDDDD;
     x
 }
 
@@ -483,14 +499,14 @@ li a {
 .top_n1_info {
     position: relative;
     margin: 0 auto;
-    top: 50%;
+    top: 30%;
     display: block;
 }
 
 .top_n1_info label {
     text-align: center;
     width: 100%;
-    color: #b9b9b9;
+    color: #ffffff;
     font-size: 30px;
     font-weight: lighter;
     margin-bottom: 15px;
@@ -498,13 +514,13 @@ li a {
 
 .top_n2 {
     display: flex;
-    border: 1px solid red;
+    border: 1px solid #FF4545;
     height: 200px;
 }
 
 .top_n3 {
     display: flex;
-    border: 1px solid red;
+    border: 1px solid #FF4545;
     height: 200px;
 }
 
@@ -564,12 +580,12 @@ li a {
     position: relative;
     padding: 10px 15px;
     margin-bottom: 25px;
-    background-color: #fff;
+    background-color: #ffffff;
     border-bottom: 0px;
     box-shadow: 0 3px 1px rgba(97, 91, 91, 0.22);
     min-height: 80px;
     text-align: center;
-    background-color: #fff;
+    background-color: #ffffff;
     box-shadow: 0 3px 1px rgba(97, 91, 91, 0.22);
 }
 
@@ -593,9 +609,9 @@ li a {
 }
 
 .sub_btn {
-    color: #fff;
+    color: #ffffff;
     font-size: 14px;
-    background-color: #fd4d4d;
+    background-color: #ED6D54;
     border: 1px solid transparent;
     border-radius: 4px;
     margin-right: 10px;
@@ -608,9 +624,8 @@ li a {
 }
 
 .sub_btn_cancel {
-    color: #fff;
+    color: #ffffff;
     font-size: 14px;
-    background-color: #fd4d4d;
     border: 1px solid transparent;
     border-radius: 4px;
     margin-right: 10px;
@@ -620,7 +635,7 @@ li a {
     height: 30px;
     display: none;
     cursor: pointer;
-    background-color: #616161;
+    background-color: #FFB563;
 }
 
 .sign_input:focus {
@@ -629,7 +644,7 @@ li a {
 }
 
 .info_input:focus {
-    border: 1px solid #bbbbbb;
+    border: 1px solid #DDDDDD;
 }
 
 .span_title {
@@ -661,10 +676,10 @@ li a {
 .panel_card {
     width: 100%;
     height: 100%;
-    background-color: #000;
+    background-color: #2A363B;
     border-radius: 4px;
     margin: 0 auto;
-    color: #fff;
+    color: #ffffff;
     background-size: contain;
 }
 
@@ -695,7 +710,7 @@ li a {
 
 .card_u label:LAST-CHILD {
     font-size: 14px;
-    color: #505050;
+    color: #6d6d6d;
 }
 
 .card_down {
@@ -732,7 +747,7 @@ li a {
 .content {
     justify-content: space-between;
     display: flex;
-    background: #fff;
+    background: #ffffff;
     border-radius: 2px;
     box-shadow: 0 1px 3px rgba(0, 37, 55, .05);
     box-sizing: border-box;
@@ -752,11 +767,11 @@ li a {
 
 .info {
     max-width: 1100px;
-    background: #fff;
+    background: #ffffff;
     border-radius: 2px;
     box-shadow: 0 1px 3px rgba(0, 37, 55, .05);
     box-sizing: border-box;
-    background: #fff
+    background: #ffffff
 }
 
 .info_left {
@@ -774,14 +789,14 @@ li a {
     width: 100%;
     margin-bottom: 40px;
     margin-right: 30px;
-    background: white;
+    background: #ffffff;
     position: relative;
 }
 
 .part_down {
     width: 100%;
     margin-right: 10px;
-    background: white;
+    background: #ffffff;
     box-shadow: 0 2px 1px rgb(236, 236, 236);
     border-bottom-right-radius: 80px;
 }
@@ -790,7 +805,7 @@ li a {
     position: fixed;
     bottom: 0px;
     width: 100%;
-    border-top: 1px solid #e4e4e4;
+    border-top: 1px solid #f3f3f3;
     padding: 5px;
     text-align: center;
     display: flex;
@@ -814,7 +829,7 @@ li a {
 }
 
 .co_tt {
-    border: 1px solid #dedede;
+    border: 1px solid #f3f3f3;
     width: 80%;
     left: 0px;
     resize: none;
@@ -825,7 +840,7 @@ li a {
 }
 
 .co_tt:focus {
-    border: 1px solid #fbf5f5;
+    border: 1px solid #f3f3f3;
     border-radius: 4px;
     box-shadow: 0 14px 43px rgba(51, 140, 55, 0.21);
 }
@@ -833,31 +848,30 @@ li a {
 .co_btn {
     font-size: 14px;
     text-align: center;
-    background-color: #d64444;
+    background-color: #ED6D54;
     border: 1px solid transparent;
     border-radius: 2px;
     cursor: pointer;
     margin-left: 2px;
     width: 15%;
     position: relative;
-    color: #fff;
+    color: #ffffff;
 }
 
 .btn {
-    color: #fff;
-    float: right;
-    font-size: 15px;
-    background-color: #fd4d4d;
-    border: 1px solid transparent;
-    border-radius: 4px;
-    padding: 6px 12px;
+    color: #ffffff;
+    font-size: 14px;
+    background-color: #FF4545;
+    border-radius: 2px;
+    padding: 4px 4px;
     cursor: pointer;
     text-align: center;
+    width: 100%;
 }
 
 .btn.focus, .btn:focus, .btn:hover, .co_btn.focus, .co_btn:focus,
     .co_btn:hover {
-    color: black;
+    color: #2A363B;
     text-decoration: none;
 }
 
@@ -873,7 +887,7 @@ li a {
 }
 
 .note_each {
-    color: #333;
+    color: #2A363B;
     margin-bottom: 10px;
     font-size: 14px;
     clear: both;
@@ -908,7 +922,7 @@ li a {
 }
 
 .ar_title {
-    color: #544d4d;;
+    color: #2A363B;
     padding: 10px;
     padding-bottom: 1px;
     margin: 10px;
@@ -935,7 +949,7 @@ li a {
 
 .ar_more {
     text-align: center;
-    color: red;
+    color: #ED6D54;
     width: 100%;
     margin: 5px;
     padding: 5px;
@@ -994,7 +1008,7 @@ li a {
 }
 
 .red {
-    color: #fd4d4d;
+    color: #ED6D54;
 }
 
 .green {
@@ -1016,7 +1030,7 @@ li a {
     border-radius: 4px;
     height: 30px;
     text-align: center;
-    background: #ff7171;
+    background: #FFB563;
     font-weight: 500;
     font-size: 13px;
     cursor: pointer;
@@ -1041,7 +1055,7 @@ li a {
 }
 
 .co_comment {
-    border-top: 1px solid #ececec;
+    border-top: 1px solid #f3f3f3;
 }
 
 .co_num {
@@ -1067,7 +1081,7 @@ li a {
     position: relative;
     margin: 10px;
     margin-top: 20px;
-    background: white;
+    background: #ffffff;
     border-radius: 4px;
     border-top: 0px;
     box-shadow: 0 1px 3px rgba(0, 37, 55, .05);
@@ -1085,8 +1099,8 @@ li a {
     font-size: 14px;
     position: relative;
     padding: 10px 15px;
-    background-color: #fff;
-    border: 1px solid #ddd;
+    background-color: #ffffff;
+    border: 1px solid #DDDDDD;
     border-bottom: 0px;
     box-shadow: 0 1px 3px rgba(0, 37, 55, .05);
 }
@@ -1125,11 +1139,11 @@ li a {
 
 .item_p_username {
     text-align: center;
-    font-size: 10px;
+    font-size: 14px;
 }
 
 .item_p_label {
-    color: #9a9a9a;
+    color: #DDDDDD;
     text-align: center;
     margin: 5px;
     margin-left: 0px;
@@ -1140,15 +1154,16 @@ li a {
 .item_p_title_pure {
     text-align: center;
     margin: 4px;
-    font-size: 10px;
-    color: #adadad;
+    font-size: 11px;
+    color: #888888;
 }
 
 .item_like {
     text-align: center;
     margin: 4px;
-    font-size: 10px;
-    color: #adadad;
+    font-size: 11px;
+    color: #888888;
+    display: flex;
 }
 
 .item_up {
@@ -1167,7 +1182,7 @@ li a {
     justify-content: space-between;
     display: flex;
     width: 1100px;
-    background: #fff;
+    background: #ffffff;
     border-radius: 2px;
     box-shadow: 0 1px 3px rgba(0, 37, 55, .05);
     box-sizing: border-box;
@@ -1177,9 +1192,8 @@ li a {
 }
 
 .comment_bar {
-    background-color: #ffffff00;
+    background-color: #ffffff;
     display: flex;
-    border-top: 1px solid #e0e0e04f;
     position: absolute;
     bottom: 0px;
     right: 0px;
@@ -1189,10 +1203,10 @@ li a {
 .bar_part {
     font-size: 15px;
     padding: 2px;
-    color: #a7a7a7;
+    color: #888888;
     width: 33%;
     text-align: center;
-    border-right: 1px solid #e2dcdc;
+    border-right: 1px solid #f3f3f3;
 }
 
 .bar_part:last-child {
@@ -1205,14 +1219,13 @@ li a {
     border-radius: 2px;
     background-color: rgba(239, 68, 68, 0.9);
     height: 150px;
-    border: 1px solid #f9f6f6;
+    border: 1px solid #f3f3f3;
 }
 
 .module-body {
-    border-top: 1px solid #d4d1d1;
+    border-top: 1px solid #DDDDDD;
     margin-top: 0px;
-    background-color: white;
-    /* height: 125px; */
+    background-color: #ffffff;
     display: flex;
 }
 
@@ -1243,7 +1256,7 @@ li a {
     width: 98%;
     margin-left: 0px;
     margin: -8px auto 11px;
-    background: #888c8799;
+    background: #DDDDDD;
     clear: both;
     float: none;
     height: 5px;
@@ -1259,7 +1272,7 @@ li a {
     position: relative;
     height: 1px;
     margin: auto;
-    background: #bbb;
+    background: #DDDDDD;
     margin-bottom: 10px;
 }
 
@@ -1268,7 +1281,7 @@ li a {
 }
 
 .msg_list {
-    border-bottom: 1px solid #f7f7f7;
+    border-bottom: 1px solid #f3f3f3;
     max-width: 800px;
     min-height: 500px;
 }
@@ -1277,7 +1290,7 @@ li a {
     min-height: 80px;
     margin-bottom: 10px;
     position: relative;
-    border: 1px solid #f5f5f5;
+    border: 1px solid #f3f3f3;
     text-align: -webkit-left;
     padding: 5px;
     box-shadow: 0 1px 3px rgba(0, 37, 55, .05);
