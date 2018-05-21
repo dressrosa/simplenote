@@ -15,7 +15,7 @@
         from biz_article
         where del_flag=0
     </select>
-    
+
     <select id="get" resultType="com.xiaoyu.modules.biz.article.entity.Article"
         parameterType="com.xiaoyu.modules.biz.article.entity.Article">
         select
@@ -27,9 +27,9 @@
 
     <select id="getForUpdate" parameterType="java.lang.String"
         resultType="com.xiaoyu.modules.biz.article.entity.Article">
-        select 
+        select
         <include refid="Base_Column_List" />
-        from  biz_article as a
+        from biz_article as a
         where a.uuid = #{uuid}
         for update
     </select>
@@ -38,7 +38,7 @@
         resultType="com.xiaoyu.modules.biz.article.entity.Article">
         select
         <include refid="Base_Column_List" />
-        from 
+        from
         biz_article as a
         where a.id = #{id}
         and a.del_flag=0
@@ -50,7 +50,7 @@
         <include refid="Base_Column_List" />
         from
         biz_article as a
-        where 
+        where
         a.uuid = #{uuid}
         and a.del_flag=0
     </select>
@@ -61,7 +61,8 @@
         <include refid="Base_Column_List" />
         ,t.read_num as 'attr.readNum',
         t.collect_num as 'attr.collectNum',
-        t.like_num as 'attr.likeNum',
+        t.like_num as
+        'attr.likeNum',
         t.comment_num as 'attr.commentNum'
         from
         biz_article as a
@@ -69,7 +70,7 @@
         biz_article_attr as t
         on
         t.article_id=a.uuid
-        where 
+        where
         a.uuid = #{uuid} and
         a.del_flag=0
     </select>
@@ -94,25 +95,30 @@
         a.user_id as userId,
         any_value(a.title) as title,
         any_value(a.create_date) as createDate,
-        any_value(u.avatar) as 'user.avatar',
+        any_value(u.avatar) as
+        'user.avatar',
         any_value(u.signature) as 'user.signature',
-        any_value(u.nickname) as 'user.nickname',
+        any_value(u.nickname) as
+        'user.nickname',
         any_value(t.read_num) as 'attr.readNum',
-        any_value(t.collect_num) as 'attr.collectNum',
+        any_value(t.collect_num) as
+        'attr.collectNum',
         any_value(t.like_num) as 'attr.likeNum',
-        any_value(t.comment_num) as 'attr.commentNum'
+        any_value(t.comment_num) as
+        'attr.commentNum'
         from
         biz_article as a
         left join biz_user as u
         on
         u.uuid = a.user_id
-        left join biz_article_attr as t
+        left join
+        biz_article_attr as t
         on
         t.article_id=a.uuid
         WHERE
         a.del_flag = 0 and
-        <foreach item="item" index="index" collection="array"
-            open="(" separator="or" close=")">
+        <foreach item="item" index="index" collection="array" open="(" separator="or"
+            close=")">
             a.user_id =#{item}
         </foreach>
         group by a.user_id
@@ -124,7 +130,8 @@
         <include refid="Base_Column_List" />
         ,t.read_num as 'attr.readNum',
         t.collect_num as 'attr.collectNum',
-        t.like_num as 'attr.likeNum',
+        t.like_num as
+        'attr.likeNum',
         t.comment_num as 'attr.commentNum'
         from
         biz_article as a
@@ -137,14 +144,15 @@
         a.create_date
         desc
     </select>
-    
+
     <select id="findByListWithAttr" resultType="com.xiaoyu.modules.biz.article.vo.ArticleVo"
         parameterType="java.lang.String">
         select
         <include refid="Base_Column_List" />
         ,t.read_num as 'attr.readNum',
         t.collect_num as 'attr.collectNum',
-        t.like_num as 'attr.likeNum',
+        t.like_num as
+        'attr.likeNum',
         t.comment_num as 'attr.commentNum'
         from
         biz_article as a
@@ -157,14 +165,15 @@
             and a.user_id=#{userId}
         </if>
     </select>
-    
+
     <select id="findCollectList" resultType="com.xiaoyu.modules.biz.article.vo.ArticleVo"
         parameterType="java.lang.String">
         select
         <include refid="Base_Column_List" />
         ,t.read_num as 'attr.readNum',
         t.collect_num as 'attr.collectNum',
-        t.like_num as 'attr.likeNum',
+        t.like_num as
+        'attr.likeNum',
         t.comment_num as 'attr.commentNum'
         from
         biz_article as a
@@ -180,7 +189,7 @@
         and ac.user_id=#{userId}
         and ac.status=1
     </select>
-    
+
     <delete id="delete" parameterType="com.xiaoyu.modules.biz.article.entity.Article">
         update biz_article set
         del_flag=1
@@ -247,6 +256,9 @@
             <if test="title != null">
                 title = #{title},
             </if>
+            <if test="columnId != null">
+                column_id = #{columnId},
+            </if>
             <if test="createDate != null">
                 create_date = #{createDate},
             </if>
@@ -263,10 +275,9 @@
         where uuid = #{uuid}
     </update>
 
-    <select id="isExist" parameterType="java.lang.String"
-        resultType="java.lang.Integer">
-        select count(*) 
-        from biz_article 
+    <select id="isExist" parameterType="java.lang.String" resultType="java.lang.Integer">
+        select count(*)
+        from biz_article
         where uuid=#{uuid}
         and del_flag=0
     </select>

@@ -26,7 +26,7 @@ public class RouteController {
         }
         return JumpPath.MOBILE.concat(path);
     }
-    
+
     @RequestMapping(value = "/", method = RequestMethod.GET)
     public String home(HttpServletRequest request, HttpServletResponse response) {
         return this.path(request, JumpPath.ArticleRelated.HOME);
@@ -63,6 +63,14 @@ public class RouteController {
     @RequestMapping(value = "article/{articleId}/comments", method = RequestMethod.GET)
     public String goComments(HttpServletRequest request, @PathVariable String articleId) {
         return this.path(request, JumpPath.ArticleRelated.COMMENT_LIST);
+    }
+
+    @RequestMapping(value = "{userId}/article/columns", method = RequestMethod.GET)
+    public String goColumn(HttpServletRequest request, @PathVariable(required=true) String userId) {
+        if (StringUtil.isEmpty(userId)) {
+            return this.path(request, JumpPath.CommonRelated.PAGE_404);
+        }
+        return this.path(request, JumpPath.ArticleRelated.COLUMNS);
     }
 
     @RequestMapping(value = "search", method = RequestMethod.GET)
