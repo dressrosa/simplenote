@@ -70,7 +70,7 @@ public class ExecutionTimeAop {
                 break;
             }
         }
-        if(StringUtil.isSafeRequest(request)) {
+        if(!StringUtil.isSafeRequest(request)) {
             ResponseMapper mapper = ResponseMapper.createMapper();
             return mapper.code(ResponseCode.FAILED.statusCode())
                     .message("Hey,Guy.You Are In Danger.").resultJson();
