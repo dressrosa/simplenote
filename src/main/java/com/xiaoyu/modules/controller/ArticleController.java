@@ -166,4 +166,8 @@ public class ArticleController {
         return this.articleService.search(request, keyword);
     }
 
+    @RequestMapping(value = "api/v1/article/columns", method = RequestMethod.GET)
+    public String columns(HttpServletRequest request, @RequestParam(required = true) String userId) {
+        return this.articleService.columns(request, userId);
+    }
 }

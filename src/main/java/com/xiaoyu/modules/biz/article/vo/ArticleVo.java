@@ -16,8 +16,30 @@ public class ArticleVo extends BaseEntity {
     private String userId;
     private String title;
     private String content;
+    private String columnId;
+
     private UserVo user;
     private ArticleAttrVo attr;
+
+    private String columnName;
+
+    public String getColumnId() {
+        return columnId;
+    }
+
+    public ArticleVo setColumnId(String columnId) {
+        this.columnId = columnId;
+        return this;
+    }
+
+    public String getColumnName() {
+        return columnName;
+    }
+
+    public ArticleVo setColumnName(String columnName) {
+        this.columnName = columnName;
+        return this;
+    }
 
     public ArticleAttrVo getAttr() {
         return this.attr;

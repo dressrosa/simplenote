@@ -35,12 +35,14 @@ import com.xiaoyu.common.utils.UserUtils;
 import com.xiaoyu.maple.core.MapleUtil;
 import com.xiaoyu.modules.biz.article.dao.ArticleAttrDao;
 import com.xiaoyu.modules.biz.article.dao.ArticleCollectDao;
+import com.xiaoyu.modules.biz.article.dao.ArticleColumnDao;
 import com.xiaoyu.modules.biz.article.dao.ArticleCommentDao;
 import com.xiaoyu.modules.biz.article.dao.ArticleDao;
 import com.xiaoyu.modules.biz.article.dao.ArticleLikeDao;
 import com.xiaoyu.modules.biz.article.entity.Article;
 import com.xiaoyu.modules.biz.article.entity.ArticleAttr;
 import com.xiaoyu.modules.biz.article.entity.ArticleCollect;
+import com.xiaoyu.modules.biz.article.entity.ArticleColumn;
 import com.xiaoyu.modules.biz.article.entity.ArticleComment;
 import com.xiaoyu.modules.biz.article.entity.ArticleLike;
 import com.xiaoyu.modules.biz.article.entity.CommentLike;
@@ -55,6 +57,7 @@ import com.xiaoyu.modules.biz.user.entity.User;
 import com.xiaoyu.modules.biz.user.vo.UserVo;
 import com.xiaoyu.modules.constant.BizAction;
 import com.xiaoyu.modules.constant.BizType;
+import com.xiaoyu.modules.constant.Flag;
 import com.xiaoyu.modules.constant.MsgType;
 import com.xiaoyu.modules.constant.NumCountType;
 
@@ -83,6 +86,9 @@ public class ArticleServiceImpl extends BaseService<ArticleDao, Article> impleme
     private ArticleCommentDao arCommentDao;
     @Autowired
     private ArticleLikeDao likeDao;
+
+    @Autowired
+    private ArticleColumnDao columnDao;
 
     @Autowired
     private IMessageService messageService;
@@ -768,6 +774,123 @@ public class ArticleServiceImpl extends BaseService<ArticleDao, Article> impleme
             return;
         }
         LOG.info("同步失败");
+    }
+
+    @Override
+    public String addColumn(HttpServletRequest request, String name) {
+        ResponseMapper mapper = ResponseMapper.createMapper();
+        User user = UserUtils.checkLoginDead(request);
+        if (user == null) {
+            return ResponseMapper.createMapper()
+                    .code(ResponseCode.LOGIN_INVALIDATE.statusCode())
+                    .message("登录失效,请重新登录")
+                    .resultJson();
+        }
+        if (StringUtil.isBlank(name) || name.length() > 10) {
+            return ResponseMapper.createMapper()
+                    .code(ResponseCode.ARGS_ERROR.statusCode())
+                    .message("请正确填写名称")
+                    .resultJson();
+        }
+
+        ArticleColumn column = new ArticleColumn();
+        column
+                .setUserId(user.getUuid());
+        if (this.columnDao.count(column) > 50) {
+            return ResponseMapper.createMapper()
+                    .code(ResponseCode.FAILED.statusCode())
+                    .message("我们觉得太多栏目可能并不是那么美好")
+                    .resultJson();
+        }
+        column.setName(name)
+                .setUuid(IdGenerator.uuid());
+        this.columnDao.insert(column);
+        return mapper.data(column).resultJson();
+
+    }
+
+    @Override
+    public String removeColumn(HttpServletRequest request, String columnId) {
+        ResponseMapper mapper = ResponseMapper.createMapper();
+        User user = UserUtils.checkLoginDead(request);
+        if (user == null) {
+            return ResponseMapper.createMapper()
+                    .code(ResponseCode.LOGIN_INVALIDATE.statusCode())
+                    .message("登录失效,请重新登录")
+                    .resultJson();
+        }
+        ArticleColumn t = new ArticleColumn();
+        t.setUserId(user.getUuid()).setUuid(columnId);
+        this.columnDao.delete(t);
+        return mapper.resultJson();
+    }
+
+    @Override
+    public String updateColumn(HttpServletRequest request, String columnId, String name) {
+        ResponseMapper mapper = ResponseMapper.createMapper();
+        User user = UserUtils.checkLoginDead(request);
+        if (user == null) {
+            return ResponseMapper.createMapper()
+                    .code(ResponseCode.LOGIN_INVALIDATE.statusCode())
+                    .message("登录失效,请重新登录")
+                    .resultJson();
+        }
+        ArticleColumn t = new ArticleColumn();
+        t.setUserId(user.getUuid())
+                .setName(name)
+                .setUuid(columnId);
+        this.columnDao.update(t);
+        return mapper.resultJson();
+    }
+
+    @Override
+    public String putOrTakeColumn(HttpServletRequest request, String columnId, String articleId, int flag) {
+        ResponseMapper mapper = ResponseMapper.createMapper();
+        User user = UserUtils.checkLoginDead(request);
+        if (user == null) {
+            return ResponseMapper.createMapper()
+                    .code(ResponseCode.LOGIN_INVALIDATE.statusCode())
+                    .message("登录失效,请重新登录")
+                    .resultJson();
+        }
+
+        Article t = new Article();
+        t.setUserId(user.getUuid())
+                .setUuid(articleId);
+        if (flag == Flag.True.ordinal()) {
+            t.setColumnId(columnId);
+        } else {
+            t.setColumnId("");
+        }
+
+        this.articleDao.update(t);
+        return mapper.resultJson();
+    }
+
+    @Override
+    public String columns(HttpServletRequest request, String userId) {
+        ResponseMapper mapper = ResponseMapper.createMapper();
+        User user = UserUtils.checkLoginDead(request);
+        ArticleColumn column = new ArticleColumn();
+        column.setUserId(userId);
+        if (user == null || !user.getUuid().equals(userId)) {
+            column.setIsOpen(Flag.True.ordinal());
+        }
+        List<ArticleColumn> columnList = this.columnDao.findByList(column);
+        List<Map<String, Object>> total = this.handleColumnList(columnList);
+        return mapper.data(total).resultJson();
+    }
+
+    private List<Map<String, Object>> handleColumnList(List<ArticleColumn> columnList) {
+        if (columnList == null || columnList.isEmpty()) {
+            return new ArrayList<>(0);
+        }
+        List<Map<String, Object>> total = new ArrayList<>();
+        for (ArticleColumn cu : columnList) {
+            total.add(MapleUtil.wrap(cu).rename("uuid", "columnId")
+                    .skip("id","delFlag","createDate","updateDate").map());
+        }
+        return total;
     }
 
 }

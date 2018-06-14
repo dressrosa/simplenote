@@ -61,14 +61,18 @@ public interface IArticleService {
      */
     public String addArticle(HttpServletRequest request, String title, String content);
 
-    /**编辑文章
+    /**
+     * 编辑文章
+     * 
      * @param request
      * @param title
      * @param content
      * @param userId
      * @return
      */
-    public String editArticle(HttpServletRequest request, String title, String content, String userId, String articleId);
+    public String editArticle(HttpServletRequest request, String title, String content, String userId,
+            String articleId);
+
     /**
      * 增加阅读数
      * 
@@ -117,7 +121,7 @@ public interface IArticleService {
      * @return
      */
     public String comment(HttpServletRequest request, String articleId, String content);
-    
+
     /**
      * 回复
      * 
@@ -170,5 +174,52 @@ public interface IArticleService {
      * @return
      */
     public void synElastic();
+
+    /**
+     * 增加栏目
+     * 
+     * @param request
+     * @param name
+     * @return
+     */
+    public String addColumn(HttpServletRequest request, String name);
+
+    /**
+     * 删除栏目,不会删除文章
+     * 
+     * @param request
+     * @param columnId
+     * @return
+     */
+    public String removeColumn(HttpServletRequest request, String columnId);
+
+    /**
+     * 更新栏目名称
+     * 
+     * @param request
+     * @param columnId
+     * @param name
+     * @return
+     */
+    public String updateColumn(HttpServletRequest request, String columnId, String name);
+
+    /**
+     * 把文章放入/移出栏目
+     * 
+     * @param request
+     * @param columnId
+     * @param articleId
+     * @return
+     */
+    public String putOrTakeColumn(HttpServletRequest request, String columnId, String articleId, int flag);
+
+    /**
+     * 栏目列表
+     * 
+     * @param request
+     * @param userId
+     * @return
+     */
+    public String columns(HttpServletRequest request, String userId);
 
 }

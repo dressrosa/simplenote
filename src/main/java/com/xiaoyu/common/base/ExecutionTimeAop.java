@@ -14,6 +14,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.context.annotation.Configuration;
 
 import com.xiaoyu.common.utils.JedisUtils;
+import com.xiaoyu.common.utils.StringUtil;
 
 /**
  * 计算方法运行时间
@@ -68,6 +69,11 @@ public class ExecutionTimeAop {
                 request = (HttpServletRequest) o;
                 break;
             }
+        }
+        if(StringUtil.isSafeRequest(request)) {
+            ResponseMapper mapper = ResponseMapper.createMapper();
+            return mapper.code(ResponseCode.FAILED.statusCode())
+                    .message("Hey,Guy.You Are In Danger.").resultJson();
         }
         ip = request.getRemoteHost();
         uri = request.getRequestURI();

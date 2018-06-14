@@ -11,6 +11,8 @@ import javax.servlet.http.HttpServletRequest;
 
 import org.apache.commons.lang3.StringEscapeUtils;
 import org.apache.commons.lang3.StringUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * @author hongyu
@@ -21,6 +23,7 @@ public class StringUtil extends StringUtils {
 
     private static final char SEPARATOR = '_';
     private static final String CHARSET_NAME = "UTF-8";
+    private static final Logger LOG = LoggerFactory.getLogger(StringUtil.class);
 
     /**
      * 转换为字节数组
@@ -231,6 +234,15 @@ public class StringUtil extends StringUtils {
             }
         }
         return flag;
+    }
+    
+    public static boolean isSafeRequest(HttpServletRequest request) {
+        final String userAgentInfo = request.getHeader("user-agent");
+        if(StringUtil.isBlank(userAgentInfo)) {
+            LOG.warn("Danger!Danger!,someone is Bazinga,ip->{}",request.getRemoteHost());
+            return false;
+        }
+        return true;
     }
 
     public static boolean isEmail(String str) {

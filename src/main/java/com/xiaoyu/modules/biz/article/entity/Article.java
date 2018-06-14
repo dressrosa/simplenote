@@ -16,6 +16,17 @@ public class Article extends BaseEntity {
     private String title;
     private String content;
 
+    private String columnId;
+
+    public String getColumnId() {
+        return columnId;
+    }
+
+    public Article setColumnId(String columnId) {
+        this.columnId = columnId;
+        return this;
+    }
+
     public String getUserId() {
         return this.userId;
     }

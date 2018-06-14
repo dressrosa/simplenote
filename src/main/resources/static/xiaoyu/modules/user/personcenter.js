@@ -1,7 +1,7 @@
 var url = document.URL;
 var userId = url.split('/')[4];
 var $lock = true;
-var $tabType="all";
+var $tabType = "all";
 var $ajaxPromise1 = $.ajax({
     type : "get",
     async : true,
@@ -86,7 +86,7 @@ var handleCollected = function(data) {
     if (!checkNull($userInfo) && $userInfo.userId == userId) {
         isSelf = true;
     }
-    
+
     var obj = jQuery.parseJSON(data);
     if (obj.code != '0' || checkNull(obj.data) || obj.data.length > 0) {
         $(".list-group").html(blankPage);
@@ -105,7 +105,7 @@ var handleCollected = function(data) {
                 + '个收藏</label>' + '</div>' + '</div>' + '</div>';
     });
     if ($(".list-group").attr("id") == "list-collected") {
-        $(".list-group").html(arHtml);
+        $(".list-group").append(arHtml);
     }
     $.session.set("pr-cd-1", arHtml, 10 * 60);
 
@@ -114,10 +114,6 @@ var handleCollected = function(data) {
 var handleFollowing = function(data) {
 
     var obj = jQuery.parseJSON(data);
-    if (obj.code != '0' || checkNull(obj.data) || obj.data.length <= 0) {
-        $(".list-group").html(blankPage);
-        return;
-    }
     var arHtml = "";
     var $ht = '<div class="love_list">';
     $ht += '<div class="page_arrow">';
@@ -170,7 +166,7 @@ var handleFollowing = function(data) {
                 $ht += '<dt class="item_username">' + ar.user.nickname + '</dt>';
                 $ht += '<label style="font-size: 13px;">最近发表:</label>';
                 $ht += '<div class="font_center" >';
-                $ht += '	<label style="cursor:pointer;" id="' + ar.id + '">"' + ar.title + '"</label>';
+                $ht += '	<label style="cursor:pointer;width:100%;" id="' + ar.id + '">"' + ar.title + '"</label>';
                 $ht += '	<time style="font-size: 12px;">' + ar.createDate + '</time>';
                 $ht += '</div>';
                 $ht += '</div>';
@@ -258,8 +254,10 @@ var removeAllCache = function() {
 $(document).ready(function() {
     $ajaxPromise1.promise().done(function() {
     });
-    var $pageNum = 1;
-    getSelfList("all",$pageNum, 12);
+    var $all_pageNum = 1;
+    var $collected_pageNum = 1;
+    var $following_pageNum = 1;
+    getSelfList("all", $all_pageNum, 12);
     // tab page
     $(".tab_ul").on('click', 'li', function() {
         var $selected = $(this);
@@ -269,28 +267,28 @@ $(document).ready(function() {
         $selected.addClass('li_active');
         switch ($selected.attr('data-select')) {
             case '0' :
-                $tabType="all";
+                $tabType = "all";
                 var $ck_al = $.session.get("pr-al-0");
                 if (!checkNull($ck_al) && $ck_al != 'null') {
                     $(".list-group").html($ck_al);
                 } else {
-                    getSelfList("all", $pageNum, 12);
+                    getSelfList("all", $all_pageNum, 12);
                 }
                 $(".list-group").attr("id", "list-all");
                 break;
             case '1' :
-                $tabType="collected";
+                $tabType = "collected";
                 var $pr_cd = $.session.get("pr-cd-1");
                 if (!checkNull($pr_cd) && $pr_cd != 'null') {
                     $(".list-group").html($pr_cd);
                 } else {
-                    getSelfList("collected", $pageNum, 12);
+                    getSelfList("collected", $collected_pageNum, 12);
                 }
                 $(".list-group").attr("id", "list-collected");
                 break;
             case '2' :
-                $tabType="following";
-                getSelfList("following", $pageNum, 12);
+                $tabType = "following";
+                getSelfList("following", $following_pageNum, 12);
                 $(".list-group").attr("id", "list-following");
                 break;
         }
@@ -501,7 +499,13 @@ $(document).ready(function() {
                 $lock = true;
                 $(".loading").css("visibility", "visible");
                 setTimeout(function() {
-                    getSelfList($tabType,++$pageNum, 12);
+                    if ($tabType == "all") {
+                        getSelfList($tabType, ++$all_pageNum, 12);
+                    } else if ($tabType == "collected") {
+                        getSelfList($tabType, ++$collected_pageNum, 12);
+                    } else if ($tabType == "following") {
+                        getSelfList($tabType, $following_pageNum, 12);
+                    }
                     $(".loading").css("visibility", "hidden");
                 }, 50);
             }

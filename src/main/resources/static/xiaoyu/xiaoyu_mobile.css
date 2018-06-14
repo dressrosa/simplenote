@@ -46,7 +46,6 @@ i {
 label {
     display: inline-block;
     max-width: 100%;
-    margin-bottom: 5px;
     font-weight: 500;
 }
 
@@ -1294,4 +1293,44 @@ li a {
     text-align: -webkit-left;
     padding: 5px;
     box-shadow: 0 1px 3px rgba(0, 37, 55, .05);
+}
+
+.list_column {
+    padding: 2px;
+}
+
+.list_column_item {
+    width: 100%;
+}
+
+.list_column_item label {
+    width: 100%;
+    text-align: left;
+}
+
+.list_column_item p {
+    width: 100%;
+    text-align: left;
+    font-size: 13px;
+}
+
+.column_item_title {
+    width: 100%;
+    color: #487eb3;
+}
+
+.column_item_content {
+    padding: 5px;
+    margin-left: 5px;
+    font-size: 13px;
+}
+
+.column_item_content_item {
+    width: 100%;
+    display: inline-block;
+    border-bottom: 1px solid #f3f3f3;
+}
+
+.column_item_content_item span {
+    float: right;
 }
