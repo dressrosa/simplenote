@@ -14,7 +14,6 @@ import javax.servlet.ServletResponse;
 import javax.servlet.annotation.WebFilter;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
@@ -43,7 +42,7 @@ public class EncodeFilterConfiguration implements Filter {
     @Override
     public void doFilter(ServletRequest request, ServletResponse response, FilterChain chain)
             throws IOException, ServletException {
-        EncodeFilterConfiguration.logger.info(">>>>>>>>>>>>>>>>>>>进入过滤器<<<<<<<<<<<<<<<<<<<<<<<<");
+        // logger.info(">>>>>>>>>>>>>>>>>>>进入过滤器<<<<<<<<<<<<<<<<<<<<<<<<");
         final HttpServletResponse res = (HttpServletResponse) response;
         final HttpServletRequest req = (HttpServletRequest) request;
         /*
@@ -60,22 +59,23 @@ public class EncodeFilterConfiguration implements Filter {
         // 对于无参请求 设置时间戳 不允许页面缓存
         req.setCharacterEncoding("utf-8");
         // Method[] m= req.getClass().getMethods();
-        EncodeFilterConfiguration.logger.info("请求详细信息:\n"
-                // +"contentLength:"+req.getContentLength()+"\n"
-                // +"contentType:"+req.getContentType()+"\n"
-                + "contentPath:" + req.getContextPath() + "\n"
-                // /+"localAddr:"+req.getLocalAddr()+"\n"
-                // +"localName:"+req.getLocalName()+"\n"
-                // +"method:"+req.getMethod()+"\n"
-                // +"pathInfo:"+req.getPathInfo()+"\n"
-                // +"pathTranslated:"+req.getPathTranslated()+"\n"
-                // +"queryString:"+req.getQueryString()+"\n"
-                // +"remoteAddr:"+req.getRemoteAddr()+"\n"
-                // +"remoteHost:"+req.getRemoteHost()+"\n"
-                + "requestURL:" + req.getRequestURL() + "\n" + "servletContext:" + req.getServletContext() + "\n"
-                + "requestURI:" + req.getRequestURI() + "\n"
+        // logger.info("request info:\n"
+        // +"contentLength:"+req.getContentLength()+"\n"
+        // +"contentType:"+req.getContentType()+"\n"
+        // + "contentPath:" + req.getContextPath() + "\n"
+        // /+"localAddr:"+req.getLocalAddr()+"\n"
+        // +"localName:"+req.getLocalName()+"\n"
+        // +"method:"+req.getMethod()+"\n"
+        // +"pathInfo:"+req.getPathInfo()+"\n"
+        // +"pathTranslated:"+req.getPathTranslated()+"\n"
+        // +"queryString:"+req.getQueryString()+"\n"
+        // +"remoteAddr:"+req.getRemoteAddr()+"\n"
+        // + "remoteHost:" + req.getRemoteHost() + "\n"
+        // + "requestURL:" + req.getRequestURL()
+        // + "servletContext:" + req.getServletContext() + "\n"
+        // + "requestURI:" + req.getRequestURI() + "\n"
         // +"parts:"+req.getParts()+"\n"
-        );
+        // );
         // 无参url添加时间
         // if (0 == req.getParameterMap().size()) {
         // res.sendRedirect(req.getRequestURI() + "?"
@@ -84,8 +84,19 @@ public class EncodeFilterConfiguration implements Filter {
         // //Cannot call sendError() after the response has been committed
         // return;
         // }
-        // 请求转发
-        chain.doFilter(req, res);
+        try {
+            // 请求转发
+            chain.doFilter(request, response);
+        } catch (Exception e) {
+            /*
+             * 异常拦截,server请求收到,但是client取消,导致死循环栈溢出
+             * Resolved exception caused by Handler execution:
+             * org.apache.catalina.connector.ClientAbortException:
+             * java.io.IOException: Broken pipe
+             * 但是这里捕获的其实是栈溢出错误.
+             */
+            logger.warn("捕获到ClientAbortException.为请求异常.");
+        }
 
     }
 
