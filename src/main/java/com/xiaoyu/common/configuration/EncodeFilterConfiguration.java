@@ -18,6 +18,8 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
 
+import com.xiaoyu.common.utils.StringUtil;
+
 /**
  * 设置字符串过滤器 单独设置默认是对全部url起作用,设置@{@link WebFilter}范围也没有作用 需要注册bean
  * {@link FilterBeanConfiguration}
@@ -46,6 +48,7 @@ public class EncodeFilterConfiguration implements Filter {
         final HttpServletResponse res = (HttpServletResponse) response;
         final HttpServletRequest req = (HttpServletRequest) request;
         /*
+         * FilterChainProxy ApplicationHttpRequest ClientAbortException
          * stackoverflow 解释: In order to create a session, you (almost always) need to
          * set a Session cookie. That is not possible when the response has already been
          * committed (i.e. the HTTP headers already sent to the client). In this case,
@@ -95,9 +98,8 @@ public class EncodeFilterConfiguration implements Filter {
              * java.io.IOException: Broken pipe
              * 但是这里捕获的其实是栈溢出错误.
              */
-            logger.warn("捕获到ClientAbortException.为请求异常.");
+            logger.warn("捕获到ClientAbortException,请求异常来源->{}",StringUtil.getRemoteAddr(req));
         }
-
     }
 
     @Override

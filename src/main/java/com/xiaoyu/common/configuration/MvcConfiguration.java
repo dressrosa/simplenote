@@ -6,8 +6,6 @@ package com.xiaoyu.common.configuration;
 import java.nio.charset.Charset;
 import java.util.List;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -28,18 +26,17 @@ import com.alibaba.fastjson.support.spring.FastJsonHttpMessageConverter;
 
 /**
  * 设置mvc的一些基本配置
+ * 
  * @EnableWebMvc // Optionally setup Spring MVC defaults if you aren’t doing so
- * elsewhere
+ *               elsewhere
  * @author xiaoyu 2016年3月21日
  *         摘自spring官方Blog:http://spring.io/blog/2013/11/01/exception
  *         -handling-in-spring-mvc
- *         
  */
 @Configuration
 @EnableScheduling
 public class MvcConfiguration extends WebMvcConfigurerAdapter {
 
-    private final static Logger logger = LoggerFactory.getLogger(MvcConfiguration.class);
 
     /**
      * springboot 默认静态资源访问路径
@@ -75,7 +72,7 @@ public class MvcConfiguration extends WebMvcConfigurerAdapter {
      * @return
      * @time 2016年3月22日上午8:28:04
      */
-    @Bean(name = "simpleMappingExceptionResolver")
+    //@Bean(name = "simpleMappingExceptionResolver")
     public SimpleMappingExceptionResolver createSimpleMappingExceptionResolver() {
         final SimpleMappingExceptionResolver r = new SimpleMappingExceptionResolver();
         // Properties mappings = new Properties();
@@ -84,12 +81,11 @@ public class MvcConfiguration extends WebMvcConfigurerAdapter {
         // r.setExceptionMappings(mappings); // None by default
         // 只能拦截Exception，404错误是拦截不了
         // 产生exception后跳转的页面
-        r.setDefaultErrorView("common/500");
+       // r.setDefaultErrorView("common/500");
         // Default is "exception"
-        r.setExceptionAttribute("ex");
+        // r.setExceptionAttribute("ex");
         // No default//TODO 未明白配置
-        r.setWarnLogCategory("info");
-        MvcConfiguration.logger.info("mvc配置:" + r.getOrder());
+        // r.setWarnLogCategory("info");
         return r;
     }
 
@@ -157,11 +153,11 @@ public class MvcConfiguration extends WebMvcConfigurerAdapter {
     /**
      * 设置起始欢迎页
      */
-//    @Override
-//    public void addViewControllers(ViewControllerRegistry registry) {
-//        registry.addViewController("/").setViewName("forward:/article/home.html");
-//        registry.setOrder(Ordered.HIGHEST_PRECEDENCE);
-//        super.addViewControllers(registry);
-//    }
+    // @Override
+    // public void addViewControllers(ViewControllerRegistry registry) {
+    // registry.addViewController("/").setViewName("forward:/article/home.html");
+    // registry.setOrder(Ordered.HIGHEST_PRECEDENCE);
+    // super.addViewControllers(registry);
+    // }
 
 }
