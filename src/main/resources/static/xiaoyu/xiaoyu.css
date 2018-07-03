@@ -889,10 +889,9 @@ li a {
     border: 1px solid transparent;
     border-radius: 2px;
     padding: 4px 4px;
+    margin-top:10px;
     cursor: pointer;
     text-align: center;
-    bottom: 1;
-    position: absolute !important;
 }
 
 .btn.focus, .btn:focus, .btn:hover, .co_btn.focus, .co_btn:focus,

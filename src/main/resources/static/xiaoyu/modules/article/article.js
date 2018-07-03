@@ -36,6 +36,7 @@ function publish() {
         }).open();
         return false;
     }
+    $("#publish").attr("disabled","disabled");
     $.ajax({
         type : "post",
         url : "/api/v1/article/add",
@@ -49,6 +50,7 @@ function publish() {
             xhr.setRequestHeader('userId', userInfo.userId);
         },
         error : function(data) {
+            $("#publish").removeAttr("disabled");
             tip = "没成功,是不是没网啊"
             $('.tooltip').jBox('Tooltip', {
                 content : tip,
@@ -60,6 +62,7 @@ function publish() {
             return false;
         },
         success : function(data) {
+            $("#publish").removeAttr("disabled");
             var jsonObj = jQuery.parseJSON(data);
             if (jsonObj.code == '0') {
                 window.location.href = "/article/" + jsonObj.data;

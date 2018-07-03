@@ -89,7 +89,7 @@ public class EncodeFilterConfiguration implements Filter {
         // }
         try {
             // 请求转发
-            chain.doFilter(request, response);
+            chain.doFilter(req, res);
         } catch (Exception e) {
             /*
              * 异常拦截,server请求收到,但是client取消,导致死循环栈溢出
@@ -98,7 +98,7 @@ public class EncodeFilterConfiguration implements Filter {
              * java.io.IOException: Broken pipe
              * 但是这里捕获的其实是栈溢出错误.
              */
-            logger.warn("捕获到ClientAbortException,请求异常来源->{}",StringUtil.getRemoteAddr(req));
+            logger.warn("捕获到ClientAbortException,请求异常来源->{}", StringUtil.getRemoteAddr(req));
         }
     }
 
