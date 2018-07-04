@@ -36,7 +36,7 @@
     <logger name="org.hibernate.validator" level="WARN" />
 
     <!-- 指定包下的log级别 additivity设置不向上传递 -->
-    <logger name="com.xiaoyu.modules.biz" level="DEBUG" additivity="false" />
+   <!--  <logger name="com.xiaoyu.modules.biz" level="DEBUG" additivity="false" /> -->
 
     <!--生产环境 -->
     <appender name="FILE" class="ch.qos.logback.core.rolling.RollingFileAppender">

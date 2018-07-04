@@ -23,6 +23,12 @@ public interface ArticleCommentDao extends BaseDao<ArticleComment> {
 
     List<ArticleCommentVo> findList(String articleId);
 
+    /**
+     * 行级锁
+     * 
+     * @param uuid
+     * @return
+     */
     ArticleComment getForUpdate(@Param("uuid") String uuid);
 
     CommentLike getLikeForUpdate(CommentLike t);
@@ -39,4 +45,11 @@ public interface ArticleCommentDao extends BaseDao<ArticleComment> {
 
     List<CommentLike> getLikes(List<CommentLike> list);
 
+    /**
+     * 乐观更新
+     * 
+     * @param c
+     * @return
+     */
+    int updateOptimistic(ArticleComment c);
 }

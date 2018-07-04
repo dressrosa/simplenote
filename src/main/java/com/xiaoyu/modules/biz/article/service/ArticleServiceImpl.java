@@ -332,12 +332,9 @@ public class ArticleServiceImpl extends BaseService<ArticleDao, Article> impleme
             return ResponseMapper.createMapper().resultJson();
         }
         ArticleAttr temp = new ArticleAttr();
-        // 行级锁
-        final ArticleAttr attr = this.articleAttrDao.getForUpdate(articleId);
-        temp.setArticleId(attr.getArticleId())
-                .setReadNum(attr.getReadNum() + 1)
-                .setId(attr.getId());
-        this.articleAttrDao.update(temp);
+        temp.setReadNum(1)
+                .setArticleId(articleId);
+        this.articleAttrDao.updateByAddition(temp);
         JedisUtils.set("user:login:" + ip, temp.getReadNum().toString(), 600);
         return ResponseMapper.createMapper().data(temp.getReadNum()).resultJson();
     }
@@ -354,9 +351,9 @@ public class ArticleServiceImpl extends BaseService<ArticleDao, Article> impleme
         // 没登录 或失效
         if (UserUtils.checkLoginDead(request) == null) {
             if (isLike == 0) {
-                this.addLikeNum(t, true);
-            } else if (isLike == 1) {
                 this.addLikeNum(t, false);
+            } else if (isLike == 1) {
+                this.addLikeNum(t, true);
             }
             return mapper.code(ResponseCode.LOGIN_INVALIDATE.statusCode()).resultJson();
         }
@@ -368,16 +365,15 @@ public class ArticleServiceImpl extends BaseService<ArticleDao, Article> impleme
     }
 
     private void addLikeNum(ArticleLike a, boolean flag) {
-        ArticleAttr attr = new ArticleAttr();
-        attr.setArticleId(a.getArticleId());
-        final ArticleAttr at = this.articleAttrDao.getForUpdate(a.getArticleId());
+        ArticleAttr temp = new ArticleAttr();
+        temp.setArticleId(a.getArticleId());
         if (flag) {
             // 点赞
-            attr.setLikeNum(at.getLikeNum() + 1);
+            temp.setLikeNum(1);
         } else {
-            attr.setLikeNum(at.getLikeNum() - 1);
+            temp.setLikeNum(-1);
         }
-        this.articleAttrDao.update(attr);
+        this.articleAttrDao.updateByAddition(temp);
     }
 
     /**
@@ -386,20 +382,15 @@ public class ArticleServiceImpl extends BaseService<ArticleDao, Article> impleme
     @Override
     public String addCollect(HttpServletRequest request, String articleId, Integer isCollect) {
         ResponseMapper mapper = ResponseMapper.createMapper();
+        // 没登录 或失效
+        if (UserUtils.checkLoginDead(request) == null) {
+            return mapper.code(ResponseCode.LOGIN_INVALIDATE.statusCode()).resultJson();
+        }
         if (this.articleDao.isExist(articleId) < 1) {
             return mapper.code(ResponseCode.ARGS_ERROR.statusCode()).resultJson();
         }
         ArticleCollect t = new ArticleCollect();
         t.setUserId(request.getHeader("userId")).setArticleId(articleId);
-        // 没登录 或失效
-        if (UserUtils.checkLoginDead(request) == null) {
-            if (isCollect == 0) {
-                this.addCollectNum(t, true);
-            } else if (isCollect == 1) {
-                this.addCollectNum(t, false);
-            }
-            return mapper.code(ResponseCode.LOGIN_INVALIDATE.statusCode()).resultJson();
-        }
         SpringBeanUtils.getBean(ArticleServiceImpl.class)
                 .handleLikeOrCollectNum(t);
         return mapper.resultJson();
@@ -407,18 +398,21 @@ public class ArticleServiceImpl extends BaseService<ArticleDao, Article> impleme
     }
 
     private int addCollectNum(ArticleCollect a, boolean flag) {
-        ArticleAttr attr = new ArticleAttr();
-        attr.setArticleId(a.getArticleId());
-        final ArticleAttr at = this.articleAttrDao.getForUpdate(a.getArticleId());
+        ArticleAttr temp = new ArticleAttr();
+        temp.setArticleId(a.getArticleId());
         // 收藏
         if (flag) {
-            attr.setCollectNum(at.getCollectNum() + 1);
+            temp.setCollectNum(1);
+        } else {
+            temp.setCollectNum(-1);
+        }
+        this.articleAttrDao.updateByAddition(temp);
+        if (flag) {
             this.userAttrDao.addNum(NumCountType.CollectNum.ordinal(), 1, a.getUserId());
         } else {
-            attr.setCollectNum(at.getCollectNum() - 1);
             this.userAttrDao.addNum(NumCountType.CollectNum.ordinal(), -1, a.getUserId());
         }
-        return this.articleAttrDao.update(attr);
+        return 1;
     }
 
     @Override
@@ -513,17 +507,16 @@ public class ArticleServiceImpl extends BaseService<ArticleDao, Article> impleme
     }
 
     private void addCommentNum(String articleId, boolean flag) {
-        ArticleAttr attr = new ArticleAttr();
-        attr.setArticleId(articleId);
-        final ArticleAttr at = this.articleAttrDao.getForUpdate(articleId);
+        ArticleAttr temp = new ArticleAttr();
+        temp.setArticleId(articleId);
         if (flag) {
             // 评论
-            attr.setCommentNum(at.getCommentNum() + 1);
+            temp.setCommentNum(1);
         } else {
             // 删除评论
-            attr.setCommentNum(at.getCommentNum() - 1);
+            temp.setCommentNum(-1);
         }
-        this.articleAttrDao.update(attr);
+        this.articleAttrDao.updateByAddition(temp);
     }
 
     @Override
@@ -613,9 +606,9 @@ public class ArticleServiceImpl extends BaseService<ArticleDao, Article> impleme
         // 没登录 或失效
         if (UserUtils.checkLoginDead(request) == null) {
             if (isLike == 0) {
-                this.addCommentLikeNum(new CommentLike().setCommentId(commentId), true);
-            } else if (isLike == 1) {
                 this.addCommentLikeNum(new CommentLike().setCommentId(commentId), false);
+            } else if (isLike == 1) {
+                this.addCommentLikeNum(new CommentLike().setCommentId(commentId), true);
             }
             return mapper.code(ResponseCode.LOGIN_INVALIDATE.statusCode()).resultJson();
         }
@@ -722,14 +715,30 @@ public class ArticleServiceImpl extends BaseService<ArticleDao, Article> impleme
     private int addCommentLikeNum(CommentLike c, boolean flag) {
         ArticleComment temp = new ArticleComment();
         temp.setUuid(c.getCommentId());
-        ArticleComment ac = this.arCommentDao.getForUpdate(c.getCommentId());
+        ArticleComment ac = this.arCommentDao.getByUuid(temp.getUuid());
         if (flag) {
             // 点赞
             temp.setNum(ac.getNum() + 1);
         } else {
             temp.setNum(ac.getNum() - 1);
         }
-        return this.arCommentDao.update(temp);
+        temp.setOld(ac.getNum());
+        // 进行乐观更新,最大重试1000次.可能会造成数据库连接量变大.
+        int retry = 0;
+        while (retry < 1000 && this.arCommentDao.updateOptimistic(temp) <= 0) {
+            ac = this.arCommentDao.getByUuid(temp.getUuid());
+            if (flag) {
+                temp.setNum(ac.getNum() + 1);
+            } else {
+                temp.setNum(ac.getNum() - 1);
+            }
+            temp.setOld(ac.getNum());
+            retry++;
+        }
+        if (retry > 0) {
+            LOG.info("乐观锁更新操作,重试了{}次", retry);
+        }
+        return 1;
     }
 
     @Override
@@ -888,7 +897,7 @@ public class ArticleServiceImpl extends BaseService<ArticleDao, Article> impleme
         List<Map<String, Object>> total = new ArrayList<>();
         for (ArticleColumn cu : columnList) {
             total.add(MapleUtil.wrap(cu).rename("uuid", "columnId")
-                    .skip("id","delFlag","createDate","updateDate").map());
+                    .skip("id", "delFlag", "createDate", "updateDate").map());
         }
         return total;
     }

@@ -195,6 +195,16 @@
         uuid =#{uuid}
     </update>
     
+    <update id="updateOptimistic"
+        parameterType="com.xiaoyu.modules.biz.article.entity.ArticleComment">
+        update biz_article_comment
+        set
+        num = #{num}
+        where
+        uuid =#{uuid}
+        and num =#{old}
+    </update>
+    
     <!--评论点赞相关 -->
     <select id="getLike"
         parameterType="com.xiaoyu.modules.biz.article.entity.CommentLike"
@@ -228,6 +238,7 @@
         and user_id = #{userId}
         for update
     </select>
+    
     <select id="isLiked"
         parameterType="com.xiaoyu.modules.biz.article.entity.CommentLike"
         resultType="java.lang.Integer">

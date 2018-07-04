@@ -19,9 +19,9 @@ public class BaseEntity implements Serializable {
      * 唯一主键
      */
     private Long id;
-    
+
     private String uuid;
-    
+
     /**
      * 创建时间
      */
@@ -36,6 +36,20 @@ public class BaseEntity implements Serializable {
      * 删除标志
      */
     private int delFlag;
+
+    /**
+     * 乐观锁要被更新的老数据
+     */
+    private long old;
+
+    public long getOld() {
+        return old;
+    }
+
+    public BaseEntity setOld(long old) {
+        this.old = old;
+        return this;
+    }
 
     public Long getId() {
         return this.id;

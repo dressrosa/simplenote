@@ -62,6 +62,7 @@ function modify() {
         }).open();
         return false;
     }
+    $("#publish").attr("disabled","disabled");
     $.ajax({
         type : "post",
         url : "/api/v1/article/edit",
@@ -85,6 +86,7 @@ function modify() {
                 closeOnClick : 'body',
                 target : $(".btn")
             }).open();
+            $("#publish").removeAttr("disabled");
             return false;
         },
         success : function(data) {
@@ -109,6 +111,7 @@ function modify() {
                     target : $(".btn")
                 }).open();
             }
+            $("#publish").removeAttr("disabled");
             return true;
         }
     });

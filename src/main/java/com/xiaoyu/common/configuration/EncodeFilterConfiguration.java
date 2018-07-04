@@ -54,7 +54,7 @@ public class EncodeFilterConfiguration implements Filter {
          * committed (i.e. the HTTP headers already sent to the client). In this case,
          * it seems that Facelets internally needs a session for something.
          */
-        req.getSession(true);
+        //req.getSession(true);
         // 设置编码格式
         res.setCharacterEncoding("UTF-8");
         // 设置请求头

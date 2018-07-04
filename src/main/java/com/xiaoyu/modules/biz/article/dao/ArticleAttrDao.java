@@ -15,6 +15,29 @@ import com.xiaoyu.modules.biz.article.entity.ArticleAttr;
 @Repository
 public interface ArticleAttrDao extends BaseDao<ArticleAttr> {
 
+    ArticleAttr getByArticleId(@Param("articleId") String articleId);
+
+    /**
+     * 悲观锁更新
+     * 
+     * @param articleId
+     * @return
+     */
     ArticleAttr getForUpdate(@Param("articleId") String articleId);
 
+    /**
+     * 乐观锁更新
+     * 
+     * @param attr
+     * @return
+     */
+    int updateOptimistic(ArticleAttr attr);
+
+    /**
+     * 加法更新
+     * 
+     * @param attr
+     * @return
+     */
+    int updateByAddition(ArticleAttr attr);
 }

@@ -5,12 +5,13 @@
         a.id as id,
         a.uuid as uuid,
         a.article_id as articleId,
-        a.readNum as readNum,
-        a.commentNum as commentNum
+        a.read_num as readNum,
+        a.comment_num as commentNum,
+        a.like_num as likeNum,
+        a.collect_num as collectNum
     </sql>
 
-    <select id="get"
-        resultType="com.xiaoyu.modules.biz.article.entity.ArticleAttr"
+    <select id="get" resultType="com.xiaoyu.modules.biz.article.entity.ArticleAttr"
         parameterType="com.xiaoyu.modules.biz.article.entity.ArticleAttr">
         select
         <include refid="Base_Column_List" />
@@ -19,18 +20,25 @@
         a.del_flag=0
     </select>
 
+    <select id="getByArticleId" parameterType="java.lang.String"
+        resultType="com.xiaoyu.modules.biz.article.entity.ArticleAttr">
+        select
+        <include refid="Base_Column_List" />
+        from biz_article_attr as a
+        where a.article_id = #{articleId}
+        and a.del_flag=0
+    </select>
+
     <!-- 分页查询用户信息 -->
-    <select id="findByList"
-        resultType="com.xiaoyu.modules.biz.article.entity.ArticleAttr"
+    <select id="findByList" resultType="com.xiaoyu.modules.biz.article.entity.ArticleAttr"
         parameterType="com.xiaoyu.modules.biz.article.entity.ArticleAttr">
         select
         <include refid="Base_Column_List" />
-        from biz_article_attr as a 
+        from biz_article_attr as a
         where a.del_flag=0
     </select>
 
-    <delete id="delete"
-        parameterType="com.xiaoyu.modules.biz.article.entity.ArticleAttr">
+    <delete id="delete" parameterType="com.xiaoyu.modules.biz.article.entity.ArticleAttr">
         update biz_article_attr set
         del_flag=1
         where
@@ -38,8 +46,7 @@
     </delete>
 
 
-    <insert id="insert"
-        parameterType="com.xiaoyu.modules.biz.article.entity.ArticleAttr">
+    <insert id="insert" parameterType="com.xiaoyu.modules.biz.article.entity.ArticleAttr">
         insert into biz_article_attr
         <trim prefix="(" suffix=")" suffixOverrides=",">
             <if test="uuid != null">
@@ -102,8 +109,7 @@
     </insert>
 
 
-    <update id="update"
-        parameterType="com.xiaoyu.modules.biz.article.entity.ArticleAttr">
+    <update id="update" parameterType="com.xiaoyu.modules.biz.article.entity.ArticleAttr">
         update biz_article_attr
         <set>
             <if test="readNum != null">
@@ -121,9 +127,59 @@
         </set>
         where article_id= #{articleId}
     </update>
+    
+    <update id="updateOptimistic" parameterType="com.xiaoyu.modules.biz.article.entity.ArticleAttr">
+        update biz_article_attr
+        <set>
+            <if test="readNum != null">
+                read_num = #{readNum},
+            </if>
+            <if test="likeNum != null">
+                like_num = #{likeNum},
+            </if>
+            <if test="collectNum != null">
+                collect_num = #{collectNum},
+            </if>
+            <if test="commentNum != null">
+                comment_num = #{commentNum},
+            </if>
+        </set>
+        where article_id= #{articleId}
+        and
+        <if test="readNum != null">
+            read_num = #{old}
+        </if>
+        <if test="likeNum != null">
+            like_num = #{old}
+        </if>
+        <if test="collectNum != null">
+            collect_num = #{old}
+        </if>
+        <if test="commentNum != null">
+            comment_num = #{old}
+        </if>
+    </update>
+    
+    <update id="updateByAddition" parameterType="com.xiaoyu.modules.biz.article.entity.ArticleAttr">
+        update biz_article_attr
+        <set>
+            <if test="readNum != null">
+                read_num = read_num+#{readNum},
+            </if>
+            <if test="likeNum != null">
+                like_num = like_num+#{likeNum},
+            </if>
+            <if test="collectNum != null">
+                collect_num = collect_num+#{collectNum},
+            </if>
+            <if test="commentNum != null">
+                comment_num = comment_num+#{commentNum},
+            </if>
+        </set>
+        where article_id= #{articleId}
+    </update>
 
-    <select id="isExist"
-        parameterType="com.xiaoyu.modules.biz.article.entity.ArticleAttr"
+    <select id="isExist" parameterType="com.xiaoyu.modules.biz.article.entity.ArticleAttr"
         resultType="java.lang.Integer">
         select count(*) from biz_article_attr
         where del_flag=0
