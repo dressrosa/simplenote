@@ -6,6 +6,7 @@ package com.xiaoyu.modules.controller;
 import javax.servlet.http.HttpServletRequest;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -16,6 +17,7 @@ import com.xiaoyu.common.base.ResponseCode;
 import com.xiaoyu.common.base.ResponseMapper;
 import com.xiaoyu.common.utils.StringUtil;
 import com.xiaoyu.modules.biz.article.service.api.IArticleService;
+import com.xiaoyu.modules.biz.article.vo.ArticleColumnVo;
 
 /**
  * 文章
@@ -165,9 +167,36 @@ public class ArticleController {
     public String search(HttpServletRequest request, @RequestParam(required = true) String keyword) {
         return this.articleService.search(request, keyword);
     }
+    /* ==========================分类栏目相关=============================== */
 
     @RequestMapping(value = "api/v1/article/columns", method = RequestMethod.GET)
     public String columns(HttpServletRequest request, @RequestParam(required = true) String userId) {
         return this.articleService.columns(request, userId);
+    }
+
+    @RequestMapping(value = "api/v1/article/columns/{columnId}", method = RequestMethod.GET)
+    public String articlesInColumn(HttpServletRequest request, @RequestParam(required = true) String userId,
+            @PathVariable(value = "columnId", required = true) String columnId) {
+        return this.articleService.findListByColumn(request, userId, columnId);
+    }
+
+    @RequestMapping(value = "api/v1/article/columns/save", method = RequestMethod.POST)
+    public String saveColumn(HttpServletRequest request, @ModelAttribute ArticleColumnVo column) {
+        if (StringUtil.isNotBlank(column.getColumnId())) {
+            return this.articleService.updateColumn(request, column.getColumnId(), column.getName());
+        } else {
+            return this.articleService.addColumn(request, column.getName());
+        }
+    }
+
+    @RequestMapping(value = "api/v1/article/columns/remove", method = RequestMethod.POST)
+    public String removeColumn(HttpServletRequest request, @RequestParam(required = true) String columnId) {
+        return this.articleService.removeColumn(request, columnId);
+    }
+
+    @RequestMapping(value = "api/v1/article/into-column", method = RequestMethod.POST)
+    public String intoColumn(HttpServletRequest request, @RequestParam(required = true) String columnId,
+            @RequestParam(required = true) String articleId) {
+        return this.articleService.putOrTakeColumn(request, columnId, articleId);
     }
 }

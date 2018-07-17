@@ -3,22 +3,29 @@
  */
 package com.xiaoyu.modules.biz.article.vo;
 
-import com.xiaoyu.common.base.BaseEntity;
-
 /**
  * @author hongyu
  * @date 2018-05
  * @description
  */
-public class ArticleColumnVo extends BaseEntity {
+public class ArticleColumnVo {
 
-    private static final long serialVersionUID = 1L;
-
+    private String columnId;
     private String userId;
     private String name;
     private int isOpen;
 
     private String userName;
+
+    
+    public String getColumnId() {
+        return columnId;
+    }
+
+    public ArticleColumnVo setColumnId(String columnId) {
+        this.columnId = columnId;
+        return this;
+    }
 
     public String getUserName() {
         return userName;

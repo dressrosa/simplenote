@@ -13,6 +13,7 @@ import javax.servlet.http.HttpServletRequest;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.context.annotation.Primary;
 import org.springframework.context.annotation.Scope;
 import org.springframework.context.annotation.ScopedProxyMode;
@@ -25,6 +26,7 @@ import com.github.pagehelper.PageHelper;
 import com.xiaoyu.common.base.BaseService;
 import com.xiaoyu.common.base.ResponseCode;
 import com.xiaoyu.common.base.ResponseMapper;
+import com.xiaoyu.common.event.EmailEvent;
 import com.xiaoyu.common.utils.ElasticUtils;
 import com.xiaoyu.common.utils.IdGenerator;
 import com.xiaoyu.common.utils.JedisUtils;
@@ -55,6 +57,7 @@ import com.xiaoyu.modules.biz.user.dao.UserAttrDao;
 import com.xiaoyu.modules.biz.user.dao.UserDao;
 import com.xiaoyu.modules.biz.user.entity.User;
 import com.xiaoyu.modules.biz.user.vo.UserVo;
+import com.xiaoyu.modules.common.MailBuilder;
 import com.xiaoyu.modules.constant.BizAction;
 import com.xiaoyu.modules.constant.BizType;
 import com.xiaoyu.modules.constant.Flag;
@@ -92,6 +95,9 @@ public class ArticleServiceImpl extends BaseService<ArticleDao, Article> impleme
 
     @Autowired
     private IMessageService messageService;
+
+    @Autowired
+    private ApplicationEventPublisher eventPublisher;
 
     private Map<String, Object> article2Map(final ArticleVo a) {
         return MapleUtil.wrap(a)
@@ -291,6 +297,15 @@ public class ArticleServiceImpl extends BaseService<ArticleDao, Article> impleme
             this.articleAttrDao.insert(attr);
             // 增加发文数
             this.userAttrDao.addNum(NumCountType.ArticleNum.ordinal(), 1, userId);
+            // 通知我有人发文章了,哈哈
+            MailBuilder builder = new MailBuilder();
+            builder.sender("1546428286@qq.com", "小往")
+                    .receiver("1546428286@qq.com", "Mr xiaoyu")
+                    .title("往往:注册通知.")
+                    .content("新鲜出炉!<br/>名称:" + t.getTitle()
+                            + "<br/>速速去了解一下拉"
+                            + "<br/><a href='http://47.93.235.211/article/" + t.getUuid() + "'>这也是个神奇的链接...</a>");
+            this.eventPublisher.publishEvent(new EmailEvent(builder));
         } catch (RuntimeException e) {
             LOG.error("publish artile failed,then rollback.", e);
             throw e;
@@ -785,6 +800,7 @@ public class ArticleServiceImpl extends BaseService<ArticleDao, Article> impleme
         LOG.info("同步失败");
     }
 
+    /* ==========================分类栏目相关=============================== */
     @Override
     public String addColumn(HttpServletRequest request, String name) {
         ResponseMapper mapper = ResponseMapper.createMapper();
@@ -853,7 +869,7 @@ public class ArticleServiceImpl extends BaseService<ArticleDao, Article> impleme
     }
 
     @Override
-    public String putOrTakeColumn(HttpServletRequest request, String columnId, String articleId, int flag) {
+    public String putOrTakeColumn(HttpServletRequest request, String columnId, String articleId) {
         ResponseMapper mapper = ResponseMapper.createMapper();
         User user = UserUtils.checkLoginDead(request);
         if (user == null) {
@@ -866,12 +882,20 @@ public class ArticleServiceImpl extends BaseService<ArticleDao, Article> impleme
         Article t = new Article();
         t.setUserId(user.getUuid())
                 .setUuid(articleId);
-        if (flag == Flag.True.ordinal()) {
-            t.setColumnId(columnId);
-        } else {
-            t.setColumnId("");
+        Article article = this.articleDao.getByUuid(columnId);
+        if (article == null) {
+            return mapper.code(ResponseCode.NO_DATA.statusCode()).resultJson();
         }
-
+        if (!article.getUserId().equals(user.getUuid())) {
+            return mapper.code(ResponseCode.NO_DATA.statusCode()).resultJson();
+        }
+        if (this.columnDao.isExist(columnId) <= 0) {
+            return mapper.code(ResponseCode.NO_DATA.statusCode()).resultJson();
+        }
+        if ("".equals((columnId)) && StringUtil.isBlank(article.getColumnId())) {
+            return mapper.resultJson();
+        }
+        t.setColumnId(columnId);
         this.articleDao.update(t);
         return mapper.resultJson();
     }
@@ -900,6 +924,37 @@ public class ArticleServiceImpl extends BaseService<ArticleDao, Article> impleme
                     .skip("id", "delFlag", "createDate", "updateDate").map());
         }
         return total;
+    }
+
+    @Override
+    public String findListByColumn(HttpServletRequest request, String userId, String columnId) {
+        ResponseMapper mapper = ResponseMapper.createMapper();
+        // 是否登录
+        User user = UserUtils.checkLoginDead(request);
+        boolean isLogin = (user != null);
+        ArticleColumn co = new ArticleColumn().setUserId(userId);
+        co.setUuid(columnId);
+        int pageNum = Integer.valueOf(request.getHeader("pageNum"));
+        int pageSize = Integer.valueOf(request.getHeader("pageSize"));
+        pageSize = pageSize > 32 ? 32 : pageSize;
+        List<ArticleVo> list = null;
+        if (user == null) {
+            // 没有登录
+            co.setIsOpen(Flag.True.ordinal());
+        } else {
+            // 登录,但看的不是自己的
+            if (!user.getUuid().equals(userId)) {
+                co.setIsOpen(Flag.True.ordinal());
+            }
+        }
+        PageHelper.startPage(pageNum, pageSize);
+        list = this.articleDao.findByColumn(co);
+        if (list.isEmpty()) {
+            return mapper.resultJson();
+        }
+        List<Map<String, Object>> total = this.handleArticleVoList(list, request.getHeader("userId"), isLogin);
+
+        return mapper.data(total).resultJson();
     }
 
 }

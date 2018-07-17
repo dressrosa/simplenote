@@ -16,7 +16,7 @@ public class ArticleColumn extends BaseEntity {
 
     private String userId;
     private String name;
-    private int isOpen;
+    private Integer isOpen;
 
     public String getUserId() {
         return userId;
@@ -36,11 +36,11 @@ public class ArticleColumn extends BaseEntity {
         return this;
     }
 
-    public int getIsOpen() {
+    public Integer getIsOpen() {
         return isOpen;
     }
 
-    public ArticleColumn setIsOpen(int isOpen) {
+    public ArticleColumn setIsOpen(Integer isOpen) {
         this.isOpen = isOpen;
         return this;
     }

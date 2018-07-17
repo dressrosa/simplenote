@@ -211,7 +211,7 @@ public interface IArticleService {
      * @param articleId
      * @return
      */
-    public String putOrTakeColumn(HttpServletRequest request, String columnId, String articleId, int flag);
+    public String putOrTakeColumn(HttpServletRequest request, String columnId, String articleId);
 
     /**
      * 栏目列表
@@ -221,5 +221,15 @@ public interface IArticleService {
      * @return
      */
     public String columns(HttpServletRequest request, String userId);
+
+    /**
+     * 获取栏目里面的文章
+     * 
+     * @param request
+     * @param userId
+     * @param columnId
+     * @return
+     */
+    public String findListByColumn(HttpServletRequest request, String userId, String columnId);
 
 }

@@ -11,6 +11,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.context.annotation.Primary;
 import org.springframework.context.annotation.Scope;
 import org.springframework.context.annotation.ScopedProxyMode;
@@ -21,6 +22,7 @@ import com.github.pagehelper.PageHelper;
 import com.xiaoyu.common.base.BaseService;
 import com.xiaoyu.common.base.ResponseCode;
 import com.xiaoyu.common.base.ResponseMapper;
+import com.xiaoyu.common.event.EmailEvent;
 import com.xiaoyu.common.utils.IdGenerator;
 import com.xiaoyu.common.utils.Md5Utils;
 import com.xiaoyu.common.utils.SpringBeanUtils;
@@ -40,6 +42,7 @@ import com.xiaoyu.modules.biz.user.entity.UserAttr;
 import com.xiaoyu.modules.biz.user.service.api.IUserService;
 import com.xiaoyu.modules.biz.user.vo.FollowVo;
 import com.xiaoyu.modules.biz.user.vo.UserVo;
+import com.xiaoyu.modules.common.MailBuilder;
 import com.xiaoyu.modules.constant.BizAction;
 import com.xiaoyu.modules.constant.BizType;
 import com.xiaoyu.modules.constant.MsgType;
@@ -67,6 +70,9 @@ public class UserServiceImpl extends BaseService<UserDao, User> implements IUser
 
     @Autowired
     private IMessageService messageService;
+
+    @Autowired
+    private ApplicationEventPublisher eventPublisher;
 
     private Map<String, Object> user2Map(User u) {
         return MapleUtil.wrap(u)
@@ -182,6 +188,15 @@ public class UserServiceImpl extends BaseService<UserDao, User> implements IUser
                     .setBizAction(BizAction.NONE.statusCode())
                     .setContent("很高兴与您相识,希望以后的日子见字如面")
                     .setReply(null));
+            // 通知我有人注册了,哈哈
+            MailBuilder builder = new MailBuilder();
+            builder.sender("1546428286@qq.com", "小往")
+                    .receiver("1546428286@qq.com", "Mr xiaoyu")
+                    .title("往往:注册通知.")
+                    .content("有新人注册了!<br/>名称:" + user.getLoginName() + "<br/>来源:" + request.getRemoteAddr()
+                            + "<br/>速速去了解一下拉"
+                            + "<br/><a href='http://47.93.235.211/user/" + user.getUuid() + "'>这是个神奇的链接...</a>");
+            this.eventPublisher.publishEvent(new EmailEvent(builder));
             return mapper.resultJson();
         }
         return mapper.code(ResponseCode.FAILED.statusCode())

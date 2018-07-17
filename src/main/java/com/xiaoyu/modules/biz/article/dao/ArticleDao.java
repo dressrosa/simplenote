@@ -11,6 +11,7 @@ import org.springframework.stereotype.Repository;
 import com.github.pagehelper.Page;
 import com.xiaoyu.common.base.BaseDao;
 import com.xiaoyu.modules.biz.article.entity.Article;
+import com.xiaoyu.modules.biz.article.entity.ArticleColumn;
 import com.xiaoyu.modules.biz.article.vo.ArticleVo;
 
 /**
@@ -32,5 +33,7 @@ public interface ArticleDao extends BaseDao<Article> {
     List<ArticleVo> findLatestOfUsers(String[] userIds);
 
     Integer count();
+
+    List<ArticleVo> findByColumn(ArticleColumn co);
 
 }

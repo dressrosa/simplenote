@@ -75,7 +75,6 @@
         a.del_flag=0
     </select>
 
-    <!-- 分页查询用户信息 -->
     <select id="findByList" resultType="com.xiaoyu.modules.biz.article.entity.Article"
         parameterType="java.lang.String">
         select
@@ -84,6 +83,29 @@
         where a.del_flag=0
         <if test="userId != null">
             and a.user_id=#{userId}
+        </if>
+        order by a.create_date desc
+    </select>
+
+    <select id="findByColumn" resultType="com.xiaoyu.modules.biz.article.vo.ArticleVo"
+        parameterType="com.xiaoyu.modules.biz.article.entity.ArticleColumn">
+        select
+        a.id as id,
+        a.uuid as uuid,
+        a.user_id as userId,
+        a.title as title,
+        a.content as content,
+        a.create_date as createDate
+        from biz_article as a
+        left join biz_article_column as ac
+        on
+        ac.user_id=a.user_id
+        and ac.uuid = a.column_id
+        where a.del_flag=0
+        and a.user_id=#{userId}
+        and a.column_id=#{uuid}
+        <if test="isOpen !=null">
+            and ac.is_open=#{isOpen}
         </if>
         order by a.create_date desc
     </select>
@@ -164,6 +186,7 @@
         <if test="userId != null">
             and a.user_id=#{userId}
         </if>
+        order by a.create_date desc
     </select>
 
     <select id="findCollectList" resultType="com.xiaoyu.modules.biz.article.vo.ArticleVo"
@@ -188,6 +211,7 @@
         a.del_flag=0
         and ac.user_id=#{userId}
         and ac.status=1
+        order by a.create_date desc
     </select>
 
     <delete id="delete" parameterType="com.xiaoyu.modules.biz.article.entity.Article">
@@ -277,7 +301,8 @@
 
     <select id="isExist" parameterType="java.lang.String" resultType="java.lang.Integer">
         select count(*)
-        from biz_article
+        from
+        biz_article
         where uuid=#{uuid}
         and del_flag=0
     </select>
