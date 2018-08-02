@@ -11,10 +11,12 @@ import org.aspectj.lang.annotation.Aspect;
 import org.aspectj.lang.annotation.Pointcut;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Configuration;
 
 import com.xiaoyu.common.utils.JedisUtils;
 import com.xiaoyu.common.utils.StringUtil;
+import com.xiaoyu.modules.common.HostRecorderHandler;
 
 /**
  * 计算方法运行时间
@@ -26,6 +28,9 @@ import com.xiaoyu.common.utils.StringUtil;
 public class ExecutionTimeAop {
 
     private final static Logger LOG = LoggerFactory.getLogger(ExecutionTimeAop.class);
+
+    @Autowired
+    private HostRecorderHandler hostRecoder;
 
     /**
      * 网络释义: 例如定义切入点表达式 execution (* com.sample.service.impl..*.*(..))
@@ -70,13 +75,21 @@ public class ExecutionTimeAop {
                 break;
             }
         }
-        if(!StringUtil.isSafeRequest(request)) {
+        ip = request.getRemoteHost();
+        uri = request.getRequestURI();
+        try {
+            if (uri.equals("/") || uri.equals("/home")) {
+                // TODO 是否会慢?
+                hostRecoder.produce(uri + ";" + ip + ";" + System.currentTimeMillis());
+            }
+        } catch (Exception e) {
+            // do nothing
+        }
+        if (!StringUtil.isSafeRequest(request)) {
             ResponseMapper mapper = ResponseMapper.createMapper();
             return mapper.code(ResponseCode.FAILED.statusCode())
                     .message("Hey,Guy.You Are In Danger.").resultJson();
         }
-        ip = request.getRemoteHost();
-        uri = request.getRequestURI();
         LOG.info("ip:" + ip + " uri:" + uri);
         methodName = point.getSignature().getName();
         if (uri.endsWith(".jpg") || uri.endsWith(".png") || uri.endsWith(".jpeg")) {
@@ -144,7 +157,7 @@ public class ExecutionTimeAop {
         try {
             result = point.proceed();
         } catch (final Throwable e) {
-            LOG.error(e.toString(),e);
+            LOG.error(e.toString(), e);
         }
         LOG.info("方法[{}]执行时间为:[{}milliseconds] ", methodName, (System.currentTimeMillis() - start));
         return result;

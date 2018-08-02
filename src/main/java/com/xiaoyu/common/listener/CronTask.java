@@ -11,6 +11,7 @@ import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
 
 import com.xiaoyu.modules.biz.article.service.api.IArticleService;
+import com.xiaoyu.modules.common.service.HostService;
 
 /**
  * 定时任务
@@ -27,6 +28,9 @@ public class CronTask {
     @Autowired
     private IArticleService articleService;
 
+    @Autowired
+    private HostService hostService;
+
     /**
      * 每周六凌晨2点执行
      */
@@ -36,4 +40,15 @@ public class CronTask {
         this.articleService.synElastic();
         LOG.info("定时同步文章结束......");
     }
+
+    /**
+     * 每天0点执行
+     */
+    @Scheduled(cron = "0 0 0 * * ?")
+    public void synHost() {
+        LOG.info("定时获取ip地域开始......");
+        this.hostService.queryLocation();
+        LOG.info("定时获取ip地域结束......");
+    }
+
 }

@@ -4,6 +4,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
+ * 邮件信息
+ * 
  * @author hongyu
  * @date 2018-07
  * @description
@@ -12,6 +14,9 @@ public class MailBuilder {
 
     private String sender;
     private String senderName;
+    /**
+     * 标题
+     */
     private String subject;
     private String content;
     private List<Receiver> receiverList;
@@ -64,7 +69,7 @@ public class MailBuilder {
         return this;
     }
 
-    protected class Receiver {
+    public class Receiver {
         private String receiverName;
         private String receiver;
 

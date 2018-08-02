@@ -301,7 +301,7 @@ public class ArticleServiceImpl extends BaseService<ArticleDao, Article> impleme
             MailBuilder builder = new MailBuilder();
             builder.sender("1546428286@qq.com", "小往")
                     .receiver("1546428286@qq.com", "Mr xiaoyu")
-                    .title("往往:注册通知.")
+                    .title("往往:发表通知.")
                     .content("新鲜出炉!<br/>名称:" + t.getTitle()
                             + "<br/>速速去了解一下拉"
                             + "<br/><a href='http://47.93.235.211/article/" + t.getUuid() + "'>这也是个神奇的链接...</a>");

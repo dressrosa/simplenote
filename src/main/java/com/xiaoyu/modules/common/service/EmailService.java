@@ -1,4 +1,4 @@
-package com.xiaoyu.modules.common;
+package com.xiaoyu.modules.common.service;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -6,7 +6,6 @@ import java.util.Date;
 import java.util.List;
 import java.util.Properties;
 
-import javax.annotation.PostConstruct;
 import javax.mail.Address;
 import javax.mail.Authenticator;
 import javax.mail.MessagingException;
@@ -21,6 +20,8 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
+
+import com.xiaoyu.modules.common.MailBuilder;
 
 /**
  * @author hongyu
@@ -37,22 +38,6 @@ public class EmailService {
     private static final String Smtp_Port = "465";
     private static final String Smtp_Host = "smtp.qq.com";
 
-    @PostConstruct
-    public void test() {
-        logger.info("fdafdfffffffffffffffffffffff");
-        MailBuilder builder = new MailBuilder();
-        builder.sender("1546428286@qq.com", "小往")
-                .receiver("1546428286@qq.com", "Mr xiaoyu")
-                .title("往往:注册通知.")
-                .content("有新人注册了!<br/>名称:" + "xiao" + "<br/>来源:" + "123.212.23.12"
-                        + "<br/>速速去了解一下拉"
-                        + "<br/><a href='http://47.93.235.211/user/" + "1" + "'>这是个神奇的连接...</a>");
-        try {
-            this.sendEmail(builder);
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-    }
     @Value("${mail.sender}")
     private String user;
 

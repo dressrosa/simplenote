@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.xiaoyu.modules.common.dao.HostRecordDao">
+
+    <sql id="columns">
+        a.id as id,
+        a.uri as uri,
+        a.ip as ip,
+        a.create_date as createDate
+    </sql>
+
+    <select id="queryByInterval" parameterType="java.lang.Long"
+        resultType="com.xiaoyu.modules.common.entity.HostRecord">
+        select a.id as id,
+        a.uri as uri,
+        a.ip as ip,
+        a.create_date as createDate
+        from
+        biz_request_record as a
+        where a.create_date &gt; #{createDate}
+        and a.location is null
+    </select>
+
+    <insert id="batchInsert" parameterType="com.xiaoyu.modules.common.entity.HostRecord">
+        insert into biz_request_record(
+        uri,
+        ip,
+        create_date
+        )
+        values
+        <foreach collection="list" item="item" index="index" separator=",">
+            (
+            #{item.uri},
+            #{item.ip},
+            #{item.createDate}
+            )
+        </foreach>
+    </insert>
+
+    <update id="batchUpdate" parameterType="java.util.List">
+        update biz_request_record
+        set location =
+        <foreach collection="list" item="item" index="index" open="(case id" close="end)"
+            separator="">
+            when #{item.id} then #{item.location}
+        </foreach>
+        where id in
+        <foreach collection="list" item="item" index="index" open="(" separator=","
+            close=")">
+            #{item.id}
+        </foreach>
+    </update>
+</mapper>

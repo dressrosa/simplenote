@@ -16,8 +16,8 @@ import com.xiaoyu.common.event.MessageEvent;
 import com.xiaoyu.modules.biz.message.entity.Message;
 import com.xiaoyu.modules.biz.message.service.MessageHandler;
 import com.xiaoyu.modules.biz.user.service.UserServiceImpl;
-import com.xiaoyu.modules.common.EmailService;
 import com.xiaoyu.modules.common.MailBuilder;
+import com.xiaoyu.modules.common.service.EmailService;
 
 /**
  * @author xiaoyu
