@@ -42,7 +42,7 @@ public class HostRecorderHandler extends DefaultAbstractQueueTemplate {
         HostRecord re = new HostRecord()
                 .setUri(uri)
                 .setIp(ip)
-                .setCreateDate(Long.valueOf(time));
+                .setCreateDate(Long.valueOf(time)/1000);
         synchronized (Host_Cache) {
             Host_Cache.add(re);
             int size = Host_Cache.size();
