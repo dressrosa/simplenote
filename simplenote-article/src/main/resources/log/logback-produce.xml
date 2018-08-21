@@ -1,0 +1,62 @@
+<configuration>
+
+    <!-- 从高到地低 OFF 、 FATAL 、 ERROR 、 WARN 、 INFO 、 DEBUG 、 TRACE 、 ALL -->
+    <!-- 日志输出规则 根据当前ROOT 级别，日志输出时，级别高于root默认的级别时 会输出 -->
+    <!--开发环境 -->
+    <appender name="STDOUT" class="ch.qos.logback.core.ConsoleAppender">
+        <!-- 只显示info级别内容 -->
+        <filter class="ch.qos.logback.classic.filter.ThresholdFilter">
+            <level>DEBUG</level>
+        </filter>
+        <!-- encoders are assigned the type ch.qos.logback.classic.encoder.PatternLayoutEncoder by default -->
+        <encoder charset="UTF-8">
+            <pattern>%d{yyyy-MM-dd HH:mm:ss.SSS} %-5level %logger{50} -%msg%n
+            </pattern>
+            <!--%d{HH:mm:ss.SSS} [%thread] %-5level %logger{36} - %msg%n -->
+        </encoder>
+    </appender>
+    <!--写入配置数据库 -->
+    <!-- <appender name="DB" class="ch.qos.logback.classic.db.DBAppender"> 日志异步到数据库 <connectionSource 
+        class="ch.qos.logback.core.db.DriverManagerConnectionSource"> 连接池 <dataSource class="com.zaxxer.hikari.HikariDataSource"> 
+        <driverClass>com.mysql.jdbc.Driver</driverClass> <url>jdbc:mysql://localhost:3306/xiaoyu</url> <user>root</user> 
+        <password>root</password> </dataSource> </connectionSource> </appender> -->
+
+    <!-- <appender name="DB" class="ch.qos.logback.classic.db.DBAppender"> <connectionSource class="ch.qos.logback.core.db.DriverManagerConnectionSource"> 
+        <driverClass>com.mysql.jdbc.Driver</driverClass> <url>jdbc:mysql://localhost:3306/xiaoyu?useSSL=false</url>配置useSSL=false用于SSL未提供的刷屏WARN 
+        <user>root</user> <password>root</password> </connectionSource> </appender> -->
+    <!-- 下面配置一些第三方包的日志过滤级别，用于避免刷屏 -->
+    <logger name="org.springframework" level="WARN" />
+    <logger name="org.springframework.scheduling" level="INFO" />
+    <logger name="org.springframework.boot.context.embedded.tomcat" level="INFO" />
+    <logger name="com.opensymphony" level="WARN" />
+    <logger name="org.apache.ibatis" level="WARN" />
+    <logger name="org.apache.activemq" level="WARN" />
+    <logger name="org.apache.http" level="WARN" />
+    <logger name="com.zaxxer.hikari" level="ERROR" />
+    <!-- <logger name="ch.qos.logback" level="WARN" /> -->
+    <logger name="org.mybatis.spring" level="WARN" />
+    <logger name="net.sf" level="WARN" />
+    <logger name="org.hibernate.validator" level="WARN" />
+    <logger name="org.apache.zookeeper.ClientCnxn" level="WARN" />
+
+    <!-- 指定包下的log级别 additivity设置不向上传递 -->
+    <!-- <logger name="com.xiaoyu.modules.biz" level="DEBUG" additivity="false" /> -->
+
+    <!--生产环境 -->
+    <appender name="FILE" class="ch.qos.logback.core.rolling.RollingFileAppender">
+        <file>/home/logs/article/simplenote-article.out</file>
+        <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
+            <fileNamePattern>/home/logs/article/%d{yyyy-MM,aux}/%d{yyyy-MM-dd}.log.zip
+            </fileNamePattern>
+            <maxHistory>30</maxHistory>
+        </rollingPolicy>
+        <layout class="ch.qos.logback.classic.PatternLayout">
+            <pattern> %d{HH:mm:ss.SSS}-%msg%n</pattern>
+        </layout>
+    </appender>
+    <!-- 默认级别和输出 -->
+    <root level="DEBUG">
+        <appender-ref ref="FILE" />
+        <appender-ref ref="STDOUT" />
+    </root>
+</configuration>

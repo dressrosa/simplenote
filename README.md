@@ -10,12 +10,13 @@
 3.收藏评价点赞关注
 4....  
 ##### 技术要点:  
-1. 基础结构:[bamboo](https://github.com/dressrosa/bamboo)
+1. ~~基础结构:[bamboo](https://github.com/dressrosa/bamboo)~~
 2. 基于json+ajax对数据进行处理
 3. 登录及权限操作redis+session处理
 4. 搜索文章基于elasticsearch
 5. 评论和关注等消息基于activemq:[celery](https://github.com/dressrosa/celery)
 6. 数据结果处理:[toolbox](https://github.com/dressrosa/toolbox)
+7. rpc:[beacon](https://github.com/dressrosa/beacon)
 
 ##### 目标:
 1. 做一个发日志,问答的小网站

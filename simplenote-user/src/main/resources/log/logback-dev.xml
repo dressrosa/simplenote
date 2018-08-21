@@ -1,0 +1,40 @@
+<configuration>
+
+    <!-- 从高到地低 OFF 、 FATAL 、 ERROR 、 WARN 、 INFO 、 DEBUG 、 TRACE 、 ALL -->
+    <!-- 日志输出规则 根据当前ROOT 级别，日志输出时，级别高于root默认的级别时 会输出 -->
+    <!--开发环境 -->
+    <appender name="STDOUT" class="ch.qos.logback.core.ConsoleAppender">
+        <!-- 只显示info级别内容 -->
+        <filter class="ch.qos.logback.classic.filter.ThresholdFilter">
+            <level>DEBUG</level>
+        </filter>
+        <!-- encoders are assigned the type ch.qos.logback.classic.encoder.PatternLayoutEncoder by default -->
+        <encoder charset="UTF-8">
+            <pattern>%d{yyyy-MM-dd HH:mm:ss.SSS} %-5level %logger{50} -%msg%n
+            </pattern>
+            <!--%d{HH:mm:ss.SSS} [%thread] %-5level %logger{36} - %msg%n -->
+        </encoder>
+    </appender>
+    <!-- 下面配置一些第三方包的日志过滤级别，用于避免刷屏 -->
+    <logger name="org.springframework" level="WARN" />
+    <logger name="org.springframework.scheduling" level="INFO" />
+    <logger name="org.springframework.boot.context.embedded.tomcat" level="INFO" />
+    <logger name="com.opensymphony" level="WARN" />
+    <logger name="org.apache.ibatis" level="WARN" />
+    <logger name="org.apache.activemq" level="WARN" />
+    <logger name="org.apache.http" level="WARN" />
+    <logger name="com.zaxxer.hikari" level="ERROR" />
+    <!-- <logger name="ch.qos.logback" level="WARN" /> -->
+    <logger name="org.mybatis.spring" level="WARN" />
+    <logger name="net.sf" level="WARN" />
+    <logger name="org.hibernate.validator" level="WARN" />
+    <logger name="org.apache.zookeeper.ClientCnxn" level="WARN" />
+
+    <!-- 指定包下的log级别 additivity设置不向上传递 -->
+    <!-- <logger name="com.xiaoyu.modules.biz" level="DEBUG" additivity="false" /> -->
+
+    <!-- 默认级别和输出 -->
+    <root level="DEBUG">
+        <appender-ref ref="STDOUT" />
+    </root>
+</configuration>

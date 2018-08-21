@@ -1,0 +1,122 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+    <parent>
+        <groupId>com.xiaoyu</groupId>
+        <artifactId>simplenote</artifactId>
+        <version>1.0.0.RELEASE</version>
+    </parent>
+    <artifactId>simplenote-common</artifactId>
+    <packaging>jar</packaging>
+    <properties>
+        <redis.version>2.0</redis.version>
+        <mysql.version>5.1.38</mysql.version>
+        <mybatis.version>3.4.5</mybatis.version>
+        <mybatisspring.version>1.3.1</mybatisspring.version>
+    </properties>
+
+    <dependencies>
+        <dependency>
+            <groupId>net.sf.ehcache</groupId>
+            <artifactId>ehcache</artifactId>
+        </dependency>
+
+        <dependency>
+            <groupId>com.google.guava</groupId>
+            <artifactId>guava</artifactId>
+            <version>19.0</version>
+        </dependency>
+
+        <dependency>
+            <groupId>org.apache.commons</groupId>
+            <artifactId>commons-lang3</artifactId>
+            <version>3.4</version>
+        </dependency>
+
+        <dependency>
+            <groupId>org.mybatis</groupId>
+            <artifactId>mybatis</artifactId>
+            <version>${mybatis.version}</version>
+        </dependency>
+        <!--分页插件 -->
+        <dependency>
+            <groupId>com.github.pagehelper</groupId>
+            <artifactId>pagehelper</artifactId>
+            <version>4.0.2</version>
+        </dependency>
+        <dependency>
+            <groupId>com.sun.mail</groupId>
+            <artifactId>javax.mail</artifactId>
+        </dependency>
+        <!--spring session with redis -->
+        <dependency>
+            <groupId>org.springframework.session</groupId>
+            <artifactId>spring-session</artifactId>
+        </dependency>
+        <!-- redis -->
+        <dependency>
+            <groupId>redis.clients</groupId>
+            <artifactId>jedis</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-data-redis</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-web</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.elasticsearch</groupId>
+            <artifactId>elasticsearch</artifactId>
+        </dependency>
+        <!--腾讯云oss -->
+        <dependency>
+            <groupId>com.qcloud</groupId>
+            <artifactId>cos_api</artifactId>
+            <version>4.4</version>
+            <exclusions>
+                <exclusion>
+                    <groupId>org.slf4j</groupId>
+                    <artifactId>slf4j-log4j12</artifactId>
+                </exclusion>
+            </exclusions>
+        </dependency>
+
+        <!--本地项目 -->
+        <dependency>
+            <groupId>com.xiaoyu</groupId>
+            <artifactId>celery</artifactId>
+            <version>0.0.1-SNAPSHOT</version>
+            <!-- <scope>system</scope> <systemPath>${celery.version}</systemPath> -->
+        </dependency>
+
+        <dependency>
+            <groupId>com.xiaoyu</groupId>
+            <artifactId>maple</artifactId>
+            <version>0.0.1-SNAPSHOT</version>
+            <!-- <scope>system</scope> -->
+            <!-- <systemPath>${toolbox.version}</systemPath> -->
+            <exclusions>
+                <exclusion>
+                    <groupId>ch.qos.logback</groupId>
+                    <artifactId>logback-classic</artifactId>
+                </exclusion>
+            </exclusions>
+        </dependency>
+        <dependency>
+            <groupId>com.xiaoyu</groupId>
+            <artifactId>ribbon</artifactId>
+            <version>0.0.1-SNAPSHOT</version>
+            <!-- <scope>system</scope> -->
+            <!-- <systemPath>${ribbon.version}</systemPath> -->
+            <exclusions>
+                <exclusion>
+                    <groupId>ch.qos.logback</groupId>
+                    <artifactId>logback-classic</artifactId>
+                </exclusion>
+            </exclusions>
+        </dependency>
+    </dependencies>
+</project>
