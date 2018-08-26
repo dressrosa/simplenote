@@ -27,15 +27,20 @@
             <artifactId>simplenote-api</artifactId>
             <version>1.0.0.RELEASE</version>
         </dependency>
+
+        <dependency>
+            <groupId>redis.clients</groupId>
+            <artifactId>jedis</artifactId>
+        </dependency>
         <dependency>
             <groupId>com.xiaoyu</groupId>
             <artifactId>beacon</artifactId>
-            <version>0.0.1-SNAPSHOT</version>
+            <version>0.0.1</version>
         </dependency>
         <dependency>
             <groupId>com.xiaoyu</groupId>
             <artifactId>beacon-spring-boot-starter</artifactId>
-            <version>0.0.1-SNAPSHOT</version>
+            <version>0.0.1</version>
         </dependency>
         <!--mysql -->
         <dependency>
@@ -70,4 +75,17 @@
             <version>4.0.2</version>
         </dependency>
     </dependencies>
+    <build>
+        <plugins>
+            <plugin>
+                <groupId>org.springframework.boot</groupId>
+                <artifactId>spring-boot-maven-plugin</artifactId>
+                <configuration>
+                    <includeSystemScope>true</includeSystemScope>
+                    <source>1.8</source>
+                    <target>1.8</target>
+                </configuration>
+            </plugin>
+        </plugins>
+    </build>
 </project>

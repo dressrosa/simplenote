@@ -24,7 +24,6 @@ import com.xiaoyu.beacon.autoconfigure.anno.BeaconExporter;
 import com.xiaoyu.common.base.ResponseCode;
 import com.xiaoyu.common.base.ResponseMapper;
 import com.xiaoyu.common.request.TraceRequest;
-import com.xiaoyu.common.utils.ElasticUtils;
 import com.xiaoyu.common.utils.IdGenerator;
 import com.xiaoyu.common.utils.JedisUtils;
 import com.xiaoyu.common.utils.SpringBeanUtils;
@@ -199,12 +198,14 @@ public class ArticleServiceImpl implements IArticleService {
                 t.setUserId(user.getUuid()).setArticleId(a.getUuid());
                 t1 = new ArticleCollect();
                 t1.setUserId(user.getUuid()).setArticleId(a.getUuid());
-                userIdList.add(a.getUserId());
                 likeQueryList.add(t);
                 collectQueryList.add(t1);
             }
             likeList = this.likeDao.findListByBatch(likeQueryList);
             collectList = this.collectDao.findListByBatch(collectQueryList);
+        }
+        for (ArticleVo a : list) {
+            userIdList.add(a.getUserId());
         }
         // 批量查询
         List<UserVo> userVoList = null;
@@ -762,11 +763,15 @@ public class ArticleServiceImpl implements IArticleService {
     }
 
     @Override
+    @Deprecated
     public String search(TraceRequest request, String keyword) {
         ResponseMapper mapper = ResponseMapper.createMapper();
-        final Map<String, Object> map = ElasticUtils.searchWithCount(new String[] { "website" },
-                new String[] { "article" }, 0, 10, keyword, new String[] { "title", "content" });
-        return mapper.data(map).resultJson();
+        // final Map<String, Object> map = ElasticUtils.searchWithCount(new String[] {
+        // "website" },
+        // new String[] { "article" }, 0, 10, keyword, new String[] { "title", "content"
+        // });
+        // return mapper.data(map).resultJson();
+        return mapper.resultJson();
     }
 
     @Override
@@ -786,7 +791,7 @@ public class ArticleServiceImpl implements IArticleService {
                 jsonMap = new HashMap<>(128);
                 for (Article a : list) {
                     jsonMap.put(a.getUuid(), JSON.toJSONString(a));
-                    ElasticUtils.upsertList("website", "article", jsonMap);
+                    // ElasticUtils.upsertList("website", "article", jsonMap);
                 }
             }
             LOG.info("同步成功");

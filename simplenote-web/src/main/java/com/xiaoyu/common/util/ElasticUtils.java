@@ -1,7 +1,7 @@
 /**
  * 唯有读书,不慵不扰
  */
-package com.xiaoyu.common.utils;
+package com.xiaoyu.common.util;
 
 import java.net.InetSocketAddress;
 import java.util.ArrayList;

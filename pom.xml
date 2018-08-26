@@ -73,7 +73,7 @@
             <artifactId>thumbnailator</artifactId>
             <version>0.4.8</version>
         </dependency>
-        
+
         <dependency>
             <groupId>javax.servlet</groupId>
             <artifactId>javax.servlet-api</artifactId>
@@ -125,21 +125,8 @@
             </exclusions>
         </dependency>
     </dependencies>
-
-    <!--创建可执行的jar -->
     <build>
-        <!-- <resources> <resource> <directory>src/main/resources</directory> <filtering>true</filtering> 
-            <includes> <include>**/*.properties</include> </includes> </resource> </resources> -->
         <plugins>
-            <plugin>
-                <groupId>org.springframework.boot</groupId>
-                <artifactId>spring-boot-maven-plugin</artifactId>
-                <configuration>
-                    <includeSystemScope>true</includeSystemScope>
-                    <source>1.8</source>
-                    <target>1.8</target>
-                </configuration>
-            </plugin>
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-compiler-plugin</artifactId>
