@@ -40,7 +40,7 @@ public class HostServiceImpl implements IHostService {
             PageHelper.startPage(pageNum++, 50, true);
             list = this.hostRecordDao.queryByInterval(time);
             if (list != null && !list.isEmpty()) {
-                List<String> ips = new ArrayList<>();
+                List<String> ips = new ArrayList<>(50);
                 for (HostRecord a : list) {
                     ips.add(a.getIp());
                 }

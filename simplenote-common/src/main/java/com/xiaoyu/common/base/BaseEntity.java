@@ -40,13 +40,13 @@ public class BaseEntity implements Serializable {
     /**
      * 乐观锁要被更新的老数据
      */
-    private long old;
+    private Long old;
 
-    public long getOld() {
+    public Long getOld() {
         return old;
     }
 
-    public BaseEntity setOld(long old) {
+    public BaseEntity setOld(Long old) {
         this.old = old;
         return this;
     }

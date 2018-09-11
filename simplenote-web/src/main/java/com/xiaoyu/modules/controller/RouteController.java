@@ -65,7 +65,7 @@ public class RouteController {
         return this.path(request, JumpPath.ArticleRelated.COMMENT_LIST);
     }
 
-    @RequestMapping(value = "{userId}/article/columns", method = RequestMethod.GET)
+    @RequestMapping(value = "user/{userId}/article/columns", method = RequestMethod.GET)
     public String goColumn(HttpServletRequest request, @PathVariable(required=true) String userId) {
         if (StringUtil.isEmpty(userId)) {
             return this.path(request, JumpPath.CommonRelated.PAGE_404);

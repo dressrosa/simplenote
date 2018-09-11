@@ -60,6 +60,7 @@ public class MessageServiceImpl implements IMessageService {
         }
         Message t = new Message();
         t.setReceiverId(userId).setType(type);
+
         PageHelper.startPage(1, 12);
         List<MessageVo> list = this.msgDao.findVoByList(t);
 
@@ -83,10 +84,9 @@ public class MessageServiceImpl implements IMessageService {
     @Override
     public String replyMsg(TraceRequest request, String msgId, String replyContent) {
         // TODO 1.回复单纯的消息 2.回复评论等,应该调用回复评论等相应的接口 目前回复消息只有回复评论
-        ResponseMapper mapper = ResponseMapper.createMapper();
         Message msg = this.msgDao.getByUuid(msgId);
         if (msg == null) {
-            mapper.code(ResponseCode.NO_DATA.statusCode()).resultJson();
+            ResponseMapper.createMapper().code(ResponseCode.NO_DATA.statusCode()).resultJson();
         }
 
         @SuppressWarnings("null")
@@ -97,21 +97,20 @@ public class MessageServiceImpl implements IMessageService {
                 || bizAction == BizAction.REPLY.statusCode()) {
             return this.articleService.reply(request, msg.getBizId(), replyContent);
         }
-        return mapper.resultJson();
+        return ResponseMapper.createMapper().resultJson();
     }
 
     @Override
     public String read(TraceRequest request, String msgIds) {
-        ResponseMapper mapper = ResponseMapper.createMapper();
         if (!request.isLogin()) {
-            return mapper.code(ResponseCode.LOGIN_INVALIDATE.statusCode()).resultJson();
+            return ResponseMapper.createMapper().code(ResponseCode.LOGIN_INVALIDATE.statusCode()).resultJson();
         }
         String[] ids = msgIds.split(";");
         if (ids != null && ids.length > 0) {
             List<String> idsList = Arrays.asList(ids);
             this.msgDao.read(idsList);
         }
-        return mapper.resultJson();
+        return ResponseMapper.createMapper().resultJson();
     }
 
     @Override

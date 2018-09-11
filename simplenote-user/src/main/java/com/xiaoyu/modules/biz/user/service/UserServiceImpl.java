@@ -53,8 +53,8 @@ import com.xiaoyu.modules.constant.NumCountType;
 @Service
 @Scope(proxyMode = ScopedProxyMode.TARGET_CLASS)
 @Primary
-@BeaconExporter(interfaceName="com.xiaoyu.modules.biz.user.service.api.IUserService",group="dev")
-public class UserServiceImpl  implements IUserService {
+@BeaconExporter(interfaceName = "com.xiaoyu.modules.biz.user.service.api.IUserService", group = "dev")
+public class UserServiceImpl implements IUserService {
 
     @Autowired
     private UserDao userDao;
@@ -71,25 +71,13 @@ public class UserServiceImpl  implements IUserService {
     @Autowired
     private IMessageService messageService;
 
-    private Map<String, Object> user2Map(UserVo u) {
-        return MapleUtil.wrap(u)
-                .map();
-    }
-
-    private User getForLogin(User user) {
-        final User u = this.userDao.getForLogin(user);
-        if (u == null) {
-            return user;
-        }
-        return u;
-    }
-
     @Override
     public User login(String loginName, String password) {
         User user = new User();
         user.setLoginName(loginName.trim());
-        user = this.getForLogin(user);
-        if (user.getId() == null || !Md5Utils.md5(password.trim()).equalsIgnoreCase(user.getPassword())) {
+        user = this.userDao.getForLogin(user);
+        if (user == null || user.getId() == null
+                || !Md5Utils.md5(password.trim()).equalsIgnoreCase(user.getPassword())) {
             return null;
         }
         return user;
@@ -109,26 +97,28 @@ public class UserServiceImpl  implements IUserService {
 
     @Override
     public String userDetail(TraceRequest request, String userId) {
-        ResponseMapper mapper = ResponseMapper.createMapper();
         User user = new User();
         user.setUuid(userId);
         UserVo u = this.userDao.getVo(user);
         if (u == null) {
-            return mapper.code(ResponseCode.NO_DATA.statusCode()).resultJson();
+            return ResponseMapper.createMapper()
+                    .code(ResponseCode.NO_DATA.statusCode())
+                    .resultJson();
         }
-        return mapper.data(this.user2Map(u)).resultJson();
+        return ResponseMapper.createMapper().data(MapleUtil.wrap(u).map())
+                .resultJson();
     }
 
     @Override
     public String register(TraceRequest request, String loginName, String password) {
-        ResponseMapper mapper = ResponseMapper.createMapper();
         User user = new User();
         user.setLoginName(loginName.trim())
                 .setPassword(Md5Utils.md5(password.trim()))
                 .setNickname(loginName.length() > 8 ? loginName.substring(0, 8) : loginName);
 
         if (this.userDao.isExist(user) > 0) {
-            return mapper.code(ResponseCode.EXIST.statusCode())
+            return ResponseMapper.createMapper()
+                    .code(ResponseCode.EXIST.statusCode())
                     .message("此账号已存在")
                     .resultJson();
         }
@@ -157,9 +147,10 @@ public class UserServiceImpl  implements IUserService {
             } catch (Exception e) {
                 e.printStackTrace();
             }
-            return mapper.resultJson();
+            return ResponseMapper.createMapper().resultJson();
         }
-        return mapper.code(ResponseCode.FAILED.statusCode())
+        return ResponseMapper.createMapper()
+                .code(ResponseCode.FAILED.statusCode())
                 .message("抱歉,注册没成功")
                 .resultJson();
     }
@@ -365,7 +356,6 @@ public class UserServiceImpl  implements IUserService {
 
     @Override
     public String following(TraceRequest request, String userId) {
-        ResponseMapper mapper = ResponseMapper.createMapper();
         Follow f = new Follow();
         f.setFollowerId(userId);
 
@@ -373,9 +363,11 @@ public class UserServiceImpl  implements IUserService {
         List<FollowVo> list = this.followDao.findList(f);
 
         if (list.isEmpty()) {
-            return mapper.code(ResponseCode.NO_DATA.statusCode()).resultJson();
+            return ResponseMapper.createMapper()
+                    .code(ResponseCode.NO_DATA.statusCode())
+                    .resultJson();
         }
-        return mapper.data(list).resultJson();
+        return ResponseMapper.createMapper().data(list).resultJson();
     }
 
     @Override
