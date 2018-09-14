@@ -13,7 +13,7 @@ import org.apache.commons.lang3.RandomStringUtils;
  * 
  * @author xiaoyu 2016年3月24日
  */
-public class IdGenerator extends RandomStringUtils implements org.springframework.util.IdGenerator {
+public class IdGenerator extends RandomStringUtils {
 
     private static SecureRandom random = new SecureRandom();
 
@@ -34,7 +34,6 @@ public class IdGenerator extends RandomStringUtils implements org.springframewor
     /**
      * 有-分隔符的id
      */
-    @Override
     public UUID generateId() {
         return UUID.randomUUID();
     }

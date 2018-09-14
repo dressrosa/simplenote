@@ -8,6 +8,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 
+import com.xiaoyu.common.util.Utils;
 import com.xiaoyu.common.utils.StringUtil;
 import com.xiaoyu.modules.constant.JumpPath;
 
@@ -21,7 +22,7 @@ import com.xiaoyu.modules.constant.JumpPath;
 public class RouteController {
 
     private String path(HttpServletRequest request, String path) {
-        if (StringUtil.isPC(request)) {
+        if (Utils.isPC(request)) {
             return path;
         }
         return JumpPath.MOBILE.concat(path);

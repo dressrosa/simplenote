@@ -72,9 +72,21 @@
         <dependency>
             <groupId>com.alibaba</groupId>
             <artifactId>fastjson</artifactId>
-            <version>1.2.8</version>
         </dependency>
-
+        <dependency>
+            <groupId>com.xiaoyu</groupId>
+            <artifactId>celery-core</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>com.xiaoyu</groupId>
+            <artifactId>maple</artifactId>
+            <exclusions>
+                <exclusion>
+                    <groupId>ch.qos.logback</groupId>
+                    <artifactId>logback-classic</artifactId>
+                </exclusion>
+            </exclusions>
+        </dependency>
         <dependency>
             <groupId>com.sun.mail</groupId>
             <artifactId>javax.mail</artifactId>

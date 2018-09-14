@@ -14,11 +14,12 @@ import javax.servlet.ServletResponse;
 import javax.servlet.annotation.WebFilter;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
 
-import com.xiaoyu.common.utils.StringUtil;
+import com.xiaoyu.common.util.Utils;
 
 /**
  * 设置字符串过滤器 单独设置默认是对全部url起作用,设置@{@link WebFilter}范围也没有作用 需要注册bean
@@ -54,7 +55,7 @@ public class EncodeFilterConfiguration implements Filter {
          * committed (i.e. the HTTP headers already sent to the client). In this case,
          * it seems that Facelets internally needs a session for something.
          */
-        //req.getSession(true);
+        // req.getSession(true);
         // 设置编码格式
         res.setCharacterEncoding("UTF-8");
         // 设置请求头
@@ -98,7 +99,7 @@ public class EncodeFilterConfiguration implements Filter {
              * java.io.IOException: Broken pipe
              * 但是这里捕获的其实是栈溢出错误.
              */
-            logger.warn("捕获到ClientAbortException,请求异常来源->{}", StringUtil.getRemoteAddr(req));
+            logger.warn("捕获到ClientAbortException,请求异常来源->{}", Utils.getRemoteAddr(req));
         }
     }
 

@@ -3,8 +3,12 @@ package com.xiaoyu.common.util;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import com.xiaoyu.common.request.TraceRequest;
 import com.xiaoyu.common.request.TraceRequest.Header;
+import com.xiaoyu.common.utils.StringUtil;
 import com.xiaoyu.modules.biz.user.entity.User;
 
 /**
@@ -13,6 +17,8 @@ import com.xiaoyu.modules.biz.user.entity.User;
  * @description
  */
 public class Utils {
+
+    private final static Logger logger = LoggerFactory.getLogger(Utils.class);
 
     public static User checkLogin(HttpServletRequest request) {
         final String userId = request.getHeader("userId");
@@ -55,4 +61,40 @@ public class Utils {
         return req;
     }
 
+    public static boolean isPC(HttpServletRequest request) {
+        final String userAgentInfo = request.getHeader("user-agent");
+        final String[] agents = { "Android", "iPhone", "SymbianOS", "Windows Phone", "iPad", "iPod" };
+        boolean flag = true;
+        for (int v = 0; v < agents.length; v++) {
+            if (userAgentInfo.indexOf(agents[v]) > 0) {
+                flag = false;
+                break;
+            }
+        }
+        return flag;
+    }
+
+    /**
+     * 获得用户远程地址
+     */
+    public static String getRemoteAddr(HttpServletRequest request) {
+        String remoteAddr = request.getHeader("X-Real-IP");
+        if (StringUtil.isNotBlank(remoteAddr)) {
+            remoteAddr = request.getHeader("X-Forwarded-For");
+        } else if (StringUtil.isNotBlank(remoteAddr)) {
+            remoteAddr = request.getHeader("Proxy-Client-IP");
+        } else if (StringUtil.isNotBlank(remoteAddr)) {
+            remoteAddr = request.getHeader("WL-Proxy-Client-IP");
+        }
+        return remoteAddr != null ? remoteAddr : request.getRemoteAddr();
+    }
+
+    public static boolean isSafeRequest(HttpServletRequest request) {
+        final String userAgentInfo = request.getHeader("user-agent");
+        if (StringUtil.isBlank(userAgentInfo)) {
+            logger.warn("Danger!Danger!,someone is Bazinga,ip->{}", request.getRemoteHost());
+            return false;
+        }
+        return true;
+    }
 }

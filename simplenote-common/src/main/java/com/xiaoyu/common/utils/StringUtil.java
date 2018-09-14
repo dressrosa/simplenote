@@ -7,12 +7,8 @@ import java.io.UnsupportedEncodingException;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-import javax.servlet.http.HttpServletRequest;
-
 import org.apache.commons.lang3.StringEscapeUtils;
 import org.apache.commons.lang3.StringUtils;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 /**
  * @author hongyu
@@ -23,7 +19,6 @@ public class StringUtil extends StringUtils {
 
     private static final char SEPARATOR = '_';
     private static final String CHARSET_NAME = "UTF-8";
-    private static final Logger LOG = LoggerFactory.getLogger(StringUtil.class);
 
     /**
      * 转换为字节数组
@@ -124,21 +119,6 @@ public class StringUtil extends StringUtils {
     }
 
     /**
-     * 获得用户远程地址
-     */
-    public static String getRemoteAddr(HttpServletRequest request) {
-        String remoteAddr = request.getHeader("X-Real-IP");
-        if (StringUtil.isNotBlank(remoteAddr)) {
-            remoteAddr = request.getHeader("X-Forwarded-For");
-        } else if (StringUtil.isNotBlank(remoteAddr)) {
-            remoteAddr = request.getHeader("Proxy-Client-IP");
-        } else if (StringUtil.isNotBlank(remoteAddr)) {
-            remoteAddr = request.getHeader("WL-Proxy-Client-IP");
-        }
-        return remoteAddr != null ? remoteAddr : request.getRemoteAddr();
-    }
-
-    /**
      * 驼峰命名法工具
      * 
      * @return toCamelCase("hello_world") == "helloWorld"
@@ -221,28 +201,6 @@ public class StringUtil extends StringUtils {
         }
 
         return sb.toString();
-    }
-
-    public static boolean isPC(HttpServletRequest request) {
-        final String userAgentInfo = request.getHeader("user-agent");
-        final String[] agents = { "Android", "iPhone", "SymbianOS", "Windows Phone", "iPad", "iPod" };
-        boolean flag = true;
-        for (int v = 0; v < agents.length; v++) {
-            if (userAgentInfo.indexOf(agents[v]) > 0) {
-                flag = false;
-                break;
-            }
-        }
-        return flag;
-    }
-    
-    public static boolean isSafeRequest(HttpServletRequest request) {
-        final String userAgentInfo = request.getHeader("user-agent");
-        if(StringUtil.isBlank(userAgentInfo)) {
-            LOG.warn("Danger!Danger!,someone is Bazinga,ip->{}",request.getRemoteHost());
-            return false;
-        }
-        return true;
     }
 
     public static boolean isEmail(String str) {

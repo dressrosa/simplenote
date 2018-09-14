@@ -54,7 +54,6 @@
         <dependency>
             <groupId>com.qcloud</groupId>
             <artifactId>cos_api</artifactId>
-            <version>4.4</version>
             <exclusions>
                 <exclusion>
                     <groupId>org.slf4j</groupId>
@@ -76,6 +75,25 @@
             <groupId>com.sun.mail</groupId>
             <artifactId>javax.mail</artifactId>
         </dependency>
+        <dependency>
+            <groupId>net.coobird</groupId>
+            <artifactId>thumbnailator</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>com.xiaoyu</groupId>
+            <artifactId>maple</artifactId>
+            <exclusions>
+                <exclusion>
+                    <groupId>ch.qos.logback</groupId>
+                    <artifactId>logback-classic</artifactId>
+                </exclusion>
+            </exclusions>
+        </dependency>
+        <dependency>
+            <groupId>com.xiaoyu</groupId>
+            <artifactId>celery-core</artifactId>
+        </dependency>
+
     </dependencies>
     <build>
         <plugins>

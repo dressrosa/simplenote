@@ -16,7 +16,7 @@ import org.springframework.context.annotation.Configuration;
 
 import com.xiaoyu.common.handler.HostRecorderMqHandler;
 import com.xiaoyu.common.util.JedisUtils;
-import com.xiaoyu.common.utils.StringUtil;
+import com.xiaoyu.common.util.Utils;
 
 /**
  * 计算方法运行时间
@@ -84,7 +84,7 @@ public class ExecutionTimeAop {
         } catch (Exception e) {
             // do nothing
         }
-        if (!StringUtil.isSafeRequest(request)) {
+        if (!Utils.isSafeRequest(request)) {
             ResponseMapper mapper = ResponseMapper.createMapper();
             return mapper.code(ResponseCode.FAILED.statusCode())
                     .message("Hey,Guy.You Are In Danger.").resultJson();

@@ -63,6 +63,10 @@
             <artifactId>pagehelper</artifactId>
             <version>4.0.2</version>
         </dependency>
+        <dependency>
+            <groupId>com.xiaoyu</groupId>
+            <artifactId>celery-core</artifactId>
+        </dependency>
     </dependencies>
     <build>
         <plugins>
