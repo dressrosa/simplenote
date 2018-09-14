@@ -7,6 +7,7 @@ import java.util.Map;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Component;
 
 import com.github.pagehelper.PageHelper;
@@ -32,6 +33,14 @@ public class HostServiceImpl implements IHostService {
 
     @Override
     public void queryLocation() {
+        this.doAsynHandle();
+    }
+
+    /**
+     * 异步处理,防止beacon调用时间过长
+     */
+    @Async
+    private void doAsynHandle() {
         List<HostRecord> list = null;
         // 分页同步 防止一次性取出量过大
         int pageNum = 1;
