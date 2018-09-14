@@ -92,6 +92,12 @@
         <dependency>
             <groupId>com.xiaoyu</groupId>
             <artifactId>celery-core</artifactId>
+            <exclusions>
+                <exclusion>
+                    <groupId>org.apache.activemq</groupId>
+                    <artifactId>activemq-broker</artifactId>
+                </exclusion>
+            </exclusions>
         </dependency>
 
     </dependencies>
