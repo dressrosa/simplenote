@@ -214,19 +214,19 @@ public class ArticleServiceImpl implements IArticleService {
         }
         // 封装数据
         Map<String, UserVo> voMap = new HashMap<>(16);
-        Optional.of(userVoList).ifPresent(a -> {
+        Optional.ofNullable(userVoList).ifPresent(a -> {
             a.forEach(u -> {
                 voMap.put(u.getUserId(), u);
             });
         });
         Map<String, ArticleLike> likeMap = new HashMap<>(16);
-        Optional.of(likeList).ifPresent(a -> {
+        Optional.ofNullable(likeList).ifPresent(a -> {
             a.forEach(li -> {
                 likeMap.put(li.getArticleId(), li);
             });
         });
         Map<String, ArticleCollect> coMap = new HashMap<>(16);
-        Optional.of(collectList).ifPresent(a -> {
+        Optional.ofNullable(collectList).ifPresent(a -> {
             a.forEach(c -> {
                 coMap.put(c.getArticleId(), c);
             });
@@ -580,7 +580,7 @@ public class ArticleServiceImpl implements IArticleService {
         }
         // 封装数据
         Map<String, CommentLike> likeMap = new HashMap<>(16);
-        Optional.of(likeList).ifPresent(a -> {
+        Optional.ofNullable(likeList).ifPresent(a -> {
             a.forEach(c -> {
                 likeMap.put(c.getCommentId(), c);
             });
@@ -775,7 +775,7 @@ public class ArticleServiceImpl implements IArticleService {
     public String latestOfUsers(TraceRequest request, String[] userIds) {
         ResponseMapper mapper = ResponseMapper.createMapper();
         List<ArticleVo> list = this.articleDao.findLatestOfUsers(userIds);
-        Optional.of(list).ifPresent(a -> {
+        Optional.ofNullable(list).ifPresent(a -> {
             mapper.data(a);
         });
         return mapper.resultJson();

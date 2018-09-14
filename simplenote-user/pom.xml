@@ -31,10 +31,6 @@
             <artifactId>beacon-spring-boot-starter</artifactId>
             <version>0.0.1</version>
         </dependency>
-        <dependency>
-            <groupId>net.sf.ehcache</groupId>
-            <artifactId>ehcache</artifactId>
-        </dependency>
         <!--mysql -->
         <dependency>
             <groupId>mysql</groupId>
@@ -80,6 +76,10 @@
                 <exclusion>
                     <groupId>org.apache.activemq</groupId>
                     <artifactId>activemq-client</artifactId>
+                </exclusion>
+                <exclusion>
+                    <groupId>org.scala-lang</groupId>
+                    <artifactId>scala-library</artifactId>
                 </exclusion>
             </exclusions>
         </dependency>

@@ -6,8 +6,6 @@ package com.xiaoyu.common.configuration;
 import javax.annotation.Resource;
 import javax.sql.DataSource;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.jdbc.datasource.DataSourceTransactionManager;
@@ -22,7 +20,6 @@ import org.springframework.transaction.annotation.TransactionManagementConfigure
 @Configuration
 public class TransactionConfiguration implements TransactionManagementConfigurer {
 
-    private static Logger logger = LoggerFactory.getLogger(TransactionConfiguration.class);
 
     @Resource(name = "manager")
     private PlatformTransactionManager manager;
@@ -35,7 +32,6 @@ public class TransactionConfiguration implements TransactionManagementConfigurer
 
     @Override
     public PlatformTransactionManager annotationDrivenTransactionManager() {
-        TransactionConfiguration.logger.info("事务管理:" + this.manager.getClass().getName());
         return this.manager;
     }
 
