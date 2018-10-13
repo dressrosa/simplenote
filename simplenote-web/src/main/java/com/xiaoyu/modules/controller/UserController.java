@@ -116,7 +116,7 @@ public class UserController {
                     .resultJson();
         }
         TraceRequest req = Utils.getTraceRequest(request);
-        return this.userService.register(req, loginName, password);
+        return this.userService.register(req, loginName, password).resultJson();
     }
 
     /**
@@ -132,7 +132,7 @@ public class UserController {
     public String loginRecord(HttpServletRequest request, String userId, String device) {
         if (StringUtil.isNotBlank(userId)) {
             TraceRequest req = Utils.getTraceRequest(request);
-            return this.userService.loginRecord(req, userId, device);
+            return this.userService.loginRecord(req, userId, device).resultJson();
         }
         return null;
     }
@@ -169,7 +169,7 @@ public class UserController {
                     .resultJson();
         }
         TraceRequest req = Utils.getTraceRequest(request);
-        return this.userService.userDetail(req, userId);
+        return this.userService.userDetail(req, userId).resultJson();
     }
 
     /**
@@ -181,46 +181,46 @@ public class UserController {
     public String editInfo(HttpServletRequest request, String content,
             @RequestParam(required = true) Integer flag) {
         TraceRequest req = Utils.getTraceRequest(request);
-        return this.userService.editUser(req, content, flag);
+        return this.userService.editUser(req, content, flag).resultJson();
     }
 
     @RequestMapping(value = "api/v1/user/follow", method = RequestMethod.POST)
     public String followUser(HttpServletRequest request, String userId, String followTo) {
         TraceRequest req = Utils.getTraceRequest(request);
-        return this.userService.followUser(req, userId, followTo);
+        return this.userService.followUser(req, userId, followTo).resultJson();
     }
 
     @RequestMapping(value = "api/v1/user/unfollow", method = RequestMethod.POST)
     public String cancelFollow(HttpServletRequest request, String userId, String followTo) {
         TraceRequest req = Utils.getTraceRequest(request);
-        return this.userService.cancelFollow(req, userId, followTo);
+        return this.userService.cancelFollow(req, userId, followTo).resultJson();
     }
 
     @RequestMapping(value = "api/v1/user/is-followed", method = RequestMethod.POST)
     public String isFollowed(HttpServletRequest request, String userId, String followTo) {
         TraceRequest req = Utils.getTraceRequest(request);
-        return this.userService.isFollowed(req, userId, followTo);
+        return this.userService.isFollowed(req, userId, followTo).resultJson();
     }
 
     // 追随者
     @RequestMapping(value = "api/v1/user/follower", method = RequestMethod.GET)
     public String follower(HttpServletRequest request, String userId) {
         TraceRequest req = Utils.getTraceRequest(request);
-        return this.userService.follower(req, userId);
+        return this.userService.follower(req, userId).resultJson();
     }
 
     // 关注的人
     @RequestMapping(value = "api/v1/user/following", method = RequestMethod.GET)
     public String following(HttpServletRequest request, String userId) {
         TraceRequest req = Utils.getTraceRequest(request);
-        return this.userService.following(req, userId);
+        return this.userService.following(req, userId).resultJson();
     }
 
     // 获取常用的统计数
     @RequestMapping(value = "api/v1/user/commonNums", method = RequestMethod.GET)
     public String commonNums(HttpServletRequest request, String userId) {
         TraceRequest req = Utils.getTraceRequest(request);
-        return this.userService.commonNums(req, userId);
+        return this.userService.commonNums(req, userId).resultJson();
     }
 
 }

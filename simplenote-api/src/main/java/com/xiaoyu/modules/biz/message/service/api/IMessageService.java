@@ -3,6 +3,7 @@
  */
 package com.xiaoyu.modules.biz.message.service.api;
 
+import com.xiaoyu.common.base.ResponseMapper;
 import com.xiaoyu.common.request.TraceRequest;
 import com.xiaoyu.modules.biz.message.entity.Message;
 
@@ -23,7 +24,7 @@ public interface IMessageService {
      * @param type
      * @return
      */
-    public String getMsgByType(TraceRequest request, String userId, int type);
+    public ResponseMapper getMsgByType(TraceRequest request, String userId, int type);
 
     /**
      * 回复消息
@@ -33,7 +34,7 @@ public interface IMessageService {
      * @param replyContent
      * @return
      */
-    public String replyMsg(TraceRequest request, String msgId, String replyContent);
+    public ResponseMapper replyMsg(TraceRequest request, String msgId, String replyContent);
 
     /**
      * 读消息(动作)
@@ -42,7 +43,7 @@ public interface IMessageService {
      * @param msgIds
      * @return
      */
-    public String read(TraceRequest request, String msgIds);
+    public ResponseMapper read(TraceRequest request, String msgIds);
 
     /**
      * 未读消息数
@@ -50,7 +51,7 @@ public interface IMessageService {
      * @param request
      * @return
      */
-    public String unreadNum(TraceRequest request);
+    public ResponseMapper unreadNum(TraceRequest request);
 
     /**
      * 推送消息事件
@@ -58,14 +59,14 @@ public interface IMessageService {
      * @param message
      * @return
      */
-    public String sendMsgEvent(Message message);
+    public ResponseMapper sendMsgEvent(Message message);
 
     /**
      * @param request
      * @param message
      * @return
      */
-    public String removeMessage(TraceRequest request, Message ...message);
+    public ResponseMapper removeMessage(TraceRequest request, Message... message);
 
     public int isDoAgain(Message t);
 

@@ -25,19 +25,23 @@ public class BeaconConfig extends BeaconReferConfiguration {
         list.add(new BeaconReference()
                 .setInterfaceName(IMessageService.class.getName())
                 .setCheck(false)
-                .setGroup("dev"));
+                .setGroup("dev")
+                .setTimeout("9000"));
         list.add(new BeaconReference()
                 .setInterfaceName(IArticleService.class.getName())
                 .setCheck(false)
-                .setGroup("dev"));
+                .setGroup("dev")
+                .setTimeout("9000"));
         list.add(new BeaconReference()
                 .setInterfaceName(IHostService.class.getName())
                 .setCheck(false)
-                .setGroup("dev"));
+                .setGroup("dev")
+                .setTimeout("9000"));
         list.add(new BeaconReference()
                 .setInterfaceName(IUserService.class.getName())
                 .setCheck(false)
-                .setGroup("dev"));
+                .setGroup("dev")
+                .setTimeout("9000"));
         return list;
     }
 

@@ -84,7 +84,7 @@ public class UserServiceImpl implements IUserService {
     }
 
     @Override
-    public String loginRecord(TraceRequest request, String userId, String device) {
+    public ResponseMapper loginRecord(TraceRequest request, String userId, String device) {
         final String loginIp = request.getHeader().getRemoteHost();
         LoginRecord record = new LoginRecord();
         record.setUserId(userId)
@@ -96,21 +96,19 @@ public class UserServiceImpl implements IUserService {
     }
 
     @Override
-    public String userDetail(TraceRequest request, String userId) {
+    public ResponseMapper userDetail(TraceRequest request, String userId) {
         User user = new User();
         user.setUuid(userId);
         UserVo u = this.userDao.getVo(user);
         if (u == null) {
             return ResponseMapper.createMapper()
-                    .code(ResponseCode.NO_DATA.statusCode())
-                    .resultJson();
+                    .code(ResponseCode.NO_DATA.statusCode());
         }
-        return ResponseMapper.createMapper().data(MapleUtil.wrap(u).map())
-                .resultJson();
+        return ResponseMapper.createMapper().data(MapleUtil.wrap(u).map());
     }
 
     @Override
-    public String register(TraceRequest request, String loginName, String password) {
+    public ResponseMapper register(TraceRequest request, String loginName, String password) {
         User user = new User();
         user.setLoginName(loginName.trim())
                 .setPassword(Md5Utils.md5(password.trim()))
@@ -119,8 +117,7 @@ public class UserServiceImpl implements IUserService {
         if (this.userDao.isExist(user) > 0) {
             return ResponseMapper.createMapper()
                     .code(ResponseCode.EXIST.statusCode())
-                    .message("此账号已存在")
-                    .resultJson();
+                    .message("此账号已存在");
         }
         user.setUuid(IdGenerator.uuid());
         if (SpringBeanUtils.getBean(UserServiceImpl.class).doRegister(user) == 1) {
@@ -147,12 +144,11 @@ public class UserServiceImpl implements IUserService {
             } catch (Exception e) {
                 e.printStackTrace();
             }
-            return ResponseMapper.createMapper().resultJson();
+            return ResponseMapper.createMapper();
         }
         return ResponseMapper.createMapper()
                 .code(ResponseCode.FAILED.statusCode())
-                .message("抱歉,注册没成功")
-                .resultJson();
+                .message("抱歉,注册没成功");
     }
 
     @Transactional(readOnly = false, rollbackFor = RuntimeException.class)
@@ -168,12 +164,11 @@ public class UserServiceImpl implements IUserService {
     }
 
     @Override
-    public String editUser(TraceRequest request, String content, Integer flag) {
+    public ResponseMapper editUser(TraceRequest request, String content, Integer flag) {
         ResponseMapper mapper = ResponseMapper.createMapper();
         if (!request.isLogin()) {
             return mapper.code(ResponseCode.LOGIN_INVALIDATE.statusCode())
-                    .message("未登录或登录失效,请重新登录")
-                    .resultJson();
+                    .message("未登录或登录失效,请重新登录");
         }
         User u = request.getUser();
         User temp = new User();
@@ -183,8 +178,7 @@ public class UserServiceImpl implements IUserService {
         case 0:
             if (StringUtil.isEmpty(content)) {
                 return mapper.code(ResponseCode.ARGS_ERROR.statusCode())
-                        .message("请上传头像")
-                        .resultJson();
+                        .message("请上传头像");
             }
             temp.setAvatar(content.substring(content.lastIndexOf("/")));
             break;
@@ -192,8 +186,7 @@ public class UserServiceImpl implements IUserService {
         case 1:
             if (StringUtil.isNotBlank(content) && content.length() > 15) {
                 return mapper.code(ResponseCode.ARGS_ERROR.statusCode())
-                        .message("签名最多15个字")
-                        .resultJson();
+                        .message("签名最多15个字");
             }
             temp.setSignature(content);
             break;
@@ -201,8 +194,7 @@ public class UserServiceImpl implements IUserService {
         case 2:
             if (StringUtil.isNotBlank(content) && content.length() > 100) {
                 return mapper.code(ResponseCode.ARGS_ERROR.statusCode())
-                        .message("简介最多100个字")
-                        .resultJson();
+                        .message("简介最多100个字");
             }
             temp.setDescription(content);
             break;
@@ -210,13 +202,11 @@ public class UserServiceImpl implements IUserService {
         case 3:
             if (StringUtil.isEmpty(content)) {
                 return mapper.code(ResponseCode.ARGS_ERROR.statusCode())
-                        .message("昵称不能为空")
-                        .resultJson();
+                        .message("昵称不能为空");
             }
             if (content.length() > 8) {
                 return mapper.code(ResponseCode.ARGS_ERROR.statusCode())
-                        .message("昵称最多8个字")
-                        .resultJson();
+                        .message("昵称最多8个字");
             }
             temp.setNickname(content);
             break;
@@ -224,8 +214,7 @@ public class UserServiceImpl implements IUserService {
         case 4:
             if (StringUtil.isEmpty(content)) {
                 return mapper.code(ResponseCode.ARGS_ERROR.statusCode())
-                        .message("请上传背景图片")
-                        .resultJson();
+                        .message("请上传背景图片");
             }
             temp.setBackground(content.substring(content.lastIndexOf("/")));
             break;
@@ -234,44 +223,37 @@ public class UserServiceImpl implements IUserService {
         }
         if (this.userDao.update(temp) > 0) {
             return mapper.code(ResponseCode.SUCCESS.statusCode())
-                    .message("资料修改成功")
-                    .resultJson();
+                    .message("资料修改成功");
         }
         return mapper.code(ResponseCode.FAILED.statusCode())
-                .message("资料修改失败")
-                .resultJson();
+                .message("资料修改失败");
 
     }
 
     @Override
-    public String followUser(TraceRequest request, String userId, String followTo) {
+    public ResponseMapper followUser(TraceRequest request, String userId, String followTo) {
         ResponseMapper mapper = ResponseMapper.createMapper();
         if (!request.isLogin()) {
             return mapper.code(ResponseCode.LOGIN_INVALIDATE.statusCode())
-                    .message("您未登录或登录失效,请重新登录")
-                    .resultJson();
+                    .message("您未登录或登录失效,请重新登录");
         }
         User u = request.getUser();
         if (!u.getUuid().equals(userId)) {
-            return mapper.code(ResponseCode.ARGS_ERROR.statusCode())
-                    .resultJson();
+            return mapper.code(ResponseCode.ARGS_ERROR.statusCode());
         }
         if (userId.equals(followTo)) {
             return mapper.code(ResponseCode.ARGS_ERROR.statusCode())
-                    .message("无法关注自己")
-                    .resultJson();
+                    .message("无法关注自己");
         }
         User t = new User();
         t.setUuid(followTo);
         if (this.userDao.isExist(t) < 1) {
             return mapper.code(ResponseCode.ARGS_ERROR.statusCode())
-                    .message("所关注用户不存在")
-                    .resultJson();
+                    .message("所关注用户不存在");
         }
         if (this.followDao.isFollow(userId, followTo) == 1) {
             return mapper.code(ResponseCode.EXIST.statusCode())
-                    .message("您已关注过该用户")
-                    .resultJson();
+                    .message("您已关注过该用户");
         }
         Follow f = new Follow();
         f.setUserId(followTo)
@@ -294,7 +276,7 @@ public class UserServiceImpl implements IUserService {
                     .setContent(null)
                     .setReply(null));
         }
-        return mapper.data(map).resultJson();
+        return mapper.data(map);
     }
 
     @Transactional(readOnly = false, rollbackFor = RuntimeException.class)
@@ -308,29 +290,26 @@ public class UserServiceImpl implements IUserService {
     }
 
     @Override
-    public String cancelFollow(TraceRequest request, String userId, String followTo) {
+    public ResponseMapper cancelFollow(TraceRequest request, String userId, String followTo) {
         ResponseMapper mapper = ResponseMapper.createMapper();
         if (!request.isLogin()) {
             return mapper.code(ResponseCode.LOGIN_INVALIDATE.statusCode())
-                    .message("未登录或登录失效,请重新登录")
-                    .resultJson();
+                    .message("未登录或登录失效,请重新登录");
         }
         User u = request.getUser();
         if (!u.getUuid().equals(userId)) {
-            return mapper.code(ResponseCode.ARGS_ERROR.statusCode())
-                    .resultJson();
+            return mapper.code(ResponseCode.ARGS_ERROR.statusCode());
         }
         User t = new User();
         t.setUuid(followTo);
         if (this.userDao.isExist(t) < 1) {
             return mapper.code(ResponseCode.ARGS_ERROR.statusCode())
-                    .message("所关注用户不存在")
-                    .resultJson();
+                    .message("所关注用户不存在");
         }
         SpringBeanUtils.getBean(UserServiceImpl.class).doCancelFollow(followTo, userId);
         Map<String, Object> map = new HashMap<>(2);
         map.put("isFollow", 0);
-        return mapper.data(map).resultJson();
+        return mapper.data(map);
     }
 
     @Transactional(readOnly = false, rollbackFor = RuntimeException.class)
@@ -340,7 +319,7 @@ public class UserServiceImpl implements IUserService {
     }
 
     @Override
-    public String follower(TraceRequest request, String userId) {
+    public ResponseMapper follower(TraceRequest request, String userId) {
         ResponseMapper mapper = ResponseMapper.createMapper();
         Follow f = new Follow();
         f.setUserId(userId);
@@ -349,13 +328,13 @@ public class UserServiceImpl implements IUserService {
         List<FollowVo> list = this.followDao.findList(f);
 
         if (list.isEmpty()) {
-            return mapper.code(ResponseCode.NO_DATA.statusCode()).resultJson();
+            return mapper.code(ResponseCode.NO_DATA.statusCode());
         }
-        return mapper.data(list).resultJson();
+        return mapper.data(list);
     }
 
     @Override
-    public String following(TraceRequest request, String userId) {
+    public ResponseMapper following(TraceRequest request, String userId) {
         Follow f = new Follow();
         f.setFollowerId(userId);
 
@@ -364,22 +343,21 @@ public class UserServiceImpl implements IUserService {
 
         if (list.isEmpty()) {
             return ResponseMapper.createMapper()
-                    .code(ResponseCode.NO_DATA.statusCode())
-                    .resultJson();
+                    .code(ResponseCode.NO_DATA.statusCode());
         }
-        return ResponseMapper.createMapper().data(list).resultJson();
+        return ResponseMapper.createMapper().data(list);
     }
 
     @Override
-    public String isFollowed(TraceRequest request, String userId, String followTo) {
+    public ResponseMapper isFollowed(TraceRequest request, String userId, String followTo) {
         int num = this.followDao.isFollow(userId, followTo);
         Map<String, Object> map = new HashMap<>(2);
         map.put("isFollow", num);
-        return ResponseMapper.createMapper().data(map).resultJson();
+        return ResponseMapper.createMapper().data(map);
     }
 
     @Override
-    public String commonNums(TraceRequest request, String userId) {
+    public ResponseMapper commonNums(TraceRequest request, String userId) {
         ResponseMapper mapper = ResponseMapper.createMapper();
         UserAttr attr = this.userAttrDao.get(new UserAttr().setUserId(userId));
         Map<String, Object> map = new HashMap<>(4);
@@ -387,9 +365,9 @@ public class UserServiceImpl implements IUserService {
             map.put("articleNum", attr.getArticleNum());
             map.put("collectNum", attr.getCollectNum());
             map.put("followerNum", attr.getFollowerNum());
-            return mapper.data(map).resultJson();
+            return mapper.data(map);
         }
-        return mapper.code(ResponseCode.NO_DATA.statusCode()).resultJson();
+        return mapper.code(ResponseCode.NO_DATA.statusCode());
     }
 
     @Override

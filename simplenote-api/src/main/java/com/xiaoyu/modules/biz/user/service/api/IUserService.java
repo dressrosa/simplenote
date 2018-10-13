@@ -5,6 +5,7 @@ package com.xiaoyu.modules.biz.user.service.api;
 
 import java.util.List;
 
+import com.xiaoyu.common.base.ResponseMapper;
 import com.xiaoyu.common.request.TraceRequest;
 import com.xiaoyu.modules.biz.user.entity.Follow;
 import com.xiaoyu.modules.biz.user.entity.User;
@@ -34,7 +35,7 @@ public interface IUserService {
      * @param device
      * @return
      */
-    public String loginRecord(TraceRequest request, String userId, String device);
+    public ResponseMapper loginRecord(TraceRequest request, String userId, String device);
 
     /**
      * 用户详情
@@ -43,7 +44,7 @@ public interface IUserService {
      * @param userId
      * @return
      */
-    public String userDetail(TraceRequest request, String userId);
+    public ResponseMapper userDetail(TraceRequest request, String userId);
 
     /**
      * 注册
@@ -53,7 +54,7 @@ public interface IUserService {
      * @param password
      * @return
      */
-    public String register(TraceRequest request, String loginName, String password);
+    public ResponseMapper register(TraceRequest request, String loginName, String password);
 
     /**
      * 编辑用户
@@ -64,7 +65,7 @@ public interface IUserService {
      * @param flag
      * @return
      */
-    public String editUser(TraceRequest request, String content, Integer flag);
+    public ResponseMapper editUser(TraceRequest request, String content, Integer flag);
 
     /**
      * 关注用户
@@ -74,7 +75,7 @@ public interface IUserService {
      * @param followTo
      * @return
      */
-    public String followUser(TraceRequest request, String userId, String followTo);
+    public ResponseMapper followUser(TraceRequest request, String userId, String followTo);
 
     /**
      * 取消关注
@@ -84,7 +85,7 @@ public interface IUserService {
      * @param followTo
      * @return
      */
-    public String cancelFollow(TraceRequest request, String userId, String followTo);
+    public ResponseMapper cancelFollow(TraceRequest request, String userId, String followTo);
 
     /**
      * 是否关注
@@ -94,7 +95,7 @@ public interface IUserService {
      * @param followTo
      * @return
      */
-    public String isFollowed(TraceRequest request, String userId, String followTo);
+    public ResponseMapper isFollowed(TraceRequest request, String userId, String followTo);
 
     /**
      * 我的关注者
@@ -103,7 +104,7 @@ public interface IUserService {
      * @param userId
      * @return
      */
-    public String follower(TraceRequest request, String userId);
+    public ResponseMapper follower(TraceRequest request, String userId);
 
     /**
      * 我关注的人
@@ -112,7 +113,7 @@ public interface IUserService {
      * @param userId
      * @return
      */
-    public String following(TraceRequest request, String userId);
+    public ResponseMapper following(TraceRequest request, String userId);
 
     /**
      * 通用的统计数
@@ -121,7 +122,7 @@ public interface IUserService {
      * @param userId
      * @return
      */
-    public String commonNums(TraceRequest request, String userId);
+    public ResponseMapper commonNums(TraceRequest request, String userId);
 
     public User getByUuid(String uuid);
 

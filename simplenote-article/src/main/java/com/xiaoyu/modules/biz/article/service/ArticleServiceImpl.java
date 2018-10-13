@@ -104,12 +104,11 @@ public class ArticleServiceImpl implements IArticleService {
     }
 
     @Override
-    public String detail(String articleId) {
+    public ResponseMapper detail(String articleId) {
         ArticleVo a = this.articleDao.getVoByUuid(articleId);
         if (a == null) {
             return ResponseMapper.createMapper()
-                    .code(ResponseCode.NO_DATA.statusCode())
-                    .resultJson();
+                    .code(ResponseCode.NO_DATA.statusCode());
         }
         UserVo vo = this.userService.getVoByUuid(a.getUserId());
         Map<String, Object> result = MapleUtil.wrap(a)
@@ -118,17 +117,17 @@ public class ArticleServiceImpl implements IArticleService {
                 .stick("createTime", TimeUtils.format(a.getCreateDate(), "HH:mm"))
                 .stick("user", vo)
                 .map();
-        return ResponseMapper.createMapper().data(result).resultJson();
+        return ResponseMapper.createMapper().data(result);
     }
 
     @Override
-    public String hotList(TraceRequest request) {
+    public ResponseMapper hotList(TraceRequest request) {
         // if (EhCacheUtil.IsExist("SystemCache")) {// 从缓存取
         // @SuppressWarnings("unchecked")
         // List<Object> total = (List<Object>) EhCacheUtil.get("SystemCache",
         // "article:hotList");
         // if (total != null && total.size() > 0) {
-        // return mapper.data(total).resultJson();
+        // return mapper.data(total);
         // }
         // }
         int pageNum = Integer.valueOf(request.getHeader().getPageNum());
@@ -140,11 +139,11 @@ public class ArticleServiceImpl implements IArticleService {
 
         List<Map<String, Object>> total = this.handleArticleVoList(list, request.getUser(), request.isLogin());
         // EhCacheUtil.put("SystemCache", "article:hotList", total);// 存入缓存
-        return ResponseMapper.createMapper().data(total).resultJson();
+        return ResponseMapper.createMapper().data(total);
     }
 
     @Override
-    public String list(TraceRequest request, String userId) {
+    public ResponseMapper list(TraceRequest request, String userId) {
         final Article article = new Article();
         article.setUserId(userId);
         int pageNum = Integer.valueOf(request.getHeader().getPageNum());
@@ -154,14 +153,14 @@ public class ArticleServiceImpl implements IArticleService {
         PageHelper.startPage(pageNum, pageSize);
         List<ArticleVo> list = this.articleDao.findByListWithAttr(userId);
         if (list.isEmpty()) {
-            return ResponseMapper.createMapper().resultJson();
+            return ResponseMapper.createMapper();
         }
         List<Map<String, Object>> total = this.handleArticleVoList(list, request.getUser(), request.isLogin());
-        return ResponseMapper.createMapper().data(total).resultJson();
+        return ResponseMapper.createMapper().data(total);
     }
 
     @Override
-    public String collectList(TraceRequest request, String userId) {
+    public ResponseMapper collectList(TraceRequest request, String userId) {
         // 是否登录
         final boolean isLogin = request.isLogin();
         final Article article = new Article();
@@ -174,7 +173,7 @@ public class ArticleServiceImpl implements IArticleService {
         final List<ArticleVo> list = this.articleDao.findCollectList(userId);
 
         List<Map<String, Object>> total = this.handleArticleVoList(list, request.getUser(), isLogin);
-        return ResponseMapper.createMapper().data(total).resultJson();
+        return ResponseMapper.createMapper().data(total);
     }
 
     private List<Map<String, Object>> handleArticleVoList(final List<ArticleVo> list, final User user,
@@ -262,17 +261,17 @@ public class ArticleServiceImpl implements IArticleService {
     }
 
     @Override
-    public String addArticle(TraceRequest request, String title, String content) {
+    public ResponseMapper addArticle(TraceRequest request, String title, String content) {
         ResponseMapper mapper = ResponseMapper.createMapper();
         if (!request.isLogin()) {
             return ResponseMapper.createMapper()
                     .code(ResponseCode.LOGIN_INVALIDATE.statusCode())
-                    .message("登录失效,请重新登录")
-                    .resultJson();
+                    .message("登录失效,请重新登录");
         }
         User user = request.getUser();
         Article t = new Article();
         ArticleAttr attr = new ArticleAttr();
+        // TODO 分布式锁
         t.setContent(content)
                 .setTitle(title)
                 .setUserId(user.getUuid())
@@ -282,7 +281,7 @@ public class ArticleServiceImpl implements IArticleService {
 
         SpringBeanUtils.getBean(ArticleServiceImpl.class)
                 .doInsertArticle(t, attr, user.getUuid());
-        return mapper.data(t.getUuid()).resultJson();
+        return mapper.data(t.getUuid());
     }
 
     @Transactional(readOnly = false, rollbackFor = RuntimeException.class)
@@ -313,52 +312,50 @@ public class ArticleServiceImpl implements IArticleService {
     }
 
     @Override
-    public String editArticle(TraceRequest request, String title, String content, String userId,
+    public ResponseMapper editArticle(TraceRequest request, String title, String content, String userId,
             String articleId) {
         if (!request.isLogin()) {
             return ResponseMapper.createMapper()
                     .code(ResponseCode.LOGIN_INVALIDATE.statusCode())
-                    .message("登录失效,请重新登录")
-                    .resultJson();
+                    .message("登录失效,请重新登录");
         }
         return this.doEdit(userId, title, content, articleId);
     }
 
-    private String doEdit(String userId, String title, String content, String articleId) {
+    private ResponseMapper doEdit(String userId, String title, String content, String articleId) {
         Article ar = articleDao.getByUuid(articleId);
         if (ar == null || !userId.equals(ar.getUserId())) {
-            return ResponseMapper.createMapper().code(ResponseCode.NO_DATA.statusCode()).resultJson();
+            return ResponseMapper.createMapper().code(ResponseCode.NO_DATA.statusCode());
         }
         Article temp = new Article();
         temp.setTitle(title)
                 .setContent(content)
                 .setUuid(articleId);
         if (this.articleDao.update(temp) <= 0) {
-            return ResponseMapper.createMapper().code(ResponseCode.FAILED.statusCode()).resultJson();
+            return ResponseMapper.createMapper().code(ResponseCode.FAILED.statusCode());
         }
-        return ResponseMapper.createMapper().data(articleId).resultJson();
+        return ResponseMapper.createMapper().data(articleId);
     }
 
     @Override
-    public String addReadNum(TraceRequest request, String articleId) {
+    public ResponseMapper addReadNum(TraceRequest request, String articleId) {
         String ip = request.getHeader().getRemoteHost();
         if (JedisUtils.get("user:login:" + ip) != null) {
-            return ResponseMapper.createMapper().resultJson();
+            return ResponseMapper.createMapper();
         }
         ArticleAttr temp = new ArticleAttr();
         temp.setReadNum(1)
                 .setArticleId(articleId);
         this.articleAttrDao.updateByAddition(temp);
         JedisUtils.set("user:login:" + ip, temp.getReadNum().toString(), 600);
-        return ResponseMapper.createMapper().data(temp.getReadNum()).resultJson();
+        return ResponseMapper.createMapper().data(temp.getReadNum());
     }
 
     @Override
-    public String addLike(TraceRequest request, String articleId, Integer isLike) {
+    public ResponseMapper addLike(TraceRequest request, String articleId, Integer isLike) {
         if (this.articleDao.isExist(articleId) < 1) {
             return ResponseMapper.createMapper()
-                    .code(ResponseCode.ARGS_ERROR.statusCode())
-                    .resultJson();
+                    .code(ResponseCode.ARGS_ERROR.statusCode());
         }
         ArticleLike t = new ArticleLike();
         t.setUserId(request.getUser().getUuid())
@@ -376,13 +373,12 @@ public class ArticleServiceImpl implements IArticleService {
                 break;
             }
             return ResponseMapper.createMapper()
-                    .code(ResponseCode.LOGIN_INVALIDATE.statusCode())
-                    .resultJson();
+                    .code(ResponseCode.LOGIN_INVALIDATE.statusCode());
         }
 
         SpringBeanUtils.getBean(ArticleServiceImpl.class)
                 .handleLikeOrCollectNum(t);
-        return ResponseMapper.createMapper().resultJson();
+        return ResponseMapper.createMapper();
 
     }
 
@@ -402,20 +398,20 @@ public class ArticleServiceImpl implements IArticleService {
      * isCollect 0取消收藏 1收藏
      */
     @Override
-    public String addCollect(TraceRequest request, String articleId, Integer isCollect) {
+    public ResponseMapper addCollect(TraceRequest request, String articleId, Integer isCollect) {
         ResponseMapper mapper = ResponseMapper.createMapper();
         // 没登录 或失效
         if (!request.isLogin()) {
-            return mapper.code(ResponseCode.LOGIN_INVALIDATE.statusCode()).resultJson();
+            return mapper.code(ResponseCode.LOGIN_INVALIDATE.statusCode());
         }
         if (this.articleDao.isExist(articleId) < 1) {
-            return mapper.code(ResponseCode.ARGS_ERROR.statusCode()).resultJson();
+            return mapper.code(ResponseCode.ARGS_ERROR.statusCode());
         }
         ArticleCollect t = new ArticleCollect();
         t.setUserId(request.getUser().getUuid()).setArticleId(articleId);
         SpringBeanUtils.getBean(ArticleServiceImpl.class)
                 .handleLikeOrCollectNum(t);
-        return mapper.resultJson();
+        return mapper;
 
     }
 
@@ -438,20 +434,20 @@ public class ArticleServiceImpl implements IArticleService {
     }
 
     @Override
-    public String comment(TraceRequest request, String articleId, String content) {
+    public ResponseMapper comment(TraceRequest request, String articleId, String content) {
         ResponseMapper mapper = ResponseMapper.createMapper();
         if (StringUtil.isEmpty(content)) {
-            return mapper.code(ResponseCode.ARGS_ERROR.statusCode()).resultJson();
+            return mapper.code(ResponseCode.ARGS_ERROR.statusCode());
         }
         if (!request.isLogin()) {
-            return mapper.code(ResponseCode.LOGIN_INVALIDATE.statusCode()).resultJson();
+            return mapper.code(ResponseCode.LOGIN_INVALIDATE.statusCode());
         }
         final User user = request.getUser();
         boolean isSendMsg = false;
         ArticleComment co = new ArticleComment();
         Article ar = this.articleDao.getByUuid(articleId);
         if (ar == null) {
-            return mapper.code(ResponseCode.ARGS_ERROR.statusCode()).resultJson();
+            return mapper.code(ResponseCode.ARGS_ERROR.statusCode());
         }
         co.setArticleId(articleId)
                 .setReplyerId(user.getUuid())
@@ -486,22 +482,22 @@ public class ArticleServiceImpl implements IArticleService {
                     .setContent(content)
                     .setReply(null));
         }
-        return mapper.data(map).resultJson();
+        return mapper.data(map);
     }
 
     @Override
-    public String reply(TraceRequest request, String commentId, String replyContent) {
+    public ResponseMapper reply(TraceRequest request, String commentId, String replyContent) {
         ResponseMapper mapper = ResponseMapper.createMapper();
         if (StringUtil.isEmpty(replyContent)) {
-            return mapper.code(ResponseCode.ARGS_ERROR.statusCode()).resultJson();
+            return mapper.code(ResponseCode.ARGS_ERROR.statusCode());
         }
         if (!request.isLogin()) {
-            return mapper.code(ResponseCode.LOGIN_INVALIDATE.statusCode()).resultJson();
+            return mapper.code(ResponseCode.LOGIN_INVALIDATE.statusCode());
         }
         final User user = request.getUser();
         ArticleComment comment = this.arCommentDao.getByUuid(commentId);
         if (comment == null) {
-            return mapper.code(ResponseCode.NO_DATA.statusCode()).resultJson();
+            return mapper.code(ResponseCode.NO_DATA.statusCode());
         }
         ArticleComment reply = new ArticleComment();
         reply.setArticleId(comment.getArticleId())
@@ -525,7 +521,7 @@ public class ArticleServiceImpl implements IArticleService {
                         .setReply(null));
             }
         }
-        return mapper.resultJson();
+        return mapper;
     }
 
     private void addCommentNum(String articleId, boolean flag) {
@@ -542,7 +538,7 @@ public class ArticleServiceImpl implements IArticleService {
     }
 
     @Override
-    public String comments(TraceRequest request, String articleId) {
+    public ResponseMapper comments(TraceRequest request, String articleId) {
         int pageNum = Integer.valueOf(request.getHeader().getPageNum());
         int pageSize = Integer.valueOf(request.getHeader().getPageSize());
         pageSize = pageSize > 32 ? 32 : pageSize;
@@ -551,14 +547,12 @@ public class ArticleServiceImpl implements IArticleService {
         final List<ArticleCommentVo> list = this.arCommentDao.findList(articleId);
         if (list.isEmpty()) {
             return ResponseMapper.createMapper()
-                    .code(ResponseCode.NO_DATA.statusCode())
-                    .resultJson();
+                    .code(ResponseCode.NO_DATA.statusCode());
         }
         List<Map<String, Object>> total = this.handleCommentsList(list, request.getUser(), request.isLogin());
         return ResponseMapper.createMapper()
                 .count(page.getTotal())
-                .data(total)
-                .resultJson();
+                .data(total);
     }
 
     private List<Map<String, Object>> handleCommentsList(List<ArticleCommentVo> list,
@@ -609,15 +603,14 @@ public class ArticleServiceImpl implements IArticleService {
     }
 
     @Override
-    public String newComments(TraceRequest request, String articleId) {
+    public ResponseMapper newComments(TraceRequest request, String articleId) {
         final List<ArticleCommentVo> list = this.arCommentDao.findNewComments(articleId);
         if (list == null || list.isEmpty()) {
             return ResponseMapper.createMapper()
-                    .code(ResponseCode.NO_DATA.statusCode())
-                    .resultJson();
+                    .code(ResponseCode.NO_DATA.statusCode());
         }
         List<Map<String, Object>> total = this.handleCommentsList(list, request.getUser(), request.isLogin());
-        return ResponseMapper.createMapper().data(total).resultJson();
+        return ResponseMapper.createMapper().data(total);
     }
 
     /**
@@ -625,7 +618,7 @@ public class ArticleServiceImpl implements IArticleService {
      */
 
     @Override
-    public String addCommentLike(TraceRequest request, String commentId, Integer isLike) {
+    public ResponseMapper addCommentLike(TraceRequest request, String commentId, Integer isLike) {
         // 没登录 或失效
         if (!request.isLogin()) {
             switch (isLike) {
@@ -639,8 +632,7 @@ public class ArticleServiceImpl implements IArticleService {
                 break;
             }
             return ResponseMapper.createMapper()
-                    .code(ResponseCode.LOGIN_INVALIDATE.statusCode())
-                    .resultJson();
+                    .code(ResponseCode.LOGIN_INVALIDATE.statusCode());
         }
 
         final CommentLike t = new CommentLike();
@@ -648,7 +640,7 @@ public class ArticleServiceImpl implements IArticleService {
         SpringBeanUtils.getBean(ArticleServiceImpl.class)
                 .handleLikeOrCollectNum(t);
 
-        return ResponseMapper.createMapper().resultJson();
+        return ResponseMapper.createMapper();
     }
 
     @Transactional(rollbackFor = RuntimeException.class)
@@ -772,25 +764,25 @@ public class ArticleServiceImpl implements IArticleService {
     }
 
     @Override
-    public String latestOfUsers(TraceRequest request, String[] userIds) {
+    public ResponseMapper latestOfUsers(TraceRequest request, String[] userIds) {
         ResponseMapper mapper = ResponseMapper.createMapper();
         List<ArticleVo> list = this.articleDao.findLatestOfUsers(userIds);
         Optional.ofNullable(list).ifPresent(a -> {
             mapper.data(a);
         });
-        return mapper.resultJson();
+        return mapper;
     }
 
     @Override
     @Deprecated
-    public String search(TraceRequest request, String keyword) {
+    public ResponseMapper search(TraceRequest request, String keyword) {
         ResponseMapper mapper = ResponseMapper.createMapper();
         // final Map<String, Object> map = ElasticUtils.searchWithCount(new String[] {
         // "website" },
         // new String[] { "article" }, 0, 10, keyword, new String[] { "title", "content"
         // });
-        // return mapper.data(map).resultJson();
-        return mapper.resultJson();
+        // return mapper.data(map);
+        return mapper;
     }
 
     @Override
@@ -822,19 +814,17 @@ public class ArticleServiceImpl implements IArticleService {
     /* ==========================分类栏目相关=============================== */
 
     @Override
-    public String addColumn(TraceRequest request, String name) {
+    public ResponseMapper addColumn(TraceRequest request, String name) {
         if (!request.isLogin()) {
             return ResponseMapper.createMapper()
                     .code(ResponseCode.LOGIN_INVALIDATE.statusCode())
-                    .message("登录失效,请重新登录")
-                    .resultJson();
+                    .message("登录失效,请重新登录");
         }
         User user = request.getUser();
         if (StringUtil.isBlank(name) || name.length() > 10) {
             return ResponseMapper.createMapper()
                     .code(ResponseCode.ARGS_ERROR.statusCode())
-                    .message("请正确填写名称")
-                    .resultJson();
+                    .message("请正确填写名称");
         }
 
         ArticleColumn column = new ArticleColumn();
@@ -842,37 +832,34 @@ public class ArticleServiceImpl implements IArticleService {
         if (this.columnDao.count(column) > 50) {
             return ResponseMapper.createMapper()
                     .code(ResponseCode.FAILED.statusCode())
-                    .message("我们觉得太多栏目可能并不是那么美好")
-                    .resultJson();
+                    .message("我们觉得太多栏目可能并不是那么美好");
         }
         column.setName(name)
                 .setUuid(IdGenerator.uuid());
         this.columnDao.insert(column);
-        return ResponseMapper.createMapper().data(column).resultJson();
+        return ResponseMapper.createMapper().data(column);
     }
 
     @Override
-    public String removeColumn(TraceRequest request, String columnId) {
+    public ResponseMapper removeColumn(TraceRequest request, String columnId) {
         if (!request.isLogin()) {
             return ResponseMapper.createMapper()
                     .code(ResponseCode.LOGIN_INVALIDATE.statusCode())
-                    .message("登录失效,请重新登录")
-                    .resultJson();
+                    .message("登录失效,请重新登录");
         }
         User user = request.getUser();
         ArticleColumn t = new ArticleColumn();
         t.setUserId(user.getUuid()).setUuid(columnId);
         this.columnDao.delete(t);
-        return ResponseMapper.createMapper().resultJson();
+        return ResponseMapper.createMapper();
     }
 
     @Override
-    public String updateColumn(TraceRequest request, String columnId, String name) {
+    public ResponseMapper updateColumn(TraceRequest request, String columnId, String name) {
         if (!request.isLogin()) {
             return ResponseMapper.createMapper()
                     .code(ResponseCode.LOGIN_INVALIDATE.statusCode())
-                    .message("登录失效,请重新登录")
-                    .resultJson();
+                    .message("登录失效,请重新登录");
         }
         User user = request.getUser();
         ArticleColumn t = new ArticleColumn();
@@ -880,16 +867,15 @@ public class ArticleServiceImpl implements IArticleService {
                 .setName(name)
                 .setUuid(columnId);
         this.columnDao.update(t);
-        return ResponseMapper.createMapper().resultJson();
+        return ResponseMapper.createMapper();
     }
 
     @Override
-    public String putOrTakeColumn(TraceRequest request, String columnId, String articleId) {
+    public ResponseMapper putOrTakeColumn(TraceRequest request, String columnId, String articleId) {
         if (!request.isLogin()) {
             return ResponseMapper.createMapper()
                     .code(ResponseCode.LOGIN_INVALIDATE.statusCode())
-                    .message("登录失效,请重新登录")
-                    .resultJson();
+                    .message("登录失效,请重新登录");
         }
 
         User user = request.getUser();
@@ -899,24 +885,24 @@ public class ArticleServiceImpl implements IArticleService {
         Article article = this.articleDao.getByUuid(columnId);
         ResponseMapper mapper = ResponseMapper.createMapper();
         if (article == null) {
-            return mapper.code(ResponseCode.NO_DATA.statusCode()).resultJson();
+            return mapper.code(ResponseCode.NO_DATA.statusCode());
         }
         if (!article.getUserId().equals(user.getUuid())) {
-            return mapper.code(ResponseCode.NO_DATA.statusCode()).resultJson();
+            return mapper.code(ResponseCode.NO_DATA.statusCode());
         }
         if (this.columnDao.isExist(columnId) <= 0) {
-            return mapper.code(ResponseCode.NO_DATA.statusCode()).resultJson();
+            return mapper.code(ResponseCode.NO_DATA.statusCode());
         }
         if ("".equals((columnId)) && StringUtil.isBlank(article.getColumnId())) {
-            return mapper.resultJson();
+            return mapper;
         }
         t.setColumnId(columnId);
         this.articleDao.update(t);
-        return mapper.resultJson();
+        return mapper;
     }
 
     @Override
-    public String columns(TraceRequest request, String userId) {
+    public ResponseMapper columns(TraceRequest request, String userId) {
         User user = request.getUser();
         ArticleColumn column = new ArticleColumn();
         column.setUserId(userId);
@@ -925,7 +911,7 @@ public class ArticleServiceImpl implements IArticleService {
         }
         List<ArticleColumn> columnList = this.columnDao.findByList(column);
         List<Map<String, Object>> total = this.handleColumnList(columnList);
-        return ResponseMapper.createMapper().data(total).resultJson();
+        return ResponseMapper.createMapper().data(total);
     }
 
     private List<Map<String, Object>> handleColumnList(List<ArticleColumn> columnList) {
@@ -941,7 +927,7 @@ public class ArticleServiceImpl implements IArticleService {
     }
 
     @Override
-    public String findListByColumn(TraceRequest request, String userId, String columnId) {
+    public ResponseMapper findListByColumn(TraceRequest request, String userId, String columnId) {
         // 是否登录
         User user = request.getUser();
         boolean isLogin = request.isLogin();
@@ -964,11 +950,11 @@ public class ArticleServiceImpl implements IArticleService {
         PageHelper.startPage(pageNum, pageSize);
         list = this.articleDao.findByColumn(co);
         if (list.isEmpty()) {
-            return ResponseMapper.createMapper().resultJson();
+            return ResponseMapper.createMapper();
         }
 
         List<Map<String, Object>> total = this.handleArticleVoList(list, request.getUser(), isLogin);
-        return ResponseMapper.createMapper().data(total).resultJson();
+        return ResponseMapper.createMapper().data(total);
     }
 
     @Override

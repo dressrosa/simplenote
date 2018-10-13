@@ -29,31 +29,31 @@ public class MessageController {
     public String getMsgByType(HttpServletRequest request, @RequestParam(required = true) String userId,
             @PathVariable Integer type) {
         TraceRequest req = Utils.getTraceRequest(request);
-        return this.messageService.getMsgByType(req, userId, type);
+        return this.messageService.getMsgByType(req, userId, type).resultJson();
     }
 
     @RequestMapping(value = "api/v1/message/read", method = RequestMethod.POST)
     public String read(HttpServletRequest request, @RequestParam(required = true) String msgIds) {
         TraceRequest req = Utils.getTraceRequest(request);
-        return this.messageService.read(req, msgIds);
+        return this.messageService.read(req, msgIds).resultJson();
     }
 
     @RequestMapping(value = "api/v1/message/unread-num", method = RequestMethod.GET)
     public String unreadNum(HttpServletRequest request) {
         TraceRequest req = Utils.getTraceRequest(request);
-        return this.messageService.unreadNum(req);
+        return this.messageService.unreadNum(req).resultJson();
     }
 
     @RequestMapping(value = "api/v1/message/reply", method = RequestMethod.POST)
     public String replyMsg(HttpServletRequest request, @RequestParam(required = true) String msgId,
             @RequestParam(required = true) String replyContent) {
         TraceRequest req = Utils.getTraceRequest(request);
-        return this.messageService.replyMsg(req, msgId, replyContent);
+        return this.messageService.replyMsg(req, msgId, replyContent).resultJson();
     }
 
     @RequestMapping(value = "api/v1/message/remove", method = RequestMethod.POST)
     public String remove(HttpServletRequest request, @RequestParam(required = true) Message... messages) {
         TraceRequest req = Utils.getTraceRequest(request);
-        return this.messageService.removeMessage(req, messages);
+        return this.messageService.removeMessage(req, messages).resultJson();
     }
 }

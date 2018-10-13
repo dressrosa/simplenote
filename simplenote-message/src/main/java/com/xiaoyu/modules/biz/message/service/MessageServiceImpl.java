@@ -49,14 +49,14 @@ public class MessageServiceImpl implements IMessageService {
     private IArticleService articleService;
 
     @Override
-    public String getMsgByType(TraceRequest request, String userId, int type) {
+    public ResponseMapper getMsgByType(TraceRequest request, String userId, int type) {
         ResponseMapper mapper = ResponseMapper.createMapper();
         if (!request.isLogin()) {
-            return mapper.code(ResponseCode.LOGIN_INVALIDATE.statusCode()).resultJson();
+            return mapper.code(ResponseCode.LOGIN_INVALIDATE.statusCode());
         }
         User user = request.getUser();
         if (!userId.equals(user.getUuid())) {
-            return mapper.code(ResponseCode.ARGS_ERROR.statusCode()).resultJson();
+            return mapper.code(ResponseCode.ARGS_ERROR.statusCode());
         }
         Message t = new Message();
         t.setReceiverId(userId).setType(type);
@@ -65,7 +65,7 @@ public class MessageServiceImpl implements IMessageService {
         List<MessageVo> list = this.msgDao.findVoByList(t);
 
         if (list.isEmpty()) {
-            return mapper.code(ResponseCode.NO_DATA.statusCode()).resultJson();
+            return mapper.code(ResponseCode.NO_DATA.statusCode());
         }
         Article tarticle = null;
         User tuser = null;
@@ -78,15 +78,15 @@ public class MessageServiceImpl implements IMessageService {
                 m.setBizName(tuser != null ? tuser.getNickname() : "");
             }
         }
-        return mapper.data(list).resultJson();
+        return mapper.data(list);
     }
 
     @Override
-    public String replyMsg(TraceRequest request, String msgId, String replyContent) {
+    public ResponseMapper replyMsg(TraceRequest request, String msgId, String replyContent) {
         // TODO 1.回复单纯的消息 2.回复评论等,应该调用回复评论等相应的接口 目前回复消息只有回复评论
         Message msg = this.msgDao.getByUuid(msgId);
         if (msg == null) {
-            ResponseMapper.createMapper().code(ResponseCode.NO_DATA.statusCode()).resultJson();
+            ResponseMapper.createMapper().code(ResponseCode.NO_DATA.statusCode());
         }
 
         @SuppressWarnings("null")
@@ -97,38 +97,38 @@ public class MessageServiceImpl implements IMessageService {
                 || bizAction == BizAction.REPLY.statusCode()) {
             return this.articleService.reply(request, msg.getBizId(), replyContent);
         }
-        return ResponseMapper.createMapper().resultJson();
+        return ResponseMapper.createMapper();
     }
 
     @Override
-    public String read(TraceRequest request, String msgIds) {
+    public ResponseMapper read(TraceRequest request, String msgIds) {
         if (!request.isLogin()) {
-            return ResponseMapper.createMapper().code(ResponseCode.LOGIN_INVALIDATE.statusCode()).resultJson();
+            return ResponseMapper.createMapper().code(ResponseCode.LOGIN_INVALIDATE.statusCode());
         }
         String[] ids = msgIds.split(";");
         if (ids != null && ids.length > 0) {
             List<String> idsList = Arrays.asList(ids);
             this.msgDao.read(idsList);
         }
-        return ResponseMapper.createMapper().resultJson();
+        return ResponseMapper.createMapper();
     }
 
     @Override
-    public String unreadNum(TraceRequest request) {
+    public ResponseMapper unreadNum(TraceRequest request) {
         ResponseMapper mapper = ResponseMapper.createMapper();
         if (!request.isLogin()) {
-            return mapper.code(ResponseCode.LOGIN_INVALIDATE.statusCode()).resultJson();
+            return mapper.code(ResponseCode.LOGIN_INVALIDATE.statusCode());
         }
         User u = request.getUser();
         int num = this.msgDao.getUnreadNumBefore1Hour(u.getUuid());
         if (num > 0) {
-            return mapper.data(num).resultJson();
+            return mapper.data(num);
         }
-        return mapper.code(ResponseCode.NO_DATA.statusCode()).resultJson();
+        return mapper.code(ResponseCode.NO_DATA.statusCode());
     }
 
     @Override
-    public String sendMsgEvent(final Message message) {
+    public ResponseMapper sendMsgEvent(final Message message) {
         final Message msg = new Message();
         msg.setSenderId(message.getSenderId())
                 .setReceiverId(message.getReceiverId())
@@ -152,10 +152,10 @@ public class MessageServiceImpl implements IMessageService {
     }
 
     @Override
-    public String removeMessage(TraceRequest request, Message... messages) {
+    public ResponseMapper removeMessage(TraceRequest request, Message... messages) {
         ResponseMapper mapper = ResponseMapper.createMapper();
         if (!request.isLogin()) {
-            return mapper.code(ResponseCode.LOGIN_INVALIDATE.statusCode()).resultJson();
+            return mapper.code(ResponseCode.LOGIN_INVALIDATE.statusCode());
         }
         User u = request.getUser();
         if (messages.length == 1) {
@@ -164,7 +164,7 @@ public class MessageServiceImpl implements IMessageService {
             this.msgDao.delete(temp);
         }
         this.msgDao.batchDelete(Arrays.asList(messages));
-        return mapper.resultJson();
+        return mapper;
     }
 
     @Override

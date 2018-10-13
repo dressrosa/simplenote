@@ -3,6 +3,7 @@
  */
 package com.xiaoyu.modules.biz.article.service.api;
 
+import com.xiaoyu.common.base.ResponseMapper;
 import com.xiaoyu.common.request.TraceRequest;
 import com.xiaoyu.modules.biz.article.entity.Article;
 
@@ -20,7 +21,7 @@ public interface IArticleService {
      * @param articleId
      * @return
      */
-    public String detail(String articleId);
+    public ResponseMapper detail(String articleId);
 
     /**
      * 热门列表
@@ -28,7 +29,7 @@ public interface IArticleService {
      * @param request
      * @return
      */
-    public String hotList(TraceRequest request);
+    public ResponseMapper hotList(TraceRequest request);
 
     /**
      * 查询列表
@@ -39,7 +40,7 @@ public interface IArticleService {
      * @param pageSize
      * @return
      */
-    public String list(TraceRequest request, String userId);
+    public ResponseMapper list(TraceRequest request, String userId);
 
     /**
      * 收藏列表
@@ -50,7 +51,7 @@ public interface IArticleService {
      * @param pageSize
      * @return
      */
-    public String collectList(TraceRequest request, String userId);
+    public ResponseMapper collectList(TraceRequest request, String userId);
 
     /**
      * 增加文章
@@ -60,7 +61,7 @@ public interface IArticleService {
      * @param content
      * @return
      */
-    public String addArticle(TraceRequest request, String title, String content);
+    public ResponseMapper addArticle(TraceRequest request, String title, String content);
 
     /**
      * 编辑文章
@@ -71,7 +72,7 @@ public interface IArticleService {
      * @param userId
      * @return
      */
-    public String editArticle(TraceRequest request, String title, String content, String userId,
+    public ResponseMapper editArticle(TraceRequest request, String title, String content, String userId,
             String articleId);
 
     /**
@@ -81,7 +82,7 @@ public interface IArticleService {
      * @param articleId
      * @return
      */
-    public String addReadNum(TraceRequest request, String articleId);
+    public ResponseMapper addReadNum(TraceRequest request, String articleId);
 
     /**
      * 点赞
@@ -91,7 +92,7 @@ public interface IArticleService {
      * @param isLike
      * @return
      */
-    public String addLike(TraceRequest request, String articleId, Integer isLike);
+    public ResponseMapper addLike(TraceRequest request, String articleId, Integer isLike);
 
     /**
      * 评论点赞
@@ -101,7 +102,7 @@ public interface IArticleService {
      * @param isLike
      * @return
      */
-    public String addCommentLike(TraceRequest request, String commentId, Integer isLike);
+    public ResponseMapper addCommentLike(TraceRequest request, String commentId, Integer isLike);
 
     /**
      * 收藏
@@ -111,7 +112,7 @@ public interface IArticleService {
      * @param isCollect
      * @return
      */
-    public String addCollect(TraceRequest request, String articleId, Integer isCollect);
+    public ResponseMapper addCollect(TraceRequest request, String articleId, Integer isCollect);
 
     /**
      * 评论
@@ -121,7 +122,7 @@ public interface IArticleService {
      * @param content
      * @return
      */
-    public String comment(TraceRequest request, String articleId, String content);
+    public ResponseMapper comment(TraceRequest request, String articleId, String content);
 
     /**
      * 回复
@@ -131,7 +132,7 @@ public interface IArticleService {
      * @param replyContent
      * @return
      */
-    public String reply(TraceRequest request, String commentId, String replyContent);
+    public ResponseMapper reply(TraceRequest request, String commentId, String replyContent);
 
     /**
      * 评论列表
@@ -140,7 +141,7 @@ public interface IArticleService {
      * @param articleId
      * @return
      */
-    public String comments(TraceRequest request, String articleId);
+    public ResponseMapper comments(TraceRequest request, String articleId);
 
     /**
      * 最新评论
@@ -149,7 +150,7 @@ public interface IArticleService {
      * @param articleId
      * @return
      */
-    public String newComments(TraceRequest request, String articleId);
+    public ResponseMapper newComments(TraceRequest request, String articleId);
 
     /**
      * 最新文章
@@ -158,7 +159,7 @@ public interface IArticleService {
      * @param userIds
      * @return
      */
-    public String latestOfUsers(TraceRequest request, String[] userIds);
+    public ResponseMapper latestOfUsers(TraceRequest request, String[] userIds);
 
     /**
      * 搜索
@@ -167,7 +168,7 @@ public interface IArticleService {
      * @param keyword
      * @return
      */
-    public String search(TraceRequest request, String keyword);
+    public ResponseMapper search(TraceRequest request, String keyword);
 
     /**
      * 同步到es
@@ -183,7 +184,7 @@ public interface IArticleService {
      * @param name
      * @return
      */
-    public String addColumn(TraceRequest request, String name);
+    public ResponseMapper addColumn(TraceRequest request, String name);
 
     /**
      * 删除栏目,不会删除文章
@@ -192,7 +193,7 @@ public interface IArticleService {
      * @param columnId
      * @return
      */
-    public String removeColumn(TraceRequest request, String columnId);
+    public ResponseMapper removeColumn(TraceRequest request, String columnId);
 
     /**
      * 更新栏目名称
@@ -202,7 +203,7 @@ public interface IArticleService {
      * @param name
      * @return
      */
-    public String updateColumn(TraceRequest request, String columnId, String name);
+    public ResponseMapper updateColumn(TraceRequest request, String columnId, String name);
 
     /**
      * 把文章放入/移出栏目
@@ -212,7 +213,7 @@ public interface IArticleService {
      * @param articleId
      * @return
      */
-    public String putOrTakeColumn(TraceRequest request, String columnId, String articleId);
+    public ResponseMapper putOrTakeColumn(TraceRequest request, String columnId, String articleId);
 
     /**
      * 栏目列表
@@ -221,7 +222,7 @@ public interface IArticleService {
      * @param userId
      * @return
      */
-    public String columns(TraceRequest request, String userId);
+    public ResponseMapper columns(TraceRequest request, String userId);
 
     /**
      * 获取栏目里面的文章
@@ -231,7 +232,7 @@ public interface IArticleService {
      * @param columnId
      * @return
      */
-    public String findListByColumn(TraceRequest request, String userId, String columnId);
+    public ResponseMapper findListByColumn(TraceRequest request, String userId, String columnId);
 
     public Article getByUuid(String uuid);
 
