@@ -22,6 +22,7 @@ import com.xiaoyu.common.base.ResponseMapper;
 import com.xiaoyu.common.request.TraceRequest;
 import com.xiaoyu.common.utils.IdGenerator;
 import com.xiaoyu.common.utils.Md5Utils;
+import com.xiaoyu.common.utils.RedisLock;
 import com.xiaoyu.common.utils.SpringBeanUtils;
 import com.xiaoyu.common.utils.StringUtil;
 import com.xiaoyu.core.constant.Type;
@@ -120,7 +121,11 @@ public class UserServiceImpl implements IUserService {
                     .message("此账号已存在");
         }
         user.setUuid(IdGenerator.uuid());
-        if (SpringBeanUtils.getBean(UserServiceImpl.class).doRegister(user) == 1) {
+        RedisLock lock = RedisLock.getRedisLock("loginName:" + loginName);
+        Integer ret = lock.lock(() -> {
+            return SpringBeanUtils.getBean(UserServiceImpl.class).doRegister(user);
+        });
+        if (ret != null && ret > 1) {
             // 消息推送
             this.messageService.sendMsgEvent(new Message()
                     .setSenderId(user.getUuid())
@@ -260,7 +265,15 @@ public class UserServiceImpl implements IUserService {
                 .setFollowerId(userId)
                 .setUuid(IdGenerator.uuid());
         boolean isSendMsg = false;
-        SpringBeanUtils.getBean(UserServiceImpl.class).doFollowUser(f);
+        RedisLock lock = RedisLock.getRedisLock("followUser:" + userId + ":" + followTo);
+        Integer ret = lock.lock(()->{
+            SpringBeanUtils.getBean(UserServiceImpl.class).doFollowUser(f);
+            return 1;
+        });
+        if(ret == null) {
+            return mapper.code(ResponseCode.FAILED.statusCode())
+                    .message("关注用户失败");
+        }
         isSendMsg = true;
         Map<String, Object> map = new HashMap<>(2);
         map.put("isFollow", 1);

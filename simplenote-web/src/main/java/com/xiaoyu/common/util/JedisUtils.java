@@ -33,6 +33,25 @@ public class JedisUtils {
         JedisUtils.pool = jedisPool;
     }
 
+    public static Jedis getRedis() {
+        return JedisUtils.pool.getResource();
+    }
+
+    public static boolean exists(String key) {
+        Jedis jedis = null;
+        try {
+            jedis = JedisUtils.pool.getResource();
+            return jedis.exists(key);
+        } catch (final Exception e) {
+            logger.debug("获取key:" + key + "失败");
+            return false;
+        } finally {
+            if (jedis != null) {
+                jedis.close();
+            }
+        }
+    }
+
     /**
      * 获取key
      * 
@@ -46,9 +65,7 @@ public class JedisUtils {
         Jedis jedis = null;
         try {
             jedis = JedisUtils.pool.getResource();
-            if (jedis.exists(key)) {
-                value = jedis.get(key);
-            }
+            value = jedis.get(key);
         } catch (final Exception e) {
             JedisUtils.logger.debug("获取key:" + key + "失败");
             return null;
@@ -58,6 +75,20 @@ public class JedisUtils {
             }
         }
         return value;
+    }
+
+    public static long ttl(String key) {
+        Jedis jedis = null;
+        try {
+            jedis = JedisUtils.pool.getResource();
+            return jedis.ttl(key);
+        } catch (final Exception e) {
+        } finally {
+            if (jedis != null) {
+                jedis.close();
+            }
+        }
+        return -1;
     }
 
     public static long del(String key) {
@@ -106,6 +137,22 @@ public class JedisUtils {
         return value;
     }
 
+    public static long expire(String key, int cacheSeconds) {
+        Jedis jedis = null;
+        try {
+            jedis = JedisUtils.pool.getResource();
+            if (cacheSeconds > 0) {
+                return jedis.expire(key, cacheSeconds);
+            }
+        } catch (final Exception e) {
+        } finally {
+            if (jedis != null) {
+                jedis.close();
+            }
+        }
+        return 0;
+    }
+
     /**
      * 设置key
      * 
@@ -128,6 +175,39 @@ public class JedisUtils {
         } catch (final Exception e) {
             e.printStackTrace();
             JedisUtils.logger.debug("设置key:" + key + "失败");
+        } finally {
+            if (jedis != null) {
+                jedis.close();
+            }
+        }
+        return result;
+    }
+
+    public static boolean setnx(String key, String value) {
+        Jedis jedis = null;
+        try {
+            jedis = JedisUtils.pool.getResource();
+            return jedis.setnx(key, value) == 1 ? true : false;
+        } catch (final Exception e) {
+            e.printStackTrace();
+            logger.debug("设置key:" + key + "失败");
+        } finally {
+            if (jedis != null) {
+                jedis.close();
+            }
+        }
+        return false;
+    }
+
+    public static String getSet(String key, String value) {
+        String result = null;
+        Jedis jedis = null;
+        try {
+            jedis = JedisUtils.pool.getResource();
+            result = jedis.getSet(key, value);
+        } catch (final Exception e) {
+            e.printStackTrace();
+            logger.debug("设置key:" + key + "失败");
         } finally {
             if (jedis != null) {
                 jedis.close();

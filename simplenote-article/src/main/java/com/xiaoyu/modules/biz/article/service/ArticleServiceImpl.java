@@ -27,6 +27,7 @@ import com.xiaoyu.common.base.ResponseMapper;
 import com.xiaoyu.common.request.TraceRequest;
 import com.xiaoyu.common.utils.IdGenerator;
 import com.xiaoyu.common.utils.JedisUtils;
+import com.xiaoyu.common.utils.RedisLock;
 import com.xiaoyu.common.utils.SpringBeanUtils;
 import com.xiaoyu.common.utils.StringUtil;
 import com.xiaoyu.common.utils.TimeUtils;
@@ -271,17 +272,24 @@ public class ArticleServiceImpl implements IArticleService {
         User user = request.getUser();
         Article t = new Article();
         ArticleAttr attr = new ArticleAttr();
-        // TODO 分布式锁
-        t.setContent(content)
-                .setTitle(title)
-                .setUserId(user.getUuid())
-                .setUuid(IdGenerator.uuid());
-        attr.setArticleId(t.getUuid())
-                .setUuid(IdGenerator.uuid());
-
-        SpringBeanUtils.getBean(ArticleServiceImpl.class)
-                .doInsertArticle(t, attr, user.getUuid());
-        return mapper.data(t.getUuid());
+        RedisLock lock = RedisLock.getRedisLock("addArticle:" + user.getUuid() + ":" + title);
+        String uuid = lock.lock(() -> {
+            t.setContent(content)
+                    .setTitle(title)
+                    .setUserId(user.getUuid())
+                    .setUuid(IdGenerator.uuid());
+            attr.setArticleId(t.getUuid())
+                    .setUuid(IdGenerator.uuid());
+            SpringBeanUtils.getBean(ArticleServiceImpl.class)
+                    .doInsertArticle(t, attr, user.getUuid());
+            return t.getUuid();
+        });
+        if (uuid == null) {
+            return ResponseMapper.createMapper()
+                    .code(ResponseCode.FAILED.statusCode())
+                    .message("发表失败");
+        }
+        return mapper.data(uuid);
     }
 
     @Transactional(readOnly = false, rollbackFor = RuntimeException.class)
@@ -826,18 +834,26 @@ public class ArticleServiceImpl implements IArticleService {
                     .code(ResponseCode.ARGS_ERROR.statusCode())
                     .message("请正确填写名称");
         }
-
-        ArticleColumn column = new ArticleColumn();
-        column.setUserId(user.getUuid());
-        if (this.columnDao.count(column) > 50) {
+        RedisLock lock = RedisLock.getRedisLock("addColumn:" + user.getUuid() + ":" + name);
+        ResponseMapper ret = lock.lock(() -> {
+            ArticleColumn column = new ArticleColumn();
+            column.setUserId(user.getUuid());
+            if (this.columnDao.count(column) > 50) {
+                return ResponseMapper.createMapper()
+                        .code(ResponseCode.FAILED.statusCode())
+                        .message("我们觉得太多栏目可能并不是那么美好");
+            }
+            column.setName(name)
+                    .setUuid(IdGenerator.uuid());
+            this.columnDao.insert(column);
+            return ResponseMapper.createMapper().data(column);
+        });
+        if (ret == null) {
             return ResponseMapper.createMapper()
                     .code(ResponseCode.FAILED.statusCode())
-                    .message("我们觉得太多栏目可能并不是那么美好");
+                    .message("添加失败");
         }
-        column.setName(name)
-                .setUuid(IdGenerator.uuid());
-        this.columnDao.insert(column);
-        return ResponseMapper.createMapper().data(column);
+        return ret;
     }
 
     @Override
