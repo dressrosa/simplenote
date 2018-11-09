@@ -274,6 +274,13 @@ public class ArticleServiceImpl implements IArticleService {
         ArticleAttr attr = new ArticleAttr();
         RedisLock lock = RedisLock.getRedisLock("addArticle:" + user.getUuid() + ":" + title);
         String uuid = lock.lock(() -> {
+            try {
+                // 这里睡眠一会,防止执行过快锁释放,
+                // 而前端因网络延迟点击多次
+                Thread.sleep(10);
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
             t.setContent(content)
                     .setTitle(title)
                     .setUserId(user.getUuid())
@@ -451,46 +458,54 @@ public class ArticleServiceImpl implements IArticleService {
             return mapper.code(ResponseCode.LOGIN_INVALIDATE.statusCode());
         }
         final User user = request.getUser();
-        boolean isSendMsg = false;
-        ArticleComment co = new ArticleComment();
-        Article ar = this.articleDao.getByUuid(articleId);
-        if (ar == null) {
-            return mapper.code(ResponseCode.ARGS_ERROR.statusCode());
-        }
-        co.setArticleId(articleId)
-                .setReplyerId(user.getUuid())
-                .setContent(content)
-                .setAuthorId(ar.getUserId())
-                .setUuid(IdGenerator.uuid());
-        // 为表情内容的设置
-        this.arCommentDao.predo();
-        if (this.arCommentDao.insert(co) > 0) {
-            this.addCommentNum(articleId, true);
-            // 别人评论的
-            if (!co.getAuthorId().equals(co.getReplyerId())) {
-                // 消息推送
-                isSendMsg = true;
+        RedisLock lock = RedisLock.getRedisLock("comment:" + user.getUuid() + ":" + articleId);
+        ResponseMapper ret = lock.lock(() -> {
+            boolean isSendMsg = false;
+            ArticleComment co = new ArticleComment();
+            Article ar = this.articleDao.getByUuid(articleId);
+            if (ar == null) {
+                return mapper.code(ResponseCode.ARGS_ERROR.statusCode());
             }
-        }
-        final Map<String, String> map = new HashMap<>(8);
-        map.put("replyerId", user.getUuid());
-        map.put("replyerName", user.getNickname());
-        map.put("replyerAvatar", user.getAvatar());
-        map.put("content", content);
-        map.put("createDate", TimeUtils.format(System.currentTimeMillis(), "yyyy-MM-dd HH:mm"));
-
-        if (isSendMsg) {
-            this.messageService.sendMsgEvent(new Message()
-                    .setSenderId(user.getUuid())
-                    .setReceiverId(ar.getUserId())
-                    .setType(MsgType.NEWS.statusCode())
-                    .setBizId(articleId)
-                    .setBizType(BizType.ARTICLE.statusCode())
-                    .setBizAction(BizAction.COMMENT.statusCode())
+            co.setArticleId(articleId)
+                    .setReplyerId(user.getUuid())
                     .setContent(content)
-                    .setReply(null));
+                    .setAuthorId(ar.getUserId())
+                    .setUuid(IdGenerator.uuid());
+            // 为表情内容的设置
+            this.arCommentDao.predo();
+            if (this.arCommentDao.insert(co) > 0) {
+                this.addCommentNum(articleId, true);
+                // 别人评论的
+                if (!co.getAuthorId().equals(co.getReplyerId())) {
+                    // 消息推送
+                    isSendMsg = true;
+                }
+            }
+            final Map<String, String> map = new HashMap<>(8);
+            map.put("replyerId", user.getUuid());
+            map.put("replyerName", user.getNickname());
+            map.put("replyerAvatar", user.getAvatar());
+            map.put("content", content);
+            map.put("createDate", TimeUtils.format(System.currentTimeMillis(), "yyyy-MM-dd HH:mm"));
+
+            if (isSendMsg) {
+                this.messageService.sendMsgEvent(new Message()
+                        .setSenderId(user.getUuid())
+                        .setReceiverId(ar.getUserId())
+                        .setType(MsgType.NEWS.statusCode())
+                        .setBizId(articleId)
+                        .setBizType(BizType.ARTICLE.statusCode())
+                        .setBizAction(BizAction.COMMENT.statusCode())
+                        .setContent(content)
+                        .setReply(null));
+            }
+            return mapper.data(map);
+        });
+        if (ret == null) {
+            return mapper.code(ResponseCode.FAILED.statusCode());
         }
-        return mapper.data(map);
+        return ret;
+
     }
 
     @Override

@@ -21,7 +21,17 @@ import redis.clients.jedis.Jedis;
  */
 public class RedisLock {
 
-    private static final int Expire_Seconds = 60;
+    private static final int Expire_Seconds = 3600;
+
+    /**
+     * 加锁数量
+     */
+    private static final ThreadLocal<Integer> accquires = new ThreadLocal<Integer>() {
+        @Override
+        protected Integer initialValue() {
+            return 0;
+        }
+    };
 
     private RedisLock(String key) {
         this.key = key;
@@ -54,7 +64,33 @@ public class RedisLock {
         return null;
     }
 
-    private boolean tryLock() {
+    /**
+     * 传入函数,加锁执行,这里runnable只是一个函数接口,
+     * 和线程无关
+     * 
+     * @param r
+     */
+    public void lock(Runnable r) {
+        if (tryLock()) {
+            try {
+                r.run();
+            } finally {
+                tryRelease();
+            }
+        }
+    }
+
+    private final boolean tryLock() {
+        int n = accquires.get();
+        if (n > 1) {
+            accquires.set(n + 1);
+            return true;
+        }
+        return this.doLock();
+    }
+
+    private final boolean doLock() {
+        int n = accquires.get();
         Jedis jedis = JedisUtils.getRedis();
         try {
             lockValue = System.currentTimeMillis() + Expire_Seconds * 1000;
@@ -62,6 +98,7 @@ public class RedisLock {
             if (jedis.setnx(key, lockValue + "") == 1) {
                 // 这里可能失败
                 jedis.expire(key, Expire_Seconds);
+                accquires.set(n + 1);
                 return true;
             }
             // key已经存在
@@ -75,6 +112,7 @@ public class RedisLock {
                     // 竞争上锁成功
                     if (String.valueOf(current).equals(old)) {
                         jedis.expire(key, Expire_Seconds);
+                        accquires.set(n + 1);
                         return true;
                     } else {
                         return false;
@@ -90,7 +128,16 @@ public class RedisLock {
         return false;
     }
 
-    private void tryRelease() {
+    private final void tryRelease() {
+        int n = accquires.get();
+        if (n > 1) {
+            accquires.set(n - 1);
+            return;
+        }
+        this.doRelease();
+    }
+
+    private final void doRelease() {
         // 这里应该重新获取jedis,因为业务代码可能执行了好长时间
         Jedis jedis = JedisUtils.getRedis();
         try {
@@ -99,6 +146,8 @@ public class RedisLock {
                 jedis.del(key);
             }
         } finally {
+            // 走到这里,说明其他重入锁已经释放,开始第一层加锁的释放.
+            accquires.set(0);
             if (jedis != null) {
                 jedis.close();
             }

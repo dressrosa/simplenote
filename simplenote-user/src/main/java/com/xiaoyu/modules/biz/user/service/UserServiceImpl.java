@@ -115,41 +115,47 @@ public class UserServiceImpl implements IUserService {
                 .setPassword(Md5Utils.md5(password.trim()))
                 .setNickname(loginName.length() > 8 ? loginName.substring(0, 8) : loginName);
 
-        if (this.userDao.isExist(user) > 0) {
-            return ResponseMapper.createMapper()
-                    .code(ResponseCode.EXIST.statusCode())
-                    .message("此账号已存在");
-        }
         user.setUuid(IdGenerator.uuid());
         RedisLock lock = RedisLock.getRedisLock("loginName:" + loginName);
         Integer ret = lock.lock(() -> {
+            if (this.userDao.isExist(user) > 0) {
+                return -1;
+            }
             return SpringBeanUtils.getBean(UserServiceImpl.class).doRegister(user);
         });
-        if (ret != null && ret > 1) {
-            // 消息推送
-            this.messageService.sendMsgEvent(new Message()
-                    .setSenderId(user.getUuid())
-                    .setReceiverId(user.getUuid())
-                    .setType(MsgType.NOTICE.statusCode())
-                    .setBizId(user.getUuid())
-                    .setBizType(BizType.USER.statusCode())
-                    .setBizAction(BizAction.NONE.statusCode())
-                    .setContent("很高兴与您相识,希望以后的日子见字如面")
-                    .setReply(null));
-            // 通知我有人注册了,哈哈
-            MailBuilder builder = new MailBuilder();
-            builder.sender("1546428286@qq.com", "小往")
-                    .receiver("1546428286@qq.com", "Mr xiaoyu")
-                    .title("往往:注册通知.")
-                    .content("有新人注册了!<br/>名称:" + user.getLoginName() + "<br/>来源:" + request.getHeader().getRemoteHost()
-                            + "<br/>速速去了解一下拉"
-                            + "<br/><a href='http://47.93.235.211/user/" + user.getUuid() + "'>这是个神奇的链接...</a>");
-            try {
-                BaseProducer.produce(Type.TOPIC, MqContant.EMAIL, JSON.toJSONString(builder));
-            } catch (Exception e) {
-                e.printStackTrace();
+        if (ret != null) {
+            if (ret > 0) {
+                // 消息推送
+                this.messageService.sendMsgEvent(new Message()
+                        .setSenderId(user.getUuid())
+                        .setReceiverId(user.getUuid())
+                        .setType(MsgType.NOTICE.statusCode())
+                        .setBizId(user.getUuid())
+                        .setBizType(BizType.USER.statusCode())
+                        .setBizAction(BizAction.NONE.statusCode())
+                        .setContent("很高兴与您相识,希望以后的日子见字如面")
+                        .setReply(null));
+                // 通知我有人注册了,哈哈
+                MailBuilder builder = new MailBuilder();
+                builder.sender("1546428286@qq.com", "小往")
+                        .receiver("1546428286@qq.com", "Mr xiaoyu")
+                        .title("往往:注册通知.")
+                        .content("有新人注册了!<br/>名称:" + user.getLoginName() + "<br/>来源:"
+                                + request.getHeader().getRemoteHost()
+                                + "<br/>速速去了解一下拉"
+                                + "<br/><a href='http://47.93.235.211/user/" + user.getUuid() + "'>这是个神奇的链接...</a>");
+                try {
+                    BaseProducer.produce(Type.TOPIC, MqContant.EMAIL, JSON.toJSONString(builder));
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+                return ResponseMapper.createMapper();
             }
-            return ResponseMapper.createMapper();
+            if (ret == -1) {
+                return ResponseMapper.createMapper()
+                        .code(ResponseCode.FAILED.statusCode())
+                        .message("用户已存在");
+            }
         }
         return ResponseMapper.createMapper()
                 .code(ResponseCode.FAILED.statusCode())
@@ -266,11 +272,11 @@ public class UserServiceImpl implements IUserService {
                 .setUuid(IdGenerator.uuid());
         boolean isSendMsg = false;
         RedisLock lock = RedisLock.getRedisLock("followUser:" + userId + ":" + followTo);
-        Integer ret = lock.lock(()->{
+        Integer ret = lock.lock(() -> {
             SpringBeanUtils.getBean(UserServiceImpl.class).doFollowUser(f);
             return 1;
         });
-        if(ret == null) {
+        if (ret == null) {
             return mapper.code(ResponseCode.FAILED.statusCode())
                     .message("关注用户失败");
         }
