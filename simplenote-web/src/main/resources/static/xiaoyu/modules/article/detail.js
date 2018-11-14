@@ -51,6 +51,9 @@ var $arPromise = $.ajax({
         $partDown.find(".ar_content").attr("id", ar.articleId);
         var converter = new showdown.Converter();
         $partDown.find(".ar_content").html(converter.makeHtml(ar.content));
+        $partDown.find(".ar_content").find("img").each(function (i) {
+            $(this).attr("width", "100%");
+        });
         $('pre code').each(function(i, block) {
             hljs.highlightBlock(block);
         });
