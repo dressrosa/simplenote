@@ -57,14 +57,15 @@ var $arPromise = $.ajax({
             var src = _this.attr("src");
             _this.bind("click",function(){
                 var t = $("#bigImgdiv");
-                if (t.attr("src") == undefined) {
-                   $( '<div id="bigImgdiv" style="text-align: center;position: fixed;z-index: 1000;top: 0;left: 0;'
+                var c = $("#bigimg").attr("src");
+                if (c == undefined || c == 'undefined') {
+                   $( '<div id="bigImgdiv" style="position: fixed;z-index: 1000;top: 0;left: 0;'
                            +'-webkit-user-drag: none;-moz-user-drag: none;-ms-user-drag: none;user-drag: none;' 
                             + 'width: 100%;height: 100%;background-color: rgba(255,255,255,0.9);display:none;">'
-                            + '<img id="bigimg" style="height: 90%;width: 90%;border: 0;'
-                            + 'margin: auto;position: absolute;top: 0;bottom: 0;left: 0;right: 0;" src="' + src + '" /></div>')
+                            + '<img id="bigimg" style="height: 100%;width: 100%;border: 0;'
+                            + 'margin:0 auto;" src="' + src + '" /></div>')
                   .appendTo("body");
-                   //new RTP.PinchZoom($("#bigimg"), {});
+                  new RTP.PinchZoom($("#bigimg"), {});
                 }
                 t = $("#bigImgdiv");
                 $("#bigimg").attr("src", src);
