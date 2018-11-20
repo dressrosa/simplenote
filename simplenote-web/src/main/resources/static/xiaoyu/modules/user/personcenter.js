@@ -337,6 +337,7 @@ $(document).ready(function() {
                 var obj = jQuery.parseJSON(data);
                 if (obj.code == "20001") {
                     console.log("未登录");
+                    $.session.remove("user");
                 }
                 return true;
             },
@@ -384,6 +385,7 @@ $(document).ready(function() {
                 var obj = jQuery.parseJSON(data);
                 if (obj.code == "20001") {
                     console.log("未登录");
+                    $.session.remove("user");
                     window.location.href = "/login";
                     return false;
                 } else if (obj.code == '0') {
@@ -446,6 +448,7 @@ $(document).ready(function() {
                 var obj = jQuery.parseJSON(data);
                 if (obj.code == "20001") {
                     console.log("未登录");
+                    $.session.remove("user");
                     window.location.href = "/login";
                     return false;
                 }

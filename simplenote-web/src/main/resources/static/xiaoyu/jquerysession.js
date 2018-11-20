@@ -30,7 +30,7 @@
             }
 
             document.cookie = this._generatePrefix() + "=" + document.location.protocol + ';path=/;expires='
-                    + (new Date((new Date).getTime() + 10800)).toUTCString();
+                    + (new Date((new Date).getTime() + 86400)).toUTCString();
 
         },
 

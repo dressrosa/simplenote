@@ -30,10 +30,10 @@
         u2.nickname as followerName,
         u2.avatar as followerAvatar
         from biz_user_follow as a
-        left join
+        join
         biz_user as u1
         on u1.uuid = user_id
-        left join biz_user as u2
+        join biz_user as u2
         on u2.uuid=a.follower_id
         where
         a.del_flag=0

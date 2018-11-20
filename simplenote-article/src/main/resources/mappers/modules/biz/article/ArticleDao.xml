@@ -66,7 +66,7 @@
         t.comment_num as 'attr.commentNum'
         from
         biz_article as a
-        left join
+        join
         biz_article_attr as t
         on
         t.article_id=a.uuid
@@ -97,7 +97,7 @@
         a.content as content,
         a.create_date as createDate
         from biz_article as a
-        left join biz_article_column as ac
+        join biz_article_column as ac
         on
         ac.user_id=a.user_id
         and ac.uuid = a.column_id
@@ -130,10 +130,10 @@
         'attr.commentNum'
         from
         biz_article as a
-        left join biz_user as u
+        join biz_user as u
         on
         u.uuid = a.user_id
-        left join
+        join
         biz_article_attr as t
         on
         t.article_id=a.uuid
@@ -157,7 +157,7 @@
         t.comment_num as 'attr.commentNum'
         from
         biz_article as a
-        left join
+        join
         biz_article_attr as t
         on
         t.article_id=a.uuid
@@ -178,7 +178,7 @@
         t.comment_num as 'attr.commentNum'
         from
         biz_article as a
-        left join
+        join
         biz_article_attr as t
         on
         t.article_id=a.uuid
@@ -200,11 +200,11 @@
         t.comment_num as 'attr.commentNum'
         from
         biz_article as a
-        left join
+        join
         biz_article_attr as t
         on
         t.article_id=a.uuid
-        left join biz_article_collect as ac
+        join biz_article_collect as ac
         on
         ac.article_id=a.uuid
         where

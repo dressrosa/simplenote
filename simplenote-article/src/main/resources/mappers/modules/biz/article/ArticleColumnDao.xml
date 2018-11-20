@@ -47,7 +47,7 @@
         ,t.nick_name as userName
         from
         biz_article_column as a
-        left join
+        join
         biz_user as t
         on
         t.user_id=a.user_id

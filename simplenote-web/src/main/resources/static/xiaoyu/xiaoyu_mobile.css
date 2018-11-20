@@ -38,6 +38,11 @@ input, textarea {
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale
 }
+/*解决手机端颜色发亮的问题*/
+input[type=button], input[type=submit], input[type=file], button {
+    cursor: pointer;
+    -webkit-appearance: none;
+}
 
 i {
     cursor: pointer;
@@ -167,8 +172,8 @@ li a {
 }
 
 .small {
-    height: 50px;
-    width: 50px;
+    height: 35px;
+    width: 35px;
 }
 
 .tiny {
@@ -329,17 +334,27 @@ li a {
     margin-bottom: 5px;
     font-size: 15px;
     padding: 15px;
-    font-weight: 200;
+    font-weight: 400;
     box-shadow: 0 1px 1px #f3f3f3;
     position: relative;
 }
 
 .item_username {
-    border-bottom: 1px solid #f3f3f3;
+    font-size: 14px;
+}
+
+.item_usersign {
+    font-size: 13px;
+    color: #888888;
 }
 
 .item_userinfo {
     display: flex;
+}
+
+.item_useravatar {
+    margin-top: auto;
+    margin-bottom: auto;
 }
 
 .item_ar_content {
@@ -349,7 +364,7 @@ li a {
 }
 
 .item_ar_content:hover {
-    color: #DDDDDD;
+    color: #6d6d6d;
 }
 
 .item_ar_title {
@@ -359,8 +374,9 @@ li a {
 }
 
 .item_desc {
-    margin-left: 10px;
-    padding-top: 15px;
+    margin-left: 1px;
+    /*  padding-top: 1px; */
+    font-size: 13px;
 }
 
 .list-group-item {
@@ -809,7 +825,7 @@ li a {
     text-align: center;
     display: flex;
     background: #ffffff;
-    z-index: 9999;
+    /* z-index: 9999; */
 }
 
 .book_radius {
@@ -845,16 +861,17 @@ li a {
 }
 
 .co_btn {
-    font-size: 14px;
+    font-size: 13px;
     text-align: center;
-    background-color: #ED6D54;
-    border: 1px solid transparent;
+    background: #CF4647;
+    border: 0px;
     border-radius: 2px;
     cursor: pointer;
-    margin-left: 2px;
-    width: 15%;
     position: relative;
     color: #ffffff;
+    width: 17%;
+    margin-left: 1px;
+    margin-right: 1px;
 }
 
 .btn {
@@ -1333,4 +1350,29 @@ li a {
 
 .column_item_content_item span {
     float: right;
+}
+
+.login_tip {
+    z-index: 9999;
+    position: fixed;
+    bottom: 40px;
+    height: 30px;
+    width: 100%;
+    text-align: center;
+    font-size: 15px;
+    opacity: 1;
+}
+.login_a {
+    background: #CF4647;
+    color: #ffffff;
+    text-align: center;
+    border-radius: 5px;
+    padding: 13px;
+    box-shadow: 0 3px 3px rgba(58, 25, 22, 0.5);
+}
+.absolute_position {
+    position: absolute;
+}
+.fixed_position {
+    position: fixed;
 }

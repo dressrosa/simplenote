@@ -76,11 +76,16 @@ var handleData = function(data) {
         var childHtml = '<dl>';
 
         childHtml += '<div class="list_item">';
-        childHtml += '<span class="item_userinfo" ><img class="avatar small" img-type="avatar" src="' + imgHead + ar.user.avatar + '" id="'
+        childHtml += '<div class="item_userinfo" >';
+        childHtml += '<div class="item_useravatar">';
+        childHtml += '<img class="avatar small" img-type="avatar" src="' + imgHead + ar.user.avatar + '" id="'
                 + ar.user.userId + '" />';
-        childHtml += '<p class="item_desc">' + ar.user.signature + '</p>';
-        childHtml += '</span>';
+        childHtml +='</div>';
+        childHtml += '<div class="item_desc">';
         childHtml += '<dt class="item_username">' + ar.user.nickname + '</dt>';
+        childHtml += '<p class="item_usersign">' + ar.user.signature + '</p>';
+        childHtml += '</div>';
+        childHtml += '</div>';
         childHtml += '<div class="item_ar" id="' + ar.articleId + '">';
         childHtml += '<dt class="item_ar_title">' + ar.title + '</dt>';
         childHtml += '<p class="item_ar_content">' + ar.content + '</p>';
@@ -115,6 +120,7 @@ var handleData = function(data) {
         var $userInfo = jQuery.parseJSON($.session.get("user"));
         if (checkNull($userInfo)) {
             showTip('您未登录或登录失效,请重新登录');
+            $.session.remove("user");
             return false;
         }
 
@@ -154,6 +160,7 @@ var handleData = function(data) {
                 var obj = jQuery.parseJSON(data);
                 if (obj.code == "20001") {
                     showTip('您未登录或登录失效,请重新登录');
+                    $.session.remove("user");
                     return false;
                 }
                 return true;
@@ -206,6 +213,7 @@ var handleData = function(data) {
                 var obj = jQuery.parseJSON(data);
                 if (obj.code == "20001") {
                     console.log("未登录");
+                    $.session.remove("user");
                 }
                 return true;
             },
@@ -250,7 +258,9 @@ $(document).ready(function() {
     getList($pageNum, 12);
     if (checkNull(userInfo)) {
         $("#loginSpan").css("display", "block");
+        $(".login_tip").css("display","initial");
     } else {
+        $(".login_tip").css("display","none");
         $("#userSpan").css("display", "block");
         $("#userSpan").find("#nickname").attr("href", "/user/" + userInfo.userId);
         $("#userSpan").find("#nickname").text(userInfo.nickname);

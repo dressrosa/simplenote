@@ -53,7 +53,7 @@
         u.nickname as
         senderName
         from biz_message as a
-        left join biz_user as u
+        join biz_user as u
         on u.uuid=a.sender_id
         where
         a.receiver_id = #{receiverId}

@@ -45,6 +45,7 @@ function writeBox() {
     writeButton.open();
     return jBoxId;
 }
+
 $(document).ready(function() {
     var userInfo = jQuery.parseJSON($.session.get("user"));
     $.ajax({
@@ -59,9 +60,11 @@ $(document).ready(function() {
             }
         },
         success : function(data) {
-            var obj = jQuery.parseJSON(data);
-            if (obj.code == '0') {
-                writeBox();
+            if(data != null && data !='') {
+                var obj = jQuery.parseJSON(data);
+                if (obj.code == '0') {
+                    writeBox();
+                } 
             }
         }
     });

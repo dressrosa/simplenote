@@ -117,6 +117,7 @@ var editNickname = function() {
                 $.session.set("user", JSON.stringify(userInfo), true);
                 hideBtn("item_name");
             } else if (obj.code == '20001') {
+                $.session.remove("user");
                 window.location.href = '/login';
             }
             return true;
@@ -179,6 +180,7 @@ var editSignature = function() {
                 userInfo.signature = $sign;
                 $.session.set("user", JSON.stringify(userInfo), true);
             } else if (obj.code == '20001') {
+                $.session.remove("user");
                 window.location.href = '/login';
             }
 
@@ -238,6 +240,7 @@ var editDesc = function() {
                 userInfo.description = con;
                 $.session.set("user", JSON.stringify(userInfo), true);
             } else if (obj.code == '20001') {
+                $.session.remove("user");
                 window.location.href = '/login';
             }
             return true;

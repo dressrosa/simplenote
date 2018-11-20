@@ -345,12 +345,19 @@ li a {
 }
 
 .item_username {
-    /* margin-left: 5px; */
-    
+   font-size:14px;
+}
+.item_usersign {
+   font-size:13px;
+   color: #888888;
 }
 
 .item_userinfo {
     display: flex;
+}
+.item_useravatar {
+    margin-top: auto;
+    margin-bottom: auto;
 }
 
 .item_ar_content {
@@ -360,7 +367,7 @@ li a {
 }
 
 .item_ar_content:hover {
-    color: #888888;
+    color: #6d6d6d;
 }
 
 .item_ar_title {
@@ -368,8 +375,8 @@ li a {
 }
 
 .item_desc {
-    margin-left: 10px;
-    padding-top: 15px;
+    margin-left: 1px;
+    font-size: 13px;
 }
 
 .list-group-item {

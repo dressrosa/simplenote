@@ -77,8 +77,8 @@ public class UserController {
         user.setPassword(null);
         // 登录名存入session
         HttpSession tsession = request.getSession(true);
-        // 4h
-        tsession.setMaxInactiveInterval(3600 << 2);
+        // 7d
+        tsession.setMaxInactiveInterval(604000);
         // 用户id和密码和当前时间生成的md5用于token
         String token = Md5Utils.md5(user.getId() + password + System.currentTimeMillis());
         tsession.setAttribute(token, user);

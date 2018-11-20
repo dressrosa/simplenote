@@ -51,8 +51,30 @@ var $arPromise = $.ajax({
         $partDown.find(".ar_content").attr("id", ar.articleId);
         var converter = new showdown.Converter();
         $partDown.find(".ar_content").html(converter.makeHtml(ar.content));
-        $partDown.find(".ar_content").find("img").each(function (i) {
-            $(this).attr("width", "100%");
+        $partDown.find(".ar_content").find("img").each(function(i) {
+            var _this = $(this);
+            _this.attr("width", "100%");
+            var src = _this.attr("src");
+            _this.bind("click",function(){
+                var t = $("#bigImgdiv");
+                if (t.attr("src") == undefined) {
+                   $( '<div id="bigImgdiv" style="text-align: center;position: fixed;z-index: 1000;top: 0;left: 0;'
+                           +'-webkit-user-drag: none;-moz-user-drag: none;-ms-user-drag: none;user-drag: none;' 
+                            + 'width: 100%;height: 100%;background-color: rgba(255,255,255,0.9);display:none;">'
+                            + '<img id="bigimg" style="height: 90%;width: 90%;border: 0;'
+                            + 'margin: auto;position: absolute;top: 0;bottom: 0;left: 0;right: 0;" src="' + src + '" /></div>')
+                  .appendTo("body");
+                   //new RTP.PinchZoom($("#bigimg"), {});
+                }
+                t = $("#bigImgdiv");
+                $("#bigimg").attr("src", src);
+                t.attr("display", "block");
+                t.fadeIn("fast");
+                $("#bigImgdiv").click(function() {
+                    $(this).attr("display", "none");
+                    $(this).fadeOut("fast");
+                });
+            });
         });
         $('pre code').each(function(i, block) {
             hljs.highlightBlock(block);
@@ -152,6 +174,7 @@ var $coPromise = $
                             var obj = jQuery.parseJSON(data);
                             if (obj.code == "20001") {
                                 console.log("未登录");
+                                $.session.remove("user");
                             }
                             return true;
                         },
@@ -170,8 +193,9 @@ var comment = function() {
         window.location.href = "/login";
         return false;
     }
-    var $text = $(".co_tt");
-    if (checkNull($text.val())) {
+    var $text = $("textarea[name=co_tt]").val();
+    
+    if (checkNull($text)) {
         new jBox('Tooltip', {
             content : '评论不能空',
             pointer : false,
@@ -181,7 +205,7 @@ var comment = function() {
         }).open();
         return false;
     }
-    if ($text.val().length > 100) {
+    if ($text.length > 100) {
         new jBox('Tooltip', {
             content : '评论字数仅限100以内',
             pointer : false,
@@ -197,7 +221,7 @@ var comment = function() {
         async : true,
         url : '/api/v1/article/' + $(".part_down").attr("id") + "/comment",
         data : {
-            content : $(".co_tt").val()
+            content : $text
         },
         beforeSend : function(xhr) {
             if (!checkNull($userInfo)) {
@@ -228,7 +252,8 @@ var comment = function() {
                         + jsonObj.data.createDate + '</label>' + '</div></div>';
                 $(".co_list").prepend($coItem);
             } else if (jsonObj.code == '20001') {
-                showTip('您未登录或登录失效,请重新登录');
+                showTip('请先登录');
+                $.session.remove("user");
             }
             $(".co_btn").removeAttr("disabled");
             return true;
@@ -368,7 +393,16 @@ $(document).ready(function() {
             });
         }
     });
-
+    //TODO 
+    var win_h = $(window).height();//关键代码
+    window.addEventListener('resize', function () {
+        if($(window).height() < win_h){
+            $(".part_comment").css("position","fixed");
+        }else{
+            $(".part_comment").css("position","fixed");
+        }
+    });
+    
     $coPromise.promise().done(function() {
     });
 

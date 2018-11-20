@@ -372,25 +372,14 @@ public class ArticleServiceImpl implements IArticleService {
             return ResponseMapper.createMapper()
                     .code(ResponseCode.ARGS_ERROR.statusCode());
         }
-        ArticleLike t = new ArticleLike();
-        t.setUserId(request.getUser().getUuid())
-                .setArticleId(articleId);
         // 没登录 或失效
         if (!request.isLogin()) {
-            switch (isLike) {
-            case 0:
-                this.addLikeNum(t, false);
-                break;
-            case 1:
-                this.addLikeNum(t, true);
-                break;
-            default:
-                break;
-            }
             return ResponseMapper.createMapper()
                     .code(ResponseCode.LOGIN_INVALIDATE.statusCode());
         }
-
+        ArticleLike t = new ArticleLike();
+        t.setArticleId(articleId);
+        t.setUserId(request.getUser().getUuid());
         SpringBeanUtils.getBean(ArticleServiceImpl.class)
                 .handleLikeOrCollectNum(t);
         return ResponseMapper.createMapper();

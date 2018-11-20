@@ -88,6 +88,7 @@ var handleData = function(data) {
                 var obj = jQuery.parseJSON(data);
                 if (obj.code == "20001") {
                     console.log("未登录");
+                    $.session.remove("user");
                 }
                 return true;
             },

@@ -33,7 +33,7 @@
         ,r.article_num as 'attr.articleNum',
         r.follower_num as 'attr.followerNum'
         from biz_user as a
-        left join biz_user_attr as r
+        join biz_user_attr as r
         on r.user_id=a.uuid
         where
         a.del_flag=0
@@ -52,7 +52,7 @@
         ,ua.article_num as "attr.articleNum",
         ua.viewed_num as "attr.viewedNum"
         from biz_user as a
-        left join biz_user_attr as ua
+        join biz_user_attr as ua
         on ua.user_id = a.uuid
         where
         a.uuid=#{uuid} 
@@ -107,7 +107,7 @@
         ua.article_num as "attr.articleNum",
         ua.viewed_num as "attr.viewedNum"
         from biz_user as a
-        left join biz_user_attr as ua
+        join biz_user_attr as ua
         on ua.user_id = a.uuid
         where
         a.del_flag=0
