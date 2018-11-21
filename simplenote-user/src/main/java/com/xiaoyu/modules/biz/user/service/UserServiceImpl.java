@@ -3,6 +3,7 @@
  */
 package com.xiaoyu.modules.biz.user.service;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -349,7 +350,11 @@ public class UserServiceImpl implements IUserService {
         if (list.isEmpty()) {
             return mapper.code(ResponseCode.NO_DATA.statusCode());
         }
-        return mapper.data(list);
+        List<Map<String, Object>> total = new ArrayList<>(list.size());
+        list.forEach(a -> {
+            total.add(MapleUtil.wrap(a).map());
+        });
+        return mapper.data(total);
     }
 
     @Override
@@ -364,7 +369,11 @@ public class UserServiceImpl implements IUserService {
             return ResponseMapper.createMapper()
                     .code(ResponseCode.NO_DATA.statusCode());
         }
-        return ResponseMapper.createMapper().data(list);
+        List<Map<String, Object>> total = new ArrayList<>(list.size());
+        list.forEach(a -> {
+            total.add(MapleUtil.wrap(a).map());
+        });
+        return ResponseMapper.createMapper().data(total);
     }
 
     @Override

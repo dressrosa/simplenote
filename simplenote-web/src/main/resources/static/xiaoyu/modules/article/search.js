@@ -8,13 +8,15 @@ var $searchPromise = $.ajax({
     url : '/api/v1/article/search?keyword=' + word,
     success : function(data) {
         var obj = jQuery.parseJSON(data);
-        if (checkNull(obj) || checkNul(obj.data.result)) {
+        var $sp1 = $(".co_num").find("span")[0];
+        var $sp2 = $(".co_num").find("span")[1];
+        if (checkNull(obj) || checkNull(obj.data.result)) {
             $(".co_list").html(blankPage);
+            $sp1.innerText = '搜索' + '"' + decodeURI(word) + '"' + '相关结果';
+            $sp2.innerText = "0篇";
             return false;
         }
         var result = obj.data.result;
-        var $sp1 = $(".co_num").find("span")[0];
-        var $sp2 = $(".co_num").find("span")[1];
         $sp1.innerText = '搜索' + '"' + decodeURI(word) + '"' + '相关结果';
         $sp2.innerText = (checkNull(obj.data.count) ? 0 : obj.data.count) + "篇";
         var arHtml = "";

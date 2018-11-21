@@ -88,7 +88,10 @@ var handleCollected = function(data) {
     }
 
     var obj = jQuery.parseJSON(data);
-    if (obj.code != '0' || checkNull(obj.data) || obj.data.length > 0) {
+    console.log(obj.code != "0");
+    console.log(checkNull(obj.data) );
+    console.log(obj.data.length > 0);
+    if (obj.code != "0" || checkNull(obj.data) || obj.data.length <= 0) {
         $(".list-group").html(blankPage);
         return;
     }
@@ -142,38 +145,41 @@ var handleFollowing = function(data) {
     $ht += $r;
     $ht += '</div>';
     $ht += '<div class="love_ar_list">';
-    $.ajax({
-        type : "post",
-        async : false,
-        url : '/api/v1/article/latest',
-        data : {
-            userId : ids
-        },
-        beforeSend : function(xhr) {
-            return before(xhr);
-        },
-        success : function(data) {
-            var obj = jQuery.parseJSON(data);
-            if (obj.code != '0' || checkNull(obj.data) || obj.data.length <= 0) {
-                return false;
+    if(ids.length > 0) {
+        $.ajax({
+            type : "post",
+            async : false,
+            url : '/api/v1/article/latest',
+            data : {
+                userId : ids
+            },
+            beforeSend : function(xhr) {
+                return before(xhr);
+            },
+            success : function(data) {
+                var obj = jQuery.parseJSON(data);
+                if (obj.code != '0' || checkNull(obj.data) || obj.data.length <= 0) {
+                    return false;
+                }
+                $.each(obj.data, function(index, ar) {
+                    $ht += '<dl>';
+                    $ht += '<div class="love_ar_model">';
+                    $ht += '	<span class="item_userinfo">';
+                    $ht += '<img class="avatar small" img-type="avatar" src="' + imgHead + ar.user.avatar + '" id="' + ar.userId + '">';
+                    $ht += '<label class="item_desc">' + ar.user.signature + '</label></span>';
+                    $ht += '<dt class="item_username">' + ar.user.nickname + '</dt>';
+                    $ht += '<label style="font-size: 13px;">最近发表:</label>';
+                    $ht += '<div class="font_center" >';
+                    $ht += '	<label style="cursor:pointer;width:100%;" id="' + ar.id + '">"' + ar.title + '"</label>';
+                    $ht += '	<time style="font-size: 12px;">' + ar.createDate + '</time>';
+                    $ht += '</div>';
+                    $ht += '</div>';
+                    $ht += '</dl>';
+                });
             }
-            $.each(obj.data, function(index, ar) {
-                $ht += '<dl>';
-                $ht += '<div class="love_ar_model">';
-                $ht += '	<span class="item_userinfo">';
-                $ht += '<img class="avatar small" img-type="avatar" src="' + imgHead + ar.user.avatar + '" id="' + ar.userId + '">';
-                $ht += '<label class="item_desc">' + ar.user.signature + '</label></span>';
-                $ht += '<dt class="item_username">' + ar.user.nickname + '</dt>';
-                $ht += '<label style="font-size: 13px;">最近发表:</label>';
-                $ht += '<div class="font_center" >';
-                $ht += '	<label style="cursor:pointer;width:100%;" id="' + ar.id + '">"' + ar.title + '"</label>';
-                $ht += '	<time style="font-size: 12px;">' + ar.createDate + '</time>';
-                $ht += '</div>';
-                $ht += '</div>';
-                $ht += '</dl>';
-            });
-        }
-    });
+        });
+    }
+    
     $ht += '</div>';
     $(".list-group").html($ht);
 
@@ -382,6 +388,9 @@ $(document).ready(function() {
                 return before(xhr);
             },
             success : function(data) {
+                if(checkNull(data)) {
+                    return;
+                }
                 var obj = jQuery.parseJSON(data);
                 if (obj.code == "20001") {
                     console.log("未登录");
@@ -445,6 +454,9 @@ $(document).ready(function() {
                 return before(xhr);
             },
             success : function(data) {
+                if(checkNull(data)) {
+                    return;
+                }
                 var obj = jQuery.parseJSON(data);
                 if (obj.code == "20001") {
                     console.log("未登录");
