@@ -62,11 +62,11 @@
         biz_article_comment AS a
         JOIN biz_user AS u
         ON a.replyer_id = u.uuid
-        JOIN
+        left JOIN
         biz_article_comment AS a1
         ON
         a.parent_id = a.uuid
-        JOIN biz_user AS u1
+        left JOIN biz_user AS u1
         ON
         a.parent_replyer_id = u1.uuid
         WHERE
@@ -108,10 +108,10 @@
         a
         JOIN biz_user AS u
         ON a.replyer_id = u.uuid
-        JOIN
+        left JOIN
         biz_article_comment AS a1 ON
         a.parent_id = a.uuid
-        JOIN biz_user AS
+        left JOIN biz_user AS
         u1 ON
         a.parent_replyer_id
         = u1.uuid

@@ -49,8 +49,8 @@ public class TraceRequest implements Serializable {
     }
 
     public static class Header {
-        private String pageNum;
-        private String pageSize;
+        private Integer pageNum;
+        private Integer pageSize;
         private String token;
         private String remoteHost;
 
@@ -63,20 +63,20 @@ public class TraceRequest implements Serializable {
             return this;
         }
 
-        public String getPageNum() {
+        public Integer getPageNum() {
             return pageNum;
         }
 
-        public Header setPageNum(String pageNum) {
+        public Header setPageNum(Integer pageNum) {
             this.pageNum = pageNum;
             return this;
         }
 
-        public String getPageSize() {
+        public Integer getPageSize() {
             return pageSize;
         }
 
-        public Header setPageSize(String pageSize) {
+        public Header setPageSize(Integer pageSize) {
             this.pageSize = pageSize;
             return this;
         }

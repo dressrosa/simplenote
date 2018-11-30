@@ -53,56 +53,41 @@ public class ExecutionTimeAop {
     @SuppressWarnings("null")
     @Around("pointcut()")
     public Object around(ProceedingJoinPoint point) {
-        final Object[] args = point.getArgs();
+        Object[] args = point.getArgs();
         HttpServletRequest request = null;
-        // 客户端ip
-        String ip = null;
-        // 接口地址
-        String uri = null;
-        // 用户id
-        // final String userId = null;
-        // 登录 token
-        // final String token = null;
-        // final String redisUserId = null;
-        String ipLimit = null;
-        // 调用方法名
-        String methodName = null;
-        // ip限制访问次数
-        int limit = 0;
-        for (final Object o : args) {
+        for (Object o : args) {
             if (o instanceof HttpServletRequest) {
                 request = (HttpServletRequest) o;
                 break;
             }
         }
-        ip = request.getRemoteHost();
-        uri = request.getRequestURI();
-        try {
-            if (uri.equals("/") || uri.equals("/home")) {
-                hostRecoder.produce(uri + ";" + ip + ";" + System.currentTimeMillis());
-            }
-        } catch (Exception e) {
-            // do nothing
-        }
         if (!Utils.isSafeRequest(request)) {
-            ResponseMapper mapper = ResponseMapper.createMapper();
-            return mapper.code(ResponseCode.FAILED.statusCode())
+            return ResponseMapper.createMapper().code(ResponseCode.FAILED.statusCode())
                     .message("Hey,Guy.You Are In Danger.").resultJson();
         }
+        // 客户端ip
+        String ip = request.getRemoteHost();
+        // 接口地址
+        String uri = request.getRequestURI();
         LOG.info("ip:" + ip + " uri:" + uri);
-        methodName = point.getSignature().getName();
         if (uri.endsWith(".jpg") || uri.endsWith(".png") || uri.endsWith(".jpeg")) {
             return null;
         }
-        // 无需登录情况下
-        // if (uri.startsWith("/public")) {
-        ipLimit = JedisUtils.hget(methodName + ":" + ip, uri);
+        if (uri.equals("/home")) {
+            try {
+                hostRecoder.produce(uri + ";" + ip + ";" + System.currentTimeMillis());
+            } catch (Exception e) {
+                // do nothing
+            }
+        }
+        String methodName = point.getSignature().getName();
+        String ipLimit = JedisUtils.hget(methodName + ":" + ip, uri);
         if (null == ipLimit) {
             JedisUtils.hset(methodName + ":" + ip, uri, 1 + "", 60);
             ipLimit = "1";
         }
-        limit = Integer.valueOf(ipLimit);
-        if (limit > ExecutionTimeAop.URI_LIMIT) {
+        int limit = Integer.valueOf(ipLimit);
+        if (limit > URI_LIMIT) {
             ResponseMapper mapper = ResponseMapper.createMapper();
             mapper.code(ResponseCode.FAILED.statusCode())
                     .message("访问次数异常,一分钟之内无法访问");
@@ -112,53 +97,19 @@ public class ExecutionTimeAop {
         } else {
             JedisUtils.hincrby(methodName + ":" + ip, uri, 1);
         }
-        return this.getResult(point);
-        // }
-        // 需登录情况下
-        // userId = request.getHeader("userId");
-        // token = request.getHeader("token");
-        // redisUserId = JedisUtils.get(token);
-        // if (null == redisUserId) {
-        // ResponseMapper mapper = ResponseMapper.createMapper();
-        // mapper.setCode(ResponseCode.ARGS_ERROR).setMessage("token异常,请重新登录");
-        // return mapper.getResultJson();
-        // }
-        // if (redisUserId.equals(userId)) {
-        // JedisUtils.set(token, userId, 6 * 60 * 60);
-        // } else {
-        // ResponseMapper mapper = ResponseMapper.createMapper();
-        // mapper.setCode(ResponseCode.ARGS_ERROR).setMessage("请先登录");
-        // return mapper.getResultJson();
-        // }
-        // // 一个用户同一个ip下访问同一个api的次数(1 min之内)
-        // ipLimit = JedisUtils.hget(userId + ":" + ip, uri);
-        // if (null == ipLimit) {
-        // JedisUtils.hset(userId + ":" + ip, uri, 1 + "", 60);
-        // ipLimit = "1";
-        // }
-        // limit = Integer.valueOf(ipLimit);
-        // if (limit > URI_LIMIT) {
-        // ResponseMapper mapper = ResponseMapper.createMapper();
-        // mapper.setCode(ResponseCode.EXCEPTION).setMessage("访问次数异常,一分钟之内无法访问");
-        // JedisUtils.hset(userId + ":" + ip, uri, limit + "", 60);
-        // JedisUtils.hincrby(userId + ":" + ip, uri, 1);
-        // return mapper.getResultJson();
-        // } else {
-        // JedisUtils.hincrby(userId + ":" + ip, uri, 1);
-        // }
-        // return getResult(point);
+        long start = System.currentTimeMillis();
+        Object result = this.getResult(point);
+        LOG.info("方法[{}]执行时间为:[{}milliseconds] ", methodName, (System.currentTimeMillis() - start));
+        return result;
     }
 
     private Object getResult(ProceedingJoinPoint point) {
         Object result = null;
-        final String methodName = point.getSignature().getName();
-        long start = System.currentTimeMillis();
         try {
             result = point.proceed();
-        } catch (final Throwable e) {
+        } catch (Throwable e) {
             LOG.error(e.toString(), e);
         }
-        LOG.info("方法[{}]执行时间为:[{}milliseconds] ", methodName, (System.currentTimeMillis() - start));
         return result;
     }
 

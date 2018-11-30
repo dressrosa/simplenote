@@ -131,8 +131,8 @@ public class ArticleServiceImpl implements IArticleService {
         // return mapper.data(total);
         // }
         // }
-        int pageNum = Integer.valueOf(request.getHeader().getPageNum());
-        int pageSize = Integer.valueOf(request.getHeader().getPageSize());
+        int pageNum = request.getHeader().getPageNum();
+        int pageSize = request.getHeader().getPageSize();
         pageSize = pageSize > 32 ? 32 : pageSize;
 
         PageHelper.startPage(pageNum, pageSize);
@@ -147,8 +147,8 @@ public class ArticleServiceImpl implements IArticleService {
     public ResponseMapper list(TraceRequest request, String userId) {
         final Article article = new Article();
         article.setUserId(userId);
-        int pageNum = Integer.valueOf(request.getHeader().getPageNum());
-        int pageSize = Integer.valueOf(request.getHeader().getPageSize());
+        int pageNum = request.getHeader().getPageNum();
+        int pageSize = request.getHeader().getPageSize();
         pageSize = pageSize > 32 ? 32 : pageSize;
 
         PageHelper.startPage(pageNum, pageSize);
@@ -166,8 +166,8 @@ public class ArticleServiceImpl implements IArticleService {
         final boolean isLogin = request.isLogin();
         final Article article = new Article();
         article.setUserId(userId);
-        int pageNum = Integer.valueOf(request.getHeader().getPageNum());
-        int pageSize = Integer.valueOf(request.getHeader().getPageSize());
+        int pageNum = request.getHeader().getPageNum();
+        int pageSize = request.getHeader().getPageSize();
         pageSize = pageSize > 32 ? 32 : pageSize;
 
         PageHelper.startPage(pageNum, pageSize);
@@ -551,8 +551,8 @@ public class ArticleServiceImpl implements IArticleService {
 
     @Override
     public ResponseMapper comments(TraceRequest request, String articleId) {
-        int pageNum = Integer.valueOf(request.getHeader().getPageNum());
-        int pageSize = Integer.valueOf(request.getHeader().getPageSize());
+        int pageNum = request.getHeader().getPageNum();
+        int pageSize = request.getHeader().getPageSize();
         pageSize = pageSize > 32 ? 32 : pageSize;
 
         Page<?> page = PageHelper.startPage(pageNum, pageSize);
@@ -953,8 +953,8 @@ public class ArticleServiceImpl implements IArticleService {
         boolean isLogin = request.isLogin();
         ArticleColumn co = new ArticleColumn().setUserId(userId);
         co.setUuid(columnId);
-        int pageNum = Integer.valueOf(request.getHeader().getPageNum());
-        int pageSize = Integer.valueOf(request.getHeader().getPageSize());
+        int pageNum = request.getHeader().getPageNum();
+        int pageSize = request.getHeader().getPageSize();
         pageSize = pageSize > 32 ? 32 : pageSize;
 
         List<ArticleVo> list = null;

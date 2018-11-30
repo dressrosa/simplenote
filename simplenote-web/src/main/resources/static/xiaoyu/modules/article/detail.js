@@ -251,7 +251,11 @@ var comment = function() {
                         + jsonObj.data.content + '</p>' + '</div><div class="item_like"><i class="icon_like"></i>'
                         + '<label class="co_item_label">0</label>' + '</div></div>' + '<div class="item_down">' + '<label class="item_p_title_pure">'
                         + jsonObj.data.createDate + '</label>' + '</div></div>';
-                $(".co_list").prepend($coItem);
+                if($(".co_list").children(":first").attr("class") == "blank_mug") {
+                    $(".co_list").html($coItem);
+                } else {
+                    $(".co_list").prepend($coItem);
+                }
             } else if (jsonObj.code == '20001') {
                 showTip('请先登录');
                 $.session.remove("user");

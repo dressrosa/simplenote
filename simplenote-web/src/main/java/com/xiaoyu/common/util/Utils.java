@@ -3,9 +3,6 @@ package com.xiaoyu.common.util;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 import com.xiaoyu.common.request.TraceRequest;
 import com.xiaoyu.common.request.TraceRequest.Header;
 import com.xiaoyu.common.utils.StringUtil;
@@ -17,8 +14,6 @@ import com.xiaoyu.modules.biz.user.entity.User;
  * @description
  */
 public class Utils {
-
-    private final static Logger logger = LoggerFactory.getLogger(Utils.class);
 
     public static User checkLogin(HttpServletRequest request) {
         final String userId = request.getHeader("userId");
@@ -42,8 +37,8 @@ public class Utils {
         final String userId = request.getHeader("userId");
         final String token = request.getHeader("token");
         req.setHeader(new Header().setToken(token)
-                .setPageNum(request.getHeader("pageNum"))
-                .setPageSize(request.getHeader("pageSize")));
+                .setPageNum(Integer.valueOf(request.getHeader("pageNum")))
+                .setPageSize(Integer.valueOf(request.getHeader("pageSize"))));
         final HttpSession session = request.getSession(false);
         if (session == null) {
             req.setLogin(false);
@@ -92,7 +87,6 @@ public class Utils {
     public static boolean isSafeRequest(HttpServletRequest request) {
         final String userAgentInfo = request.getHeader("user-agent");
         if (StringUtil.isBlank(userAgentInfo)) {
-            logger.warn("Danger!Danger!,someone is Bazinga,ip->{}", request.getRemoteHost());
             return false;
         }
         return true;

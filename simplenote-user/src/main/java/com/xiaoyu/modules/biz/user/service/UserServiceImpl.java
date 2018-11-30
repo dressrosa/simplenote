@@ -344,7 +344,7 @@ public class UserServiceImpl implements IUserService {
         Follow f = new Follow();
         f.setUserId(userId);
 
-        PageHelper.startPage(Integer.valueOf(request.getHeader().getPageNum()), 12);
+        PageHelper.startPage(request.getHeader().getPageNum(), 12);
         List<FollowVo> list = this.followDao.findList(f);
 
         if (list.isEmpty()) {
@@ -362,7 +362,7 @@ public class UserServiceImpl implements IUserService {
         Follow f = new Follow();
         f.setFollowerId(userId);
 
-        PageHelper.startPage(Integer.valueOf(request.getHeader().getPageNum()), 12);
+        PageHelper.startPage(request.getHeader().getPageNum(), 12);
         List<FollowVo> list = this.followDao.findList(f);
 
         if (list.isEmpty()) {

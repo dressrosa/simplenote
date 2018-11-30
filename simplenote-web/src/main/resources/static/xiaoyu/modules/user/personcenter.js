@@ -38,9 +38,15 @@ var before = function(xhr) {
         xhr.setRequestHeader('userId', userInfo.userId);
     }
 };
-var handleAll = function(obj) {
+var handleAll = function(obj,pageNum) {
     var userInfo = jQuery.parseJSON($.session.get("user"));
     var arHtml = "";
+    if (obj.code != "0" || checkNull(obj.data) || obj.data.length <= 0) {
+        if(pageNum == 1) {
+            $(".list-group").html(blankPage);
+        }
+        return;
+    }
     $.each(obj.data, function(index, ar) {
         arHtml += '<li class="list-group-item"   id="' + ar.articleId + '">';
         arHtml += '<label style="color:#cd5c5c;">' + ar.title + '</label>';
@@ -72,15 +78,20 @@ var handleAll = function(obj) {
         arHtml += '</li>';
 
     });
-    $(".list-group").append(arHtml);
+    if(pageNum == 1) {
+        $(".list-group").html(arHtml);
+    } else {
+        $(".list-group").append(arHtml);
+    }
+    
     $(".list-group").attr("id", "list-all");
-    $.session.set("pr-al-0", arHtml, 10 * 60);
+    $.session.set("pr-al-0", $(".list-group").html(), 10 * 60);
 
     return true;
 
 };
 
-var handleCollected = function(data) {
+var handleCollected = function(data,pageNum) {
     var $userInfo = jQuery.parseJSON($.session.get("user"));
     var isSelf = false;
     if (!checkNull($userInfo) && $userInfo.userId == userId) {
@@ -88,11 +99,10 @@ var handleCollected = function(data) {
     }
 
     var obj = jQuery.parseJSON(data);
-    console.log(obj.code != "0");
-    console.log(checkNull(obj.data) );
-    console.log(obj.data.length > 0);
     if (obj.code != "0" || checkNull(obj.data) || obj.data.length <= 0) {
-        $(".list-group").html(blankPage);
+        if(pageNum == 1) {
+            $(".list-group").html(blankPage);
+        }
         return;
     }
     var arHtml = "";
@@ -108,15 +118,24 @@ var handleCollected = function(data) {
                 + '个收藏</label>' + '</div>' + '</div>' + '</div>';
     });
     if ($(".list-group").attr("id") == "list-collected") {
-        $(".list-group").append(arHtml);
+        if(pageNum == 1) {
+            $(".list-group").html(arHtml);
+        } else {
+            $(".list-group").append(arHtml);
+        }
     }
-    $.session.set("pr-cd-1", arHtml, 10 * 60);
+    $.session.set("pr-cd-1", $(".list-group").html(), 10 * 60);
 
     return true;
 };
-var handleFollowing = function(data) {
-
+var handleFollowing = function(data,pageNum) {
     var obj = jQuery.parseJSON(data);
+    if (obj.code != "0" || checkNull(obj.data) || obj.data.length <= 0) {
+        if(pageNum == 1) {
+            $(".list-group").html(blankPage);
+        }
+        return;
+    }
     var arHtml = "";
     var $ht = '<div class="love_list">';
     $ht += '<div class="page_arrow">';
@@ -181,7 +200,11 @@ var handleFollowing = function(data) {
     }
     
     $ht += '</div>';
-    $(".list-group").html($ht);
+    if(pageNum == 1) {
+        $(".list-group").html($ht);
+    } else {
+        $(".list-group").append($ht);
+    }
 
     return true;
 };
@@ -215,18 +238,19 @@ var getSelfList = function(urlType, pageNum, pageSize) {
                 if (obj.code != '0') {
                     $(".list-group").html(blankPage);
                     return;
-                }
-                if (checkNull(obj.data) && obj.data.length <= 0) {
+                } else if (checkNull(obj.data) && obj.data.length <= 0) {
                     $(".list-group").html(blankPage);
                     return;
+                } else {
+                    $(".list-group").html("");
                 }
             }
             if ("all" == urlType) {
-                return handleAll(obj);
+                return handleAll(obj,pageNum);
             } else if ("collected" == urlType) {
-                return handleCollected(data);
+                return handleCollected(data,pageNum);
             } else if ("following" == urlType) {
-                return handleFollowing(data);
+                return handleFollowing(data,pageNum);
             }
 
         }

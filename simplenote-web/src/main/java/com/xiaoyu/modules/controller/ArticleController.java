@@ -192,14 +192,14 @@ public class ArticleController {
         return this.articleService.columns(req, userId).resultJson();
     }
 
-    @RequestMapping(value = "api/v1/article/columns/{columnId}", method = RequestMethod.GET)
+    @RequestMapping(value = "api/v1/article/column/{columnId}", method = RequestMethod.GET)
     public String articlesInColumn(HttpServletRequest request, @RequestParam(required = true) String userId,
             @PathVariable(value = "columnId", required = true) String columnId) {
         TraceRequest req = Utils.getTraceRequest(request);
         return this.articleService.findListByColumn(req, userId, columnId).resultJson();
     }
 
-    @RequestMapping(value = "api/v1/article/columns/save", method = RequestMethod.POST)
+    @RequestMapping(value = "api/v1/article/column/save", method = RequestMethod.POST)
     public String saveColumn(HttpServletRequest request, @ModelAttribute ArticleColumnVo column) {
         TraceRequest req = Utils.getTraceRequest(request);
         if (StringUtil.isNotBlank(column.getColumnId())) {
@@ -209,7 +209,7 @@ public class ArticleController {
         }
     }
 
-    @RequestMapping(value = "api/v1/article/columns/remove", method = RequestMethod.POST)
+    @RequestMapping(value = "api/v1/article/column/remove", method = RequestMethod.POST)
     public String removeColumn(HttpServletRequest request, @RequestParam(required = true) String columnId) {
         TraceRequest req = Utils.getTraceRequest(request);
         return this.articleService.removeColumn(req, columnId).resultJson();
