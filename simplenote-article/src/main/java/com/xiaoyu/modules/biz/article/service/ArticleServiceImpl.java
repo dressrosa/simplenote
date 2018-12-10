@@ -263,7 +263,6 @@ public class ArticleServiceImpl implements IArticleService {
 
     @Override
     public ResponseMapper addArticle(TraceRequest request, String title, String content) {
-        ResponseMapper mapper = ResponseMapper.createMapper();
         if (!request.isLogin()) {
             return ResponseMapper.createMapper()
                     .code(ResponseCode.LOGIN_INVALIDATE.statusCode())
@@ -296,7 +295,7 @@ public class ArticleServiceImpl implements IArticleService {
                     .code(ResponseCode.FAILED.statusCode())
                     .message("发表失败");
         }
-        return mapper.data(uuid);
+        return ResponseMapper.createMapper().data(uuid);
     }
 
     @Transactional(readOnly = false, rollbackFor = RuntimeException.class)
@@ -358,8 +357,8 @@ public class ArticleServiceImpl implements IArticleService {
         if (JedisUtils.get("user:login:" + ip) != null) {
             return ResponseMapper.createMapper();
         }
-        ArticleAttr temp = new ArticleAttr();
-        temp.setReadNum(1)
+        ArticleAttr temp = new ArticleAttr()
+                .setReadNum(1)
                 .setArticleId(articleId);
         this.articleAttrDao.updateByAddition(temp);
         JedisUtils.set("user:login:" + ip, temp.getReadNum().toString(), 600);
@@ -368,38 +367,46 @@ public class ArticleServiceImpl implements IArticleService {
 
     @Override
     public ResponseMapper addLike(TraceRequest request, String articleId, Integer isLike) {
-        if (this.articleDao.isExist(articleId) < 1) {
-            return ResponseMapper.createMapper()
-                    .code(ResponseCode.ARGS_ERROR.statusCode());
-        }
         // 没登录 或失效
         if (!request.isLogin()) {
             return ResponseMapper.createMapper()
                     .code(ResponseCode.LOGIN_INVALIDATE.statusCode());
         }
-        ArticleLike t = new ArticleLike();
-        t.setArticleId(articleId);
-        t.setUserId(request.getUser().getUuid());
+        if (this.articleDao.isExist(articleId) < 1) {
+            return ResponseMapper.createMapper()
+                    .code(ResponseCode.ARGS_ERROR.statusCode());
+        }
+        ArticleLike t = new ArticleLike()
+                .setArticleId(articleId)
+                .setUserId(request.getUser().getUuid());
         SpringBeanUtils.getBean(ArticleServiceImpl.class)
                 .handleLikeOrCollectNum(t);
         return ResponseMapper.createMapper();
 
     }
 
-    private void addLikeNum(ArticleLike a, boolean flag) {
-        ArticleAttr temp = new ArticleAttr();
-        temp.setArticleId(a.getArticleId());
-        if (flag) {
-            // 点赞
-            temp.setLikeNum(1);
-        } else {
-            temp.setLikeNum(-1);
+    private boolean addArticleLikeNum(ArticleLike a) {
+        boolean isSendMsg = false;
+        ArticleLike like = this.likeDao.get(a);
+        // 已经点过
+        if (like != null) {
+            a.setStatus(-like.getStatus());
+            if (this.likeDao.update(a) > 0 && a.getStatus() > 0) {
+                isSendMsg = true;
+            }
+        } else if (this.likeDao.insert(a.setStatus(1).setNum(1)) > 0) {
+            isSendMsg = true;
         }
-        this.articleAttrDao.updateByAddition(temp);
+
+        // 点赞+1 取消-1
+        this.articleAttrDao.updateByAddition(new ArticleAttr()
+                .setArticleId(a.getArticleId())
+                .setLikeNum(a.getStatus()));
+        return isSendMsg;
     }
 
     /**
-     * isCollect 0取消收藏 1收藏
+     * isCollect -1取消收藏 1收藏
      */
     @Override
     public ResponseMapper addCollect(TraceRequest request, String articleId, Integer isCollect) {
@@ -411,42 +418,52 @@ public class ArticleServiceImpl implements IArticleService {
         if (this.articleDao.isExist(articleId) < 1) {
             return mapper.code(ResponseCode.ARGS_ERROR.statusCode());
         }
-        ArticleCollect t = new ArticleCollect();
-        t.setUserId(request.getUser().getUuid()).setArticleId(articleId);
+        ArticleCollect t = new ArticleCollect()
+                .setUserId(request.getUser().getUuid())
+                .setArticleId(articleId);
         SpringBeanUtils.getBean(ArticleServiceImpl.class)
                 .handleLikeOrCollectNum(t);
         return mapper;
 
     }
 
-    private int addCollectNum(ArticleCollect a, boolean flag) {
-        ArticleAttr temp = new ArticleAttr();
-        temp.setArticleId(a.getArticleId());
-        // 收藏
-        if (flag) {
-            temp.setCollectNum(1);
+    private boolean addCollectNum(ArticleCollect a) {
+        ArticleCollect co = this.collectDao.get(a);
+        boolean isSendMsg = false;
+        if (co != null) {
+            a.setStatus(-co.getStatus());
+            if (this.collectDao.update(a) > 0 && a.getStatus() > 0) {
+                isSendMsg = true;
+            }
         } else {
-            temp.setCollectNum(-1);
+            // 没收藏
+            a.setUuid(IdGenerator.uuid());
+            if (this.collectDao.insert(a) > 0) {
+                // 消息推送
+                isSendMsg = true;
+            }
         }
+
+        ArticleAttr temp = new ArticleAttr()
+                .setArticleId(a.getArticleId())
+                // 1收藏 -1取消收藏
+                .setCollectNum(a.getStatus());
         this.articleAttrDao.updateByAddition(temp);
-        if (flag) {
-            this.userService.addNum(NumCountType.CollectNum.ordinal(), 1, a.getUserId());
-        } else {
-            this.userService.addNum(NumCountType.CollectNum.ordinal(), -1, a.getUserId());
-        }
-        return 1;
+
+        this.userService.addNum(NumCountType.CollectNum.ordinal(), temp.getCollectNum(), a.getUserId());
+        return isSendMsg;
     }
 
     @Override
     public ResponseMapper comment(TraceRequest request, String articleId, String content) {
         ResponseMapper mapper = ResponseMapper.createMapper();
-        if (StringUtil.isEmpty(content)) {
-            return mapper.code(ResponseCode.ARGS_ERROR.statusCode());
-        }
         if (!request.isLogin()) {
             return mapper.code(ResponseCode.LOGIN_INVALIDATE.statusCode());
         }
-        final User user = request.getUser();
+        if (StringUtil.isEmpty(content)) {
+            return mapper.code(ResponseCode.ARGS_ERROR.statusCode());
+        }
+        User user = request.getUser();
         RedisLock lock = RedisLock.getRedisLock("comment:" + user.getUuid() + ":" + articleId);
         ResponseMapper ret = lock.lock(() -> {
             boolean isSendMsg = false;
@@ -463,14 +480,14 @@ public class ArticleServiceImpl implements IArticleService {
             // 为表情内容的设置
             this.arCommentDao.predo();
             if (this.arCommentDao.insert(co) > 0) {
-                this.addCommentNum(articleId, true);
+                this.addCommentNum(articleId, 1);
                 // 别人评论的
                 if (!co.getAuthorId().equals(co.getReplyerId())) {
                     // 消息推送
                     isSendMsg = true;
                 }
             }
-            final Map<String, String> map = new HashMap<>(8);
+            Map<String, String> map = new HashMap<>(8);
             map.put("replyerId", user.getUuid());
             map.put("replyerName", user.getNickname());
             map.put("replyerAvatar", user.getAvatar());
@@ -500,13 +517,13 @@ public class ArticleServiceImpl implements IArticleService {
     @Override
     public ResponseMapper reply(TraceRequest request, String commentId, String replyContent) {
         ResponseMapper mapper = ResponseMapper.createMapper();
-        if (StringUtil.isEmpty(replyContent)) {
-            return mapper.code(ResponseCode.ARGS_ERROR.statusCode());
-        }
         if (!request.isLogin()) {
             return mapper.code(ResponseCode.LOGIN_INVALIDATE.statusCode());
         }
-        final User user = request.getUser();
+        if (StringUtil.isEmpty(replyContent)) {
+            return mapper.code(ResponseCode.ARGS_ERROR.statusCode());
+        }
+        User user = request.getUser();
         ArticleComment comment = this.arCommentDao.getByUuid(commentId);
         if (comment == null) {
             return mapper.code(ResponseCode.NO_DATA.statusCode());
@@ -536,16 +553,10 @@ public class ArticleServiceImpl implements IArticleService {
         return mapper;
     }
 
-    private void addCommentNum(String articleId, boolean flag) {
-        ArticleAttr temp = new ArticleAttr();
-        temp.setArticleId(articleId);
-        if (flag) {
-            // 评论
-            temp.setCommentNum(1);
-        } else {
-            // 删除评论
-            temp.setCommentNum(-1);
-        }
+    private void addCommentNum(String articleId, int num) {
+        ArticleAttr temp = new ArticleAttr()
+                .setArticleId(articleId)
+                .setCommentNum(num);
         this.articleAttrDao.updateByAddition(temp);
     }
 
@@ -567,7 +578,7 @@ public class ArticleServiceImpl implements IArticleService {
                 .data(total);
     }
 
-    private List<Map<String, Object>> handleCommentsList(List<ArticleCommentVo> list,
+    private List<Map<String, Object>> handleCommentsList(final List<ArticleCommentVo> list,
             final User user, final boolean isLogin) {
         int size = list.size();
         List<CommentLike> likeQueryList = new ArrayList<>(size);
@@ -595,7 +606,7 @@ public class ArticleServiceImpl implements IArticleService {
         Map<String, Object> map = null;
         List<Map<String, Object>> total = new ArrayList<>(size);
         CommentLike c = null;
-        for (final ArticleCommentVo a : list) {
+        for (ArticleCommentVo a : list) {
             map = MapleUtil.wrap(a)
                     .rename("uuid", "commentId")
                     .stick("createDate", TimeUtils.format(a.getCreateDate(), "yyyy-MM-dd HH:mm"))
@@ -616,7 +627,7 @@ public class ArticleServiceImpl implements IArticleService {
 
     @Override
     public ResponseMapper newComments(TraceRequest request, String articleId) {
-        final List<ArticleCommentVo> list = this.arCommentDao.findNewComments(articleId);
+        List<ArticleCommentVo> list = this.arCommentDao.findNewComments(articleId);
         if (list == null || list.isEmpty()) {
             return ResponseMapper.createMapper()
                     .code(ResponseCode.NO_DATA.statusCode());
@@ -633,22 +644,12 @@ public class ArticleServiceImpl implements IArticleService {
     public ResponseMapper addCommentLike(TraceRequest request, String commentId, Integer isLike) {
         // 没登录 或失效
         if (!request.isLogin()) {
-            switch (isLike) {
-            case 0:
-                this.addCommentLikeNum(new CommentLike().setCommentId(commentId), false);
-                break;
-            case 1:
-                this.addCommentLikeNum(new CommentLike().setCommentId(commentId), true);
-                break;
-            default:
-                break;
-            }
             return ResponseMapper.createMapper()
                     .code(ResponseCode.LOGIN_INVALIDATE.statusCode());
         }
-
-        final CommentLike t = new CommentLike();
-        t.setUserId(request.getUser().getUuid()).setCommentId(commentId);
+        CommentLike t = new CommentLike()
+                .setUserId(request.getUser().getUuid())
+                .setCommentId(commentId);
         SpringBeanUtils.getBean(ArticleServiceImpl.class)
                 .handleLikeOrCollectNum(t);
 
@@ -669,22 +670,8 @@ public class ArticleServiceImpl implements IArticleService {
                     .setBizId(c.getCommentId())
                     .setBizType(BizType.ARTICLE.statusCode())
                     .setBizAction(BizAction.COMMENT_LIKE.statusCode());
-            final CommentLike like = this.arCommentDao.getLikeForUpdate(c);
-            if (like != null) {
-                if (like.getStatus() == 1) {
-                    // 取消点赞
-                    this.addCommentLikeNum(c.setStatus(0), false);
-                } else {
-                    // 进行点赞
-                    this.addCommentLikeNum(c.setStatus(1), true);
-                }
-                if (this.arCommentDao.updateLike(c) > 0 && like.getStatus() == 0) {
-                    isSendMsg = true;
-                }
-            } else if (this.arCommentDao.insertLike(c) > 0 && this.addCommentLikeNum(c, true) > 0) {
-                // 没点过赞
-                isSendMsg = true;
-            }
+            isSendMsg = this.addCommentLikeNum(c);
+
         } else if (t instanceof ArticleLike) {
             ArticleLike a = (ArticleLike) t;
             msg.setSenderId(a.getUserId())
@@ -692,24 +679,7 @@ public class ArticleServiceImpl implements IArticleService {
                     .setBizId(a.getArticleId())
                     .setBizType(BizType.ARTICLE.statusCode())
                     .setBizAction(BizAction.ARTICLE_LIKE.statusCode());
-            // 已经点过
-            final ArticleLike like = this.likeDao.getForUpdate(a);
-            if (like != null) {
-                // 取消点赞
-                if (like.getStatus() == 1) {
-                    this.addLikeNum(a.setStatus(0), false);
-                } else {
-                    // 进行点赞
-                    this.addLikeNum(a.setStatus(1), true);
-                }
-                if (this.likeDao.update(a) > 0 && like.getStatus() == 0) {
-                    isSendMsg = true;
-                }
-            } else if (this.likeDao.insert(a.setNum(1)) > 0) {
-                // 没点过赞
-                this.addLikeNum(a, true);
-                isSendMsg = true;
-            }
+            isSendMsg = this.addArticleLikeNum(a);
 
         } else if (t instanceof ArticleCollect) {
             ArticleCollect a = (ArticleCollect) t;
@@ -718,27 +688,8 @@ public class ArticleServiceImpl implements IArticleService {
                     .setBizId(a.getArticleId())
                     .setBizType(BizType.ARTICLE.statusCode())
                     .setBizAction(BizAction.COLLECT.statusCode());
-            // 已经收藏
-            final ArticleCollect co = this.collectDao.getForUpdate(a);
-            if (co != null) {
-                // 取消收藏
-                if (co.getStatus() == 1) {
-                    this.addCollectNum(a.setStatus(0), false);
-                } else {
-                    // 进行收藏
-                    this.addCollectNum(a.setStatus(1), true);
-                }
-                if (this.collectDao.update(a) > 0 && co.getStatus() == 0) {
-                    isSendMsg = true;
-                }
-            } else {
-                // 没收藏
-                a.setUuid(IdGenerator.uuid());
-                if (this.collectDao.insert(a) > 0 && this.addCollectNum(a, true) > 0) {
-                    // 消息推送
-                    isSendMsg = true;
-                }
-            }
+            isSendMsg = this.addCollectNum(a);
+
         }
 
         if (isSendMsg) {
@@ -746,33 +697,37 @@ public class ArticleServiceImpl implements IArticleService {
         }
     }
 
-    private int addCommentLikeNum(CommentLike c, boolean flag) {
+    private boolean addCommentLikeNum(CommentLike c) {
+        CommentLike like = this.arCommentDao.getLike(c);
+        boolean isSendMsg = false;
+        if (like != null) {
+            c.setStatus(-like.getStatus());
+            if (this.arCommentDao.updateLike(c) > 0 && c.getStatus() > 0) {
+                isSendMsg = true;
+            }
+        } else {
+            this.arCommentDao.insertLike(c);
+            // 没点过赞
+            isSendMsg = true;
+        }
+
         ArticleComment temp = new ArticleComment();
         temp.setUuid(c.getCommentId());
-        ArticleComment ac = this.arCommentDao.getByUuid(temp.getUuid());
-        if (flag) {
-            // 点赞
-            temp.setNum(ac.getNum() + 1);
-        } else {
-            temp.setNum(ac.getNum() - 1);
-        }
+        ArticleComment ac = this.arCommentDao.getByUuid(c.getCommentId());
+        temp.setNum(ac.getNum() + c.getStatus());
         temp.setOld((long) ac.getNum());
         // 进行乐观更新,最大重试1000次.可能会造成数据库连接量变大.
         int retry = 0;
         while (retry < 1000 && this.arCommentDao.updateOptimistic(temp) <= 0) {
             ac = this.arCommentDao.getByUuid(temp.getUuid());
-            if (flag) {
-                temp.setNum(ac.getNum() + 1);
-            } else {
-                temp.setNum(ac.getNum() - 1);
-            }
+            temp.setNum(ac.getNum() + c.getStatus());
             temp.setOld((long) ac.getNum());
             retry++;
         }
         if (retry > 0) {
             LOG.info("乐观锁更新操作,重试了{}次", retry);
         }
-        return 1;
+        return isSendMsg;
     }
 
     @Override
@@ -845,7 +800,7 @@ public class ArticleServiceImpl implements IArticleService {
             if (this.columnDao.count(column) > 50) {
                 return ResponseMapper.createMapper()
                         .code(ResponseCode.FAILED.statusCode())
-                        .message("我们觉得太多栏目可能并不是那么美好");
+                        .message("我们觉得太多栏目可能并不那么美好");
             }
             column.setName(name)
                     .setUuid(IdGenerator.uuid());

@@ -18,6 +18,7 @@ public class ArticleLike extends BaseEntity {
     private String userId;
     // 点了几次
     private Integer num;
+    // -1 未点赞 1点赞
     private Integer status;
 
     public Integer getStatus() {

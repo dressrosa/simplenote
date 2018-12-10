@@ -87,7 +87,7 @@ public class UserServiceImpl implements IUserService {
 
     @Override
     public ResponseMapper loginRecord(TraceRequest request, String userId, String device) {
-        final String loginIp = request.getHeader().getRemoteHost();
+        String loginIp = request.getHeader().getRemoteHost();
         LoginRecord record = new LoginRecord();
         record.setUserId(userId)
                 .setLoginIp(loginIp)
@@ -167,8 +167,8 @@ public class UserServiceImpl implements IUserService {
     public int doRegister(User user) {
         if (this.userDao.insert(user) > 0) {
             // 用户初始化数据
-            UserAttr attr = new UserAttr();
-            attr.setUserId(user.getUuid());
+            UserAttr attr = new UserAttr()
+                    .setUserId(user.getUuid());
             this.userAttrDao.insert(attr);
             return 1;
         }
@@ -182,9 +182,8 @@ public class UserServiceImpl implements IUserService {
             return mapper.code(ResponseCode.LOGIN_INVALIDATE.statusCode())
                     .message("未登录或登录失效,请重新登录");
         }
-        User u = request.getUser();
         User temp = new User();
-        temp.setUuid(u.getUuid());
+        temp.setUuid(request.getUser().getUuid());
         switch (flag) {
         // 修改头像
         case 0:
@@ -341,11 +340,8 @@ public class UserServiceImpl implements IUserService {
     @Override
     public ResponseMapper follower(TraceRequest request, String userId) {
         ResponseMapper mapper = ResponseMapper.createMapper();
-        Follow f = new Follow();
-        f.setUserId(userId);
-
         PageHelper.startPage(request.getHeader().getPageNum(), 12);
-        List<FollowVo> list = this.followDao.findList(f);
+        List<FollowVo> list = this.followDao.findList(new Follow().setUserId(userId));
 
         if (list.isEmpty()) {
             return mapper.code(ResponseCode.NO_DATA.statusCode());
@@ -359,11 +355,8 @@ public class UserServiceImpl implements IUserService {
 
     @Override
     public ResponseMapper following(TraceRequest request, String userId) {
-        Follow f = new Follow();
-        f.setFollowerId(userId);
-
         PageHelper.startPage(request.getHeader().getPageNum(), 12);
-        List<FollowVo> list = this.followDao.findList(f);
+        List<FollowVo> list = this.followDao.findList(new Follow().setFollowerId(userId));
 
         if (list.isEmpty()) {
             return ResponseMapper.createMapper()

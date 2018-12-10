@@ -69,7 +69,7 @@ public class MessageServiceImpl implements IMessageService {
         }
         Article tarticle = null;
         User tuser = null;
-        for (final MessageVo m : list) {
+        for (MessageVo m : list) {
             if (m.getBizType() == 0) {
                 tarticle = this.articleService.getByUuid(m.getBizId());
                 m.setBizName(tarticle != null ? tarticle.getTitle() : "");
@@ -129,7 +129,7 @@ public class MessageServiceImpl implements IMessageService {
 
     @Override
     public ResponseMapper sendMsgEvent(final Message message) {
-        final Message msg = new Message();
+        Message msg = new Message();
         msg.setSenderId(message.getSenderId())
                 .setReceiverId(message.getReceiverId())
                 .setType(message.getType())

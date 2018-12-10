@@ -16,6 +16,7 @@ public class ArticleCollect extends BaseEntity {
 
     private String articleId;
     private String userId;
+    // -1 取消 1收藏
     private Integer status;
 
     public Integer getStatus() {

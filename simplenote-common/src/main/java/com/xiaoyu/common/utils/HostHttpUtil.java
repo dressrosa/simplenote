@@ -30,7 +30,7 @@ import com.alibaba.fastjson.JSONObject;
  */
 public class HostHttpUtil {
 
-    private static Logger logger = LoggerFactory.getLogger(HostHttpUtil.class);
+    private static final Logger logger = LoggerFactory.getLogger(HostHttpUtil.class);
     private static final int DEFAULT_SOCKET_TIMEOUT = 30_000;
     private static final int DEFAULT_CONNECT_TIMEOUT = 10_000;
 
@@ -49,16 +49,17 @@ public class HostHttpUtil {
      * @return location
      */
     public static Map<String, String> sendRequest(String... ips) {
-        Map<String, String> result = new HashMap<>(ips.length << 1);
+        Map<String, String> result = new HashMap<>(ips.length);
         CloseableHttpClient httpclient = HttpClients.createDefault();
         HttpGet httpGet = new HttpGet();
         httpGet.setHeader("Accept", "application/json");
         httpGet.setHeader("Content-Type", "application/json");
         httpGet.setConfig(requestConfig);
+
+        String resp = null;
+        CloseableHttpResponse response = null;
+        String requestUrl = null;
         try {
-            String resp = null;
-            CloseableHttpResponse response = null;
-            String requestUrl = null;
             for (String ip : ips) {
                 requestUrl = URL.concat(ip).concat(TAIL);
                 httpGet.setURI(URI.create(requestUrl));

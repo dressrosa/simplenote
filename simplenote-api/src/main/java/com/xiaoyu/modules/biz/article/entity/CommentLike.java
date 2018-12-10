@@ -17,7 +17,7 @@ public class CommentLike extends BaseEntity {
 
     private String commentId;
     private String userId;
-
+    // -1 未点赞 1点赞
     private Integer status;
 
     public String getCommentId() {
