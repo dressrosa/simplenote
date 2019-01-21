@@ -36,9 +36,12 @@ public class Utils {
         TraceRequest req = new TraceRequest();
         final String userId = request.getHeader("userId");
         final String token = request.getHeader("token");
-        req.setHeader(new Header().setToken(token)
-                .setPageNum(Integer.valueOf(request.getHeader("pageNum")))
-                .setPageSize(Integer.valueOf(request.getHeader("pageSize"))));
+        Header header = new Header();
+        req.setHeader(header.setToken(token));
+        if (StringUtil.isNotEmpty(request.getHeader("pageNum"))) {
+            header.setPageNum(Integer.valueOf(request.getHeader("pageNum")))
+                    .setPageSize(Integer.valueOf(request.getHeader("pageSize")));
+        }
         final HttpSession session = request.getSession(false);
         if (session == null) {
             req.setLogin(false);

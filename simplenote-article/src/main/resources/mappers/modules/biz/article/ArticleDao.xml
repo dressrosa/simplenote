@@ -67,7 +67,8 @@
         from
         biz_article as a
         join
-        biz_article_attr as t
+        biz_article_attr as
+        t
         on
         t.article_id=a.uuid
         where
@@ -76,13 +77,20 @@
     </select>
 
     <select id="findByList" resultType="com.xiaoyu.modules.biz.article.entity.Article"
-        parameterType="java.lang.String">
+        parameterType="com.xiaoyu.common.base.CommonQuery">
         select
         <include refid="Base_Column_List" />
         from biz_article as a
         where a.del_flag=0
         <if test="userId != null">
             and a.user_id=#{userId}
+        </if>
+        <if test="articleIds != null">
+            and uuid in
+            <foreach collection="articleIds" item="item" index="index" open="(" close=")"
+                separator=",">
+                #{item}
+            </foreach>
         </if>
         order by a.create_date desc
     </select>
@@ -103,7 +111,8 @@
         and ac.uuid = a.column_id
         where a.del_flag=0
         and a.user_id=#{userId}
-        and a.column_id=#{uuid}
+        and
+        a.column_id=#{uuid}
         <if test="isOpen !=null">
             and ac.is_open=#{isOpen}
         </if>
@@ -158,7 +167,8 @@
         from
         biz_article as a
         join
-        biz_article_attr as t
+        biz_article_attr as
+        t
         on
         t.article_id=a.uuid
         where a.del_flag=0
@@ -179,7 +189,8 @@
         from
         biz_article as a
         join
-        biz_article_attr as t
+        biz_article_attr as
+        t
         on
         t.article_id=a.uuid
         where a.del_flag=0
@@ -201,7 +212,8 @@
         from
         biz_article as a
         join
-        biz_article_attr as t
+        biz_article_attr as
+        t
         on
         t.article_id=a.uuid
         join biz_article_collect as ac

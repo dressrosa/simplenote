@@ -6,10 +6,12 @@
         a.uuid as uuid,
         a.article_id as articleId,
         a.num as num,
-        a.author_id as authorId,
+        a.author_id as
+        authorId,
         a.parent_id as parentId,
         a.parent_replyer_id as parentReplyerId,
-        a.content as content,
+        a.content as
+        content,
         a.replyer_id as replyerId,
         a.create_date as createDate
     </sql>
@@ -33,15 +35,24 @@
     </select>
 
     <!-- 分页查询信息 -->
-    <select id="findByList"
-        resultType="com.xiaoyu.modules.biz.article.entity.ArticleComment"
-        parameterType="com.xiaoyu.modules.biz.article.entity.ArticleComment">
+    <select id="findByList" resultType="com.xiaoyu.modules.biz.article.entity.ArticleComment"
+        parameterType="com.xiaoyu.common.base.CommonQuery">
         select
         <include refid="Base_Column_List" />
-        from biz_article_comment as a 
+        from biz_article_comment as a
         where a.del_flag=0
+        <if test="replyerId != null">
+            and a.replyer_id = #{replyerId}
+        </if>
+        <if test="commentIds != null">
+            and uuid in
+            <foreach collection="commentIds" item="item" index="index" open="(" close=")"
+                separator=",">
+                #{item}
+            </foreach>
+        </if>
     </select>
-    
+
     <select id="findNewComments" parameterType="java.lang.String"
         resultType="com.xiaoyu.modules.biz.article.vo.ArticleCommentVo">
         SELECT
@@ -77,8 +88,7 @@
         LIMIT 5
 
     </select>
-    <select id="findList"
-        resultType="com.xiaoyu.modules.biz.article.vo.ArticleCommentVo"
+    <select id="findList" resultType="com.xiaoyu.modules.biz.article.vo.ArticleCommentVo"
         parameterType="java.lang.String">
         SELECT
         a.id AS id,
@@ -86,7 +96,8 @@
         a.article_id AS
         articleId,
         a.author_id
-        AS authorId,
+        AS
+        authorId,
         a.num as num,
         a.parent_id AS
         parentId,
@@ -123,19 +134,18 @@
         a.create_date desc
     </select>
 
-    <delete id="delete"
-        parameterType="com.xiaoyu.modules.biz.article.entity.ArticleComment">
+    <delete id="delete" parameterType="com.xiaoyu.modules.biz.article.entity.ArticleComment">
         update biz_article_comment set
         del_flag=1
-        where uuid = #{uuid}
+        where uuid =
+        #{uuid}
     </delete>
 
     <update id="predo">
         set names utf8mb4
     </update>
 
-    <insert id="insert"
-        parameterType="com.xiaoyu.modules.biz.article.entity.ArticleComment">
+    <insert id="insert" parameterType="com.xiaoyu.modules.biz.article.entity.ArticleComment">
         insert into biz_article_comment
         <trim prefix="(" suffix=")" suffixOverrides=",">
             <if test="uuid != null">
@@ -185,16 +195,16 @@
             </if>
         </trim>
     </insert>
-    
-    <update id="update"
-        parameterType="com.xiaoyu.modules.biz.article.entity.ArticleComment">
+
+    <update id="update" parameterType="com.xiaoyu.modules.biz.article.entity.ArticleComment">
         update biz_article_comment
         set
         num = #{num}
         where
-        uuid =#{uuid}
+        uuid
+        =#{uuid}
     </update>
-    
+
     <update id="updateOptimistic"
         parameterType="com.xiaoyu.modules.biz.article.entity.ArticleComment">
         update biz_article_comment
@@ -204,15 +214,15 @@
         uuid =#{uuid}
         and num =#{old}
     </update>
-    
+
     <!--评论点赞相关 -->
-    <select id="getLike"
-        parameterType="com.xiaoyu.modules.biz.article.entity.CommentLike"
+    <select id="getLike" parameterType="com.xiaoyu.modules.biz.article.entity.CommentLike"
         resultType="com.xiaoyu.modules.biz.article.entity.CommentLike">
         select * from biz_article_comment_like
         where
         comment_id=#{commentId}
-        and user_id = #{userId}
+        and user_id =
+        #{userId}
     </select>
 
     <select id="getLikes" parameterType="java.util.List"
@@ -222,9 +232,10 @@
         where
         user_id = #{list[0].userId}
         and del_flag=0
-        and comment_id in
-        <foreach collection="list" item="item" index="index"
-            open="(" close=")" separator=",">
+        and
+        comment_id in
+        <foreach collection="list" item="item" index="index" open="(" close=")"
+            separator=",">
             #{item.commentId}
         </foreach>
     </select>
@@ -235,22 +246,22 @@
         select * from biz_article_comment_like
         where
         comment_id=#{commentId}
-        and user_id = #{userId}
+        and user_id =
+        #{userId}
         for update
     </select>
-    
-    <select id="isLiked"
-        parameterType="com.xiaoyu.modules.biz.article.entity.CommentLike"
+
+    <select id="isLiked" parameterType="com.xiaoyu.modules.biz.article.entity.CommentLike"
         resultType="java.lang.Integer">
         select count(*) from
         biz_article_comment_like
         where
         comment_id=#{commentId}
-        and user_id = #{userId}
+        and
+        user_id = #{userId}
     </select>
-    
-    <update id="updateLike"
-        parameterType="com.xiaoyu.modules.biz.article.entity.CommentLike">
+
+    <update id="updateLike" parameterType="com.xiaoyu.modules.biz.article.entity.CommentLike">
         update
         biz_article_comment_like
         set
@@ -260,8 +271,7 @@
         and user_id =#{userId}
     </update>
 
-    <insert id="insertLike"
-        parameterType="com.xiaoyu.modules.biz.article.entity.CommentLike">
+    <insert id="insertLike" parameterType="com.xiaoyu.modules.biz.article.entity.CommentLike">
         insert into biz_article_comment_like
         <trim prefix="(" suffix=")" suffixOverrides=",">
             <if test="commentId != null">

@@ -5,7 +5,6 @@ package com.xiaoyu.modules.biz.user.vo;
 
 /**
  * @author:xiaoyu 2017年6月27日下午11:20:28
- *
  * @description:关注
  */
 public class FollowVo {
@@ -15,7 +14,25 @@ public class FollowVo {
     private String userName;
     private String followerName;
     private String userAvatar;
+    private String userBackground;
     private String followerAvatar;
+    private String followerBackground;
+
+    public String getUserBackground() {
+        return userBackground;
+    }
+
+    public void setUserBackground(String userBackground) {
+        this.userBackground = userBackground;
+    }
+
+    public String getFollowerBackground() {
+        return followerBackground;
+    }
+
+    public void setFollowerBackground(String followerBackground) {
+        this.followerBackground = followerBackground;
+    }
 
     public String getUserId() {
         return this.userId;

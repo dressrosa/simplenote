@@ -236,4 +236,6 @@ public interface IArticleService {
 
     public Article getByUuid(String uuid);
 
+    public ResponseMapper userComments(TraceRequest req, String userId);
+
 }

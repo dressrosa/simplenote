@@ -70,7 +70,7 @@
     </select>
 
     <select id="findByList" resultType="com.xiaoyu.modules.biz.article.entity.ArticleColumn"
-        parameterType="java.lang.String">
+        parameterType="com.xiaoyu.common.base.CommonQuery">
         select
         <include refid="Base_Column_List" />
         from biz_article_column as a

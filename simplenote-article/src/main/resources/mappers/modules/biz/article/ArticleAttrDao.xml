@@ -31,7 +31,7 @@
 
     <!-- 分页查询用户信息 -->
     <select id="findByList" resultType="com.xiaoyu.modules.biz.article.entity.ArticleAttr"
-        parameterType="com.xiaoyu.modules.biz.article.entity.ArticleAttr">
+        parameterType="com.xiaoyu.common.base.CommonQuery">
         select
         <include refid="Base_Column_List" />
         from biz_article_attr as a

@@ -11,11 +11,12 @@ import javax.servlet.http.HttpSession;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.alibaba.fastjson.JSONObject;
 import com.xiaoyu.common.base.ResponseCode;
 import com.xiaoyu.common.base.ResponseMapper;
 import com.xiaoyu.common.request.TraceRequest;
@@ -23,6 +24,7 @@ import com.xiaoyu.common.util.Utils;
 import com.xiaoyu.common.utils.Md5Utils;
 import com.xiaoyu.common.utils.StringUtil;
 import com.xiaoyu.maple.core.MapleUtil;
+import com.xiaoyu.modules.biz.article.service.api.IArticleService;
 import com.xiaoyu.modules.biz.user.entity.User;
 import com.xiaoyu.modules.biz.user.service.api.IUserService;
 
@@ -37,6 +39,9 @@ public class UserController {
     @Autowired
     private IUserService userService;
 
+    @Autowired
+    private IArticleService articleService;
+
     /**
      * 正常登录
      * 
@@ -50,7 +55,9 @@ public class UserController {
      * @time 2016年4月14日下午8:24:06
      */
     @RequestMapping(value = "api/v1/user/login", method = RequestMethod.POST)
-    public String login(HttpServletRequest request, String loginName, String password) throws IOException {
+    public String login(HttpServletRequest request, @RequestBody JSONObject json) throws IOException {
+        String loginName = json.getString("loginName");
+        String password = json.getString("password");
         if (StringUtil.isAnyEmpty(loginName, password)) {
             return ResponseMapper.createMapper()
                     .code(ResponseCode.ARGS_ERROR.statusCode())
@@ -96,10 +103,17 @@ public class UserController {
     }
 
     @RequestMapping(value = "api/v1/user/register", method = RequestMethod.POST)
-    public String register(HttpServletRequest request, @RequestParam(required = true) String loginName,
-            @RequestParam(required = true) String password, @RequestParam(required = true) String repassword)
+    public String register(HttpServletRequest request, @RequestBody JSONObject json)
             throws IOException {
-        final ResponseMapper mapper = ResponseMapper.createMapper();
+        String loginName = json.getString("loginName");
+        String password = json.getString("password");
+        String repassword = json.getString("repassword");
+        if (StringUtil.isAnyEmpty(loginName, password, repassword)) {
+            return ResponseMapper.createMapper()
+                    .code(ResponseCode.ARGS_ERROR.statusCode())
+                    .resultJson();
+        }
+        ResponseMapper mapper = ResponseMapper.createMapper();
         if (!StringUtil.isMobile(loginName) && !StringUtil.isEmail(loginName)) {
             return mapper.code(ResponseCode.ARGS_ERROR.statusCode())
                     .message("请填写正确的邮箱或手机号")
@@ -129,7 +143,9 @@ public class UserController {
      * @time 2016年4月12日上午10:30:37
      */
     @RequestMapping(value = "api/v1/user/login/record", method = RequestMethod.POST)
-    public String loginRecord(HttpServletRequest request, String userId, String device) {
+    public String loginRecord(HttpServletRequest request, @RequestBody JSONObject json) {
+        String userId = json.getString("userId");
+        String device = json.getString("device");
         if (StringUtil.isNotBlank(userId)) {
             TraceRequest req = Utils.getTraceRequest(request);
             return this.userService.loginRecord(req, userId, device).resultJson();
@@ -146,8 +162,9 @@ public class UserController {
      * @time 2016年4月14日下午7:21:06
      */
     @RequestMapping(value = "api/v1/user/logout")
-    public void logout(HttpServletRequest request, String token) {
-        final HttpSession session = request.getSession(false);
+    public void logout(HttpServletRequest request, @RequestBody JSONObject json) {
+        String token = json.getString("token");
+        HttpSession session = request.getSession(false);
         if (session != null) {
             if (session.getAttribute(token) != null) {
                 session.removeAttribute(token);
@@ -162,7 +179,7 @@ public class UserController {
      * @author xiaoyu
      */
     @RequestMapping(value = "api/v1/user/{userId}", method = RequestMethod.GET)
-    public String userDetail(@PathVariable String userId, HttpServletRequest request) {
+    public String userDetail(HttpServletRequest request, @PathVariable String userId) {
         if (StringUtil.isEmpty(userId)) {
             return ResponseMapper.createMapper()
                     .code(ResponseCode.ARGS_ERROR.statusCode())
@@ -178,26 +195,53 @@ public class UserController {
      * @return
      */
     @RequestMapping(value = "api/v1/user/edit", method = RequestMethod.POST)
-    public String editInfo(HttpServletRequest request, String content,
-            @RequestParam(required = true) Integer flag) {
+    public String editInfo(HttpServletRequest request, @RequestBody JSONObject json) {
+        String content = json.getString("content");
+        Integer flag = json.getInteger("flag");
+        if (flag == null) {
+            return ResponseMapper.createMapper()
+                    .code(ResponseCode.ARGS_ERROR.statusCode())
+                    .resultJson();
+        }
         TraceRequest req = Utils.getTraceRequest(request);
         return this.userService.editUser(req, content, flag).resultJson();
     }
 
     @RequestMapping(value = "api/v1/user/follow", method = RequestMethod.POST)
-    public String followUser(HttpServletRequest request, String userId, String followTo) {
+    public String followUser(HttpServletRequest request, @RequestBody JSONObject json) {
+        String userId = json.getString("userId");
+        String followTo = json.getString("followTo");
+        if (StringUtil.isAnyEmpty(userId, followTo)) {
+            return ResponseMapper.createMapper()
+                    .code(ResponseCode.ARGS_ERROR.statusCode())
+                    .resultJson();
+        }
         TraceRequest req = Utils.getTraceRequest(request);
         return this.userService.followUser(req, userId, followTo).resultJson();
     }
 
     @RequestMapping(value = "api/v1/user/unfollow", method = RequestMethod.POST)
-    public String cancelFollow(HttpServletRequest request, String userId, String followTo) {
+    public String cancelFollow(HttpServletRequest request, @RequestBody JSONObject json) {
+        String userId = json.getString("userId");
+        String followTo = json.getString("followTo");
+        if (StringUtil.isAnyEmpty(userId, followTo)) {
+            return ResponseMapper.createMapper()
+                    .code(ResponseCode.ARGS_ERROR.statusCode())
+                    .resultJson();
+        }
         TraceRequest req = Utils.getTraceRequest(request);
         return this.userService.cancelFollow(req, userId, followTo).resultJson();
     }
 
     @RequestMapping(value = "api/v1/user/is-followed", method = RequestMethod.POST)
-    public String isFollowed(HttpServletRequest request, String userId, String followTo) {
+    public String isFollowed(HttpServletRequest request, @RequestBody JSONObject json) {
+        String userId = json.getString("userId");
+        String followTo = json.getString("followTo");
+        if (StringUtil.isAnyEmpty(userId, followTo)) {
+            return ResponseMapper.createMapper()
+                    .code(ResponseCode.ARGS_ERROR.statusCode())
+                    .resultJson();
+        }
         TraceRequest req = Utils.getTraceRequest(request);
         return this.userService.isFollowed(req, userId, followTo).resultJson();
     }
@@ -223,4 +267,13 @@ public class UserController {
         return this.userService.commonNums(req, userId).resultJson();
     }
 
+    @RequestMapping(value = "api/v1/user/comments", method = RequestMethod.GET)
+    public String userComments(HttpServletRequest request) {
+        TraceRequest req = Utils.getTraceRequest(request);
+        if (!req.isLogin()) {
+            return ResponseMapper.createMapper().code(ResponseCode.LOGIN_INVALIDATE.statusCode())
+                    .resultJson();
+        }
+        return this.articleService.userComments(req, req.getUser().getUuid()).resultJson();
+    }
 }

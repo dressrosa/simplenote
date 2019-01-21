@@ -77,20 +77,20 @@ public class UploadController {
             }
             iter = collection.iterator();
 
-        } catch (final IOException e1) {
+        } catch (IOException e1) {
             LOG.error(e1.toString());
-        } catch (final ServletException e2) {
+        } catch (ServletException e2) {
             LOG.error(e2.toString());
         }
         if (iter == null) {
             return mapper.code(ResponseCode.ARGS_ERROR.statusCode()).resultJson();
         }
         while (iter.hasNext()) {
-            final String result = ImgUtils.saveImgToTencentOss(iter.next());
+            String result = ImgUtils.saveImgToTencentOss(iter.next());
             Map<String, Object> map = (Map<String, Object>) JSON.parse(result);
             String path = null;
             if (map.get("code").equals(0)) {
-                final Map<String, String> urlMap = (Map<String, String>) map.get("data");
+                Map<String, String> urlMap = (Map<String, String>) map.get("data");
                 path = urlMap.get("source_url");
                 this.userService.editUser(req, path, bizType);
                 return mapper.data(path).resultJson();

@@ -4,11 +4,14 @@ import javax.servlet.http.HttpServletRequest;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.alibaba.fastjson.JSONObject;
+import com.xiaoyu.common.base.ResponseCode;
+import com.xiaoyu.common.base.ResponseMapper;
 import com.xiaoyu.common.request.TraceRequest;
 import com.xiaoyu.common.util.Utils;
 import com.xiaoyu.modules.biz.message.entity.Message;
@@ -26,16 +29,19 @@ public class MessageController {
     private IMessageService messageService;
 
     @RequestMapping(value = "api/v1/message/type/{type}", method = RequestMethod.GET)
-    public String getMsgByType(HttpServletRequest request, @RequestParam(required = true) String userId,
-            @PathVariable Integer type) {
+    public String getMsgByType(HttpServletRequest request, String userId, @PathVariable Integer type) {
         TraceRequest req = Utils.getTraceRequest(request);
         return this.messageService.getMsgByType(req, userId, type).resultJson();
     }
 
     @RequestMapping(value = "api/v1/message/read", method = RequestMethod.POST)
-    public String read(HttpServletRequest request, @RequestParam(required = true) String msgIds) {
+    public String read(HttpServletRequest request, @RequestBody JSONObject json) {
+        if (!json.containsKey("msgIds")) {
+            return ResponseMapper.createMapper()
+                    .code(ResponseCode.ARGS_ERROR.statusCode()).resultJson();
+        }
         TraceRequest req = Utils.getTraceRequest(request);
-        return this.messageService.read(req, msgIds).resultJson();
+        return this.messageService.read(req, json.getString("msgIds")).resultJson();
     }
 
     @RequestMapping(value = "api/v1/message/unread-num", method = RequestMethod.GET)
@@ -45,14 +51,17 @@ public class MessageController {
     }
 
     @RequestMapping(value = "api/v1/message/reply", method = RequestMethod.POST)
-    public String replyMsg(HttpServletRequest request, @RequestParam(required = true) String msgId,
-            @RequestParam(required = true) String replyContent) {
+    public String replyMsg(HttpServletRequest request, @RequestBody JSONObject json) {
+        if (!json.containsKey("msgId") || !json.containsKey("replyContent")) {
+            return ResponseMapper.createMapper()
+                    .code(ResponseCode.ARGS_ERROR.statusCode()).resultJson();
+        }
         TraceRequest req = Utils.getTraceRequest(request);
-        return this.messageService.replyMsg(req, msgId, replyContent).resultJson();
+        return this.messageService.replyMsg(req, json.getString("msgId"), json.getString("replyContent")).resultJson();
     }
 
     @RequestMapping(value = "api/v1/message/remove", method = RequestMethod.POST)
-    public String remove(HttpServletRequest request, @RequestParam(required = true) Message... messages) {
+    public String remove(HttpServletRequest request, @RequestBody Message... messages) {
         TraceRequest req = Utils.getTraceRequest(request);
         return this.messageService.removeMessage(req, messages).resultJson();
     }

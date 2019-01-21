@@ -22,6 +22,7 @@ import com.alibaba.fastjson.JSON;
 import com.github.pagehelper.Page;
 import com.github.pagehelper.PageHelper;
 import com.xiaoyu.beacon.autoconfigure.anno.BeaconExporter;
+import com.xiaoyu.common.base.CommonQuery;
 import com.xiaoyu.common.base.ResponseCode;
 import com.xiaoyu.common.base.ResponseMapper;
 import com.xiaoyu.common.request.TraceRequest;
@@ -488,6 +489,7 @@ public class ArticleServiceImpl implements IArticleService {
                 }
             }
             Map<String, String> map = new HashMap<>(8);
+            map.put("authorId", ar.getUserId());
             map.put("replyerId", user.getUuid());
             map.put("replyerName", user.getNickname());
             map.put("replyerAvatar", user.getAvatar());
@@ -495,15 +497,20 @@ public class ArticleServiceImpl implements IArticleService {
             map.put("createDate", TimeUtils.format(System.currentTimeMillis(), "yyyy-MM-dd HH:mm"));
 
             if (isSendMsg) {
-                this.messageService.sendMsgEvent(new Message()
-                        .setSenderId(user.getUuid())
-                        .setReceiverId(ar.getUserId())
-                        .setType(MsgType.NEWS.statusCode())
-                        .setBizId(articleId)
-                        .setBizType(BizType.ARTICLE.statusCode())
-                        .setBizAction(BizAction.COMMENT.statusCode())
-                        .setContent(content)
-                        .setReply(null));
+                try {
+                    this.messageService.sendMsgEvent(new Message()
+                            .setSenderId(user.getUuid())
+                            .setReceiverId(ar.getUserId())
+                            .setType(MsgType.NEWS.statusCode())
+                            .setBizId(articleId)
+                            .setBizType(BizType.ARTICLE.statusCode())
+                            .setBizAction(BizAction.COMMENT.statusCode())
+                            .setContent(content)
+                            .setReply(null));
+                } catch (Exception e) {
+                    // do nothing
+                }
+
             }
             return mapper.data(map);
         });
@@ -636,6 +643,88 @@ public class ArticleServiceImpl implements IArticleService {
         return ResponseMapper.createMapper().data(total);
     }
 
+    @Override
+    public ResponseMapper userComments(TraceRequest request, String userId) {
+        if (!request.isLogin()) {
+            return ResponseMapper.createMapper().code(ResponseCode.LOGIN_INVALIDATE.statusCode());
+        }
+        int pageNum = request.getHeader().getPageNum();
+        int pageSize = request.getHeader().getPageSize();
+        pageSize = pageSize > 32 ? 32 : pageSize;
+
+        Page<?> page = PageHelper.startPage(pageNum, pageSize);
+        CommonQuery query = new CommonQuery().setReplyerId(userId);
+        List<ArticleComment> list = this.arCommentDao.findByList(query);
+        if (list.isEmpty()) {
+            return ResponseMapper.createMapper()
+                    .code(ResponseCode.NO_DATA.statusCode());
+        }
+        List<Map<String, Object>> total = this.handleUserCommentsList(list);
+        return ResponseMapper.createMapper()
+                .count(page.getTotal())
+                .data(total);
+    }
+
+    private List<Map<String, Object>> handleUserCommentsList(final List<ArticleComment> list) {
+        int size = list.size();
+        // 处理数据
+        Map<String, Object> map = null;
+        List<Map<String, Object>> total = new ArrayList<>(size);
+        List<String> articleIds = new ArrayList<>();
+        List<String> parentCommentIds = new ArrayList<>();
+        List<String> parentReplyerIds = new ArrayList<>();
+        for (ArticleComment a : list) {
+            articleIds.add(a.getArticleId());
+            if (StringUtil.isNotEmpty(a.getParentId())) {
+                parentCommentIds.add(a.getParentId());
+                parentReplyerIds.add(a.getParentReplyerId());
+            }
+        }
+        CommonQuery query = new CommonQuery();
+        query.setArticleIds(articleIds);
+        List<Article> articles = this.articleDao.findByList(query);
+        Map<String, Article> arMap = new HashMap<>(articles.size());
+        articles.forEach(a -> {
+            arMap.put(a.getUuid(), a);
+        });
+        Map<String, UserVo> parentReplyerMap = new HashMap<>(parentReplyerIds.size());
+        Map<String, ArticleComment> coMap = new HashMap<>(parentReplyerIds.size());
+        if (!parentReplyerIds.isEmpty()) {
+            List<UserVo> uservos = this.userService.findVoByUuid(parentReplyerIds);
+            uservos.forEach(a -> {
+                parentReplyerMap.put(a.getUserId(), a);
+            });
+            query = new CommonQuery();
+            query.setCommentIds(parentCommentIds);
+            List<ArticleComment> comments = this.arCommentDao.findByList(query);
+            comments.forEach(a -> {
+                coMap.put(a.getUuid(), a);
+            });
+        }
+
+        for (ArticleComment a : list) {
+            map = MapleUtil.wrap()
+                    .stick("commentId", a.getUuid())
+                    .stick("createDate", TimeUtils.format(a.getCreateDate(), "yyyy-MM-dd HH:mm"))
+                    .stick("replyerName", "")
+                    .stick("parentReplyerId", a.getParentReplyerId())
+                    .stick("content", a.getContent())
+                    .stick("articleTitle", arMap.get(a.getArticleId()).getTitle())
+                    .map();
+            if (!StringUtil.isEmpty(a.getParentId())) {
+                ArticleComment co = coMap.get(a.getParentId());
+                if (co != null) {
+                    map.put("parentContent", co.getContent());
+                } else {
+                    map.put("parentContent", "已删除");
+                }
+                map.put("parentReplyerName", parentReplyerMap.get(a.getParentReplyerId()).getNickname());
+            }
+            total.add(map);
+        }
+        return total;
+    }
+
     /**
      * =============================评论相关===========================
      */
@@ -693,7 +782,11 @@ public class ArticleServiceImpl implements IArticleService {
         }
 
         if (isSendMsg) {
-            this.messageService.sendMsgEvent(msg);
+            try {
+                this.messageService.sendMsgEvent(msg);
+            } catch (Exception e) {
+                // do nothing
+            }
         }
     }
 
@@ -761,7 +854,7 @@ public class ArticleServiceImpl implements IArticleService {
         Map<String, String> jsonMap = null;
         // 分页同步 防止一次性取出量过大
         int i = 1;
-        Article t = new Article();
+        CommonQuery t = new CommonQuery();
         while (i <= pageNum) {
             PageHelper.startPage(i++, pageSize, true);
             list = this.articleDao.findByList(t);
@@ -879,12 +972,11 @@ public class ArticleServiceImpl implements IArticleService {
     @Override
     public ResponseMapper columns(TraceRequest request, String userId) {
         User user = request.getUser();
-        ArticleColumn column = new ArticleColumn();
-        column.setUserId(userId);
+        CommonQuery query = new CommonQuery().setUserId(userId);
         if (user == null || !user.getUuid().equals(userId)) {
-            column.setIsOpen(Flag.True.ordinal());
+            query.setIsOpen(Flag.True.ordinal());
         }
-        List<ArticleColumn> columnList = this.columnDao.findByList(column);
+        List<ArticleColumn> columnList = this.columnDao.findByList(query);
         List<Map<String, Object>> total = this.handleColumnList(columnList);
         return ResponseMapper.createMapper().data(total);
     }

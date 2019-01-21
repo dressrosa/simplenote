@@ -27,8 +27,10 @@
         a.follower_id as followerId,
         u1.nickname as userName,
         u1.avatar as userAvatar,
+        u1.background as userBackground,
         u2.nickname as followerName,
-        u2.avatar as followerAvatar
+        u2.avatar as followerAvatar,
+        u2.background as followerBackground
         from biz_user_follow as a
         join
         biz_user as u1

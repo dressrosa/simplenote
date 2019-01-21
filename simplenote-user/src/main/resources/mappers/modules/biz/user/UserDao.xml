@@ -101,7 +101,6 @@
         a.sex as sex,
         a.description as description,
         a.signature as signature,
-        date_format(a.create_date,'%Y-%m-%d') as createDate,
         a.login_name as name,
         a.avatar as avatar,
         ua.article_num as "attr.articleNum",
