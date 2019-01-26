@@ -98,7 +98,7 @@ public class ArticleServiceImpl implements IArticleService {
     private Map<String, Object> article2Map(final ArticleVo a) {
         return MapleUtil.wrap(a)
                 .rename("uuid", "articleId")
-                .stick("content", a.getContent().length() > 150 ? a.getContent().substring(0, 149) : a.getContent())
+                .stick("content", a.getContent().length() > 60 ? a.getContent().substring(0, 59) : a.getContent())
                 .stick("createDate", TimeUtils.format(a.getCreateDate(), "yyyy-MM-dd HH:mm"))
                 .stick("isLike", "0")
                 .stick("isCollect", "0")
@@ -318,11 +318,11 @@ public class ArticleServiceImpl implements IArticleService {
                 .content("新鲜出炉!<br/>名称:" + t.getTitle()
                         + "<br/>速速去了解一下拉"
                         + "<br/><a href='http://47.93.235.211/article/" + t.getUuid() + "'>这也是个神奇的链接...</a>");
-        try {
-            BaseProducer.produce(Type.QUEUE, MqContant.EMAIL, JSON.toJSONString(builder));
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
+//        try {
+//            BaseProducer.produce(Type.QUEUE, MqContant.EMAIL, JSON.toJSONString(builder));
+//        } catch (Exception e) {
+//            e.printStackTrace();
+//        }
 
     }
 

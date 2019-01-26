@@ -97,9 +97,14 @@ public class UserController {
                 .skip("sex")
                 .skip("loginName")
                 .map();
-        ;
         result.put("token", token);
         return mapper.data(result).resultJson();
+    }
+
+    @RequestMapping(value = "api/v1/user/loginInfo", method = RequestMethod.GET)
+    public String loginInfo(HttpServletRequest request) {
+        TraceRequest req = Utils.getTraceRequest(request);
+        return ResponseMapper.createMapper().data(req.isLogin()).resultJson();
     }
 
     @RequestMapping(value = "api/v1/user/register", method = RequestMethod.POST)
