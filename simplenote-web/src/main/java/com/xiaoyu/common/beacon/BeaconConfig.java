@@ -7,7 +7,9 @@ import com.xiaoyu.beacon.autoconfigure.BeaconReferConfiguration;
 import com.xiaoyu.beacon.autoconfigure.anno.BeaconRefer;
 import com.xiaoyu.modules.biz.article.service.api.IArticleService;
 import com.xiaoyu.modules.biz.message.service.api.IMessageService;
+import com.xiaoyu.modules.biz.note.service.api.INoteService;
 import com.xiaoyu.modules.biz.user.service.api.IUserService;
+import com.xiaoyu.modules.common.service.api.IFileService;
 import com.xiaoyu.modules.common.service.api.IHostService;
 import com.xiaoyu.spring.config.BeaconReference;
 
@@ -38,7 +40,17 @@ public class BeaconConfig extends BeaconReferConfiguration {
                 .setGroup("dev")
                 .setTimeout("9000"));
         list.add(new BeaconReference()
+                .setInterfaceName(IFileService.class.getName())
+                .setCheck(false)
+                .setGroup("dev")
+                .setTimeout("9000"));
+        list.add(new BeaconReference()
                 .setInterfaceName(IUserService.class.getName())
+                .setCheck(false)
+                .setGroup("dev")
+                .setTimeout("9000"));
+        list.add(new BeaconReference()
+                .setInterfaceName(INoteService.class.getName())
                 .setCheck(false)
                 .setGroup("dev")
                 .setTimeout("9000"));

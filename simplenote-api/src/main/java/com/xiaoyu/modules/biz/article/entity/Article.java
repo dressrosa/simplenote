@@ -15,8 +15,18 @@ public class Article extends BaseEntity {
     private String userId;
     private String title;
     private String content;
+    private String brief;
 
     private String columnId;
+
+    public String getBrief() {
+        return brief;
+    }
+
+    public Article setBrief(String brief) {
+        this.brief = brief;
+        return this;
+    }
 
     public String getColumnId() {
         return columnId;

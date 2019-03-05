@@ -13,7 +13,9 @@ public enum BizType {
     /**
      * 1, "用户"
      */
-    USER(1, "用户");
+    USER(1, "用户"),
+
+    NOTE(2, "纸条");
 
     private int code;
     private String message;

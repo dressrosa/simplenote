@@ -8,6 +8,7 @@ import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.util.Map;
 import java.util.Random;
 import java.util.ResourceBundle;
 
@@ -18,6 +19,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.util.FileCopyUtils;
 import org.springframework.web.multipart.MultipartFile;
 
+import com.alibaba.fastjson.JSON;
 import com.qcloud.cos.COSClient;
 import com.qcloud.cos.ClientConfig;
 import com.qcloud.cos.request.UploadFileRequest;
@@ -185,5 +187,34 @@ public class ImgUtils {
         }
         final UploadFileRequest f = new UploadFileRequest(bucketName, "/" + newImgName, contentBuffer);
         return client.uploadSingleFile(f);
+    }
+
+    @SuppressWarnings("unchecked")
+    public static String saveImgToTencentOss(byte[] bytes) {
+        final long appId = 1253813687;
+        final String secretId = "AKIDMdrzwiXi6KSVYtD86wd9UdlkW6Ui2aFD";
+        final String secretKey = "2ta5QZXJuJXZb2bkmdPNI1d3GI8mHahh";
+        // 设置要操作的bucket
+        final String bucketName = "xiaoyu1";
+        // 初始化秘钥信息
+        final Credentials cred = new Credentials(appId, secretId, secretKey);
+        // 初始化客户端配置
+        final ClientConfig clientConfig = new ClientConfig();
+        // 设置bucket所在的区域，比如华南园区：gz； 华北园区：tj；华东园区：sh ；
+        clientConfig.setRegion("tj");
+        // 初始化cosClient
+        final COSClient client = new COSClient(clientConfig, cred);
+        final String newImgName = new Random().nextInt(1_000) + Long.toString(System.currentTimeMillis())
+                + new Random().nextInt(1_000) + ".png";
+        final UploadFileRequest f = new UploadFileRequest(bucketName, "/" + newImgName, bytes);
+
+        Map<String, Object> map = (Map<String, Object>) JSON.parse(client.uploadSingleFile(f));
+        String path = null;
+        if (map.get("code").equals(0)) {
+            Map<String, String> urlMap = (Map<String, String>) map.get("data");
+            path = urlMap.get("source_url");
+            return path;
+        }
+        return "";
     }
 }

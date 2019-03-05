@@ -1,0 +1,141 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.xiaoyu.modules.biz.note.dao.NoteAttrDao">
+    <sql id="Base_Column_List">
+        a.note_id as noteId,
+        a.read_num as readNum,
+        a.comment_num as commentNum,
+        a.like_num as
+        likeNum,
+        a.mark_num as markNum
+    </sql>
+
+    <select id="getByNoteId" parameterType="java.lang.String"
+        resultType="com.xiaoyu.modules.biz.note.entity.NoteAttr">
+        select
+        <include refid="Base_Column_List" />
+        from biz_note_attr as a
+        where a.note_id = #{noteId}
+        and a.del_flag=0
+    </select>
+
+    <select id="findByList" resultType="com.xiaoyu.modules.biz.note.entity.NoteAttr"
+        parameterType="com.xiaoyu.common.base.CommonQuery">
+        select
+        <include refid="Base_Column_List" />
+        from biz_note_attr as a
+        where a.del_flag=0
+        <if test="bizIds != null">
+            and a.note_id in
+            <foreach collection="bizIds" item="item" index="index" open="(" close=")"
+                separator=",">
+                #{item}
+            </foreach>
+        </if>
+    </select>
+
+    <insert id="insert" parameterType="com.xiaoyu.modules.biz.note.entity.NoteAttr">
+        insert into biz_note_attr
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="noteId != null">
+                note_id,
+            </if>
+            <if test="readNum != null">
+                read_num,
+            </if>
+            <if test="likeNum != null">
+                like_num,
+            </if>
+            <if test="markNum != null">
+                mark_num,
+            </if>
+            <if test="commentNum != null">
+                comment_num,
+            </if>
+            <if test="createDate != null">
+                create_date,
+            </if>
+            <if test="updateDate != null">
+                update_date,
+            </if>
+            <if test="delFlag != null">
+                del_flag,
+            </if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="noteId != null">
+                #{noteId},
+            </if>
+            <if test="readNum != null">
+                #{readNum},
+            </if>
+            <if test="likeNum != null">
+                #{likeNum},
+            </if>
+            <if test="markNum != null">
+                #{markNum},
+            </if>
+            <if test="commentNum != null">
+                #{commentNum},
+            </if>
+            <if test="createDate != null">
+                #{createDate},
+            </if>
+            <if test="updateDate != null">
+                #{updateDate},
+            </if>
+            <if test="delFlag != null">
+                #{delFlag},
+            </if>
+        </trim>
+    </insert>
+
+
+    <update id="update" parameterType="com.xiaoyu.modules.biz.note.entity.NoteAttr">
+        update biz_note_attr
+        <set>
+            <if test="readNum != null">
+                read_num = #{readNum},
+            </if>
+            <if test="likeNum != null">
+                like_num = #{likeNum},
+            </if>
+            <if test="markNum != null">
+                mark_num = #{markNum},
+            </if>
+            <if test="commentNum != null">
+                comment_num = #{commentNum},
+            </if>
+        </set>
+        where note_id= #{noteId}
+    </update>
+
+    <update id="updateByAddition" parameterType="com.xiaoyu.modules.biz.note.entity.NoteAttr">
+        update biz_note_attr
+        <set>
+            <if test="readNum != null">
+                read_num = read_num+#{readNum},
+            </if>
+            <if test="likeNum != null">
+                like_num = like_num+#{likeNum},
+            </if>
+            <if test="markNum != null">
+                mark_num = mark_num+#{markNum},
+            </if>
+            <if test="commentNum != null">
+                comment_num = comment_num+#{commentNum},
+            </if>
+        </set>
+        where note_id= #{noteId}
+    </update>
+
+    <select id="isExist" parameterType="com.xiaoyu.modules.biz.note.entity.NoteAttr"
+        resultType="java.lang.Integer">
+        select count(*) from biz_note_attr
+        where del_flag=0
+        <if test="noteId != null">
+            and note_id = #{noteId}
+        </if>
+    </select>
+
+</mapper>

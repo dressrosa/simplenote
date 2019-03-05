@@ -238,4 +238,6 @@ public interface IArticleService {
 
     public ResponseMapper userComments(TraceRequest req, String userId);
 
+    public ResponseMapper getContentByArticleId(TraceRequest req, String articleId);
+
 }

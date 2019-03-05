@@ -19,6 +19,7 @@
         <module>simplenote-article</module>
         <module>simplenote-message</module>
         <module>simplenote-others</module>
+        <module>simplenote-note</module>
     </modules>
     <!--version -->
     <properties>

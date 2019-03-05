@@ -54,6 +54,17 @@ public class ArticleController {
         return this.articleService.detail(articleId).resultJson();
     }
 
+    @RequestMapping(value = "api/v1/article/content/{articleId}", method = RequestMethod.GET)
+    public String getContentByArticleId(HttpServletRequest request, @PathVariable String articleId) {
+        if (StringUtil.isEmpty(articleId)) {
+            return ResponseMapper.createMapper()
+                    .code(ResponseCode.ARGS_ERROR.statusCode())
+                    .resultJson();
+        }
+        TraceRequest req = Utils.getTraceRequest(request);
+        return this.articleService.getContentByArticleId(req, articleId).resultJson();
+    }
+
     /**
      * 首页的列表
      * 

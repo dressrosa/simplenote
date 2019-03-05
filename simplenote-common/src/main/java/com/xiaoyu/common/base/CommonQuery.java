@@ -25,6 +25,27 @@ public class CommonQuery {
     private Collection<String> articleIds;
     private Collection<String> userIds;
     private Collection<String> commentIds;
+    private Collection<String> bizIds;
+
+    private String bizId;
+
+    public Collection<String> getBizIds() {
+        return bizIds;
+    }
+
+    public CommonQuery setBizIds(Collection<String> bizIds) {
+        this.bizIds = bizIds;
+        return this;
+    }
+
+    public String getBizId() {
+        return bizId;
+    }
+
+    public CommonQuery setBizId(String bizId) {
+        this.bizId = bizId;
+        return this;
+    }
 
     public Collection<String> getArticleIds() {
         return articleIds;

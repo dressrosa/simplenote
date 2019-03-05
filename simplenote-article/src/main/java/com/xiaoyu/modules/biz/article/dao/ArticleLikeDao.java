@@ -3,8 +3,6 @@
  */
 package com.xiaoyu.modules.biz.article.dao;
 
-import java.util.List;
-
 import org.springframework.stereotype.Repository;
 
 import com.xiaoyu.common.base.BaseDao;
@@ -17,7 +15,5 @@ import com.xiaoyu.modules.biz.article.entity.ArticleLike;
 public interface ArticleLikeDao extends BaseDao<ArticleLike> {
 
     ArticleLike getForUpdate(ArticleLike t);
-
-    List<ArticleLike> findListByBatch(List<ArticleLike> likeQueryList);
 
 }

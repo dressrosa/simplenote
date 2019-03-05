@@ -17,11 +17,21 @@ public class ArticleVo extends BaseEntity {
     private String title;
     private String content;
     private String columnId;
+    private String brief;
 
     private UserVo user;
     private ArticleAttrVo attr;
 
     private String columnName;
+
+    public String getBrief() {
+        return brief;
+    }
+
+    public ArticleVo setBrief(String brief) {
+        this.brief = brief;
+        return this;
+    }
 
     public String getColumnId() {
         return columnId;

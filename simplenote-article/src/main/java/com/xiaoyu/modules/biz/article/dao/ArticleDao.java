@@ -12,6 +12,7 @@ import com.github.pagehelper.Page;
 import com.xiaoyu.common.base.BaseDao;
 import com.xiaoyu.modules.biz.article.entity.Article;
 import com.xiaoyu.modules.biz.article.entity.ArticleColumn;
+import com.xiaoyu.modules.biz.article.vo.ArticleContentVo;
 import com.xiaoyu.modules.biz.article.vo.ArticleVo;
 
 /**
@@ -36,4 +37,11 @@ public interface ArticleDao extends BaseDao<Article> {
 
     List<ArticleVo> findByColumn(ArticleColumn co);
 
+    ArticleContentVo getContentByArticleId(String articleId);
+
+    List<ArticleContentVo> findContentByArticleIds(List<String> articleIds);
+
+    int insertContent(ArticleContentVo vo);
+
+    int updateContent(ArticleContentVo vo);
 }

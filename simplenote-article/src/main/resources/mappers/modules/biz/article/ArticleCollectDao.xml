@@ -6,8 +6,7 @@
     </sql>
 
 
-    <select id="get"
-        parameterType="com.xiaoyu.modules.biz.article.entity.ArticleCollect"
+    <select id="get" parameterType="com.xiaoyu.modules.biz.article.entity.ArticleCollect"
         resultType="com.xiaoyu.modules.biz.article.entity.ArticleCollect">
         select
         status as
@@ -19,30 +18,28 @@
         article_id = #{articleId}
     </select>
 
-    <select id="findListByBatch" parameterType="java.util.List"
+    <select id="findByList" parameterType="com.xiaoyu.common.base.CommonQuery"
         resultType="com.xiaoyu.modules.biz.article.entity.ArticleCollect">
         select
         a.article_id as articleId,
         a.user_id as userId,
         a.status as
         status
-        from biz_article_collect as a
+        from
+        biz_article_collect as a
         where
         a.article_id in
-        <foreach collection="list" item="item" index="index"
-            open="(" close=")" separator=",">
-            #{item.articleId}
+        <foreach collection="bizIds" item="item" index="index" open="(" close=")"
+            separator=",">
+            #{item}
         </foreach>
-        and a.user_id in
-        <foreach collection="list" item="item" index="index"
-            open="(" close=")" separator=",">
-            #{item.userId}
-        </foreach>
+        <if test="userId != null">
+            and a.user_id = #{userId}
+        </if>
         and a.del_flag=0
     </select>
 
-    <insert id="insert"
-        parameterType="com.xiaoyu.modules.biz.article.entity.ArticleCollect">
+    <insert id="insert" parameterType="com.xiaoyu.modules.biz.article.entity.ArticleCollect">
         insert into biz_article_collect
         <trim prefix="(" suffix=")" suffixOverrides=",">
             <if test="uuid != null">
@@ -69,8 +66,7 @@
     </insert>
 
 
-    <update id="update"
-        parameterType="com.xiaoyu.modules.biz.article.entity.ArticleCollect">
+    <update id="update" parameterType="com.xiaoyu.modules.biz.article.entity.ArticleCollect">
         update biz_article_collect
         <set>
             <if test="status != null">
@@ -81,13 +77,13 @@
         and user_id =#{userId}
     </update>
 
-    <select id="isExist"
-        parameterType="com.xiaoyu.modules.biz.article.entity.ArticleCollect"
+    <select id="isExist" parameterType="com.xiaoyu.modules.biz.article.entity.ArticleCollect"
         resultType="java.lang.Integer">
         select count(*) from biz_article_collect
         where
         article_id =#{articleId}
-        and user_id =#{userId}
+        and user_id
+        =#{userId}
     </select>
 
     <select id="getForUpdate"
@@ -96,7 +92,8 @@
         select * from biz_article_collect
         where
         article_id=#{articleId}
-        and user_id = #{userId}
+        and user_id =
+        #{userId}
         for update
     </select>
 </mapper>

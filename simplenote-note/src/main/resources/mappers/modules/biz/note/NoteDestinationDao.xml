@@ -1,0 +1,160 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.xiaoyu.modules.biz.note.dao.NoteDestinationDao">
+    <sql id="Base_Column_List">
+        a.id as id,
+        a.uuid as uuid,
+        a.note_id as noteId,
+        a.note_piece as notePiece,
+        a.reader as
+        reader,
+        a.read_time as readTime,
+        a.state as state,
+        a.create_date as createDate
+    </sql>
+
+    <select id="count" resultType="java.lang.Integer">
+        select count(*)
+        from biz_note_destination
+        where del_flag=0
+    </select>
+
+    <select id="get" resultType="com.xiaoyu.modules.biz.note.entity.NoteDestination"
+        parameterType="com.xiaoyu.modules.biz.note.entity.NoteDestination">
+        select
+        <include refid="Base_Column_List" />
+        from biz_note_destination as a
+        where a.uuid = #{uuid}
+        and a.del_flag=0
+    </select>
+
+    <select id="getById" parameterType="java.lang.String"
+        resultType="com.xiaoyu.modules.biz.note.entity.NoteDestination">
+        select
+        <include refid="Base_Column_List" />
+        from
+        biz_note_destination as a
+        where a.id = #{id}
+        and a.del_flag=0
+    </select>
+
+    <select id="getByUuid" parameterType="java.lang.String"
+        resultType="com.xiaoyu.modules.biz.note.entity.NoteDestination">
+        select
+        <include refid="Base_Column_List" />
+        from
+        biz_note_destination as a
+        where
+        a.uuid = #{uuid}
+        and a.del_flag=0
+    </select>
+
+    <select id="findByList" resultType="com.xiaoyu.modules.biz.note.entity.NoteDestination"
+        parameterType="com.xiaoyu.common.base.CommonQuery">
+        select
+        <include refid="Base_Column_List" />
+        from biz_note_destination as a
+        where a.del_flag=0
+        <if test="noteId != null">
+            and a.note_id=#{noteId}
+        </if>
+        order by a.create_date desc
+    </select>
+
+    <delete id="delete" parameterType="com.xiaoyu.modules.biz.note.entity.NoteDestination">
+        update biz_note_destination set
+        del_flag=1
+        where uuid =
+        #{uuid}
+    </delete>
+
+    <insert id="insert" parameterType="com.xiaoyu.modules.biz.note.entity.NoteDestination">
+        insert into biz_note_destination
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="uuid != null">
+                uuid,
+            </if>
+            <if test="noteId != null">
+                note_id,
+            </if>
+            <if test="notePiece != null">
+                note_piece,
+            </if>
+            <if test="reader != null">
+                reader,
+            </if>
+            <if test="readTime != null">
+                read_time,
+            </if>
+            <if test="state != null">
+                state,
+            </if>
+            <if test="createDate != null">
+                create_date,
+            </if>
+            <if test="updateDate != null">
+                update_date,
+            </if>
+            <if test="delFlag != null">
+                del_flag,
+            </if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="uuid != null">
+                #{uuid},
+            </if>
+            <if test="noteId != null">
+                #{noteId},
+            </if>
+            <if test="notePiece != null">
+                #{notePiece},
+            </if>
+            <if test="reader != null">
+                #{reader},
+            </if>
+            <if test="readTime != null">
+                #{readTime},
+            </if>
+            <if test="state != null">
+                #{state},
+            </if>
+            <if test="createDate != null">
+                #{createDate},
+            </if>
+            <if test="updateDate != null">
+                #{updateDate},
+            </if>
+            <if test="delFlag != null">
+                #{delFlag},
+            </if>
+        </trim>
+    </insert>
+
+    <update id="update" parameterType="com.xiaoyu.modules.biz.note.entity.NoteDestination">
+        update biz_note_destination
+        <set>
+            <if test="readTime != null">
+                read_time = #{readTime},
+            </if>
+            <if test="state != null">
+                state = #{state},
+            </if>
+            <if test="updateDate != null">
+                update_date = #{updateDate},
+            </if>
+            <if test="delFlag != null">
+                del_flag = #{delFlag},
+            </if>
+        </set>
+        where uuid = #{uuid}
+    </update>
+
+    <select id="isExist" parameterType="java.lang.String" resultType="java.lang.Integer">
+        select count(*)
+        from
+        biz_note_destination
+        where uuid=#{uuid}
+        and del_flag=0
+    </select>
+
+</mapper>

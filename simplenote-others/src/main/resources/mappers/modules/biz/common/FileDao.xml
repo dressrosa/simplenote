@@ -1,0 +1,126 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.xiaoyu.modules.common.dao.FileDao">
+
+    <sql id="Base_Column_List">
+        a.id as id,
+        a.biz_type as bizType,
+        a.biz_id as bizId,
+        a.file_type as fileType,
+        a.user_id as userId,
+        a.name as name,
+        a.url as url
+    </sql>
+
+    <select id="findByList" resultType="com.xiaoyu.modules.common.entity.File"
+        parameterType="com.xiaoyu.common.base.CommonQuery">
+        select
+        <include refid="Base_Column_List" />
+        from biz_file as a
+        where a.del_flag=0
+        <if test="bizId != null">
+            and a.biz_id=#{bizId}
+        </if>
+        <if test="bizIds != null">
+            and a.biz_id in
+            <foreach collection="bizIds" item="item" index="index" open="(" close=")"
+                separator=",">
+                #{item}
+            </foreach>
+        </if>
+    </select>
+
+    <insert id="batchInsert" parameterType="com.xiaoyu.modules.common.entity.File">
+        insert into biz_file
+        (
+        uuid,
+        biz_type,
+        biz_id,
+        file_type,
+        user_id,
+        name,
+        url
+        )
+        values
+        <foreach collection="list" item="item" index="index" separator=",">
+            (
+            #{item.uuid},
+            #{item.bizType},
+            #{item.bizId},
+            #{item.fileType},
+            #{item.userId},
+            #{item.name},
+            #{item.url}
+            )
+        </foreach>
+    </insert>
+
+    <insert id="insert" parameterType="com.xiaoyu.modules.common.entity.File">
+        insert into biz_note
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="uuid != null">
+                uuid,
+            </if>
+            <if test="bizType != null">
+                biz_type,
+            </if>
+            <if test="bizId != null">
+                biz_id,
+            </if>
+            <if test="fileType != null">
+                file_type,
+            </if>
+            <if test="userId != null">
+                user_id,
+            </if>
+            <if test="name != null">
+                name,
+            </if>
+            <if test="url != null">
+                url,
+            </if>
+            <if test="createDate != null">
+                create_date,
+            </if>
+            <if test="updateDate != null">
+                update_date,
+            </if>
+            <if test="delFlag != null">
+                del_flag,
+            </if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="uuid != null">
+                #{uuid},
+            </if>
+            <if test="bizType != null">
+                #{bizType},
+            </if>
+            <if test="bizId != null">
+                #{bizId},
+            </if>
+            <if test="fileType != null">
+                #{fileType},
+            </if>
+            <if test="userId != null">
+                #{userId},
+            </if>
+            <if test="name != null">
+                #{name},
+            </if>
+            <if test="url != null">
+                #{url},
+            </if>
+            <if test="createDate != null">
+                #{createDate},
+            </if>
+            <if test="updateDate != null">
+                #{updateDate},
+            </if>
+            <if test="delFlag != null">
+                #{delFlag},
+            </if>
+        </trim>
+    </insert>
+
+</mapper>

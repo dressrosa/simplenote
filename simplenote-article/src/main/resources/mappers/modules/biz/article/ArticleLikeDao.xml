@@ -2,42 +2,47 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
 <mapper namespace="com.xiaoyu.modules.biz.article.dao.ArticleLikeDao">
 
-    <select id="get"
-        parameterType="com.xiaoyu.modules.biz.article.entity.ArticleLike"
+    <select id="get" parameterType="com.xiaoyu.modules.biz.article.entity.ArticleLike"
         resultType="com.xiaoyu.modules.biz.article.entity.ArticleLike">
         select
+        num as num,
         status as status
         from biz_article_like
         where
-        user_id = #{userId} 
-        and article_id = #{articleId}
+        user_id = #{userId}
+        and article_id
+        = #{articleId}
     </select>
 
-    <select id="findListByBatch" parameterType="java.util.List"
-        resultType="com.xiaoyu.modules.biz.article.entity.ArticleLike">
+    <select id="findByList" resultType="com.xiaoyu.modules.biz.article.entity.ArticleLike"
+        parameterType="com.xiaoyu.common.base.CommonQuery">
         select
         a.article_id as articleId,
         a.user_id as userId,
         a.status as status
         from biz_article_like as a
-        where
-        a.article_id in
-        <foreach collection="list" item="item" index="index"
-            open="(" close=")" separator=",">
-            #{item.articleId}
-        </foreach>
-        
-        and a.user_id in
-        <foreach collection="list" item="item" index="index"
-            open="(" close=")" separator=",">
-            #{item.userId}
-        </foreach>
-        and a.del_flag=0
+        where a.del_flag=0
+        <if test="userId != null">
+            and a.user_id=#{userId}
+        </if>
+        <if test="bizIds != null">
+            and a.article_id in
+            <foreach collection="bizIds" item="item" index="index" open="(" close=")"
+                separator=",">
+                #{item}
+            </foreach>
+        </if>
+        <if test="userId != null">
+            and a.user_id = #{userId}
+        </if>
     </select>
 
     <insert id="insert" parameterType="com.xiaoyu.modules.biz.article.entity.ArticleLike">
         insert into biz_article_like
         <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="uuid != null">
+                uuid,
+            </if>
             <if test="articleId != null">
                 article_id,
             </if>
@@ -49,6 +54,9 @@
             </if>
         </trim>
         <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="uuid != null">
+                #{uuid},
+            </if>
             <if test="articleId != null">
                 #{articleId},
             </if>
@@ -71,28 +79,31 @@
                 status = #{status},
             </if>
         </set>
-        where 
-        article_id = #{articleId} 
+        where
+        article_id = #{articleId}
         and user_id =#{userId}
     </update>
 
-    <select id="isExist" resultType="java.lang.Integer" 
+    <select id="isExist" resultType="java.lang.Integer"
         parameterType="com.xiaoyu.modules.biz.article.entity.ArticleLike">
-        select count(*) 
+        select count(*)
         from biz_article_like
-        where 
-        article_id = #{articleId} 
-        and user_id =#{userId}
+        where
+        article_id = #{articleId}
+        and user_id
+        =#{userId}
     </select>
 
-    <select id="getForUpdate" parameterType="com.xiaoyu.modules.biz.article.entity.ArticleLike"
+    <select id="getForUpdate"
+        parameterType="com.xiaoyu.modules.biz.article.entity.ArticleLike"
         resultType="com.xiaoyu.modules.biz.article.entity.ArticleLike">
-        select 
+        select
         num as num,
         status as status,
         article_id as articleId,
         user_id as userId
-        from biz_article_like
+        from
+        biz_article_like
         where
         article_id=#{articleId}
         and user_id = #{userId}

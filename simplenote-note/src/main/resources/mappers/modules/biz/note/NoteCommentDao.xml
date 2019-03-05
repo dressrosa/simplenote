@@ -1,0 +1,121 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.xiaoyu.modules.biz.note.dao.NoteCommentDao">
+    <sql id="Base_Column_List">
+        a.id as id,
+        a.uuid as uuid,
+        a.note_id as noteId,
+        a.author_id as
+        authorId,
+        a.parent_id as
+        parentId,
+        a.parent_replyer_id as parentReplyerId,
+        a.content as
+        content,
+        a.replyer_id as
+        replyerId,
+        a.create_date as createDate
+    </sql>
+
+    <select id="getByUuid" parameterType="java.lang.String"
+        resultType="com.xiaoyu.modules.biz.note.vo.NoteCommentVo">
+        select
+        <include refid="Base_Column_List" />
+        where a.uuid=#{uuid}
+        and a.del_flag=0
+    </select>
+
+    <!-- 分页查询信息 -->
+    <select id="findByList" resultType="com.xiaoyu.modules.biz.note.vo.NoteCommentVo"
+        parameterType="com.xiaoyu.common.base.CommonQuery">
+        select
+        <include refid="Base_Column_List" />
+        from biz_note_comment as a
+        where a.del_flag=0
+        <if test="replyerId != null">
+            and a.replyer_id = #{replyerId}
+        </if>
+        <if test="commentIds != null">
+            and uuid in
+            <foreach collection="commentIds" item="item" index="index" open="(" close=")"
+                separator=",">
+                #{item}
+            </foreach>
+        </if>
+    </select>
+
+
+    <select id="findList" resultType="com.xiaoyu.modules.biz.note.vo.NoteCommentVo"
+        parameterType="java.lang.String">
+        SELECT
+        <include refid="Base_Column_List" />
+        WHERE
+        a.del_flag = 0 and a.note_id
+        =
+        #{noteId}
+        order by
+        a.create_date desc
+    </select>
+
+    <delete id="delete" parameterType="com.xiaoyu.modules.biz.note.entity.NoteComment">
+        update biz_note_comment set
+        del_flag=1
+        where uuid =
+        #{uuid}
+    </delete>
+
+    <update id="predo">
+        set names utf8mb4
+    </update>
+
+    <insert id="insert" parameterType="com.xiaoyu.modules.biz.note.entity.NoteComment">
+        insert into biz_note_comment
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="uuid != null">
+                uuid,
+            </if>
+            <if test="noteId != null">
+                note_id,
+            </if>
+            <if test="authorId != null">
+                author_id,
+            </if>
+            <if test="parentId != null">
+                parent_id,
+            </if>
+            <if test="content != null">
+                content,
+            </if>
+            <if test="replyerId != null">
+                replyer_id,
+            </if>
+            <if test="parentReplyerId != null">
+                parent_replyer_id,
+            </if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="uuid != null">
+                #{uuid},
+            </if>
+            <if test="noteId != null">
+                #{noteId},
+            </if>
+            <if test="authorId != null">
+                #{authorId},
+            </if>
+            <if test="parentId != null">
+                #{parentId},
+            </if>
+            <if test="content != null">
+                #{content},
+            </if>
+            <if test="replyerId != null">
+                #{replyerId},
+            </if>
+            <if test="parentReplyerId != null">
+                #{parentReplyerId},
+            </if>
+        </trim>
+    </insert>
+
+</mapper>
