@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
-<mapper namespace="com.xiaoyu.modules.biz.user.dao.UserAttrDao">
+<mapper namespace="com.xiaoyu.simplenote.modules.biz.user.dao.UserAttrDao">
     <sql id="Base_Column_List">
         a.user_id as userId,
         a.article_num as articleNum,
@@ -10,7 +10,7 @@
         a.follower_num as followerNum
     </sql>
 
-    <select id="get" resultType="com.xiaoyu.modules.biz.user.entity.UserAttr"
+    <select id="get" resultType="com.xiaoyu.simplenote.modules.biz.user.entity.UserAttr"
         parameterType="java.lang.String">
         select
         <include refid="Base_Column_List" />
@@ -18,7 +18,7 @@
         where a.user_id= #{userId}
     </select>
 
-    <insert id="insert" parameterType="com.xiaoyu.modules.biz.user.entity.UserAttr">
+    <insert id="insert" parameterType="com.xiaoyu.simplenote.modules.biz.user.entity.UserAttr">
         insert into biz_user_attr
         <trim prefix="(" suffix=")" suffixOverrides=",">
             <if test="userId != null">

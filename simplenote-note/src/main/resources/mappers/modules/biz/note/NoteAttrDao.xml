@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
-<mapper namespace="com.xiaoyu.modules.biz.note.dao.NoteAttrDao">
+<mapper namespace="com.xiaoyu.simplenote.modules.biz.note.dao.NoteAttrDao">
     <sql id="Base_Column_List">
         a.note_id as noteId,
         a.read_num as readNum,
@@ -11,7 +11,7 @@
     </sql>
 
     <select id="getByNoteId" parameterType="java.lang.String"
-        resultType="com.xiaoyu.modules.biz.note.entity.NoteAttr">
+        resultType="com.xiaoyu.simplenote.modules.biz.note.entity.NoteAttr">
         select
         <include refid="Base_Column_List" />
         from biz_note_attr as a
@@ -19,7 +19,7 @@
         and a.del_flag=0
     </select>
 
-    <select id="findByList" resultType="com.xiaoyu.modules.biz.note.entity.NoteAttr"
+    <select id="findByList" resultType="com.xiaoyu.simplenote.modules.biz.note.entity.NoteAttr"
         parameterType="com.xiaoyu.common.base.CommonQuery">
         select
         <include refid="Base_Column_List" />
@@ -34,7 +34,7 @@
         </if>
     </select>
 
-    <insert id="insert" parameterType="com.xiaoyu.modules.biz.note.entity.NoteAttr">
+    <insert id="insert" parameterType="com.xiaoyu.simplenote.modules.biz.note.entity.NoteAttr">
         insert into biz_note_attr
         <trim prefix="(" suffix=")" suffixOverrides=",">
             <if test="noteId != null">
@@ -91,7 +91,7 @@
     </insert>
 
 
-    <update id="update" parameterType="com.xiaoyu.modules.biz.note.entity.NoteAttr">
+    <update id="update" parameterType="com.xiaoyu.simplenote.modules.biz.note.entity.NoteAttr">
         update biz_note_attr
         <set>
             <if test="readNum != null">
@@ -110,7 +110,7 @@
         where note_id= #{noteId}
     </update>
 
-    <update id="updateByAddition" parameterType="com.xiaoyu.modules.biz.note.entity.NoteAttr">
+    <update id="updateByAddition" parameterType="com.xiaoyu.simplenote.modules.biz.note.entity.NoteAttr">
         update biz_note_attr
         <set>
             <if test="readNum != null">
@@ -129,7 +129,7 @@
         where note_id= #{noteId}
     </update>
 
-    <select id="isExist" parameterType="com.xiaoyu.modules.biz.note.entity.NoteAttr"
+    <select id="isExist" parameterType="com.xiaoyu.simplenote.modules.biz.note.entity.NoteAttr"
         resultType="java.lang.Integer">
         select count(*) from biz_note_attr
         where del_flag=0

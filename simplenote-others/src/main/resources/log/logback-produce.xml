@@ -46,9 +46,9 @@
     <appender name="FILE" class="ch.qos.logback.core.rolling.RollingFileAppender">
         <file>/home/logs/others/simplenote-others.out</file>
         <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
-            <fileNamePattern>/home/logs/others/%d{yyyy-MM,aux}/%d{yyyy-MM-dd}.log.zip
+            <fileNamePattern>/home/logs/others/%d{yyyy,aux}/%d{yyyy-MM}.log.zip
             </fileNamePattern>
-            <maxHistory>30</maxHistory>
+            <maxHistory>3</maxHistory>
         </rollingPolicy>
         <layout class="ch.qos.logback.classic.PatternLayout">
             <pattern> %d{HH:mm:ss.SSS}-%msg%n</pattern>

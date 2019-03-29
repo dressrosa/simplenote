@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
-<mapper namespace="com.xiaoyu.modules.biz.message.dao.MessageDao">
+<mapper namespace="com.xiaoyu.simplenote.modules.biz.message.dao.MessageDao">
     <sql id="Base_Column_List">
         a.id as id,
         a.uuid as uuid,
@@ -17,7 +17,7 @@
         a.create_date as createDate
     </sql>
 
-    <select id="isDoAgain" parameterType="com.xiaoyu.modules.biz.message.entity.Message"
+    <select id="isDoAgain" parameterType="com.xiaoyu.simplenote.modules.biz.message.entity.Message"
         resultType="java.lang.Integer">
         select count(*)
         from biz_message as a
@@ -27,15 +27,15 @@
         #{bizId}
     </select>
 
-    <select id="getByUuid" parameterType="java.lang.String" resultType="com.xiaoyu.modules.biz.message.entity.Message">
+    <select id="getByUuid" parameterType="java.lang.String" resultType="com.xiaoyu.simplenote.modules.biz.message.entity.Message">
         select
         <include refid="Base_Column_List" />
         from biz_message as a
         where a.del_flag=0 and a.uuid=#{uuid}
     </select>
 
-    <select id="findVoByList" parameterType="com.xiaoyu.modules.biz.message.entity.Message"
-        resultType="com.xiaoyu.modules.biz.message.vo.MessageVo">
+    <select id="findVoByList" parameterType="com.xiaoyu.simplenote.modules.biz.message.entity.Message"
+        resultType="com.xiaoyu.simplenote.modules.biz.message.vo.MessageVo">
         select
         a.uuid as messageId,
         a.type as type,
@@ -63,7 +63,7 @@
         </if>
     </select>
 
-    <insert id="insert" parameterType="com.xiaoyu.modules.biz.message.entity.Message">
+    <insert id="insert" parameterType="com.xiaoyu.simplenote.modules.biz.message.entity.Message">
         insert into biz_message
         <trim prefix="(" suffix=")" suffixOverrides=",">
             <if test="uuid != null">

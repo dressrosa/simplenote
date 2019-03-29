@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
-<mapper namespace="com.xiaoyu.modules.common.dao.FileDao">
+<mapper namespace="com.xiaoyu.simplenote.modules.common.dao.FileDao">
 
     <sql id="Base_Column_List">
         a.id as id,
@@ -12,7 +12,7 @@
         a.url as url
     </sql>
 
-    <select id="findByList" resultType="com.xiaoyu.modules.common.entity.File"
+    <select id="findByList" resultType="com.xiaoyu.simplenote.modules.common.entity.File"
         parameterType="com.xiaoyu.common.base.CommonQuery">
         select
         <include refid="Base_Column_List" />
@@ -30,7 +30,7 @@
         </if>
     </select>
 
-    <insert id="batchInsert" parameterType="com.xiaoyu.modules.common.entity.File">
+    <insert id="batchInsert" parameterType="com.xiaoyu.simplenote.modules.common.entity.File">
         insert into biz_file
         (
         uuid,
@@ -55,7 +55,7 @@
         </foreach>
     </insert>
 
-    <insert id="insert" parameterType="com.xiaoyu.modules.common.entity.File">
+    <insert id="insert" parameterType="com.xiaoyu.simplenote.modules.common.entity.File">
         insert into biz_note
         <trim prefix="(" suffix=")" suffixOverrides=",">
             <if test="uuid != null">

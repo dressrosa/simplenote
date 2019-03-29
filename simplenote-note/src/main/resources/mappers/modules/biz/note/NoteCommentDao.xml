@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
-<mapper namespace="com.xiaoyu.modules.biz.note.dao.NoteCommentDao">
+<mapper namespace="com.xiaoyu.simplenote.modules.biz.note.dao.NoteCommentDao">
     <sql id="Base_Column_List">
         a.id as id,
         a.uuid as uuid,
@@ -18,7 +18,7 @@
     </sql>
 
     <select id="getByUuid" parameterType="java.lang.String"
-        resultType="com.xiaoyu.modules.biz.note.vo.NoteCommentVo">
+        resultType="com.xiaoyu.simplenote.modules.biz.note.vo.NoteCommentVo">
         select
         <include refid="Base_Column_List" />
         where a.uuid=#{uuid}
@@ -26,7 +26,7 @@
     </select>
 
     <!-- 分页查询信息 -->
-    <select id="findByList" resultType="com.xiaoyu.modules.biz.note.vo.NoteCommentVo"
+    <select id="findByList" resultType="com.xiaoyu.simplenote.modules.biz.note.vo.NoteCommentVo"
         parameterType="com.xiaoyu.common.base.CommonQuery">
         select
         <include refid="Base_Column_List" />
@@ -45,7 +45,7 @@
     </select>
 
 
-    <select id="findList" resultType="com.xiaoyu.modules.biz.note.vo.NoteCommentVo"
+    <select id="findList" resultType="com.xiaoyu.simplenote.modules.biz.note.vo.NoteCommentVo"
         parameterType="java.lang.String">
         SELECT
         <include refid="Base_Column_List" />
@@ -57,18 +57,15 @@
         a.create_date desc
     </select>
 
-    <delete id="delete" parameterType="com.xiaoyu.modules.biz.note.entity.NoteComment">
+    <delete id="delete" parameterType="com.xiaoyu.simplenote.modules.biz.note.entity.NoteComment">
         update biz_note_comment set
         del_flag=1
         where uuid =
         #{uuid}
     </delete>
 
-    <update id="predo">
-        set names utf8mb4
-    </update>
-
-    <insert id="insert" parameterType="com.xiaoyu.modules.biz.note.entity.NoteComment">
+    <insert id="insert" parameterType="com.xiaoyu.simplenote.modules.biz.note.entity.NoteComment">
+        set names utf8mb4;
         insert into biz_note_comment
         <trim prefix="(" suffix=")" suffixOverrides=",">
             <if test="uuid != null">

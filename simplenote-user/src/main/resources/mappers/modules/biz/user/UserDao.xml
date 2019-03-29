@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
-<mapper namespace="com.xiaoyu.modules.biz.user.dao.UserDao">
+<mapper namespace="com.xiaoyu.simplenote.modules.biz.user.dao.UserDao">
 
     <sql id="columns">
         a.id as id,
@@ -26,8 +26,8 @@
     </sql>
     
     <!-- 根据登录名查询用户 -->
-    <select id="getVo" resultType="com.xiaoyu.modules.biz.user.vo.UserVo" 
-        parameterType="com.xiaoyu.modules.biz.user.entity.User">
+    <select id="getVo" resultType="com.xiaoyu.simplenote.modules.biz.user.vo.UserVo" 
+        parameterType="com.xiaoyu.simplenote.modules.biz.user.entity.User">
         select
         <include refid="vocolumns" />
         ,r.article_num as 'attr.articleNum',
@@ -46,7 +46,7 @@
     </select>
 
     <select id="getVoByUuid"  parameterType="java.lang.String"
-        resultType="com.xiaoyu.modules.biz.user.vo.UserVo">
+        resultType="com.xiaoyu.simplenote.modules.biz.user.vo.UserVo">
         select
         <include refid="vocolumns" />
         ,ua.article_num as "attr.articleNum",
@@ -60,7 +60,7 @@
     </select>
 
     <select id="findVoByUuid" parameterType="java.util.List"
-        resultType="com.xiaoyu.modules.biz.user.vo.UserVo">
+        resultType="com.xiaoyu.simplenote.modules.biz.user.vo.UserVo">
         select
         <include refid="vocolumns" />
         from biz_user as a
@@ -72,7 +72,7 @@
     </select>
 
     <select id="getById" parameterType="java.lang.String"
-        resultType="com.xiaoyu.modules.biz.user.entity.User">
+        resultType="com.xiaoyu.simplenote.modules.biz.user.entity.User">
         select
         <include refid="columns" />
         from biz_user as a
@@ -81,7 +81,7 @@
         and a.del_flag=0
     </select>
 
-    <select id="getByUuid" resultType="com.xiaoyu.modules.biz.user.entity.User"
+    <select id="getByUuid" resultType="com.xiaoyu.simplenote.modules.biz.user.entity.User"
         parameterType="java.lang.String">
         select
         <include refid="columns" />
@@ -92,8 +92,8 @@
     </select>
     
     <!-- 分页查询用户信息 -->
-    <select id="findByList" resultType="com.xiaoyu.modules.biz.user.entity.User"
-        parameterType="com.xiaoyu.modules.biz.user.entity.User">
+    <select id="findByList" resultType="com.xiaoyu.simplenote.modules.biz.user.entity.User"
+        parameterType="com.xiaoyu.simplenote.modules.biz.user.entity.User">
         select
         a.id as id,
         a.uuid as uuid,
@@ -113,7 +113,7 @@
     </select>
 
     <!-- 插入用户 -->
-    <insert id="insert" parameterType="com.xiaoyu.modules.biz.user.entity.User">
+    <insert id="insert" parameterType="com.xiaoyu.simplenote.modules.biz.user.entity.User">
         insert into biz_user
         <trim prefix="(" suffix=")" suffixOverrides=",">
             <if test="uuid != null">
@@ -181,7 +181,7 @@
         where uuid=#{uuid}
     </update>
     
-    <select id="isExist" parameterType="com.xiaoyu.modules.biz.user.entity.User"
+    <select id="isExist" parameterType="com.xiaoyu.simplenote.modules.biz.user.entity.User"
          resultType="java.lang.Integer">
         select count(*) from biz_user as a
         where
@@ -195,8 +195,8 @@
     </select>
 
     <!-- 根据登录名查询用户 -->
-    <select id="getForLogin" resultType="com.xiaoyu.modules.biz.user.entity.User"
-        parameterType="com.xiaoyu.modules.biz.user.entity.User">
+    <select id="getForLogin" resultType="com.xiaoyu.simplenote.modules.biz.user.entity.User"
+        parameterType="com.xiaoyu.simplenote.modules.biz.user.entity.User">
         select
         <include refid="columns" />
         ,a.password as password
