@@ -4,7 +4,7 @@
     <modelVersion>4.0.0</modelVersion>
     <groupId>com.xiaoyu</groupId>
     <artifactId>simplenote </artifactId>
-    <version>1.0.0.RELEASE</version>
+    <version>1.1</version>
     <parent>
         <groupId>org.springframework.boot</groupId>
         <artifactId>spring-boot-starter-parent</artifactId>
