@@ -18,7 +18,7 @@
         article_id = #{articleId}
     </select>
 
-    <select id="findByList" parameterType="com.xiaoyu.common.base.CommonQuery"
+    <select id="findByList" parameterType="com.xiaoyu.simplenote.common.base.CommonQuery"
         resultType="com.xiaoyu.simplenote.modules.biz.article.entity.ArticleCollect">
         select
         a.article_id as articleId,

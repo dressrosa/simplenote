@@ -50,7 +50,7 @@
     </select>
 
     <select id="findByList" resultType="com.xiaoyu.simplenote.modules.biz.note.entity.NoteDestination"
-        parameterType="com.xiaoyu.common.base.CommonQuery">
+        parameterType="com.xiaoyu.simplenote.common.base.CommonQuery">
         select
         <include refid="Base_Column_List" />
         from biz_note_destination as a

@@ -17,7 +17,7 @@
     </select>
 
     <select id="findByList" resultType="com.xiaoyu.simplenote.modules.biz.note.entity.NoteLike"
-        parameterType="com.xiaoyu.common.base.CommonQuery">
+        parameterType="com.xiaoyu.simplenote.common.base.CommonQuery">
         select
         a.note_id as noteId,
         a.user_id as userId,

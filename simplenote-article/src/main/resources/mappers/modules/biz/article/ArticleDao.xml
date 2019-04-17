@@ -102,7 +102,7 @@
     </select>
 
     <select id="findByList" resultType="com.xiaoyu.simplenote.modules.biz.article.entity.Article"
-        parameterType="com.xiaoyu.common.base.CommonQuery">
+        parameterType="com.xiaoyu.simplenote.common.base.CommonQuery">
         select
         <include refid="Base_Column_List" />
         from biz_article as a

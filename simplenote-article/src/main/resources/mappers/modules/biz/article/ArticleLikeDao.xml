@@ -15,7 +15,7 @@
     </select>
 
     <select id="findByList" resultType="com.xiaoyu.simplenote.modules.biz.article.entity.ArticleLike"
-        parameterType="com.xiaoyu.common.base.CommonQuery">
+        parameterType="com.xiaoyu.simplenote.common.base.CommonQuery">
         select
         a.article_id as articleId,
         a.user_id as userId,

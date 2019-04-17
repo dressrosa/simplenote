@@ -13,7 +13,7 @@
     </sql>
 
     <select id="findByList" resultType="com.xiaoyu.simplenote.modules.common.entity.File"
-        parameterType="com.xiaoyu.common.base.CommonQuery">
+        parameterType="com.xiaoyu.simplenote.common.base.CommonQuery">
         select
         <include refid="Base_Column_List" />
         from biz_file as a
