@@ -35,7 +35,11 @@ public enum ResponseCode {
     /**
      * 没有权限
      */
-    REQ_NOACCESS(20002, "no access");
+    REQ_NOACCESS(20002, "no access"),
+    /**
+     * 访问错误
+     */
+    REQ_ERROR(20003, "request error");
 
     private int code;
     private String message;
