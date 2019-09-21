@@ -19,15 +19,13 @@
         <dependency>
             <groupId>com.xiaoyu</groupId>
             <artifactId>beacon</artifactId>
-            <version>0.0.1</version>
-            <type>pom</type>
         </dependency>
-
         <dependency>
             <groupId>com.xiaoyu</groupId>
             <artifactId>beacon-spring-boot-starter</artifactId>
-            <version>0.0.1</version>
         </dependency>
+
+
 
         <dependency>
             <groupId>org.springframework.boot</groupId>

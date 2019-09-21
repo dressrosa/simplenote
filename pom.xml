@@ -26,6 +26,8 @@
         <mysql.version>5.1.38</mysql.version>
         <mybatis.version>3.4.5</mybatis.version>
         <mybatisspring.version>1.3.1</mybatisspring.version>
+        <beacon.version>0.0.2</beacon.version>
+        <beaconspring.version>0.0.2</beaconspring.version>
     </properties>
     <dependencyManagement>
         <dependencies>
@@ -39,12 +41,21 @@
                 </dependency> -->
 
 
-
+            <dependency>
+                <groupId>com.xiaoyu</groupId>
+                <artifactId>beacon</artifactId>
+                <version>${beacon.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>com.xiaoyu</groupId>
+                <artifactId>beacon-spring-boot-starter</artifactId>
+                <version>${beaconspring.version}</version>
+            </dependency>
             <!--fastJson -->
             <dependency>
                 <groupId>com.alibaba</groupId>
                 <artifactId>fastjson</artifactId>
-                <version>1.2.8</version>
+                <version>1.2.58</version>
             </dependency>
 
             <!-- common lang -->
