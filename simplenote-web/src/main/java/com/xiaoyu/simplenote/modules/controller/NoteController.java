@@ -34,6 +34,9 @@ public class NoteController {
     @Autowired
     private INoteService noteService;
 
+    @Autowired
+    private ImgUtils imgUtils;
+
     @RequestMapping(value = "api/v1/note/squareList", method = RequestMethod.GET)
     public String squareList(HttpServletRequest request) {
         TraceRequest req = Utils.getTraceRequest(request);
@@ -78,7 +81,7 @@ public class NoteController {
                         f = f.substring(22);
                     }
                     byte[] bytes = Base64.decodeBase64(f);
-                    String url = ImgUtils.saveImgToTencentOss(bytes);
+                    String url = imgUtils.saveImgToTencentOss(bytes);
                     sb.append(url);
                 }
             }

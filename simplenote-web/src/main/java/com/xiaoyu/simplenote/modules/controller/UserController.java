@@ -44,6 +44,9 @@ public class UserController {
     @Autowired
     private IArticleService articleService;
 
+    @Autowired
+    private ImgUtils imgUtils;
+
     /**
      * 正常登录
      * 
@@ -222,10 +225,10 @@ public class UserController {
                 // do nothing
             } else if (content.startsWith("data:image/jpeg;base64,")) {
                 content = content.substring(23);
-                content = ImgUtils.saveImgToTencentOss(Base64.decodeBase64(content));
+                content = imgUtils.saveImgToTencentOss(Base64.decodeBase64(content));
             } else if (content.startsWith("data:image/png;base64,")) {
                 content = content.substring(22);
-                content = ImgUtils.saveImgToTencentOss(Base64.decodeBase64(content));
+                content = imgUtils.saveImgToTencentOss(Base64.decodeBase64(content));
             } else {
                 return ResponseMapper.createMapper()
                         .code(ResponseCode.ARGS_ERROR.statusCode())

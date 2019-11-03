@@ -40,6 +40,9 @@ public class UploadController {
     @Autowired
     private IUserService userService;
 
+    @Autowired
+    private ImgUtils imgUtils;
+
     /**
      * jQuery-File-Upload-9.12.1上传插件 暂时只是单张上传
      * 
@@ -88,7 +91,7 @@ public class UploadController {
             return mapper.code(ResponseCode.ARGS_ERROR.statusCode()).resultJson();
         }
         while (iter.hasNext()) {
-            String result = ImgUtils.saveImgToTencentOss(iter.next());
+            String result = imgUtils.saveImgToTencentOss(iter.next());
             Map<String, Object> map = (Map<String, Object>) JSON.parse(result);
             String path = null;
             if (map.get("code").equals(0)) {

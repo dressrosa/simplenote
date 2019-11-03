@@ -16,6 +16,8 @@ import javax.servlet.http.Part;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.stereotype.Component;
 import org.springframework.util.FileCopyUtils;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -24,7 +26,6 @@ import com.qcloud.cos.COSClient;
 import com.qcloud.cos.ClientConfig;
 import com.qcloud.cos.request.UploadFileRequest;
 import com.qcloud.cos.sign.Credentials;
-import com.xiaoyu.simplenote.common.utils.PropUtil;
 import com.xiaoyu.simplenote.common.utils.StringUtil;
 
 import net.coobird.thumbnailator.Thumbnails;
@@ -34,9 +35,17 @@ import net.coobird.thumbnailator.Thumbnails;
  * 
  * @author xiaoyu 2016年3月19日
  */
+@Component
 public class ImgUtils {
 
     private final static Logger logger = LoggerFactory.getLogger(ImgUtils.class);
+
+    @Value("${oss_app_id}")
+    private String ossAppId;
+    @Value("${oss_secret_id}")
+    private String ossSecretId;
+    @Value("${oss_secret_key}")
+    private String ossSecretKey;
 
     public static String upload(MultipartFile img) throws IllegalStateException, IOException {
         final ResourceBundle bundle = ResourceBundle.getBundle("application");
@@ -156,15 +165,15 @@ public class ImgUtils {
         return ImgUtils.getPath(imagesDir + newImgName);
     }
 
-    public static String saveImgToTencentOss(Part part) {
+    public String saveImgToTencentOss(Part part) {
         // 限制只要图片
         final String suffix = part.getSubmittedFileName().substring(part.getSubmittedFileName().lastIndexOf("."));
         if (!suffix.matches("[.](jpg|jpeg|png)$")) {
             return null;
         }
-        final long appId = Long.valueOf(PropUtil.getProp("oss_app_id"));
-        final String secretId = PropUtil.getProp("oss_secret_id");
-        final String secretKey = PropUtil.getProp("oss_secret_key");
+        final long appId = Long.valueOf(ossAppId);
+        final String secretId = ossSecretId;
+        final String secretKey = ossSecretKey;
         // 设置要操作的bucket
         final String bucketName = "xiaoyu1";
         // 初始化秘钥信息
@@ -191,10 +200,11 @@ public class ImgUtils {
     }
 
     @SuppressWarnings("unchecked")
-    public static String saveImgToTencentOss(byte[] bytes) {
-        final long appId = Long.valueOf(PropUtil.getProp("oss_app_id"));
-        final String secretId = PropUtil.getProp("oss_secret_id");
-        final String secretKey = PropUtil.getProp("oss_secret_key");
+    public String saveImgToTencentOss(byte[] bytes) {
+        final long appId = Long.valueOf(ossAppId);
+        final String secretId = ossSecretId;
+        final String secretKey = ossSecretKey;
+        logger.info(appId + ":" + secretId + ":" + secretKey + " size:" + bytes.length);
         // 设置要操作的bucket
         final String bucketName = "xiaoyu1";
         // 初始化秘钥信息
@@ -209,7 +219,7 @@ public class ImgUtils {
                 + new Random().nextInt(1_000) + ".png";
         final UploadFileRequest f = new UploadFileRequest(bucketName, "/" + newImgName, bytes);
         String ret = client.uploadSingleFile(f);
-        logger.info("oss return:", ret);
+        logger.info("oss return:" + ret);
         Map<String, Object> map = (Map<String, Object>) JSON.parse(ret);
         String path = null;
         if (map.get("code").equals(0)) {
