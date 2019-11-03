@@ -182,6 +182,7 @@ public class UserServiceImpl implements IUserService {
             return mapper.code(ResponseCode.LOGIN_INVALIDATE.statusCode())
                     .message("未登录或登录失效,请重新登录");
         }
+
         User temp = new User();
         temp.setUuid(request.getUser().getUuid());
         switch (flag) {
@@ -191,7 +192,8 @@ public class UserServiceImpl implements IUserService {
                 return mapper.code(ResponseCode.ARGS_ERROR.statusCode())
                         .message("请上传头像");
             }
-            temp.setAvatar(content.substring(content.lastIndexOf("/")));
+            content = content.substring(content.lastIndexOf("/"));
+            temp.setAvatar(content);
             break;
         // 修改签名
         case 1:
@@ -227,13 +229,15 @@ public class UserServiceImpl implements IUserService {
                 return mapper.code(ResponseCode.ARGS_ERROR.statusCode())
                         .message("请上传背景图片");
             }
-            temp.setBackground(content.substring(content.lastIndexOf("/")));
+            content = content.substring(content.lastIndexOf("/"));
+            temp.setBackground(content);
             break;
         default:
             break;
         }
         if (this.userDao.update(temp) > 0) {
             return mapper.code(ResponseCode.SUCCESS.statusCode())
+                    .data(content)
                     .message("资料修改成功");
         }
         return mapper.code(ResponseCode.FAILED.statusCode())

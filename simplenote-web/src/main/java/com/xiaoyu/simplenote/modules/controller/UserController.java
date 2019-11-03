@@ -218,13 +218,20 @@ public class UserController {
         }
         // 头像/背景图
         if (flag == 0 || flag == 4) {
-            if (content.startsWith("data:image/jpeg;base64,")) {
+            if (content.startsWith("http")) {
+                // do nothing
+            } else if (content.startsWith("data:image/jpeg;base64,")) {
                 content = content.substring(23);
+                content = ImgUtils.saveImgToTencentOss(Base64.decodeBase64(content));
             } else if (content.startsWith("data:image/png;base64,")) {
                 content = content.substring(22);
+                content = ImgUtils.saveImgToTencentOss(Base64.decodeBase64(content));
+            } else {
+                return ResponseMapper.createMapper()
+                        .code(ResponseCode.ARGS_ERROR.statusCode())
+                        .message("图片格式不正确").resultJson();
             }
-            byte[] bytes = Base64.decodeBase64(content);
-            content = ImgUtils.saveImgToTencentOss(bytes);
+
         }
         return this.userService.editUser(req, content, flag).resultJson();
     }

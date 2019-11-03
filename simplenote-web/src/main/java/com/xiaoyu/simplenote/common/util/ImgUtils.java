@@ -24,6 +24,7 @@ import com.qcloud.cos.COSClient;
 import com.qcloud.cos.ClientConfig;
 import com.qcloud.cos.request.UploadFileRequest;
 import com.qcloud.cos.sign.Credentials;
+import com.xiaoyu.simplenote.common.utils.PropUtil;
 import com.xiaoyu.simplenote.common.utils.StringUtil;
 
 import net.coobird.thumbnailator.Thumbnails;
@@ -36,10 +37,6 @@ import net.coobird.thumbnailator.Thumbnails;
 public class ImgUtils {
 
     private final static Logger logger = LoggerFactory.getLogger(ImgUtils.class);
-
-    private static final long App_Id = 1253813687;
-    private static final String Secret_Id = "AKIDMdrzwiXi6KSVYtD86wd9UdlkW6Ui2aFD";
-    private static final String Secret_Key = "2ta5QZXJuJXZb2bkmdPNI1d3GI8mHahh";
 
     public static String upload(MultipartFile img) throws IllegalStateException, IOException {
         final ResourceBundle bundle = ResourceBundle.getBundle("application");
@@ -165,9 +162,9 @@ public class ImgUtils {
         if (!suffix.matches("[.](jpg|jpeg|png)$")) {
             return null;
         }
-        final long appId = App_Id;
-        final String secretId = Secret_Id;
-        final String secretKey = Secret_Key;
+        final long appId = Long.valueOf(PropUtil.getProp("oss_app_id"));
+        final String secretId = PropUtil.getProp("oss_secret_id");
+        final String secretKey = PropUtil.getProp("oss_secret_key");
         // 设置要操作的bucket
         final String bucketName = "xiaoyu1";
         // 初始化秘钥信息
@@ -195,9 +192,9 @@ public class ImgUtils {
 
     @SuppressWarnings("unchecked")
     public static String saveImgToTencentOss(byte[] bytes) {
-        final long appId = App_Id;
-        final String secretId = Secret_Id;
-        final String secretKey = Secret_Key;
+        final long appId = Long.valueOf(PropUtil.getProp("oss_app_id"));
+        final String secretId = PropUtil.getProp("oss_secret_id");
+        final String secretKey = PropUtil.getProp("oss_secret_key");
         // 设置要操作的bucket
         final String bucketName = "xiaoyu1";
         // 初始化秘钥信息
@@ -211,8 +208,9 @@ public class ImgUtils {
         final String newImgName = new Random().nextInt(1_000) + Long.toString(System.currentTimeMillis())
                 + new Random().nextInt(1_000) + ".png";
         final UploadFileRequest f = new UploadFileRequest(bucketName, "/" + newImgName, bytes);
-
-        Map<String, Object> map = (Map<String, Object>) JSON.parse(client.uploadSingleFile(f));
+        String ret = client.uploadSingleFile(f);
+        logger.info("oss return:", ret);
+        Map<String, Object> map = (Map<String, Object>) JSON.parse(ret);
         String path = null;
         if (map.get("code").equals(0)) {
             Map<String, String> urlMap = (Map<String, String>) map.get("data");
